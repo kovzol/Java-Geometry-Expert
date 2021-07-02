@@ -4,6 +4,7 @@
     <property name="dest" value="classes"/>
     <property name="out" value="output"/>
     <property name="jgex_jar" value="jgex.jar"/>
+    <property name="debug" value="on"/>
 
 
     <!-- Step 1:  clean alreay exists directory and files -->
@@ -24,13 +25,13 @@
 
     <!-- Step 3:  compile all .java files, here we have four packages totally -->
     <target name="compile" depends="clean, init" description="compiling jgex">
-        <javac  srcdir="${src}/pdf" destdir="${dest}" debug="off" nowarn="on" />      
-        <javac  srcdir="${src}/UI" destdir="${dest}" debug="off" nowarn="on" />
-        <javac  srcdir="${src}/maths" destdir="${dest}" debug="off" nowarn="on" />
-        <javac  srcdir="${src}/gprover" destdir="${dest}" debug="off" nowarn="on" />
-        <javac  srcdir="${src}/wprover" destdir="${dest}" debug="off" nowarn="on" />
-    </target>
+        <javac  target="1.8" source="1.8" srcdir="${src}/pdf" destdir="${dest}" debug="${debug}" nowarn="on" />
+        <javac  target="1.8" source="1.8" srcdir="${src}/UI" destdir="${dest}" debug="${debug}" nowarn="on" />
+        <javac  target="1.8" source="1.8" srcdir="${src}/maths" destdir="${dest}" debug="${debug}" nowarn="on" />
+        <javac  target="1.8" source="1.8" srcdir="${src}/gprover" destdir="${dest}" debug="${debug}" nowarn="on" />
+        <javac  target="1.8" source="1.8" srcdir="${src}/wprover" destdir="${dest}" debug="${debug}" nowarn="on" />
 
+    </target>
 
     <!-- Step 4:  copy all images to destination before generating jar file  -->
     <target name="copy-images" depends="compile"
@@ -95,7 +96,9 @@
         <java jar="${out}/${jgex_jar}" classpath="${out}/"
               fork="true"
               failonerror="true"
-              maxmemory="128m"/>
+              maxmemory="128m"
+        />
+
     </target>
 
 
@@ -122,7 +125,19 @@
         <java jar="${out}/${jgex_jar}" classpath="${out}/"
               fork="true"
               failonerror="true"
-              maxmemory="128m"/>
+              maxmemory="128m">
+
+        </java>
+    </target>
+
+    <!-- Run the jar file for debugging without building it. -->
+    <target name="run_debug" description="Run JGEX for Debugging">
+        <java jar="${out}/${jgex_jar}" classpath="${out}/"
+              fork="true"
+              failonerror="true"
+              maxmemory="128m">
+            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"/>
+        </java>
     </target>
 
 
