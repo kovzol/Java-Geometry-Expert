@@ -2,7 +2,7 @@ package gprover;
 
 public class rulers {
 
-    final public static String[] GDD = {
+    final public static String[] GDD_English = {
             "* 1",
             "If AB ∥ BC, then Collinear(A,B,C).",
 
@@ -161,7 +161,7 @@ public class rulers {
     };
 
 
-    final public static String[] FULL =
+    final public static String[] FULL_English =
             {
                     "* 1 # The Definition of Full Angle.",
                     "A full angle is defined as an ordered pair of two lines u and v denoted by ∠[u,v].",
@@ -256,6 +256,15 @@ public class rulers {
                     " If AB = AC = BC, i.e., triangle ABC is an equilateral triangle, then 3 * ∠[AB, BC] = ∠[0].  ",
 
                     "* END.",
+
+            };
+
+    final public static String[] FULL_German =
+            {
+
+            };
+    final public static String[] GDD_German =
+            {
 
             };
 }

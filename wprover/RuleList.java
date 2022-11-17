@@ -3,6 +3,7 @@ package wprover;
 import gprover.gib;
 import gprover.rulers;
 
+import javax.sound.midi.Soundbank;
 import java.io.*;
 import java.util.Vector;
 import java.net.URL;
@@ -22,6 +23,9 @@ public class RuleList {
     private RuleList() {
 
     }
+
+
+
 
     final public static Vector GDDLIST = new Vector();
     final public static Vector FULLLIST = new Vector();
@@ -116,10 +120,28 @@ public class RuleList {
 
     }
 
+
+
     final public static void loadRulers() {
-        loadRulers(rulers.GDD, GDDLIST, 0);
-        loadRulers(rulers.FULL, FULLLIST, 1);
-    }
+        System.out.println("RealLang= "+ GExpert.lan);
+        System.out.println("1");
+        System.out.println("2");
+
+//            else if (m1.equalsIgnoreCase("Language")) {
+//            lan = m2;
+//
+
+        if(GExpert.lan=="English") { //only load the math vocab from the correct language "database"
+            loadRulers(rulers.GDD_English, GDDLIST, 0);
+            loadRulers(rulers.FULL_English, FULLLIST, 1);
+        }
+        if(GExpert.lan=="German") {
+            loadRulers(rulers.GDD_German, GDDLIST, 0);
+            loadRulers(rulers.FULL_German, FULLLIST, 1);
+        }
+
+
+        }
 
     final public static void writeRulers(File file, File file2) {
         try {
