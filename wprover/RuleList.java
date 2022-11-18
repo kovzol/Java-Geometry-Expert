@@ -3,7 +3,7 @@ package wprover;
 import gprover.gib;
 import gprover.rulers;
 
-import javax.sound.midi.Soundbank;
+// import javax.sound.midi.Soundbank; //never used
 import java.io.*;
 import java.util.Vector;
 import java.net.URL;
@@ -131,11 +131,11 @@ public class RuleList {
 //            lan = m2;
 //
 
-        if(GExpert.lan=="English") { //only load the math vocab from the correct language "database"
+        if(GExpert.lan.equals("English")) { //only load the math vocab from the correct language "database"
             loadRulers(rulers.GDD_English, GDDLIST, 0);
             loadRulers(rulers.FULL_English, FULLLIST, 1);
         }
-        if(GExpert.lan=="German") {
+        if(GExpert.lan.equals("German")) {
             loadRulers(rulers.GDD_German, GDDLIST, 0);
             loadRulers(rulers.FULL_German, FULLLIST, 1);
         }
