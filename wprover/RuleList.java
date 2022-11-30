@@ -122,13 +122,6 @@ public class RuleList {
 
 
     final public static void loadRulers() {
-        System.out.println("RealLang= "+ GExpert.lan);
-        System.out.println("1");
-        System.out.println("2");
-
-//            else if (m1.equalsIgnoreCase("Language")) {
-//            lan = m2;
-//
 
         if(GExpert.lan.equals("English")) { //only load the math vocab from the correct language "database"
             loadRulers(rulers.GDD_English, GDDLIST, 0);
