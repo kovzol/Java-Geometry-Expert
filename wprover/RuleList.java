@@ -3,7 +3,6 @@ package wprover;
 import gprover.gib;
 import gprover.rulers;
 
-// import javax.sound.midi.Soundbank; //never used
 import java.io.*;
 import java.util.Vector;
 import java.net.URL;
