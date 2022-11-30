@@ -364,7 +364,6 @@ public class CMisc {
                     full_screen = Boolean.parseBoolean(m2);
                 } else if (m1.equalsIgnoreCase("Language")) {
                     lan = m2;
-                    System.out.println("m2= "+m2);
                 } else if (m1.equalsIgnoreCase("Alpha")) {
                     float f = Float.parseFloat(m2);
                     fillac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, f);
