@@ -8,15 +8,50 @@ tasks.withType(JavaCompile).configureEach {
     sourceCompatibility = 1.8
 }
 
+ext.poDir = 'src/main/po'
+ext.classesDir = 'build/classes/java/main'
+
 task msgFmt(type: Exec) {
     // TODO: Skip generating the translation if a new .class file is already present.
+    // This task is obsolete since the task msgFmtAll skips the translations that are already generated.
+    def languages = 'de fa hu it pt rs zh_CN'
     description "Creates the .class files from the .po translations."
     group "build"
-    ext.poDir = 'src/main/po'
-    ext.classesDir = 'build/classes/java/main'
-    ext.languages = 'de fa hu it pt rs zh_CN'
     commandLine "bash", "-c",  "for i in ${languages}; do " +
             "msgfmt --java2 -d ${classesDir} -r i18n.Messages -l \$i ${poDir}/\$i.po; done"
+}
+
+tasks.addRule("Pattern: msgFmt_<FILE>Po: Compile <FILE>.po into <FILE>.class.") { String taskName ->
+    if (taskName.startsWith('msgFmt_') && taskName.endsWith('Po')) {
+        def language = (taskName - 'Po').substring('msgFmt_'.length())
+        task(taskName) {
+            def input = "${poDir}/${language}.po"
+            inputs.file input
+            def output = "${classesDir}/i18n/Messages_${language}.class"
+            outputs.file output
+            doLast {
+                exec { // TODO: This should be implemented for the Windows platform too.
+                    commandLine "bash", "-c",
+                            "msgfmt --java2 -d ${classesDir} -r i18n.Messages -l ${language} ${input}"
+                }
+            }
+        }
+    }
+}
+
+task msgFmtAll {
+    description "Creates the .class files from the .po translations."
+    group "build"
+    def list = []
+    FileTree files = fileTree(dir: poDir)
+    files.visit { f ->
+        if (f.name.endsWith('.po')) {
+            def msgFmtAllTask = 'msgFmt_' + f.name - '.po' + 'Po'
+            list << msgFmtAllTask
+        }
+    }
+    dependsOn list
+    mustRunAfter 'classes'
 }
 
 group = 'io.github.kovzol'
