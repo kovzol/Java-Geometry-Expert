@@ -8,6 +8,17 @@ tasks.withType(JavaCompile).configureEach {
     sourceCompatibility = 1.8
 }
 
+task msgFmt(type: Exec) {
+    // TODO: Skip generating the translation if a new .class file is already present.
+    description "Creates the .class files from the .po translations."
+    group "build"
+    ext.poDir = 'src/main/po'
+    ext.classesDir = 'build/classes/java/main'
+    ext.languages = 'de fa hu it pt rs zh_CN'
+    commandLine "bash", "-c",  "for i in ${languages}; do " +
+            "msgfmt --java2 -d ${classesDir} -r i18n.Messages -l \$i ${poDir}/\$i.po; done"
+}
+
 group = 'io.github.kovzol'
 version = '0.80'
 
