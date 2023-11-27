@@ -1,3 +1,12 @@
+/*
+ * This is how you should build JGEX:
+ *
+ * ./gradlew clean # optional
+ * ./gradlew msgFmtAll # build the translations
+ * ./gradlew installDist # build the software and create a start script in build/install/jgex/bin
+ *
+ */
+
 plugins {
     id 'application'
 }
@@ -10,16 +19,6 @@ tasks.withType(JavaCompile).configureEach {
 
 ext.poDir = 'src/main/po'
 ext.classesDir = 'build/classes/java/main'
-
-task msgFmt(type: Exec) {
-    // TODO: Skip generating the translation if a new .class file is already present.
-    // This task is obsolete since the task msgFmtAll skips the translations that are already generated.
-    def languages = 'de fa hu it pt rs zh_CN'
-    description "Creates the .class files from the .po translations."
-    group "build"
-    commandLine "bash", "-c",  "for i in ${languages}; do " +
-            "msgfmt --java2 -d ${classesDir} -r i18n.Messages -l \$i ${poDir}/\$i.po; done"
-}
 
 tasks.addRule("Pattern: msgFmt_<FILE>Po: Compile <FILE>.po into <FILE>.class.") { String taskName ->
     if (taskName.startsWith('msgFmt_') && taskName.endsWith('Po')) {
@@ -51,7 +50,17 @@ task msgFmtAll {
         }
     }
     dependsOn list
-    mustRunAfter 'classes'
+    // TODO: This should be set correctly, in order to be automatically used on the build task:
+    // mustRunAfter 'classes'
+}
+
+distributions {
+    main {
+        distributionBaseName = 'jgex'
+        contents {
+            into("bin") { from 'src/docs'}
+        }
+    }
 }
 
 group = 'io.github.kovzol'
