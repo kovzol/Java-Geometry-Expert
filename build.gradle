@@ -1,16 +1,32 @@
 /*
  * This is how you should build JGEX:
  *
- * ./gradlew clean        # optional
- * ./gradlew msgFmtAll    # build the translations
- * ./gradlew installDist  # build the software and create a start script in build/install/jgex/bin
- * ./gradlew distZip      # package the software as a .zip
+ * ./gradlew distZip      # build and package the software as a .zip via the application plugin
+ * ./gradlew package      # build and package the software via the javapackager plugin
+ *
+ * Prerequisites: You need the msgfmt utility to have internationalized text. Otherwise comment
+ * the line "tasks.named("classes") { finalizedBy("msgFmtAll") }". FIXME.
+ *
+ * To run JGEX without the help and examples, just use
+ *
+ * ./gradlew run
+ *
  */
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.github.fvarrui:javapackager:1.7.5'
+    }
+}
 
 plugins {
     id 'application'
-    id 'edu.sc.seis.launch4j' version '3.0.5'
 }
+
+apply plugin: 'io.github.fvarrui.javapackager.plugin'
 
 tasks.withType(JavaCompile).configureEach {
     // The original sources of JGEX use the keyword "var" which is a reserved word in later Java versions.
@@ -31,9 +47,13 @@ tasks.addRule("Pattern: msgFmt_<FILE>Po: Compile <FILE>.po into <FILE>.class.") 
             def output = "${classesDir}/i18n/Messages_${language}.class"
             outputs.file output
             doLast {
-                exec { // TODO: This should be implemented for the Windows platform too.
-                    commandLine "bash", "-c",
-                            "msgfmt --java2 -d ${classesDir} -r i18n.Messages -l ${language} ${input}"
+                def msgFmtCmd = "msgfmt --java2 -d ${classesDir} -r i18n.Messages -l ${language} ${input}"
+                exec {
+                    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+                        commandLine 'cmd', '/c', msgFmtCmd
+                    } else {
+                        commandLine 'bash', '-c', msgFmtCmd
+                    }
                 }
             }
         }
@@ -52,9 +72,8 @@ task msgFmtAll {
         }
     }
     dependsOn list
-    // TODO: This should be set correctly, in order to be automatically used on the build task:
-    // mustRunAfter 'classes'
 }
+tasks.named("classes") { finalizedBy("msgFmtAll") }
 
 distributions {
     main {
@@ -112,9 +131,16 @@ jar {
                 'Main-Class': application.mainClass
         )
     }
+    mustRunAfter "msgFmtAll"
 }
 
-launch4j {
-    mainClassName = application.mainClass
-    // icon = "${projectDir}/icons/myApp.ico"
+// FIXME: When running directly, help and examples are not available.
+run {
+    mustRunAfter "msgFmtAll"
+}
+
+javapackager {
+    mainClass = "wprover.GExpert"
+    bundleJre = true
+    additionalResources = [ file ("src/docs/examples"), file ("src/docs/help") ]
 }
