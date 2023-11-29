@@ -12,6 +12,7 @@
  *
  */
 
+
 buildscript {
     repositories {
         mavenCentral()
@@ -27,6 +28,10 @@ plugins {
 
 apply plugin: 'io.github.fvarrui.javapackager.plugin'
 
+// Global settings:
+group = 'io.github.kovzol'
+ext.softwareVersion = '0.80'
+
 tasks.withType(JavaCompile).configureEach {
     // The original sources of JGEX use the keyword "var" which is a reserved word in later Java versions.
     // As a workaround, we set compatibility to source = 8
@@ -36,6 +41,9 @@ tasks.withType(JavaCompile).configureEach {
 // These are default settings based on Gradle's standard layout:
 ext.poDir = 'src/main/po'
 ext.classesDir = 'build/classes/java/main'
+ext.applicationMainClass = 'wprover.GExpert'
+version = softwareVersion
+
 
 tasks.addRule("Pattern: msgFmt_<FILE>Po: Compile <FILE>.po into <FILE>.class.") { String taskName ->
     if (taskName.startsWith('msgFmt_') && taskName.endsWith('Po')) {
@@ -84,8 +92,6 @@ distributions {
     }
 }
 
-group = 'io.github.kovzol'
-version = '0.80'
 
 repositories {
     mavenCentral()
@@ -119,7 +125,7 @@ dependencies {
 
 // It seems, both settings are required, one for running inside IntelliJ IDEA...
 application {
-    mainClass = 'wprover.GExpert'
+    mainClass = applicationMainClass
 }
 
 // ...and one for the packaging:
@@ -139,19 +145,22 @@ run {
 
 javapackager {
     description = "JGEX combines dynamic geometry software, automated geometry theorem prover with a visually dynamic approach for presenting proofs."
-    mainClass = "wprover.GExpert"
+    mainClass = applicationMainClass
     bundleJre = true
     additionalResources = [ file ("src/docs/examples"), file ("src/docs/help") ]
     organizationName = "JGEX Contributors"
     url = "https://github.com/kovzol/Java-Geometry-Expert"
     organizationEmail = "jgex@googlegroups.com"
-    version = "0.80"
-    // fileAssociations = ["application/vnd.geometry-expert", "gex", "Geometry Expert File" ]
+    version = softwareVersion
+    // fileAssociations = ["application/vnd.geometry-expert", "gex", "Geometry Expert File" ] // FIXME: use correct syntax
 
     winConfig.generateMsi = false
     winConfig.setupLanguages.english = "compiler:Default.isl"
     winConfig.setupLanguages.spanish = "compiler:Languages\\Spanish.isl"
     winConfig.setupLanguages.german = "compiler:Languages\\German.isl"
+    winConfig.setupLanguages.italian = "compiler:Languages\\Italian.isl"
+    winConfig.setupLanguages.portuguese = "compiler:Languages\\Portuguese.isl"
+    // See https://github.com/HeliumProject/InnoSetup/tree/master/Languages
     winConfig.disableFinishedPage = false
     winConfig.disableRunAfterInstall = false
 
