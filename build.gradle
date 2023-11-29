@@ -4,8 +4,7 @@
  * ./gradlew distZip      # build and package the software as a .zip via the application plugin
  * ./gradlew package      # build and package the software via the javapackager plugin
  *
- * Prerequisites: You need the msgfmt utility to have internationalized text. Otherwise comment
- * the line "tasks.named("classes") { finalizedBy("msgFmtAll") }". FIXME.
+ * Prerequisites: You need the msgfmt utility (in your PATH) to have internationalized texts.
  *
  * To run JGEX without the help and examples, just use
  *
@@ -49,6 +48,7 @@ tasks.addRule("Pattern: msgFmt_<FILE>Po: Compile <FILE>.po into <FILE>.class.") 
             doLast {
                 def msgFmtCmd = "msgfmt --java2 -d ${classesDir} -r i18n.Messages -l ${language} ${input}"
                 exec {
+                    ignoreExitValue true
                     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
                         commandLine 'cmd', '/c', msgFmtCmd
                     } else {
