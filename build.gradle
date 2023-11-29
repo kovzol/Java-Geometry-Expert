@@ -92,8 +92,6 @@ repositories {
 }
 
 dependencies {
-    // implementation fileTree(dir: 'lib', include: ['*.jar'])
-    // TODO: Fully remove the lib/ folder.
     implementation 'org.apache.xmlgraphics:batik-anim:1.17',
             'org.apache.xmlgraphics:batik-awt-util:1.17',
             'org.apache.xmlgraphics:batik-bridge:1.17',
