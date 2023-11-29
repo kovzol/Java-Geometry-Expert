@@ -138,7 +138,12 @@ run {
 }
 
 javapackager {
+    description = "JGEX combines dynamic geometry software, automated geometry theorem prover with a visually dynamic approach for presenting proofs."
     mainClass = "wprover.GExpert"
     bundleJre = true
     additionalResources = [ file ("src/docs/examples"), file ("src/docs/help") ]
+    organizationName = "JGEX Contributors"
+    url = "https://github.com/kovzol/Java-Geometry-Expert"
+    version = "0.80"
+    // fileAssociations = ["application/vnd.geometry-expert", "gex", "Geometry Expert File" ]
 }
