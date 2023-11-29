@@ -144,6 +144,7 @@ javapackager {
     additionalResources = [ file ("src/docs/examples"), file ("src/docs/help") ]
     organizationName = "JGEX Contributors"
     url = "https://github.com/kovzol/Java-Geometry-Expert"
+    organizationEmail = "jgex@googlegroups.com"
     version = "0.80"
     // fileAssociations = ["application/vnd.geometry-expert", "gex", "Geometry Expert File" ]
 }
