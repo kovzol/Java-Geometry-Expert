@@ -87,9 +87,11 @@ This fork is maintained by Zoltán Kovács (PHDL Linz, Austria). The following c
 some features in this version:
 <ul>
  <li>Jorge Cassio (Portuguese translation)
+ <li>Ines Ganglmayr (German translation)
  <li>Benedek Kovács (Localization support)
- <li>Predrag Janicic (Serbian translation)
- <li>Jelena Markovic (Serbian translation)
+ <li>Zoltán Kovács (Hungarian translation)
+ <li>Predrag Janičić (Serbian translation)
+ <li>Jelena Marković (Serbian translation)
  <li>Alexander Thaller (German translation)
  <li>Alexander Vujic (Serbian translation)
  <li>Engelbert Zeintl (German translation)
