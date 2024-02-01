@@ -3475,3 +3475,9 @@ msgstr "Középpont"
 
 msgid "View Remainder"
 msgstr "Maradék megtekintése"
+
+msgid "Current Solution:"
+msgstr "Az aktuális megoldás:"
+
+msgid "Filter"
+msgstr "Szűrő"

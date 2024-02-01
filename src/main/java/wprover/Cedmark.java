@@ -65,12 +65,12 @@ public class Cedmark extends CClass {
     }
 
     public String TypeString() {
-        String st = Language.getLs(125, "Equal Mark");
+        String st = Language.getLs("Equal Mark");
         return st;
     }
 
     public String getDescription() {
-        String st = Language.getLs(125, "Equal Mark");
+        String st = Language.getLs("Equal Mark");
         return st + " " + p1.m_name + " " + p2.m_name;
     }
 

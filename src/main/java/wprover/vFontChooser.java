@@ -91,32 +91,32 @@ public class vFontChooser extends JBaseDialog {
     private vFontChooser(GExpert owner) {
         super(owner.getFrame(), "Font Chooser", true);
         gxInstance = owner;
-        this.setTitle(getLanguage(601, "Font Chooser"));
+        this.setTitle(getLanguage("Font Chooser"));
 
-        boldCheckBox = new JCheckBox(getLanguage(604, "Bold"));
-        italicCheckBox = new JCheckBox(getLanguage(605, "Italic"));
-        underlineCheckBox = new JCheckBox(getLanguage(606, "Underline"));
-        strikethroughCheckBox = new JCheckBox(getLanguage(607, "Strikethrough"));
-        subscriptCheckBox = new JCheckBox(getLanguage(608, "Subscript"));
-        superscriptCheckBox = new JCheckBox(getLanguage(609, "Superscript"));
-        PREVIEW_TEXT = getLanguage(610, "Preview Font");
+        boldCheckBox = new JCheckBox(getLanguage("Bold"));
+        italicCheckBox = new JCheckBox(getLanguage("Italic"));
+        underlineCheckBox = new JCheckBox(getLanguage("Underline"));
+        strikethroughCheckBox = new JCheckBox(getLanguage("Strikethrough"));
+        subscriptCheckBox = new JCheckBox(getLanguage("Subscript"));
+        superscriptCheckBox = new JCheckBox(getLanguage("Superscript"));
+        PREVIEW_TEXT = getLanguage("Preview Font");
 
 
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         JPanel p = new JPanel(new GridLayout(1, 2, 10, 2));
-        p.setBorder(new TitledBorder(new EtchedBorder(), getLanguage(602, "Font")));
+        p.setBorder(new TitledBorder(new EtchedBorder(), getLanguage("Font")));
         p.add(fontNameInputList);
         fontNameInputList.setDisplayedMnemonic('n');
-        fontNameInputList.setToolTipText(getLanguage(611, "Font name"));
+        fontNameInputList.setToolTipText(getLanguage("Font name"));
 
         p.add(fontSizeInputList);
         fontSizeInputList.setDisplayedMnemonic('s');
-        fontSizeInputList.setToolTipText(getLanguage(612, "Font size"));
+        fontSizeInputList.setToolTipText(getLanguage("Font size"));
         getContentPane().add(p);
 
         p = new JPanel(new GridLayout(2, 3, 10, 5));
-        p.setBorder(new TitledBorder(new EtchedBorder(), getLanguage(603, "Effects")));
+        p.setBorder(new TitledBorder(new EtchedBorder(), getLanguage("Effects")));
         boldCheckBox.setMnemonic('b');
         boldCheckBox.setToolTipText("Bold font");
         p.add(boldCheckBox);
@@ -152,14 +152,14 @@ public class vFontChooser extends JBaseDialog {
         p.add(Box.createHorizontalStrut(20));
         colorComboBox = new ColorComboBox();
         lbl.setLabelFor(colorComboBox);
-        colorComboBox.setToolTipText(getLanguage(613, "Font color"));
+        colorComboBox.setToolTipText(getLanguage("Font color"));
         ToolTipManager.sharedInstance().registerComponent(colorComboBox);
         p.add(colorComboBox);
         p.add(Box.createHorizontalStrut(10));
         getContentPane().add(p);
 
         p = new JPanel(new BorderLayout());
-        p.setBorder(new TitledBorder(new EtchedBorder(), getLanguage(614, "Preview")));
+        p.setBorder(new TitledBorder(new EtchedBorder(), getLanguage("Preview")));
         previewLabel = new FontLabel(PREVIEW_TEXT);
 
         p.add(previewLabel, BorderLayout.CENTER);
@@ -167,8 +167,8 @@ public class vFontChooser extends JBaseDialog {
 
         p = new JPanel(new FlowLayout());
         JPanel p1 = new JPanel(new GridLayout(1, 2, 10, 2));
-        JButton btOK = new JButton(getLanguage(3204, "OK"));
-        btOK.setToolTipText(getLanguage(615, "Save and exit"));
+        JButton btOK = new JButton(getLanguage("OK"));
+        btOK.setToolTipText(getLanguage("Save and exit"));
         getRootPane().setDefaultButton(btOK);
         ActionListener actionListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -180,7 +180,7 @@ public class vFontChooser extends JBaseDialog {
         p1.add(btOK);
 
         JButton btCancel = new JButton(getLanguage("Cancel"));
-        btCancel.setToolTipText(getLanguage(616, "Exit without save"));
+        btCancel.setToolTipText(getLanguage("Exit without save"));
         actionListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Closed_Option = JOptionPane.CANCEL_OPTION;
@@ -233,16 +233,6 @@ public class vFontChooser extends JBaseDialog {
             return gxInstance.getLanguage(s);
         return s;
     }
-
-    public String getLanguage(int n, String s) {
-        String s1 = "";
-        if (gxInstance != null)
-            s1 = gxInstance.getLanguage(n);
-        if (s1 != null && s1.length() > 0)
-            return s1;
-        return s;
-    }
-
 
     private void setAttributes(AttributeSet a) {
         attributes = new SimpleAttributeSet(a);

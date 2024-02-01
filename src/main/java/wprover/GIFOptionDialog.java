@@ -30,7 +30,7 @@ public class GIFOptionDialog extends JBaseDialog implements ActionListener, Chan
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         JPanel panel1 = new JPanel();
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
-        panel1.add(new JLabel(fr.getLanguage(2304, "Image Quality")));
+        panel1.add(new JLabel(fr.getLanguage("Image Quality")));
         field1 = new JTextField();
         field2 = new JTextField();
         field1.setEditable(false);
@@ -53,7 +53,7 @@ public class GIFOptionDialog extends JBaseDialog implements ActionListener, Chan
         JPanel panel2 = new JPanel();
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
         panel2.add(Box.createHorizontalGlue());
-        panel2.add(bok = new JButton(fr.getLanguage(3204, "OK")));
+        panel2.add(bok = new JButton(fr.getLanguage("OK")));
         panel2.add(bcancel = new JButton(fr.getLanguage("Cancel")));
         bok.addActionListener(this);
         bcancel.addActionListener(this);
@@ -100,14 +100,14 @@ public class GIFOptionDialog extends JBaseDialog implements ActionListener, Chan
 
     private String getRate(int n) {
         if (n > 18)
-            return gxInstance.getLanguage(2305, "Best");
+            return gxInstance.getLanguage("Best");
         if (n > 15)
-            return gxInstance.getLanguage(2306, "Good");
+            return gxInstance.getLanguage("Good");
         if (n > 10)
-            return gxInstance.getLanguage(2307, "Medium");
+            return gxInstance.getLanguage("Medium");
         else if (n > 5)
-            return gxInstance.getLanguage(2308, "Low");
-        else return gxInstance.getLanguage(2309, "Very Low");
+            return gxInstance.getLanguage("Low");
+        else return gxInstance.getLanguage("Very Low");
     }
 
 

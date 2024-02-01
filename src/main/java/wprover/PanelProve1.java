@@ -2080,11 +2080,11 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
             add(item);
              */
             item.addActionListener(this);
-            item = new JMenuItem(GExpert.getLanguage(310, "Refresh"));
+            item = new JMenuItem(GExpert.getLanguage("Refresh"));
             // item.setActionCommand("Refresh");
             item.addActionListener(this);
             add(item);
-            item = new JMenuItem(GExpert.getLanguage(305, "Search a fact"));
+            item = new JMenuItem(GExpert.getLanguage("Search a fact"));
             item.setActionCommand("FACT");
             item.addActionListener(this);
             add(item);
@@ -2202,8 +2202,8 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
             if (v.size() == 0) {
                 JOptionPane.showMessageDialog(gxInstance,
                         file.getName() +
-                                "\n" + GExpert.getLanguage(1051, "File format not supported!"),
-                        GExpert.getLanguage(509, "Can not open"),
+                                "\n" + GExpert.getLanguage("File format not supported!"),
+                        GExpert.getLanguage("Can not open"),
                         JOptionPane.WARNING_MESSAGE);
                 return false;
             }
@@ -2212,8 +2212,8 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
                 gt = (gterm) v.get(0);
             } else {
                 Object rv = JOptionPane.showInputDialog(gxInstance,
-                        "Please selet theorem", "input",
-                        JOptionPane.PLAIN_MESSAGE, null, v.toArray(), "Select");
+                        GExpert.getLanguage("Please select theorem"), GExpert.getLanguage("input"),
+                        JOptionPane.PLAIN_MESSAGE, null, v.toArray(), GExpert.getLanguage("Select"));
                 if (rv == null)
                     return true;
                 gt = (gterm) rv;

@@ -51,10 +51,10 @@ public class PDFStringHelper
   
   /**
    * Helper method for toString()
-   * @param s source string
-   * @param f string to remove
-   * @param t string to replace f
-   * @return string with f replaced by t
+   * @param source source string
+   * @param removeThis string to remove
+   * @param replaceWith string to replace f
+   * @return source string where removeThis is replaced by replaceWith
    */
   private static String replace(String source,
                                 String removeThis,

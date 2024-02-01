@@ -189,9 +189,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
         language = new Language();
         String user_directory = getUserDir();
-        File f = new File(user_directory + "/language/" + CMisc.lan + ".lan");
-        language.load(f);
-        Language.setLanugage(language);
+        Language.setLanguage(language);
         System.out.println("Language loaded: "+CMisc.lan);
         lan = CMisc.lan; //setting lan to current language so RuleList can read it.
 
@@ -234,18 +232,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                 }
             }
         }
-    }
-
-    // TODO: This is not used. Remove.
-    public void setLocal() {
-        Locale.setDefault(Locale.ENGLISH);
-        if (language != null)
-            language.setLocal();
-//        Locale l = new Locale("en", "US");
-//        this.setLocale(l);
-    }
-
-    public void showWelcome() {
     }
 
     public Font getDefaultFont() {
@@ -462,7 +448,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     }
 
     public static String getFileSeparator() {
-        return System.getProperty("file.separator");
+        return File.separator;
     }
 
     public boolean hasMannualInputBar() {
@@ -967,8 +953,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         addImageToItem(item);
         item = addAMenu(menu, "Contact Us", "Contact Us", this);
         addImageToItem(item);
-        // menu.addSeparator();
-        // item = addAMenu(menu, "Check for Update", "Check for Update", this);
+        menu.addSeparator();
+        item = addAMenu(menu, "Check for Update", "Check for Update", this);
         addImageToItem(item);
         item = addAMenu(menu, "About JGEX", "About Java Geometry Expert", this);
         addImageToItem(item, "infor");
@@ -1113,18 +1099,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return s2;
     }
 
-    @Deprecated
-    public static String getLanguage(int n) {
-
-        System.err.println("Missing translation for (" + n + ")");
-
-        if (language == null)
-            return "";
-
-        String s1 = language.getString(n);
-        return s1;
-    }
-
     public static String getTranslationViaGettext(String s) {
         return getTranslationViaGettext(s, (String) null);
     }
@@ -1145,25 +1119,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             return gettextTranslation;
         System.err.println("Missing translation: " + s + ", " + p);
         return "";
-    }
-
-    @Deprecated
-    public static String getLanguage(int n, String s) {
-
-        s = getTranslationViaGettext(s);
-        if (s != null) {
-            return s;
-        }
-
-        System.err.println("Missing translation for " + s + " (" + n + ")");
-
-        if (language == null)
-            return s;
-
-        String s1 = language.getString(n);
-        if (s1 != null && s1.length() > 0)
-            return s1;
-        return s;
     }
 
     public void setActionMove() {
@@ -1358,13 +1313,13 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         } else if (command.equals("JGEX Homepage")) {
             openURL(("https://github.com/kovzol/Java-Geometry-Expert"));
         } else if (command.equals("Contact Us")) {
-            openURL(("mailto:zoltan@geogebra.org"));
+            openURL(("mailto:jgex@googlegroups.com"));
         } else if (command.equals("ff")) {
             dp.redo();
             setBKState();
             d.repaint();
         } else if (command.equalsIgnoreCase("Check for Update")) {
-            updateJGEX();
+            openURL("https://github.com/kovzol/Java-Geometry-Expert/releases");
         } else if (command.equals("fr")) {
             dp.Undo();
             setBKState();
@@ -1665,7 +1620,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     ps = language.getEnglish(ps);
                     // Here we need to check the translated string:
                     if (ps.equalsIgnoreCase(getLanguage("Other..."))) {
-                        String s = JOptionPane.showInputDialog(this, this.getLanguage(1053, "Please input the value of the angle"));
+                        String s = JOptionPane.showInputDialog(this, this.getLanguage("Please input the value of the angle"));
                         if (s == null)
                             s = "0";
                         n = Integer.parseInt(s);
@@ -1815,7 +1770,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     public boolean need_save() {
         if (!dp.need_save()) {
-            this.setTipText(getLanguage(1050, "Nothing to be saved."));
+            this.setTipText(getLanguage("Nothing to be saved."));
             return false;
         }
         return true;
@@ -1870,7 +1825,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     public int Clear() {
         int n = 0;
         if (CMisc.isApplication() && !dp.isitSaved()) {
-            n = JOptionPane.showConfirmDialog(this, getLanguage(1000, "The diagram has been changed, do you want to save it?"),
+            n = JOptionPane.showConfirmDialog(this, getLanguage("The diagram has been changed, do you want to save it?"),
                     getLanguage("Save"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (n == JOptionPane.YES_OPTION) {
                 if (!saveAFile(false))
@@ -1935,7 +1890,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     public boolean get_User_Overwrite_Option(String name) {
         if (JOptionPane.OK_OPTION != JOptionPane.showConfirmDialog(this,
                 getTranslationViaGettext("{0} already exists, do you want to overwrite it?", name),
-                getLanguage(1001, "File exists"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+                getLanguage("File exists"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
             return true;
         }
         return false;
@@ -2012,14 +1967,14 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             return;
         AnimateC am = dp.getAnimateC();
         if (am == null) {
-            JOptionPane.showMessageDialog(this, getLanguage(2301, "No animation has been defined.") + "\n"
-                    + getLanguage(2302, "Please use the menu \"Action -> Animation\" to define an animation first."), "GIF", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, getLanguage("No animation has been defined.") + "\n"
+                    + getLanguage("Please use the menu \"Action -> Animation\" to define an animation first."), "GIF", JOptionPane.WARNING_MESSAGE);
             return;
         }
         am = new AnimateC(am);
 
 
-        GIFOptionDialog dlg = new GIFOptionDialog(this, getLanguage(2303, "GIF Option"));
+        GIFOptionDialog dlg = new GIFOptionDialog(this, getLanguage("GIF Option"));
         this.centerDialog(dlg);
         dlg.setDefaultValue(20);
         dlg.setVisible(true);
@@ -3174,13 +3129,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             }
         }
     }
-
-    public void updateJGEX() {
-        Update up = new Update(this);
-        if (up.updateJGEX()) {
-        }
-    }
-
 
     class OPoolabel extends JLabel implements MouseListener {
         private int otype = -1;

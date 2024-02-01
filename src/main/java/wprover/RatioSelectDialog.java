@@ -24,12 +24,12 @@ public class RatioSelectDialog extends JBaseDialog implements ActionListener {
 
     public RatioSelectDialog(GExpert f) {
         super(f.getFrame(), true);
-        this.setTitle(f.getLanguage(2201, "Set the ratio"));
+        this.setTitle(f.getLanguage("Set the ratio"));
 
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
-        JLabel labelx = new JLabel(f.getLanguage(2200, "Please input two integers"));
+        JLabel labelx = new JLabel(f.getLanguage("Please input two integers"));
         JPanel px = new JPanel(new FlowLayout());
         px.add(labelx);
         px.add(Box.createHorizontalGlue());
@@ -46,7 +46,7 @@ public class RatioSelectDialog extends JBaseDialog implements ActionListener {
 
         JPanel p1 = new JPanel(new FlowLayout());
         p1.add(Box.createHorizontalGlue());
-        button1 = new JButton(f.getLanguage(3204, "OK"));
+        button1 = new JButton(f.getLanguage("OK"));
         button2 = new JButton(f.getLanguage("Cancel"));
         p1.add(button1);
         p1.add(button2);

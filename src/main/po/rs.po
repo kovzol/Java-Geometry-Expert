@@ -3582,6 +3582,13 @@ msgstr "Središte duži"
 msgid "View Remainder"
 msgstr "Ostatak"
 
+#, fuzzy
+msgid "Current Solution:"
+msgstr "Zaključak"
+
+msgid "Filter"
+msgstr ""
+
 #~ msgid "animate_start"
 #~ msgstr "animacija početak"
 

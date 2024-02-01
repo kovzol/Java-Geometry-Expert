@@ -53,17 +53,17 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
         JPanel p2 = new JPanel(new FlowLayout());
         JButton b1 = new JButton("Save Preferences");
-        b1.setText(GExpert.getLanguage(501, "Save Preferences"));
+        b1.setText(GExpert.getLanguage("Save Preferences"));
 
         JButton b3 = new JButton("Default");
-        b3.setText(GExpert.getLanguage(505, "Default"));
+        b3.setText(GExpert.getLanguage("Default"));
         b3.setActionCommand("Default");
         b3.addActionListener(this);
 
         b1.setActionCommand("Save Preferences");
 
-        JButton b2 = new JButton(GExpert.getLanguage(3204, "OK"));
-        b2.setText(GExpert.getLanguage(3204, "OK"));
+        JButton b2 = new JButton(GExpert.getLanguage("OK"));
+        b2.setText(GExpert.getLanguage("OK"));
         b2.setActionCommand("OK");
         b1.addActionListener(this);
         b2.addActionListener(this);
@@ -113,16 +113,17 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
                 CMisc.SaveProperty(writer);
             } catch (IOException ee) {
-                JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage(502, "Can not save Preferences"),
+                JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage("Can not save Preferences"),
                         GExpert.getLanguage("Fail"), JOptionPane.WARNING_MESSAGE);
             }
-            JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage(503,
-                    "Preferences have been successfully saved.") + "\n" +
-                    GExpert.getLanguage(506, "Please restart the program."),
+            JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage("Preferences have been successfully saved.") + "\n" +
+                    GExpert.getLanguage("Please restart the program."),
                     GExpert.getLanguage("Saved"), JOptionPane.WARNING_MESSAGE);
 
-            try {
+            /* We don't try to restart the program, since it requires different strategies on different systems.
+               Instead, we leave the restart to the user.
 
+            try {
                 ProcessBuilder pb = new ProcessBuilder("java", "-jar",
                         GExpert.getUserDir() + GExpert.getFileSeparator() + "jgex.jar");
                 pb.directory(new File(GExpert.getUserDir()));
@@ -131,6 +132,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
                 System.exit(0);
             } catch (IOException e0) {
             }
+             */
         }
 
     }
@@ -152,7 +154,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
         public DisplayPanel() {
             this.setLayout(new GridLayout(5, 1));
             JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage(358, "Polygon Alpha")));
+            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Polygon Alpha")));
             float f = CMisc.getFillCompositeAlpha();
             int n = 100 - (int) (f * 100);
 
@@ -193,7 +195,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             slider1.setPaintTrack(true);
             slider1.setPaintLabels(true);
 
-            p2.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage(359, "Radius of Point")));
+            p2.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Radius of Point")));
             p2.add(slider1);
             slider1.addChangeListener(new ChangeListener() {
                 public void stateChanged(ChangeEvent e) {
@@ -210,14 +212,14 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
             JPanel p3 = new JPanel();
             p3.setLayout(new FlowLayout(FlowLayout.LEADING));
-            p3.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage(360, "Point's Text")));
-            JButton button = new JButton(GExpert.getLanguage(362, "Default Font"));
+            p3.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Point's Text")));
+            JButton button = new JButton(GExpert.getLanguage("Default Font"));
             button.setText(CMisc.nameFont.getName() + " " + CMisc.nameFont.getSize());
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (JOptionPane.OK_OPTION ==
                             vFontChooser.showDialog(gxInstance, CMisc.nameFont,
-                                    GExpert.getLanguage(1024, "Choose default font for point's text"), Color.black)) {
+                                    GExpert.getLanguage("Choose default font for point's text"), Color.black)) {
                         CMisc.nameFont = vFontChooser.getReturnFont();
                         JButton b = (JButton) e.getSource();
                         b.setText(CMisc.nameFont.getName() + " " + CMisc.nameFont.getSize());
@@ -226,7 +228,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
             });
 
-            JCheckBox b = bts = new JCheckBox(GExpert.getLanguage(361, "Show Text"));
+            JCheckBox b = bts = new JCheckBox(GExpert.getLanguage("Show Text"));
             b.setSelected(CMisc.nameTextShown);
             b.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
@@ -247,7 +249,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
             JPanel p5 = new JPanel();
             p5.setLayout(new FlowLayout(FlowLayout.LEADING));
-            p5.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage(363, "Angle Text")));
+            p5.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Angle Text")));
             ButtonGroup bg = new ButtonGroup();
             ItemListener listener = new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
@@ -305,8 +307,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
             JPanel p6 = new JPanel();
             p6.setLayout(new FlowLayout(FlowLayout.LEADING));
-            p6.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage(367, "Foot Mark")));
-            JCheckBox bx = bft = new JCheckBox(GExpert.getLanguage(368, "Show foot mark"));
+            p6.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Foot Mark")));
+            JCheckBox bx = bft = new JCheckBox(GExpert.getLanguage("Show foot mark"));
             bx.setSelected(CMisc.footMarkShown);
 
             bx.addItemListener(new ItemListener() {
@@ -376,13 +378,13 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Angle")));
 
             ButtonGroup bg = new ButtonGroup();
-            ba = new JRadioButton(GExpert.getLanguage(383, "Without Arrow"));
+            ba = new JRadioButton(GExpert.getLanguage("Without Arrow"));
             bg.add(ba);
-            bwa = new JRadioButton(GExpert.getLanguage(384, "With Arrow"));
+            bwa = new JRadioButton(GExpert.getLanguage("With Arrow"));
             bg.add(bwa);
-            bma = new JRadioButton(GExpert.getLanguage(385, "Multiple Arc"));
+            bma = new JRadioButton(GExpert.getLanguage("Multiple Arc"));
             bg.add(bma);
-            bfill = new JRadioButton(GExpert.getLanguage(386, "Fill"));
+            bfill = new JRadioButton(GExpert.getLanguage("Fill"));
 
 
             ba.addItemListener(this);
@@ -397,7 +399,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             this.add(p1);
 
             p1 = new JPanel();
-            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage(381, "Polygon Moving Interval")));
+            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Polygon Moving Interval")));
             p1.setLayout(new FlowLayout(FlowLayout.LEFT));
 
             int d = CMisc.getMoveStep();
@@ -466,7 +468,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             this.setLayout(new GridLayout(3, 2));
 
             JPanel p1 = new JPanel();
-            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage(360, "Point's Text")));
+            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Point's Text")));
             JButton button = new JButton("PTEXT"); // FIXME
             button.setText(CMisc.nameFont.getName() + " " + CMisc.nameFont.getSize());
             button.addActionListener(new ActionListener() {
@@ -485,7 +487,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
             p1 = new JPanel();
             p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("THM") + " - " +
-                    GExpert.getLanguage(3100, "Theorem")));
+                    GExpert.getLanguage("Theorem")));
             button = new JButton(GExpert.getLanguage("THM"));
             button.setText(CMisc.thmFont.getName() + " " + CMisc.thmFont.getSize());
             button.addActionListener(new ActionListener() {
@@ -521,7 +523,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             this.add(p1);
 
             p1 = new JPanel();
-            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Area") + " - " + GExpert.getLanguage(3004, "Area Method")));
+            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Area") + " - " +
+                    GExpert.getLanguage("Area Method")));
             // p1.setLayout(new FlowLayout(FlowLayout.LEFT));
             button = new JButton(GExpert.getLanguage("Area"));
             button.setText(CMisc.areaFont.getName() + " " + CMisc.areaFont.getSize());
@@ -540,7 +543,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
             p1 = new JPanel();
             p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Manual") + " - " +
-                    GExpert.getLanguage(3007, "Manual Method")));
+                    GExpert.getLanguage("Manual Method")));
             // p1.setLayout(new FlowLayout(FlowLayout.LEFT));
             button = new JButton(GExpert.getLanguage("Manual"));
             button.setText(CMisc.manualFont.getName() + " " + CMisc.manualFont.getSize());
@@ -558,7 +561,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             this.add(p1);
 
             p1 = new JPanel();
-            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Fix") + " - " + GExpert.getLanguage(307, "Fixpoint")));
+            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Fix") + " - " +
+                    GExpert.getLanguage("Fixpoint")));
             // p1.setLayout(new FlowLayout(FlowLayout.LEFT));
             button = new JButton(GExpert.getLanguage("Fixpoint"));
             button.setText(CMisc.fixFont.getName() + " " + CMisc.fixFont.getSize());
@@ -576,7 +580,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             this.add(p1);
 
             p1 = new JPanel();
-            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Algebra") + " - " + GExpert.getLanguage(1111, "Algebra")));
+            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Algebra") + " - " +
+                    GExpert.getLanguage("Algebra")));
             //
             //  p1.setLayout(new FlowLayout(FlowLayout.LEFT));
             button = new JButton(GExpert.getLanguage("Algebra"));
@@ -612,12 +617,12 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
         public colorPanel() {
             this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage(388, "Color Mode")));
+            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Color Mode")));
 
             ButtonGroup bg = new ButtonGroup();
             b1 = new JRadioButton(GExpert.getLanguage("Colorful"));
             b2 = new JRadioButton(GExpert.getLanguage("Gray"));
-            b3 = new JRadioButton(GExpert.getLanguage(352, "Black and White"));
+            b3 = new JRadioButton(GExpert.getLanguage("Black and White"));
             {
                 int n = CMisc.ColorMode;
                 if (n == 0)
@@ -646,7 +651,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             pbk = new ColorPane(100, 30);
             pbk.addMouseListener(this);
             JPanel p31 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            p31.add(new JLabel(GExpert.getLanguage(377, "Background color")));
+            p31.add(new JLabel(GExpert.getLanguage("Background color")));
             p31.add(pbk);
 
             pgrid = new ColorPane(100, 30);
@@ -700,7 +705,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             Object o = e.getSource();
             if (o == pbk) {
                 Color newColor = JColorChooser.showDialog(gxInstance,
-                        GExpert.getLanguage(379, "Choose Color"), CMisc.getBackGroundColor());
+                        GExpert.getLanguage("Choose Color"), CMisc.getBackGroundColor());
                 if (newColor != null) {
                     Color c = newColor;
                     CMisc.setBackGroundColor(c);
@@ -711,7 +716,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
             } else if (o == pgrid) {
                 Color newColor = JColorChooser.showDialog(gxInstance,
-                        GExpert.getLanguage(379, "Choose Color"), CMisc.getBackGroundColor());
+                        GExpert.getLanguage("Choose Color"), CMisc.getBackGroundColor());
                 if (newColor != null) {
                     Color c = newColor;
                     CMisc.setGridColor(c);
@@ -761,7 +766,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
             JPanel p2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            p2.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage(371, "AntiAlias")));
+            p2.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("AntiAlias")));
             ButtonGroup bg1 = new ButtonGroup();
             r1 = new JRadioButton(GExpert.getLanguage("ON"));
             r2 = new JRadioButton(GExpert.getLanguage("OFF"));

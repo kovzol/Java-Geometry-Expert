@@ -23,7 +23,7 @@ public class Main2 {
 //    final public static int CM_EX_MIQ1 = 7;
 
         String user_directory = System.getProperty("user.dir");
-        String sp = System.getProperty("file.separator");
+        String sp = File.separator;
         String dr = user_directory + sp + "ex";
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File(dr));

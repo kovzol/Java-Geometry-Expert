@@ -29,7 +29,7 @@ public class SpecificAngleDialog extends JBaseDialog implements ActionListener, 
         gxInstance = owner;
 
         JPanel panel = new JPanel(new GridLayout(1, 6));
-        this.setTitle(GExpert.getLanguage(104, "Angle Specification"));
+        this.setTitle(GExpert.getLanguage("Angle Specification"));
         cb1 = new JCheckBox("30");
         cb2 = new JCheckBox("45");
         cb3 = new JCheckBox("60");

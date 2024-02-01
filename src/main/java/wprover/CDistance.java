@@ -34,7 +34,7 @@ public class CDistance extends CClass {
     }
 
     public String TypeString() {
-        String st = Language.getLs(124);
+        String st = Language.getLs("Measure Distance");
         if (st == null)
             st = "distance";
 
@@ -43,7 +43,7 @@ public class CDistance extends CClass {
     }
 
     public String getDescription() {
-        String st = Language.getLs(124);
+        String st = Language.getLs("Measure Distance");
         if (st == null)
             st = "distance";
 

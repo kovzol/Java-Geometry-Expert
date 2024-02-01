@@ -3503,6 +3503,13 @@ msgstr "中点"
 msgid "View Remainder"
 msgstr "余项"
 
+#, fuzzy
+msgid "Current Solution:"
+msgstr "所有作图结果"
+
+msgid "Filter"
+msgstr ""
+
 #~ msgid "animate_start"
 #~ msgstr "播放动画"
 

@@ -620,7 +620,7 @@ public class panelGB extends panelAlgebric implements MouseListener {
     public void addSVdd(Vector v) {
         GeoPoly basic = GeoPoly.getPoly();
 
-        addString2(getLanguage(1116, "The Nondegenerate Conditions:"));
+        addString2(GExpert.getLanguage("The Nondegenerate Conditions:"));
         for (int i = 0; i < v.size(); i++) {
 //            TDono d = (TDono) v.get(i);
             TMono m = (TMono) v.get(i);
@@ -676,7 +676,7 @@ public class panelGB extends panelAlgebric implements MouseListener {
 
 
         addAlgebraicForm();
-        addString2(getLanguage(1103, "The equational hypotheses:"));
+        addString2(GExpert.getLanguage("The equational hypotheses:"));
 
         Vector vc = dp.getAllConstraint();
         int n = 1;
@@ -701,12 +701,12 @@ public class panelGB extends panelAlgebric implements MouseListener {
             }
         }
 
-        addString2(getLanguage(1114, "The Initial Polynomial Set:"));
+        addString2(GExpert.getLanguage("The Initial Polynomial Set:"));
         printTP(pp);
 
         String s1 = poly.printSPoly(mc);
 
-        addString2(getLanguage(1115, "The Groebner basis:") /* + "GB = " */);
+        addString2(GExpert.getLanguage("The Groebner basis:") /* + "GB = " */);
 //        addString2("GB = ");
         Vector v = dp.getPBMono();
 
@@ -720,18 +720,18 @@ public class panelGB extends panelAlgebric implements MouseListener {
         pp = v;
 
         String s2 = poly.printSPoly(mc);
-        addString2(getLanguage(1105, "The conclusion:"));
+        addString2(GExpert.getLanguage("The conclusion:"));
         addString1(sc + "\n");
         addString(s1);
-        addString2(getLanguage(1117, "The conclusion after reduce:"));
+        addString2(GExpert.getLanguage("The conclusion after reduce:"));
         addString(s2);
 
         if (mc == null) {
             addString("icon1", "icon1");
-            addString1(getLanguage(1108, "The conclusion is true"));
+            addString1(GExpert.getLanguage("The conclusion is true"));
         } else {
             addString("icon2", "icon2");
-            addString1(getLanguage(1109, "The conclusion is false"));
+            addString1(GExpert.getLanguage("The conclusion is false"));
             if (poly.plength(mc) > 2) {
                 _mremainder = mc;
                 addString("\n");

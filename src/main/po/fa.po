@@ -3463,6 +3463,13 @@ msgstr "نقطه میانی"
 msgid "View Remainder"
 msgstr ""
 
+#, fuzzy
+msgid "Current Solution:"
+msgstr "بدون نتیجه"
+
+msgid "Filter"
+msgstr ""
+
 #~ msgid "FF"
 #~ msgstr "بعدی"
 

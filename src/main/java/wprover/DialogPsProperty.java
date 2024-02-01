@@ -27,7 +27,7 @@ public class DialogPsProperty extends JBaseDialog implements ActionListener {
 //        this.setSize(350, 120);
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        JToggleButton button1 = new JToggleButton(gxInstance.getLanguage(1015, "Color"));
+        JToggleButton button1 = new JToggleButton(gxInstance.getLanguage("Color"));
         button1.setActionCommand("Color");
         JToggleButton button2 = new JToggleButton(getLanguage("Gray"));
         button2.setActionCommand("Gray");
@@ -53,7 +53,7 @@ public class DialogPsProperty extends JBaseDialog implements ActionListener {
 
         JPanel ppanel = new JPanel();
         ppanel.setLayout(new BoxLayout(ppanel, BoxLayout.Y_AXIS));
-        pfill = new JCheckBox(gxInstance.getLanguage(1013, "Point filled with background color"));
+        pfill = new JCheckBox(gxInstance.getLanguage("Point filled with background color"));
 //        ptext = new JCheckBox(gxInstance.getLanguage(1014, "Proof text"));
 //        ptext.setSelected(true);
         ppanel.add(pfill);

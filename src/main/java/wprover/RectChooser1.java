@@ -78,7 +78,7 @@ public class RectChooser1 extends JBaseDialog implements MouseListener, MouseMot
         JPanel bpane = new JPanel();
         bpane.setLayout(new BoxLayout(bpane, BoxLayout.X_AXIS));
         bpane.add(Box.createHorizontalGlue());
-        JButton bok = new JButton(GExpert.getLanguage(3204, "OK"));
+        JButton bok = new JButton(GExpert.getLanguage("OK"));
         JButton bcancel = new JButton(GExpert.getLanguage("Cancel"));
         bok.addActionListener(this);
         bcancel.addActionListener(this);

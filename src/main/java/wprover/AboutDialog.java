@@ -46,23 +46,23 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
         panel2.addMouseListener(this);
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
 
-        JLabel lv = new JLabel(GExpert.getLanguage(1016, "Java Geometry Expert") + " " + Version.getVersion1());
+        JLabel lv = new JLabel(GExpert.getLanguage("Java Geometry Expert") + " " + Version.getVersion1());
         lv.setHorizontalTextPosition(JLabel.LEFT);
         panel2.add(lv);
 
-        lv = new JLabel(GExpert.getLanguage(1017, "Last modified on") + " " + Version.getData());
+        lv = new JLabel(GExpert.getLanguage("Last modified on") + " " + Version.getData());
         lv.setHorizontalTextPosition(JLabel.RIGHT);
         panel2.add(lv);
 
-        lv = new JLabel(GExpert.getLanguage(1018, "Java version") + " " + System.getProperty("java.version"));
+        lv = new JLabel(GExpert.getLanguage("Java version") + " " + System.getProperty("java.version"));
         lv.setHorizontalTextPosition(JLabel.LEFT);
         panel2.add(lv);
         pane = new wuTextPane();
         pane.addMouseListener(this);
 //        String s = "\n" +
         addString("\n", "regular");
-        addString(GExpert.getLanguage(1019, "Java Geometry Expert is free under GNU General Public License (GPL).") + "\n", "regular");
-        addString(GExpert.getLanguage(1020, "The user may download and distribute it freely.") + "\n\n", "regular");
+        addString(GExpert.getLanguage("Java Geometry Expert is free under GNU General Public License (GPL).") + "\n", "regular");
+        addString(GExpert.getLanguage("The user may download and distribute it freely.") + "\n\n", "regular");
 //        addString("The software Geometry Expert (GEX) was originally developed around 1994.\n", "regualr");
 //        addString("The Java Version of Geometry Expert ", "regular");
 //        addString("(JGEX)", "bold");
@@ -75,7 +75,7 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
         //  addString(s1, "regular");
 
         addString("\n", "bold");
-        addString(GExpert.getLanguage(1070, "Authors") + ":" + "\n", "bold");
+        addString(GExpert.getLanguage("Authors") + ":" + "\n", "bold");
 
         addString("Shang Ching Chou\t\t", "bold");
         addString("chou@cs.wichita.edu\n", "head");
@@ -100,7 +100,7 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
         JPanel panel3 = new JPanel(new FlowLayout());
         panel3.addMouseListener(this);
 
-        JLabel b1 = new JLabel(GExpert.getLanguage(1023, "For more information, please visit:"));
+        JLabel b1 = new JLabel(GExpert.getLanguage("For more information, please visit:"));
         b1.addMouseListener(this);
         b2 = new JLabel("https://github.com/kovzol/Java-Geometry-Expert"); // TODO: Put this in a top-level file.
         b2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));

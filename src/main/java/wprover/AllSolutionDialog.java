@@ -55,7 +55,7 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
         JPanel p2 = new JPanel();
         p2.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         p2.setLayout(new GridLayout(1, 3));
-        JLabel l2 = new JLabel("Current Solution:");
+        JLabel l2 = new JLabel(GExpert.getLanguage("Current Solution:"));
 //        p2.add(Box.createHorizontalGlue());
         p2.add(l2);
         p2.add(Box.createHorizontalBox());
@@ -126,7 +126,7 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
     public void autoFiltered() {
         cns = gxInstance.getpprove().getConstructionTerm().getConclusion();
         if (cns != null) {
-            dlg = new concDialog(gxInstance, ("Filter"));
+            dlg = new concDialog(gxInstance, GExpert.getLanguage("Filter"));
             dlg.setPoints(gxInstance.dp.getPointList());
             dlg.setCns(cns);
             button.setEnabled(true);
@@ -214,7 +214,7 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
                 update();
                 gxInstance.d.repaint();
             } else if (src == button1) {
-                dlg = new concDialog(gxInstance, ("Filter"));
+                dlg = new concDialog(gxInstance, GExpert.getLanguage("Filter"));
                 dlg.setPoints(gxInstance.dp.getPointList());
                 dlg.changeBOKListener(this);
                 dlg.showDialog("");

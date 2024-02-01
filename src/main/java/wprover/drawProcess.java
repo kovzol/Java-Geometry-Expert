@@ -2237,8 +2237,8 @@ drawProcess extends drawbase implements Printable, ActionListener {
             Vector v = this.getSpecificAngleList();
             if (v.size() == 0) {
                 JOptionPane.showMessageDialog(gxInstance,
-                        gxInstance.getLanguage(1027, "Angle Specification must be done before drawing anything"),
-                        gxInstance.getLanguage(302, "Warning"),
+                        gxInstance.getLanguage("Angle Specification must be done before drawing anything"),
+                        gxInstance.getLanguage("Warning"),
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -3036,9 +3036,8 @@ drawProcess extends drawbase implements Printable, ActionListener {
                     if (n == 1) {
                         CLine ln1 = (CLine) SelectList.get(0);
                         if (CLine.commonPoint(ln1, line) == null) {
-                            JOptionPane.showMessageDialog(gxInstance, this.getLanguage(1025,
-                                    "The selected two lines don't have intersected point"),
-                                    this.getLanguage(302, "Warning"), JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage("The selected two lines don't have intersected point"),
+                                    GExpert.getLanguage("Warning"), JOptionPane.WARNING_MESSAGE);
                             break;
                         }
                     }
@@ -3097,8 +3096,8 @@ drawProcess extends drawbase implements Printable, ActionListener {
                             if (CLine.commonPoint(ln0, ln) != null)
                                 addToSelectList(ln);
                             else
-                                JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage(1025, "The selected two lines don't have intersected point")
-                                        , gxInstance.getLanguage(1026, "No intersected point"), JOptionPane.WARNING_MESSAGE);
+                                JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage("The selected two lines don't have intersected point")
+                                        , gxInstance.getLanguage("No intersected point"), JOptionPane.WARNING_MESSAGE);
                         }
                     }
                     n = SelectList.size();
@@ -8109,9 +8108,9 @@ drawProcess extends drawbase implements Printable, ActionListener {
         if (CLine.commonPoint(line1, line2) != null)
             return null;
         if (check_para(line1, line2)) {
-            JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage(1028, "The two lines you selected are parallel" +
+            JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage("The two lines you selected are parallel" +
                             ", don't have any intersection!")
-                    , gxInstance.getLanguage(1029, "No intersection"), JOptionPane.ERROR_MESSAGE);
+                    , gxInstance.getLanguage("No intersection"), JOptionPane.ERROR_MESSAGE);
             return null;
         }
 
@@ -8171,8 +8170,8 @@ drawProcess extends drawbase implements Printable, ActionListener {
         CPoint p1 = null;
 
         if (!check_lc_inter(line, c)) {
-            JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage(1030, "The line and the circle you selected don't have any intersection"),
-                    gxInstance.getLanguage(1029, "No intersection"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage("The line and the circle you selected don't have any intersection"),
+                    gxInstance.getLanguage("No intersection"), JOptionPane.ERROR_MESSAGE);
             return null;
         }
         for (int i = 0; i < line.points.size(); i++) {
@@ -8186,9 +8185,8 @@ drawProcess extends drawbase implements Printable, ActionListener {
             }
         }
         if (p1 != null && p != null) {
-            JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage(1031,
-                    "The two objects you selected already have two points as their intersections"),
-                    gxInstance.getLanguage(1032, "intersection already defined"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage("The two objects you selected already have two points as their intersections"),
+                    gxInstance.getLanguage("intersection already defined"), JOptionPane.WARNING_MESSAGE);
             return null;
         }
 
@@ -8244,8 +8242,8 @@ drawProcess extends drawbase implements Printable, ActionListener {
 
 
         if (!check_cc_inter(c1, c2)) {
-            JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage(1033, "The circles you selected don't have any intersection"),
-                    gxInstance.getLanguage(1029, "No intersection"),
+            JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage("The circles you selected don't have any intersection"),
+                    gxInstance.getLanguage("No intersection"),
                     JOptionPane.ERROR_MESSAGE);
             return null;
         }
@@ -8260,8 +8258,8 @@ drawProcess extends drawbase implements Printable, ActionListener {
             }
         }
         if (p1 != null && p != null) {
-            JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage(1034, "The two circles you selected already have two points as their intersections"),
-                    gxInstance.getLanguage(1032, "intersection already defined"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage("The two circles you selected already have two points as their intersections"),
+                    gxInstance.getLanguage("intersection already defined"), JOptionPane.WARNING_MESSAGE);
             return null;
         }
 
@@ -10452,7 +10450,7 @@ drawProcess extends drawbase implements Printable, ActionListener {
     final public void addCalculationPolygon(CPolygon poly) {
         if (poly == null)
             return;
-        String area = this.getLanguage(461, "Area") + " ";
+        String area = GExpert.getLanguage("Area") + " ";
         int n = poly.getPtn();
         for (int i = 0; i < n - 1; i++)
             area += poly.getElement(i);
@@ -10504,15 +10502,15 @@ drawProcess extends drawbase implements Printable, ActionListener {
             s = CTextValue.SPI + " * " +
                     "((x" + pp[0].x1.xindex + " - x" + pp[1].x1.xindex + ")^2 + (x" +
                     pp[0].y1.xindex + " - x" + pp[1].y1.xindex + ")^2)";
-            sname = this.getLanguage(461, "Area") + " " + c.m_name;
+            sname = GExpert.getLanguage("Area") + " " + c.m_name;
         } else if (t == 1) {
             s = "2 * " + CTextValue.SPI + " * sqrt((x" + pp[0].x1.xindex + " - x" + pp[1].x1.xindex + ")^2 + (x" +
                     pp[0].y1.xindex + " - x" + pp[1].y1.xindex + ")^2)";
-            sname = this.getLanguage(460, "Girth") + " " + c.m_name;
+            sname = GExpert.getLanguage("Girth") + " " + c.m_name;
         } else {
             s = "sqrt((x" + pp[0].x1.xindex + " - x" + pp[1].x1.xindex + ")^2 + (x" +
                     pp[0].y1.xindex + " - x" + pp[1].y1.xindex + ")^2)";
-            sname = this.getLanguage(4004, "Radius") + " " + c.m_name;
+            sname = GExpert.getLanguage("Radius") + " " + c.m_name;
         }
 
         CText tx = new CText(5, 2, s);

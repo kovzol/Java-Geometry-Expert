@@ -118,7 +118,7 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         bcancel = new JButton(GExpert.getLanguage("Cancel"));
         bcancel.addActionListener(this);
         topPanel.add(bcancel);
-        bok.setText(GExpert.getLanguage(3204, "OK"));
+        bok.setText(GExpert.getLanguage("OK"));
         bcancel.setText(GExpert.getLanguage("Cancel"));
 
         fonts.addActionListener(this);

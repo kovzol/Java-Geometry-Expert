@@ -16,7 +16,7 @@ public class Main {
         try {
 
             String user_directory = System.getProperty("user.dir");
-            String sp = System.getProperty("file.separator");
+            String sp = File.separator;
             String dr = user_directory + sp + "ex";
             File file = new File(dr);
 
@@ -99,7 +99,7 @@ public class Main {
     static void proveFull() {
         try {
             String user_directory = System.getProperty("user.dir");
-            String sp = System.getProperty("file.separator");
+            String sp = File.separator;
             String dr = user_directory + sp + "ex";
             File file = new File(dr);
 

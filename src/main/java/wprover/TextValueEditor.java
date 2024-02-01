@@ -42,7 +42,7 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
     }
 
     public TextValueEditor(GExpert gx) {
-        super(gx.getFrame(), GExpert.getLanguage(132, "Calculation"));
+        super(gx.getFrame(), GExpert.getLanguage("Calculation"));
         gxInstance = gx;
 
 
@@ -104,8 +104,8 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
 //        bdata.setFont(bf);
         JButton bfunc = new JButton("Function", im);
 //        bfunc.setFont(bf);
-        bdata.setText(GExpert.getLanguage(254, "Data"));
-        bfunc.setText(GExpert.getLanguage(255, "Function"));
+        bdata.setText(GExpert.getLanguage("Data"));
+        bfunc.setText(GExpert.getLanguage("Function"));
         bdata.setActionCommand("Data");
         bfunc.setActionCommand("Function");
 
@@ -120,7 +120,7 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
 
         JPanel p5 = new JPanel();
         p5.setLayout(new BoxLayout(p5, BoxLayout.X_AXIS));
-        JButton bok = new JButton(GExpert.getLanguage(3204, "OK"));
+        JButton bok = new JButton(GExpert.getLanguage("OK"));
         JButton bcancel = new JButton(GExpert.getLanguage("Cancel"));
         bok.setActionCommand("OK");
         bcancel.setActionCommand("Cancel");
@@ -139,7 +139,7 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
         this.setSize(400, 400);
 
         mdata = new JPopupMenu();
-        JMenu m = new JMenu(GExpert.getLanguage(4015, "Coordinates"));
+        JMenu m = new JMenu(GExpert.getLanguage("Coordinates"));
         mdata.add(m);
         Vector v = gxInstance.dp.getPointList();
         for (int i = 0; i < v.size(); i++) {

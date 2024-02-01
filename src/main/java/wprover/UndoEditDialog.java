@@ -17,7 +17,7 @@ public class UndoEditDialog extends JBaseDialog implements WindowListener {
 
     public UndoEditDialog(GExpert owner) {
         super(owner.getFrame());
-        this.setTitle(owner.getLanguage(157, "Construct History"));
+        this.setTitle(owner.getLanguage("Construct History"));
         treepanel = new ListTree(owner);
         this.setContentPane(treepanel);
         this.setSize(new Dimension(430, 600));

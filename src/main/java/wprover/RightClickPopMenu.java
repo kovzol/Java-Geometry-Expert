@@ -17,7 +17,7 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         this.setForeground(Color.white);
 
 
-        JMenuItem item = addAMenuItem(getLanguage(3205, "Cancel Action"), true);
+        JMenuItem item = addAMenuItem(GExpert.getLanguage("Cancel Action"), true);
         item.setActionCommand("Cancel Action");
         item.setMnemonic(KeyEvent.VK_ESCAPE);
         KeyStroke ctrlP = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
@@ -31,18 +31,12 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         int d = 0;
         if (c != null)
             d = c.getColorIndex();
-        addAColorMenuItem(getLanguage(350, "Color"), c != null, d);
+        addAColorMenuItem(GExpert.getLanguage("Color"), c != null, d);
 
         addSpecificMenu(c);
         this.addSeparator();
-        item = addAMenuItem(getLanguage(309, "Properties"), c != null);
+        item = addAMenuItem(GExpert.getLanguage("Properties"), c != null);
         item.setActionCommand("Properties");
-    }
-
-    public String getLanguage(int n, String s) {
-        if (gxInstance == null)
-            return s;
-        return GExpert.getLanguage(n, s);
     }
 
     public void addSpecificMenu(CClass c) {
@@ -53,49 +47,49 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         int t = c.get_type();
         switch (t) {
             case CClass.TEXT:
-                item = addAMenuItem(getLanguage(4021, "Edit Text"), true);
+                item = addAMenuItem(GExpert.getLanguage("Edit Text"), true);
                 item.setActionCommand("Edit Text");
                 addFontSizeMenuItem((CText) c);
                 break;
             case CClass.POINT: {
                 CPoint p = (CPoint) cc;
                 if (!p.isFreezed()) {
-                    item = addAMenuItem(getLanguage(4022, "Freeze"), true);
+                    item = addAMenuItem(GExpert.getLanguage("Freeze"), true);
                     item.setActionCommand("Freeze");
                 } else {
-                    item = addAMenuItem(getLanguage(4023, "Unfreeze"), true);
+                    item = addAMenuItem(GExpert.getLanguage("Unfreeze"), true);
                     item.setActionCommand("Unfreeze");
                 }
                 if (gxInstance.dp.getTraceByPt(p) != null) {
-                    item = addAMenuItem(getLanguage(4024, "Stop Trace"), true);
+                    item = addAMenuItem(GExpert.getLanguage("Stop Trace"), true);
                     item.setActionCommand("Stop Trace");
                 } else {
-                    item = addAMenuItem(getLanguage(120, "Trace"), true);
+                    item = addAMenuItem(GExpert.getLanguage("Trace"), true);
                     item.setActionCommand("Trace");
                 }
-                item = addAMenuItem(getLanguage(4005, "X Coordinate"), true);
+                item = addAMenuItem(GExpert.getLanguage("X Coordinate"), true);
                 item.setActionCommand("X Coordinate");
-                item = addAMenuItem(getLanguage(4006, "Y Coordinate"), true);
+                item = addAMenuItem(GExpert.getLanguage("Y Coordinate"), true);
                 item.setActionCommand("Y Coordinate");
             }
             break;
             case CClass.LINE:
-                item = addAMenuItem("Slope", true);
+                item = addAMenuItem(GExpert.getLanguage("Slope"), true);
                 item.setActionCommand("Slope");
                 break;
             case CClass.CIRCLE:
-                item = addAMenuItem(getLanguage(461, "Area"), true);
+                item = addAMenuItem(GExpert.getLanguage("Area"), true);
                 item.setActionCommand("Area");
 
-                item = addAMenuItem(getLanguage(460, "Girth"), true);
+                item = addAMenuItem(GExpert.getLanguage("Girth"), true);
                 item.setActionCommand("Girth");
 
-                item = addAMenuItem(getLanguage(4004, "Radius"), true);
+                item = addAMenuItem(GExpert.getLanguage("Radius"), true);
                 item.setActionCommand("Radius");
 
                 break;
             case CClass.POLYGON:
-                item = addAMenuItem(getLanguage(461, "Area"), true);
+                item = addAMenuItem(GExpert.getLanguage("Area"), true);
                 item.setActionCommand("Area");
                 break;
         }
@@ -193,7 +187,7 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
             }
         };
 
-        JMenu m = new JMenu(getLanguage(4027, "Font size"));
+        JMenu m = new JMenu(GExpert.getLanguage("Font size"));
         for (int i = 0; i < n; i++) {
             JMenuItem item = new JMenuItem(" " + fz[i] + " ");
             item.addActionListener(ls);
@@ -202,8 +196,8 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
                 item.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.gray, 1), new LineBorder(Color.white, 1)));
             m.add(item);
         }
-        t1 = new JRadioButtonMenuItem(getLanguage(4025, "Plain"));
-        t2 = new JRadioButtonMenuItem(getLanguage(4026, "Bold"));
+        t1 = new JRadioButtonMenuItem(GExpert.getLanguage("Plain"));
+        t2 = new JRadioButtonMenuItem(GExpert.getLanguage("Bold"));
 
         ButtonGroup g = new ButtonGroup();
         g.add(t1);

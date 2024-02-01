@@ -290,18 +290,18 @@ public class CPolygon extends CClass {
         int size = pointlist.size() - 1;
         if (ftype == 0) {
             if (size == 3)
-                ds = Language.getLs(71, "triangle ");
+                ds = Language.getLs("triangle ");
             else if (size == 4)
-                ds = Language.getLs(76, "quadrangle ");
+                ds = Language.getLs("quadrangle ");
             else if (size == 5)
-                ds = Language.getLs(82, "pentagon ");
+                ds = Language.getLs("pentagon ");
             else if (size == 6)
                 ds = "hexagon ";
             else
                 ds = "polygon";
             return ds;
         } else {
-            return Language.getLs(50, "Circle");
+            return Language.getLs("Circle");
         }
 
     }

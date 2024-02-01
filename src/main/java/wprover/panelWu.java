@@ -80,7 +80,7 @@ public class panelWu extends panelAlgebric implements Runnable, MouseListener {
             addDiv(index, m1, m.x, t1 - time);
             time = t1;
             if (poly.pzerop(m1)) {
-                addString(getLanguage(1110, "Remainder") + " = R_" + (index) + " = 0");
+                addString(GExpert.getLanguage("Remainder") + " = R_" + (index) + " = 0");
                 return 0;
             }
             if (!running)
@@ -90,7 +90,7 @@ public class panelWu extends panelAlgebric implements Runnable, MouseListener {
         if (m1 != null)
             s += " != 0";
 
-        addString(getLanguage(1110, "Remainder") + " = " + s);
+        addString(GExpert.getLanguage("Remainder") + " = " + s);
         mremainder = m1;
 
         return 1;
@@ -118,7 +118,7 @@ public class panelWu extends panelAlgebric implements Runnable, MouseListener {
         }
 
         addAlgebraicForm();
-        addString2(getLanguage(1103, "The equational hypotheses:"));
+        addString2(GExpert.getLanguage("The equational hypotheses:"));
 
         TPoly pp = null;
         Vector vc = dp.getAllConstraint();
@@ -142,7 +142,7 @@ public class panelWu extends panelAlgebric implements Runnable, MouseListener {
         }
 
 
-        addString2(getLanguage(1104, "The Triangulized Hypotheses:"));
+        addString2(GExpert.getLanguage("The Triangulized Hypotheses:"));
         TPoly p1 = dp.getPolyList();
         int i = 0;
         while (p1 != null) {
@@ -151,11 +151,11 @@ public class panelWu extends panelAlgebric implements Runnable, MouseListener {
         }
 
 
-        addString2(getLanguage(1105, "The conclusion:"));
+        addString2(GExpert.getLanguage("The conclusion:"));
         addString1(sc + "\n");
         addString(poly.printSPoly(mc));
 
-        addString2(getLanguage(1106, "Successive Pseudo Remainder of the conclusion wrt Triangulized Hypotheses:"));
+        addString2(GExpert.getLanguage("Successive Pseudo Remainder of the conclusion wrt Triangulized Hypotheses:"));
         int r = 0;
 
         try {
@@ -164,21 +164,21 @@ public class panelWu extends panelAlgebric implements Runnable, MouseListener {
             }
         } catch (final java.lang.OutOfMemoryError e) {
             running = false;
-            JOptionPane.showMessageDialog(panelWu.this, getLanguage(1130, "System Run Out Of Memory") + "\n" +
-                    getLanguage(1131, "The Theorem Is Not Proved!"), getLanguage(1130, "System Run Out of Memory"), JOptionPane.WARNING_MESSAGE);
-            addString("\n" + getLanguage(1130, "System Run Out of Memory"));
+            JOptionPane.showMessageDialog(panelWu.this, GExpert.getLanguage("System Run Out Of Memory") + "\n" +
+                    GExpert.getLanguage("The Theorem Is Not Proved!"), GExpert.getLanguage("System Run Out of Memory"), JOptionPane.WARNING_MESSAGE);
+            addString("\n" + GExpert.getLanguage("System Run Out of Memory"));
             addString("icon3", "icon3");
-            addString1(getLanguage(1109, "The conclusion is not proved"));
+            addString1(GExpert.getLanguage("The conclusion is not proved"));
             return;
         }
         scrollToEnd();
 
         if (r == 0) {
             addString("icon1", "icon1");
-            addString1(getLanguage(1108, "The conclusion is true"));
+            addString1(GExpert.getLanguage("The conclusion is true"));
         } else if (r == 1) {
             addString("icon2", "icon2");
-            addString1(getLanguage(1107, "The conclusion is false"));
+            addString1(GExpert.getLanguage("The conclusion is false"));
             if (poly.plength(mc) > 2) {
                 _mremainder = mc;
                 addString("\n");

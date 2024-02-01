@@ -419,14 +419,14 @@ public class CText extends CClass {
         }
 
         if (type == NORMAL_TEXT) {
-            String st = Language.getLs(355, "text");
+            String st = Language.getLs("text");
             return st + "(\"" + str.substring(0, n) + "...\")";
         } else if (type == NAME_TEXT || type == CNAME_TEXT) {
-            String st = Language.getLs(245, "name");
+            String st = Language.getLs("name");
             return st + "(\"" + str.substring(0, n) + "...\")";
         } else if (type == VALUE_TEXT) {
             if (m_name == null) {
-                String st = Language.getLs(355, "text");
+                String st = Language.getLs("text");
                 return st + "(\"" + str.substring(0, n) + "...\")";
             } else
                 return m_name;

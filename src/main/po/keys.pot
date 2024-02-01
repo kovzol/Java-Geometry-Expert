@@ -3266,3 +3266,10 @@ msgstr ""
 
 msgid "View Remainder"
 msgstr ""
+
+msgid "Current Solution:"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+

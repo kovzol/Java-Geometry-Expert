@@ -3510,6 +3510,13 @@ msgstr "Punto medio"
 msgid "View Remainder"
 msgstr "Resto"
 
+#, fuzzy
+msgid "Current Solution:"
+msgstr "La conclusione"
+
+msgid "Filter"
+msgstr ""
+
 #~ msgid "animate_start"
 #~ msgstr "avvia animazione"
 

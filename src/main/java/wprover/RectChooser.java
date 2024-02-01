@@ -33,7 +33,7 @@ public class RectChooser extends JBaseDialog implements MouseListener, MouseMoti
 
     public RectChooser(GExpert gx) {
         super(gx.getFrame(), true);
-        this.setTitle(gx.getLanguage(2300, "Please choose the client area"));
+        this.setTitle(gx.getLanguage("Please choose the client area"));
         this.gxInstance = gx;
 //        this.setUndecorated(true);
         rx = ry = 0;
@@ -81,7 +81,7 @@ public class RectChooser extends JBaseDialog implements MouseListener, MouseMoti
         fieldh.setEditable(false);
         bpane.add(fieldh);
         bpane.add(Box.createHorizontalGlue());
-        bok = new JButton(gx.getLanguage(3204, "OK"));
+        bok = new JButton(gx.getLanguage("OK"));
         bcancel = new JButton(gx.getLanguage("Cancel"));
         bpane.add(bok);
         bpane.add(bcancel);

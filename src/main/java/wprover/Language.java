@@ -14,108 +14,12 @@ public class Language {
     private Font font;
     private lnode[] ndlist = new lnode[MAX_LEN];
 
-    public static void setLanugage(Language lan) {
+    public static void setLanguage(Language lan) {
         laninstance = lan;
     }
 
     public boolean isEnglish() {
         return "English".equalsIgnoreCase(stype);
-    }
-
-    // TODO: This is not used. Remove.
-    public void setLocal() {
-        if (stype.equalsIgnoreCase("Chinese"))
-            Locale.setDefault(Locale.SIMPLIFIED_CHINESE);
-        else if(stype.equalsIgnoreCase("Italian"))
-            Locale.setDefault(Locale.ITALIAN);
-        else if(stype.equalsIgnoreCase("German"))
-            Locale.setDefault(Locale.GERMAN);
-        else if(stype.equalsIgnoreCase("Portuguese"))
-            Locale.setDefault(new Locale("pt", ""));
-        else if(stype.equalsIgnoreCase("Serbian"))
-            Locale.setDefault(new Locale("rs", ""));
-        else if(stype.equalsIgnoreCase("Persian"))
-        {
-         //Locale.setDefault(Locale.P);   
-        }
-
-        
-    }
-
-    public void load(File f) {
-
-        try {
-            //  OutputStreamWriter writer = this.outputBlank(f);
-
-            InputStreamReader read = new InputStreamReader(new FileInputStream(f), "UTF-8");//
-            BufferedReader reader = new BufferedReader(read);
-            String h = reader.readLine();
-            stype = h.trim();
-            h = readFont(reader);
-
-            //   writer.write(stype);
-            //   writer.write("\nFont: " + font.getFontName() + " # " + font.getStyle() + " # " + font.getSize() + "\n");
-
-            int i = 0;
-            String s1, s2, s3;
-
-            while (h != null) {
-                s1 = s2 = s3 = null;
-
-                if (h.length() > 1) {
-                    if (h.trim().startsWith("*")) {
-                        h = reader.readLine();
-                        continue;
-                    }
-
-                    String[] st = h.split("#");
-                    int n = Integer.parseInt(st[0].trim());
-                    s1 = st[1].trim();
-                    int sz = st.length;
-                    if (sz >= 3)
-                        s2 = st[2].trim();
-                    if (sz >= 4)
-                        s3 = st[3].trim();
-
-                    lnode ln = new lnode(n, s1, s2, s3);
-                    ndlist[i++] = ln;
-                    //       writer.write(n + " = " + s1 +"\n");
-//                    ln.writeen(writer);
-                }
-                //   else  writer.write("\n");
-                h = reader.readLine();
-            }
-
-            reader.close();
-            //     writer.close();
-
-        } catch (IOException ee) {
-        }
-
-    }
-
-    public String readFont(BufferedReader reader) throws IOException {
-        String h = reader.readLine();
-        while (h == null || h.length() < 1) {
-            h = reader.readLine();
-        }
-
-        String[] sf = h.split(":");
-        if (sf.length == 2) {
-            String sh = sf[0].trim();
-
-            if (sh.equalsIgnoreCase("Font")) {
-                String[] sk = sf[1].trim().split("#");
-                String name = sk[0].trim();
-                String style = sk[1].trim();
-                String size = sk[2].trim();
-                Font f = new Font(name, Integer.parseInt(style), Integer.parseInt(size));
-                font = f;
-            }
-
-            h = reader.readLine();
-        }
-        return h;
     }
 
     public Font getFont() {
@@ -202,25 +106,6 @@ public class Language {
         return "";
     }
 
-    public String getString(int m, String s) {
-        String s1 = getString(m);
-        if (s1 != null && s1.length() > 0)
-            return s1;
-        return s;
-    }
-
-    public String getString(int m) {
-        for (int i = 0; i < MAX_LEN; i++) {
-            lnode ln = ndlist[i];
-            if (ln == null)
-                break;
-
-            if (ln.index == m)
-                return ln.tx;
-        }
-        return "";
-    }
-
     public String getEnglish(String s) {
         if (stype == null)
             return GExpert.getLanguage(s);
@@ -242,22 +127,6 @@ public class Language {
         if (laninstance == null)
             return s;
         return laninstance.getString(s);
-    }
-
-    public static String getLs(int m, String s) {
-        return GExpert.getLanguage(s);
-        /*
-        if (laninstance == null)
-            return s;
-        return laninstance.getString(m, s);
-         */
-    }
-
-    public static String getLs(int n) {
-        System.err.println("Translation wants to use getLs(" + n +")");
-        if (laninstance == null)
-            return "";
-        return laninstance.getString(n);
     }
 
     public static String getLs1(String s) {

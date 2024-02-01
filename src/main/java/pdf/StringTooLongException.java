@@ -22,7 +22,7 @@ package pdf;
 
 
 /**
- * <p>This exception is thrown from {@link gnu.jpdf.BoundingBox} if the 
+ * <p>This exception is thrown from gnu.jpdf.BoundingBox if the
  * string won't fit into the box</p>
  *
  * @author Eric Z. Beard, erizbeard@hotmail.com

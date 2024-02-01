@@ -62,10 +62,6 @@ public class concDialog extends JBaseDialog implements ActionListener, ItemListe
         bok.addActionListener(ls);
     }
 
-    public String getLanguage(int n, String s) {
-        return GExpert.getLanguage(n, s);
-    }
-
     public void setCns(cons c) {
         if (c == null)
             return;
@@ -94,11 +90,11 @@ public class concDialog extends JBaseDialog implements ActionListener, ItemListe
         if (model) return;
 
         if (t == 1) {
-            ltext1.setText(getLanguage(230, "True"));
+            ltext1.setText(GExpert.getLanguage("True"));
             ltext1.setIcon(ic1);
             ltext1.setForeground(Color.green.darker());
         } else if (t == -1) {
-            ltext1.setText(getLanguage(231, "False"));
+            ltext1.setText(GExpert.getLanguage("False"));
             ltext1.setIcon(ic2);
             ltext1.setForeground(Color.red.brighter().brighter());
         } else if (t == 0) {
@@ -132,7 +128,7 @@ public class concDialog extends JBaseDialog implements ActionListener, ItemListe
         int len = ts.length;
         String[] ss = new String[len];
         for (int i = 0; i < len; i++)
-            ss[i] = this.getLanguage(200 + i, ts[i]);
+            ss[i] = GExpert.getLanguage(ts[i]);
 
         bt = new JComboBox(ss) {
             public Dimension getMaximumSize() {
@@ -148,8 +144,8 @@ public class concDialog extends JBaseDialog implements ActionListener, ItemListe
         topPane.setLayout(new FlowLayout(FlowLayout.LEFT));
         JPanel topPane1 = new JPanel();
         topPane1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        topPane.add(new JLabel(getLanguage(3301, "Set One")));
-        topPane1.add(new JLabel(getLanguage(3302, "Set Two")));
+        topPane.add(new JLabel(GExpert.getLanguage("Set One")));
+        topPane1.add(new JLabel(GExpert.getLanguage("Set Two")));
 
         for (int i = 0; i < 4; i++) {
             JComboBox b = new JComboBox();
@@ -176,9 +172,9 @@ public class concDialog extends JBaseDialog implements ActionListener, ItemListe
 
         JPanel textPane = new JPanel();
         textPane.setLayout(new BoxLayout(textPane, BoxLayout.X_AXIS));
-        ltext = new JLabel(getLanguage(3206, "Please select"));
+        ltext = new JLabel(GExpert.getLanguage("Please select"));
 
-        ltext1 = new JLabel(getLanguage(230, "true"));
+        ltext1 = new JLabel(GExpert.getLanguage("true"));
         ltext1.setIcon(ic1);
         ltext1.setHorizontalTextPosition(JLabel.LEFT);
         ltext1.setVisible(!model);
@@ -197,13 +193,13 @@ public class concDialog extends JBaseDialog implements ActionListener, ItemListe
         bottomPane.setLayout(new BoxLayout(bottomPane, BoxLayout.X_AXIS));
 
         bottomPane.add(Box.createHorizontalGlue());
-        bok = new JButton(getLanguage(3204, "OK"));
+        bok = new JButton(GExpert.getLanguage("OK"));
         bok.addActionListener(this);
         bottomPane.add(bok);
         JButton bclear, bcancel;
-        bottomPane.add(bclear = new JButton(getLanguage(301, "Clear")));
+        bottomPane.add(bclear = new JButton(GExpert.getLanguage("Clear")));
         bclear.addActionListener(this);
-        bottomPane.add(bcancel = new JButton(getLanguage(300, "Cancel")));
+        bottomPane.add(bcancel = new JButton(GExpert.getLanguage("Cancel")));
         bcancel.addActionListener(this);
         bok.setActionCommand("OK");
         bclear.setActionCommand("Clear");
@@ -286,7 +282,7 @@ public class concDialog extends JBaseDialog implements ActionListener, ItemListe
                 resetAllItem();
                 setItemChanged(id);
                 if (id != -1) // FIXME, improve translation pattern
-                    ltext.setText(getLanguage(3300, "The number of points to be selected:") + " " + this.getStatePointsCount());
+                    ltext.setText(GExpert.getLanguage("The number of points to be selected:") + " " + this.getStatePointsCount());
             }
         } else {
 
@@ -304,7 +300,7 @@ public class concDialog extends JBaseDialog implements ActionListener, ItemListe
                 if (v)
                     bt.setEnabled(true);
             } else { // FIXME, improve translation pattern
-                ltext.setText(getLanguage(3300, "The number of points to be selected:") + " " + this.getStatePointsCount());
+                ltext.setText(GExpert.getLanguage("The number of points to be selected:") + " " + this.getStatePointsCount());
                 setLtext1Value(0);
             }
         }

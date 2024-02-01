@@ -7,11 +7,8 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
+import java.io.*;
 import java.util.Vector;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.DataInputStream;
-import java.io.FileOutputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -782,7 +779,7 @@ public class CProveText {
             rpath = this.ReadString(in);
         else {
             if (rule.length() > 0) {
-                String sp = System.getProperty("file.separator");
+                String sp = File.separator;
                 rpath = "rules" + sp + rule + ".gex";
             } else
                 rpath = "";

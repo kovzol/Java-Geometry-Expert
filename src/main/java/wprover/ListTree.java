@@ -57,7 +57,7 @@ public class ListTree extends JTabbedPane
         list.setCellRenderer(rener);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addListSelectionListener(this);
-        this.addTab(GExpert.getLanguage(157, "Construct History"), pane1);
+        this.addTab(GExpert.getLanguage("Construct History"), pane1);
 
         modelx = new DefaultListModel();
         listx = new JList(modelx) {
@@ -96,7 +96,7 @@ public class ListTree extends JTabbedPane
         listx.setCellRenderer(rener1);
         pane2.setRightComponent(prop);
         listx.addListSelectionListener(this);
-        this.addTab(GExpert.getLanguage(3115, "Objects"), pane2);
+        this.addTab(GExpert.getLanguage("Objects"), pane2);
     }
 
 

@@ -28,7 +28,7 @@ public class ndgDialog extends JBaseDialog implements ActionListener, MouseMotio
     private GExpert gxInstance;
 
     public ndgDialog(GExpert gx, gterm gt, drawProcess dp) {
-        super(gx.getFrame(), gx.getLanguage(1116, "Nondegenerate Conditions"));
+        super(gx.getFrame(), gx.getLanguage("Nondegenerate Conditions"));
         gxInstance = gx;
 
         this.gt = gt;
@@ -41,8 +41,8 @@ public class ndgDialog extends JBaseDialog implements ActionListener, MouseMotio
         this.getConstructions();
 
         model1 = new ndgTableModel();
-        String c1 = gxInstance.getLanguage(1138, "The Simplified Nondegenerate Conditions");
-        String c2 = gxInstance.getLanguage(1139, "The Final Nondegenerate Conditions");
+        String c1 = gxInstance.getLanguage("The Simplified Nondegenerate Conditions");
+        String c2 = gxInstance.getLanguage("The Final Nondegenerate Conditions");
         model2 = new ndgTableModel1(c1);
         model3 = new ndgTableModel1(c2);
         tabel1 = new JTable(model1);
@@ -255,8 +255,8 @@ public class ndgDialog extends JBaseDialog implements ActionListener, MouseMotio
     }
 
     class ndgTableModel extends DefaultTableModel {
-        String c1 = gxInstance.getLanguage(1137, "Construction");
-        String c2 = gxInstance.getLanguage(1116, "Nondegenerate Condition");
+        String c1 = gxInstance.getLanguage("Construction");
+        String c2 = gxInstance.getLanguage("Nondegenerate Condition");
 
         Object[] cons = new Object[100];
         Object[] ndgs = new Object[100];

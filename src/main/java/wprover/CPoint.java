@@ -229,7 +229,7 @@ public class CPoint extends CClass {
     }
 
     public String TypeString() {
-        String s1 = Language.getLs(33, "Point");
+        String s1 = Language.getLs("Point");
 
         if (m_name == null) {
             return GExpert.getLanguage("Point");
@@ -240,10 +240,10 @@ public class CPoint extends CClass {
 
     public String getDescription() {
         if (this.isAFreePoint()) {
-            String s1 = Language.getLs(1052, "Free Point");
+            String s1 = Language.getLs("Free Point");
             return s1 + " " + this.m_name;
         } else {
-            String s1 = Language.getLs(33, "Point");
+            String s1 = Language.getLs("Point");
             return s1 + " " + m_name;
         }
     }
