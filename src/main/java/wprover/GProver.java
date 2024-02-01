@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 public class GProver implements Runnable {
 
     GExpert gxInstance;
-    PanelProve1 pprove;
+    PanelProve pprove;
     Thread main;
     private int Status = 0;
     private boolean isRunning = false;
@@ -18,7 +18,7 @@ public class GProver implements Runnable {
     int number = 0;
     long ftime = 0;
 
-    public GProver(PanelProve1 p, GExpert fr) {
+    public GProver(PanelProve p, GExpert fr) {
         pprove = p;
         gxInstance = fr;
     }

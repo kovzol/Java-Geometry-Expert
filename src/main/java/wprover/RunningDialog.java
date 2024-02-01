@@ -22,7 +22,7 @@ public class RunningDialog extends JPopupMenu implements ActionListener {
     private JLabel labelt;
     private String str;
     private long start_time;
-    private panelGB panegb;
+    private PanelGB panegb;
 
     private static Color color = new Color(206, 223, 242);
 
@@ -61,7 +61,7 @@ public class RunningDialog extends JPopupMenu implements ActionListener {
     public void menuSelectionChanged(boolean isIncluded) {
     }
 
-    public void setPanelGB(panelGB gb) {
+    public void setPanelGB(PanelGB gb) {
         panegb = gb;
     }
 

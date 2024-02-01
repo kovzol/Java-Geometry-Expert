@@ -20,7 +20,7 @@ import java.util.Vector;
  */
 public class TextValueEditor extends JBaseDialog implements ActionListener, KeyListener {
 
-    wuTextPane pane1, pane;
+    WuTextPane pane1, pane;
     String[] sbutton = {"7", "8", "9", "+", "^", "4", "5", "6", "-",
             "(", "1", "2", "3", "*", ")", "0", "/", ".", "<="};
     JPopupMenu mdata, mfunc;
@@ -50,7 +50,7 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        pane1 = new wuTextPane() {
+        pane1 = new WuTextPane() {
             public Dimension getPreferredSize() {
                 Dimension dm = super.getPreferredSize();
                 dm.setSize(dm.getWidth(), 30);
@@ -63,7 +63,7 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
         pt.add(pane1);
         pane1.setBackground(this.getBackground());
         pane1.setEditable(false);
-        pane = new wuTextPane();
+        pane = new WuTextPane();
         pane.setEnabled(true);
         pane.setEditable(true);
         pt.add(Box.createVerticalStrut(6));

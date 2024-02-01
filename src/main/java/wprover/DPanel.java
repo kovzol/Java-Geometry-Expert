@@ -1,7 +1,5 @@
 package wprover;
 
-import UI.GBevelBorder;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,7 +8,7 @@ class DPanel extends JPanel implements MouseListener, MouseMotionListener, Mouse
 
     final public static int DRAW = 0;
     final public static int CONS = 1;    // construction.
-    drawTextProcess dp = new drawTextProcess();
+    DrawTextProcess dp = new DrawTextProcess();
     private int Input_type = DRAW; // draw  ,1 : prove
     GExpert gxInstance;
 
@@ -87,7 +85,7 @@ class DPanel extends JPanel implements MouseListener, MouseMotionListener, Mouse
             return;
         }
         if (Input_type == 0) {
-            if (dp.GetCurrentAction() == drawProcess.CONSTRUCT_FROM_TEXT) {
+            if (dp.GetCurrentAction() == DrawProcess.CONSTRUCT_FROM_TEXT) {
                 dp.mouseDown(e.getX(), e.getY());
             } else
                 dp.DWButtonDown(e.getX(), e.getY());

@@ -15,13 +15,13 @@ import java.util.Vector;
  */
 public class JAreaFlash extends JFlash implements ActionListener{
     private Vector vlist = new Vector();
-    private int color = drawData.LIGHTCOLOR;
+    private int color = DrawData.LIGHTCOLOR;
 
     public JAreaFlash(JPanel p,int cindex)
     {
         super(p);
 
-        color = drawData.LIGHTCOLOR + cindex-1;
+        color = DrawData.LIGHTCOLOR + cindex-1;
         timer = new Timer(TIME_INTERVAL, this);
     }
     public  boolean draw(Graphics2D g2)
@@ -43,7 +43,7 @@ public class JAreaFlash extends JFlash implements ActionListener{
         }
         g2.setColor(Color.black);
         g2.drawPolygon(x,y,n);
-        g2.setColor(drawData.getColor(color));
+        g2.setColor(DrawData.getColor(color));
         g2.fillPolygon(x,y,n);
         g2.setComposite(ac);
         return true;

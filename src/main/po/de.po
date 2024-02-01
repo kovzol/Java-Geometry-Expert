@@ -2521,10 +2521,10 @@ msgid "Select two points to determine a line"
 msgstr "Wähle zwei Punkte um eine Gerade anzugeben"
 
 msgid ""
-"Please use the menu \"Action -> Animation\" to define an animation first"
+"Please use the menu \"Action -> Animation\" to define an animation first."
 msgstr ""
 "Bitte nutze das Menü \"Aktion -> Animation\" um eine Animation erst zu "
-"definieren"
+"definieren."
 
 msgid "Groebner Basis Method"
 msgstr "Methode mit Gröbnerbasen"
@@ -2664,7 +2664,8 @@ msgstr "Rechtwinkelig"
 msgid "Building GIF File"
 msgstr "GIF-Datei erstellen"
 
-msgid "0 frame(s) added"
+#, fuzzy
+msgid "{0} frame(s) added"
 msgstr "0 Bild(er) hinzugefügt"
 
 msgid "Next"
@@ -3413,3 +3414,43 @@ msgstr "Alle Lösungen:"
 
 msgid "Filter"
 msgstr ""
+
+#, fuzzy
+msgid "Choose a rectangle"
+msgstr "Zeichne ein Rechteck"
+
+#, fuzzy
+msgid "Saving Proof as GIF File"
+msgstr "Speichern den GDD-Beweis als GraphViz-Datei"
+
+#, fuzzy
+msgid "Default Delay"
+msgstr "Standard"
+
+msgid "Delay at Begin"
+msgstr ""
+
+msgid "Delay at End"
+msgstr ""
+
+msgid "Look in:"
+msgstr ""
+
+#, fuzzy
+msgid "File name:"
+msgstr "Name Schriftart"
+
+msgid "Files of type:"
+msgstr ""
+
+#, fuzzy
+msgid "Save in:"
+msgstr "Speichern"
+
+#, fuzzy
+msgid "Save As"
+msgstr "Speichern"
+
+#, fuzzy
+msgid "All Files"
+msgstr "Datei"

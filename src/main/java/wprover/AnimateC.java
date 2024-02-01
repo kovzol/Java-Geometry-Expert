@@ -86,7 +86,7 @@ public class AnimateC {
         return null;
     }
 
-    public boolean loadAnimationString(String s, drawTextProcess dp) {
+    public boolean loadAnimationString(String s, DrawTextProcess dp) {
         if (!s.startsWith("ANI")) {
             return false;
         }
@@ -404,7 +404,7 @@ public class AnimateC {
 
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         bx = in.readDouble();
         by = in.readDouble();
         width = in.readDouble();

@@ -3,10 +3,6 @@ package wprover;
 import UI.*;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.CompoundBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.net.URL;
@@ -66,8 +62,8 @@ class ProveBar extends JToolBar implements ActionListener, ChangeListener {
 
     private GExpert gxInstance;
     private DPanel dpane;
-    private drawTextProcess dp;
-    private PanelProve1 pproof;
+    private DrawTextProcess dp;
+    private PanelProve pproof;
 
     private JSlider slider;
     private Timer timer;
@@ -85,7 +81,7 @@ class ProveBar extends JToolBar implements ActionListener, ChangeListener {
         init();
     }
 
-    public ProveBar(GExpert gex, DPanel dd, drawTextProcess dp, PanelProve1 pproof) {
+    public ProveBar(GExpert gex, DPanel dd, DrawTextProcess dp, PanelProve pproof) {
         super();
         gxInstance = gex;
         this.dpane = dd;

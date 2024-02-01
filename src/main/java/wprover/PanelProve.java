@@ -24,12 +24,12 @@ import org.graphper.api.attributes.NodeShapeEnum;
 import org.graphper.api.attributes.Rankdir;
 import org.w3c.dom.svg.SVGDocument;
 
-public class PanelProve1 extends JTabbedPane implements ChangeListener {
+public class PanelProve extends JTabbedPane implements ChangeListener {
 //    private Font font_thm = new Font("Dialog", Font.BOLD, 12);
 
     private GExpert gxInstance;
     private DPanel dpane;
-    private drawTextProcess dp;
+    private DrawTextProcess dp;
 
     private Conspanel condPane; //  construction;
 
@@ -44,12 +44,12 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
 
     private DefaultMutableTreeNode top_mp;
     private MProveTree tree_mp;
-    private mproveInputPanel inputm;
+    private MProveInputPanel inputm;
 
     private JPanel mpPanel;
     private JScrollPane gddPanel, areaPanel, dbPanel, fullPanel;
-    private panelWu wuPanel;
-    private panelGB gbPanel;
+    private PanelWu wuPanel;
+    private PanelGB gbPanel;
 
     private popMenu popcond;
     private ButtonToolBar tbar;
@@ -59,14 +59,14 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
     private GProver gprover;
     private boolean is_database_updated = true;
 
-    private concDialog cdialog;
+    private ConcDialog cdialog;
     private FactFinderDialog fdialog;
 
     private JDialog lstDrawDialog = null;
     private JDialog lstRuleDialog = null;
 
 
-    public PanelProve1(GExpert gx, DPanel dd, drawTextProcess dp, boolean mbar, int idonly) {
+    public PanelProve(GExpert gx, DPanel dd, DrawTextProcess dp, boolean mbar, int idonly) {
         gxInstance = gx;
 
         if (gx != null) {
@@ -129,7 +129,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
 
     }
 
-    public void setMember(DPanel dd, drawTextProcess dp) {
+    public void setMember(DPanel dd, DrawTextProcess dp) {
         this.dpane = dd;
         this.dp = dp;
     }
@@ -655,7 +655,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
         mdrobj.createAllIcons();
 
         if (mbar)
-            mpPanel.add((inputm = new mproveInputPanel(gxInstance, dpane, dp, tree_mp)));
+            mpPanel.add((inputm = new MProveInputPanel(gxInstance, dpane, dp, tree_mp)));
 //        this.addTab("M", mpPanel);
         mpPanel.setBackground(Color.white);
         mpPanel.setForeground(Color.white);
@@ -667,7 +667,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
             this.setSelectedComponent(mpPanel);
     }
 
-    public mproveInputPanel getmInputPanel() {
+    public MProveInputPanel getmInputPanel() {
         return inputm;
     }
 
@@ -889,7 +889,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
             gxInstance.setActionSelect();
 
         if (cdialog == null) {
-            cdialog = new concDialog(gxInstance, getLanguage("Add Conclusion"));
+            cdialog = new ConcDialog(gxInstance, getLanguage("Add Conclusion"));
             cdialog.setTitle(s);
         }
         cdialog.setPoints(condPane.getAllPts());
@@ -899,7 +899,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
     public void proveWu() {
 
         if (wuPanel == null) {
-            wuPanel = new panelWu(dp, new wuTextPane());
+            wuPanel = new PanelWu(dp, new WuTextPane());
             if (gxInstance != null) {
                 wuPanel.setLanguage(gxInstance.getLan());
                 wuPanel.setXInstance(gxInstance);
@@ -914,7 +914,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
 
     public void proveGB() {
         if (gbPanel == null) {
-            gbPanel = new panelGB(dp, new wuTextPane());
+            gbPanel = new PanelGB(dp, new WuTextPane());
             gbPanel.setXInstance(gxInstance);
             this.addTab("GB", null, gbPanel, GExpert.getLanguage("Algebraic computations for the Groebner basis method"));
         }
@@ -1076,7 +1076,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
 
     public void show_AllFullAux(boolean ang) {
         //     drawTextProcess dp = gxInstance.dp;
-        drawData.setAuxStatus();
+        DrawData.setAuxStatus();
         DefaultMutableTreeNode node = top_full;
         if (node == null) {
             node = top;
@@ -1243,7 +1243,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
 
     public void drawConstruction() {
         if (dp.inConstruction()) {
-            dp.SetCurrentAction(drawProcess.CONSTRUCT_FROM_TEXT);
+            dp.SetCurrentAction(DrawProcess.CONSTRUCT_FROM_TEXT);
             return;
         }
 
@@ -1253,7 +1253,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
             return;
         }
         dp.setConstructLines(gt);
-        dp.SetCurrentAction(drawProcess.CONSTRUCT_FROM_TEXT);
+        dp.SetCurrentAction(DrawProcess.CONSTRUCT_FROM_TEXT);
         dpane.repaint();
 
     }
@@ -1484,6 +1484,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
 
     }
 
+    /*
     public void saveConstruction() {
         JFileChooser chooser = new JFileChooser();
         int result = chooser.showDialog(gxInstance, "Save");
@@ -1511,6 +1512,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
         }
 
     }
+     */ // Seemingly unused. Remove.
 
 
     private void expandOrCollapse() {
@@ -2048,7 +2050,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
 
     public void finishedDrawing() {
         tbar.finishedDrawing();
-        PanelProve1.this.setSelectedIndex(0);
+        PanelProve.this.setSelectedIndex(0);
     }
 
     class popFull extends JPopupMenu implements ActionListener {
@@ -2060,7 +2062,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
         }
 
         public void actionPerformed(ActionEvent e) {
-            PanelProve1.this.showFullGIB();
+            PanelProve.this.showFullGIB();
         }
     }
 
@@ -2140,7 +2142,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
                 dlg.showDialog();
                 return;
             } else if (command.equals("Refresh")) {
-                PanelProve1.this.showDatabase();
+                PanelProve.this.showDatabase();
             }
 
             if (obj instanceof itemLabel) {
@@ -2148,7 +2150,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
                 Object value = lb.getUserObject();
                 if (value instanceof cond) {
                     if (command.equals("Prove")) {
-                        PanelProve1.this.proveCond((cond) value, false);
+                        PanelProve.this.proveCond((cond) value, false);
                     } else if (command.equals("Prove in a new tab")) {
                     }
                 }
@@ -2161,7 +2163,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
                         if (obj3 instanceof cclass) {
                             cond c = getSelectedCondFromAttr((cclass) obj3);
                             if (c != null)
-                                PanelProve1.this.proveCond(c, true);
+                                PanelProve.this.proveCond(c, true);
                         }
                     }
                 }
@@ -2291,7 +2293,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
 
                 public void actionPerformed(ActionEvent e) {
                     b1.setSelected(false);
-                    PanelProve1.this.getSelectedIndex();
+                    PanelProve.this.getSelectedIndex();
 
                     if (gxInstance != null) {
                         MiscDialog dlg = new MiscDialog(gxInstance);
@@ -2426,7 +2428,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
                 addImageToItem(item, "run");
 
                 JMenu m = new JMenu(getLanguage("To Prove"));
-                String[] ts = concDialog.ts;
+                String[] ts = ConcDialog.ts;
                 for (int i = 0; i < ts.length; i++) {
                     JMenuItem it = new JMenuItem(getLanguage(200 + i, ts[i]));
                     it.setActionCommand("CONC");
@@ -2505,7 +2507,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
 
 
         private void prove() {
-            PanelProve1.this.prove();
+            PanelProve.this.prove();
         }
 
 
@@ -2519,7 +2521,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
                 JMenuItem item = (JMenuItem) e.getSource();
                 addConclusion(item.getText());
             } else if (s.equals("Generate")) {
-                PanelProve1.this.generate();
+                PanelProve.this.generate();
             } else if (s.equals("Detail")) {
                 JMenuItem item = (JMenuItem) e.getSource();
                 boolean detail_proof = item.isSelected();
@@ -2550,7 +2552,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
             } else if (s.equals("LV")) {
                 dp.popLeadingVariableDialog();
             } else if (s.equals("NDG"))
-                PanelProve1.this.showNDGs();
+                PanelProve.this.showNDGs();
             else if (s.equalsIgnoreCase("All solutions")) {
                 Vector v = dp.calculate_allResults();
                 AllSolutionDialog dlg = new AllSolutionDialog(gxInstance);
@@ -2654,7 +2656,7 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
 
         if (!Prover.getAllNdgs(g, v1, v2, v3, v4))
             return;
-        ndgDialog d = new ndgDialog(gxInstance, g, dp);
+        NdgDialog d = new NdgDialog(gxInstance, g, dp);
 
         d.setValue(v1, v2, v3, v4);
         d.setVisible(true);
@@ -2798,21 +2800,21 @@ public class PanelProve1 extends JTabbedPane implements ChangeListener {
                 JRadioButtonMenuItem m = (JRadioButtonMenuItem) o;
                 this.showDetail(m.isSelected());
             } else if (command.equals("PC")) {
-                ppDialog pp = new ppDialog(gxInstance, condPane.getTerm(), dp);
+                PPDialog pp = new PPDialog(gxInstance, condPane.getTerm(), dp);
                 pp.setVisible(true);
             } else if (command.equals("NDG")) {
-                PanelProve1.this.showNDGs();
+                PanelProve.this.showNDGs();
             } else if (command.equals("Add Conclusion")) {
-                PanelProve1.this.addConclusion("Add Conclusion");
+                PanelProve.this.addConclusion("Add Conclusion");
             } else if (command.equals("NDGS")) {
-                PanelProve1.this.addConclusion("Add Nondegenerate Conditions");
+                PanelProve.this.addConclusion("Add Nondegenerate Conditions");
                 cdialog.setType(1);
             } else if (command.equals("Prove")) {
-                PanelProve1.this.prove();
+                PanelProve.this.prove();
             } else if (command.equals("Construct Diagram")) {
                 tbar.startConstcutDiagram();
             } else if (command.equals("Show Database")) {
-                PanelProve1.this.showDatabase();
+                PanelProve.this.showDatabase();
             } else if (command.equals("Close")) {
                 bclose.setSelected(false);
                 this.showDetail(false);

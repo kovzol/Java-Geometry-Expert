@@ -2533,7 +2533,7 @@ msgid "Select two points to determine a line"
 msgstr "نمایش خط با مشخص کردن دو نقطه"
 
 msgid ""
-"Please use the menu \"Action -> Animation\" to define an animation first"
+"Please use the menu \"Action -> Animation\" to define an animation first."
 msgstr ""
 
 msgid "Groebner Basis Method"
@@ -2692,7 +2692,7 @@ msgstr ""
 msgid "Building GIF File"
 msgstr ""
 
-msgid "0 frame(s) added"
+msgid "{0} frame(s) added"
 msgstr ""
 
 msgid "Next"
@@ -3469,6 +3469,45 @@ msgstr "بدون نتیجه"
 
 msgid "Filter"
 msgstr ""
+
+#, fuzzy
+msgid "Choose a rectangle"
+msgstr "مستطیل"
+
+msgid "Saving Proof as GIF File"
+msgstr ""
+
+#, fuzzy
+msgid "Default Delay"
+msgstr "پیش فرض"
+
+msgid "Delay at Begin"
+msgstr ""
+
+msgid "Delay at End"
+msgstr ""
+
+msgid "Look in:"
+msgstr ""
+
+#, fuzzy
+msgid "File name:"
+msgstr "نام فونت"
+
+msgid "Files of type:"
+msgstr ""
+
+#, fuzzy
+msgid "Save in:"
+msgstr "ذخیره"
+
+#, fuzzy
+msgid "Save As"
+msgstr "ذخیره"
+
+#, fuzzy
+msgid "All Files"
+msgstr "فایل"
 
 #~ msgid "FF"
 #~ msgstr "بعدی"

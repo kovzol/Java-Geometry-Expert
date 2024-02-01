@@ -16,12 +16,12 @@ import java.awt.*;
  */
 public class RightTransformPopupMenu extends JPopupMenu implements ItemListener, ActionListener {
 
-    private drawProcess dp;
+    private DrawProcess dp;
     private JRadioButtonMenuItem m1, m2, m3;
     private JMenuItem m;
     private int xx, yy;
 
-    public RightTransformPopupMenu(drawProcess d) {
+    public RightTransformPopupMenu(DrawProcess d) {
         dp = d;
 
         ButtonGroup g = new ButtonGroup();

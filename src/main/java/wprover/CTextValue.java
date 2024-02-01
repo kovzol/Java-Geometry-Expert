@@ -1,9 +1,6 @@
 package wprover;
 
 import maths.TMono;
-import maths.param;
-
-import java.awt.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -399,12 +396,12 @@ public class CTextValue {
         return Math.round(r * 1000 + 0.1) / 1000.0;
     }
 
-    public void calculate(drawProcess dp) {
+    public void calculate(DrawProcess dp) {
         double r = calvalue(this, dp);
         this.dvalue = roud3(r);
     }
 
-    public static double calvalue(CTextValue ct, drawProcess dp) {
+    public static double calvalue(CTextValue ct, DrawProcess dp) {
         if (ct == null) return 0.0;
         return dp.calculate(ct);
     }

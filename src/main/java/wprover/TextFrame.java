@@ -1,8 +1,6 @@
 package wprover;
 
 import javax.swing.*;
-import javax.swing.event.CaretListener;
-import javax.swing.event.CaretEvent;
 import java.awt.event.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -264,7 +262,7 @@ public class TextFrame extends JBaseDialog implements ItemListener,
             Font f = new Font(s, type, size);
             textpane.setFont(f);
             int id = color.getSelectedIndex();
-            textpane.setForeground(drawData.getColor(id));
+            textpane.setForeground(DrawData.getColor(id));
             if (text != null)
                 text.m_color = (id);
         }

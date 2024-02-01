@@ -289,7 +289,7 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
 
         public boolean Cal_Value() {
-            return drawbase.check_Collinear(getPt(0), getPt(1), getPt(2));
+            return DrawBase.check_Collinear(getPt(0), getPt(1), getPt(2));
         }
 
     }
@@ -300,7 +300,7 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
 
         public boolean Cal_Value() {
-            return drawbase.check_para(getPt(0), getPt(1), getPt(2), getPt(3));
+            return DrawBase.check_para(getPt(0), getPt(1), getPt(2), getPt(3));
         }
 
         public String getLex() {
@@ -317,7 +317,7 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
 
         public boolean Cal_Value() {
-            return drawbase.check_perp(getPt(0), getPt(1), getPt(2), getPt(3));
+            return DrawBase.check_perp(getPt(0), getPt(1), getPt(2), getPt(3));
         }
 
         public String getLex() {
@@ -334,7 +334,7 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
 
         public boolean Cal_Value() {
-            return drawbase.check_cyclic(getPt(0), getPt(1), getPt(2), getPt(3));
+            return DrawBase.check_cyclic(getPt(0), getPt(1), getPt(2), getPt(3));
         }
 
         public String getLex() {
@@ -351,7 +351,7 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
 
         public boolean Cal_Value() {
-            return drawbase.check_eqdistance(getPt(0), getPt(1), getPt(2), getPt(3));
+            return DrawBase.check_eqdistance(getPt(0), getPt(1), getPt(2), getPt(3));
         }
 
         public String getLex() {
@@ -368,7 +368,7 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
 
         public boolean Cal_Value() {
-            return drawbase.check_eqangle(getPt(0), getPt(1), getPt(2), getPt(3), getPt(4), getPt(5));
+            return DrawBase.check_eqangle(getPt(0), getPt(1), getPt(2), getPt(3), getPt(4), getPt(5));
         }
 
         public String getLex() {

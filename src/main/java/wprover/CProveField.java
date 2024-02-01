@@ -2,7 +2,6 @@ package wprover;
 
 import gprover.cond;
 
-import javax.swing.*;
 import java.util.Vector;
 import java.awt.*;
 import java.io.DataOutputStream;
@@ -53,7 +52,7 @@ public class CProveField {
         cpname.setMessage(sname);
     }
 
-    public CProveField(drawProcess dp) //undolist;
+    public CProveField(DrawProcess dp) //undolist;
     {
 
         pt = new Point(20, 20);
@@ -283,7 +282,7 @@ public class CProveField {
         return pselect;
     }
 
-    public boolean undo_to_head(drawProcess dp) {
+    public boolean undo_to_head(DrawProcess dp) {
         if (HEAD) {
             if (vlist.size() == 0) return false;
 
@@ -325,7 +324,7 @@ public class CProveField {
         return true;
     }
 
-    public boolean run_to_begin(drawProcess dp) {
+    public boolean run_to_begin(DrawProcess dp) {
         if (HEAD) {
             // if (vlist.size() == 0) return false;
 
@@ -363,7 +362,7 @@ public class CProveField {
         return true;
     }
 
-    public boolean undo_default(drawProcess dp) {
+    public boolean undo_default(DrawProcess dp) {
         if (HEAD) {
             if (vlist.size() == 0) return false;
 
@@ -391,7 +390,7 @@ public class CProveField {
         return true;
     }
 
-    public boolean run_to_end(drawProcess dp) {
+    public boolean run_to_end(DrawProcess dp) {
         while (true) {
             if (!this.next_prove_step(dp)) {
                 return true;
@@ -415,7 +414,7 @@ public class CProveField {
         }
     }
 
-    public CProveText redo_invisible_head(drawProcess dp) {
+    public CProveText redo_invisible_head(DrawProcess dp) {
         if (vlist.size() == 0) return null;
         CProveText ct = (CProveText) vlist.get(0);
         if (ct.getVisible() == false) {
@@ -429,11 +428,11 @@ public class CProveField {
         rstep = rmid;
     }
 
-    public boolean next(drawProcess dp) {
+    public boolean next(DrawProcess dp) {
         CProveText ct = fd_text(++this.rstep);
         if (ct != null) {
             this.pselect = ct;
-            ((drawTextProcess) dp).addaux(ct);
+            ((DrawTextProcess) dp).addaux(ct);
         } else {
             dp.resetAux();
             this.pselect = null;
@@ -470,7 +469,7 @@ public class CProveField {
         }
     }
 
-    public boolean next_prove_step(drawProcess dp) {
+    public boolean next_prove_step(DrawProcess dp) {
         if (HEAD) {
             CBoolean find = new CBoolean(false);
             Vector vl = new Vector();
@@ -491,7 +490,7 @@ public class CProveField {
     }
 
 
-    public void setSelectedUndo(UndoStruct u, drawProcess dp) {
+    public void setSelectedUndo(UndoStruct u, DrawProcess dp) {
         CProveText ct = pselect = findPText(u);
         Vector vl = new Vector();
         if (ct != null) {
@@ -532,7 +531,7 @@ public class CProveField {
     }
 
 
-    public CProveText next_prove_step(drawProcess dp, CProveText cpt, CBoolean find) {
+    public CProveText next_prove_step(DrawProcess dp, CProveText cpt, CBoolean find) {
 
         for (int i = 0; i < clist.size(); i++) {
             CProveText cp = (CProveText) clist.get(i);
@@ -807,7 +806,7 @@ public class CProveField {
 
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
 
         HEAD = in.readBoolean();
         if (HEAD) {

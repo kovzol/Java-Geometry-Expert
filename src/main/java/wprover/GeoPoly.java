@@ -3,7 +3,6 @@ package wprover;
 import maths.PolyBasic;
 import maths.TMono;
 import maths.TPoly;
-import gprover.cons;
 import gprover.gib;
 import gprover.cndg;
 
@@ -533,7 +532,7 @@ public class GeoPoly extends PolyBasic {
     }
 
     ////////////////////////////////////////////////////
-    public TMono mm_poly(cndg c, drawProcess dp) {
+    public TMono mm_poly(cndg c, DrawProcess dp) {
         if (c == null) return null;
         switch (c.type) {
             case gib.NDG_NEQ:

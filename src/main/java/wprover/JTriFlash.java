@@ -337,7 +337,7 @@ public class JTriFlash extends JFlash implements ActionListener {
         p2[0] = day[0];
         p2[1] = dby[0];
         p2[2] = dcy[0];
-        g2.setColor(drawData.getColor(color - 1));
+        g2.setColor(DrawData.getColor(color - 1));
         g2.fillPolygon(p1, p2, 3);
         drawColoredTriangle(p1, p2, g2);
     }
@@ -406,9 +406,9 @@ public class JTriFlash extends JFlash implements ActionListener {
         p2[1] = dby[index];
         p2[2] = dcy[index];
 
-        Color c = drawData.getColor(color);
+        Color c = DrawData.getColor(color);
         if (c == null)
-            c = drawData.getColor(color - drawData.LIGHTCOLOR);
+            c = DrawData.getColor(color - DrawData.LIGHTCOLOR);
         g2.setColor(c);
 
         g2.fillPolygon(p1, p2, 3);

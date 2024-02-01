@@ -28,7 +28,7 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
     ImageIcon cross, hook;
 
 
-    concDialog dlg;
+    ConcDialog dlg;
     cons cns;
 
     Vector vblist, vlist;
@@ -126,7 +126,7 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
     public void autoFiltered() {
         cns = gxInstance.getpprove().getConstructionTerm().getConclusion();
         if (cns != null) {
-            dlg = new concDialog(gxInstance, GExpert.getLanguage("Filter"));
+            dlg = new ConcDialog(gxInstance, GExpert.getLanguage("Filter"));
             dlg.setPoints(gxInstance.dp.getPointList());
             dlg.setCns(cns);
             button.setEnabled(true);
@@ -214,7 +214,7 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
                 update();
                 gxInstance.d.repaint();
             } else if (src == button1) {
-                dlg = new concDialog(gxInstance, GExpert.getLanguage("Filter"));
+                dlg = new ConcDialog(gxInstance, GExpert.getLanguage("Filter"));
                 dlg.setPoints(gxInstance.dp.getPointList());
                 dlg.changeBOKListener(this);
                 dlg.showDialog("");

@@ -50,7 +50,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     private JToggleButton buttonMove, buttonSelect;
 
     public DPanel d;
-    public drawTextProcess dp;
+    public DrawTextProcess dp;
     public CProperty cp;
     public ListTree lp;
 
@@ -62,7 +62,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     private SelectDialog sdialog;
     private UndoEditDialog udialog;
     private CDialogProve pdialog;
-    private concDialog cdialog;
+    private ConcDialog cdialog;
     private RuleDialog rdialog;
     private NumCheckDialog ndialog;
     private AboutDialog adialog;
@@ -73,9 +73,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     private CStyleDialog styleDialog;
     private JPopExView rview;
     JToggleButton anButton;
-    private mproveInputPanel inputm;
+    private MProveInputPanel inputm;
 
-    private PanelProve1 pprove;
+    private PanelProve pprove;
     private JPanel ppanel;
     private JSplitPane contentPane;
     private JFileChooser filechooser;
@@ -120,7 +120,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         scroll = new JScrollPane(d, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setBorder(null);
         scroll.setAutoscrolls(true);
-        pprove = new PanelProve1(this, d, dp, true, -1);
+        pprove = new PanelProve(this, d, dp, true, -1);
         inputm = pprove.getmInputPanel();
         ppanel = new JPanel();
         ppanel.setLayout(new BoxLayout(ppanel, BoxLayout.Y_AXIS));
@@ -215,9 +215,21 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                 loc, org.xnap.commons.i18n.I18nFactory.FALLBACK);
         JOptionPane.setDefaultLocale(loc); // this is not required if the next lines are present
         // Some languages may be not supported in the current JDK/JRE, so we use this workaround:
-        UIManager.put("OptionPane.yesButtonText", getTranslationViaGettext("Yes"));
-        UIManager.put("OptionPane.noButtonText", getTranslationViaGettext("No"));
-        UIManager.put("OptionPane.cancelButtonText", getTranslationViaGettext("Cancel"));
+        UIManager.put("OptionPane.yesButtonText", getLanguage("Yes"));
+        UIManager.put("OptionPane.noButtonText", getLanguage("No"));
+        UIManager.put("OptionPane.cancelButtonText", getLanguage("Cancel"));
+
+        UIManager.put("FileChooser.openDialogTitleText", getLanguage("Open"));
+        UIManager.put("FileChooser.lookInLabelText", getLanguage("Look in:"));
+        UIManager.put("FileChooser.fileNameLabelText", getLanguage("File name:"));
+        UIManager.put("FileChooser.filesOfTypeLabelText", getLanguage("Files of type:"));
+        UIManager.put("FileChooser.openButtonText", getLanguage("Open"));
+        UIManager.put("FileChooser.cancelButtonText", getLanguage("Cancel"));
+        UIManager.put("FileChooser.acceptAllFileFilterText", getLanguage("All Files"));
+
+        UIManager.put("FileChooser.saveDialogTitleText", getLanguage("Save as"));
+        UIManager.put("FileChooser.saveInLabelText", getLanguage("Save in:"));
+        UIManager.put("FileChooser.saveButtonText", getLanguage("Save"));
     }
 
     public void initAttribute() {
@@ -291,7 +303,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
-    public PanelProve1 getpprove() {
+    public PanelProve getpprove() {
         return pprove;
     }
 
@@ -384,9 +396,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return false;
     }
 
-    public concDialog getConcDialog() {
+    public ConcDialog getConcDialog() {
         if (cdialog == null) {
-            cdialog = new concDialog(this, "");
+            cdialog = new ConcDialog(this, "");
             centerDialog(cdialog);
         }
         return cdialog;
@@ -463,7 +475,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return styleDialog;
     }
 
-    public mproveInputPanel getMannalInputToolBar() {
+    public MProveInputPanel getMannalInputToolBar() {
         return inputm;
     }
 
@@ -1236,7 +1248,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                 String dr = getUserDir();
                 filechooser1.setCurrentDirectory(new File(dr));
 
-                int result = filechooser1.showDialog(this, "Save");
+                int result = filechooser1.showDialog(this, getLanguage("Save"));
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File f = filechooser1.getSelectedFile();
                     FileOutputStream fp;
@@ -1353,7 +1365,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             dp.SetSnap(!dp.isSnap());
             d.repaint();
         } else if (command.equals("view")) {
-            this.dp.SetCurrentAction(drawProcess.VIEWELEMENT);
+            this.dp.SetCurrentAction(DrawProcess.VIEWELEMENT);
         } else if (command.equals("lessgrid")) {
             dp.setMeshStep(true);
             button.setSelected(false);
@@ -1407,16 +1419,16 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
 
             if (command.equalsIgnoreCase("select")) {
-                dp.SetCurrentAction(drawProcess.SELECT);
+                dp.SetCurrentAction(DrawProcess.SELECT);
             } else if (command.equalsIgnoreCase("point")) {
-                dp.SetCurrentAction(drawProcess.D_POINT);
+                dp.SetCurrentAction(DrawProcess.D_POINT);
             } else if (command.equalsIgnoreCase("line")) {
-                dp.SetCurrentAction(drawProcess.D_LINE);
+                dp.SetCurrentAction(DrawProcess.D_LINE);
             } else if (command.equalsIgnoreCase("circle")) {
-                dp.SetCurrentAction(drawProcess.D_CIRCLE);
+                dp.SetCurrentAction(DrawProcess.D_CIRCLE);
 
             } else if (command.equalsIgnoreCase("oriented segment")) {
-                dp.SetCurrentAction(drawProcess.D_PRATIO);
+                dp.SetCurrentAction(DrawProcess.D_PRATIO);
                 String s = ((JMenuItem) src).getText();
                 int n1 = 1;
                 int n2 = 1;
@@ -1431,56 +1443,56 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     dp.setParameter(t[0], t[1]);
                 }
             } else if (command.equalsIgnoreCase("compass")) {
-                dp.SetCurrentAction(drawProcess.D_CIRCLEBYRADIUS);
+                dp.SetCurrentAction(DrawProcess.D_CIRCLEBYRADIUS);
             } else if (command.equalsIgnoreCase("parallel")) {
-                dp.SetCurrentAction(drawProcess.D_PARELINE);
+                dp.SetCurrentAction(DrawProcess.D_PARELINE);
             } else if (command.equalsIgnoreCase("perpendicular")) {
-                dp.SetCurrentAction(drawProcess.D_PERPLINE);
+                dp.SetCurrentAction(DrawProcess.D_PERPLINE);
             } else if (command.equalsIgnoreCase("aline")) {
-                dp.SetCurrentAction(drawProcess.D_ALINE);
+                dp.SetCurrentAction(DrawProcess.D_ALINE);
             } else if (command.equalsIgnoreCase("Angle Bisector")) {
-                dp.SetCurrentAction(drawProcess.D_ABLINE);
+                dp.SetCurrentAction(DrawProcess.D_ABLINE);
             } else if (command.equalsIgnoreCase("bline")) {
-                dp.SetCurrentAction(drawProcess.D_BLINE);
+                dp.SetCurrentAction(DrawProcess.D_BLINE);
             } else if (command.equalsIgnoreCase("tcline")) {
-                dp.SetCurrentAction(drawProcess.D_TCLINE); //cctangent
+                dp.SetCurrentAction(DrawProcess.D_TCLINE); //cctangent
             }
 //            else if (command.equalsIgnoreCase("cctangent")) {
 //                dp.SetCurrentAction(drawProcess.CCTANGENT);
 //            }
             else if (command.equalsIgnoreCase("intersect")) {
-                dp.SetCurrentAction(drawProcess.MEET);
+                dp.SetCurrentAction(DrawProcess.MEET);
             } else if (command.equalsIgnoreCase("middle")) {
-                dp.SetCurrentAction(drawProcess.D_MIDPOINT);
+                dp.SetCurrentAction(DrawProcess.D_MIDPOINT);
             } else if (command.equalsIgnoreCase("Circle by Three Points")) {
-                dp.SetCurrentAction(drawProcess.D_3PCIRCLE);
+                dp.SetCurrentAction(DrawProcess.D_3PCIRCLE);
             } else if (command.equalsIgnoreCase("translate")) {
                 this.setDrawCursor(Cursor.HAND_CURSOR);
-                dp.SetCurrentAction(drawProcess.TRANSLATE);
+                dp.SetCurrentAction(DrawProcess.TRANSLATE);
             } else if (command.equalsIgnoreCase("foot")) {
-                dp.SetCurrentAction(drawProcess.PERPWITHFOOT);
+                dp.SetCurrentAction(DrawProcess.PERPWITHFOOT);
             } else if (command.equalsIgnoreCase("angle")) {
-                dp.SetCurrentAction(drawProcess.D_ANGLE);
+                dp.SetCurrentAction(DrawProcess.D_ANGLE);
             } else if (command.equalsIgnoreCase("zoom-in")) {
                 //setDrawCursor("ZOOM_IN");
-                dp.SetCurrentAction(drawProcess.ZOOM_IN);
+                dp.SetCurrentAction(DrawProcess.ZOOM_IN);
             } else if (command.equalsIgnoreCase("zoom-out")) {
                 //setDrawCursor("ZOOM_OUT");
-                dp.SetCurrentAction(drawProcess.ZOOM_OUT);
+                dp.SetCurrentAction(DrawProcess.ZOOM_OUT);
             } else if (command.equalsIgnoreCase("animation")) {
-                dp.SetCurrentAction(drawProcess.ANIMATION);
+                dp.SetCurrentAction(DrawProcess.ANIMATION);
             } else if (command.equalsIgnoreCase("eqangle")) {
-                dp.SetCurrentAction(drawProcess.SETEQANGLE);
+                dp.SetCurrentAction(DrawProcess.SETEQANGLE);
             } else if (command.equalsIgnoreCase("nteqangle")) {
-                dp.SetCurrentAction(drawProcess.NTANGLE);
+                dp.SetCurrentAction(DrawProcess.NTANGLE);
             } else if (command.equalsIgnoreCase("eqangle3p")) {
-                dp.SetCurrentAction(drawProcess.SETEQANGLE3P);
+                dp.SetCurrentAction(DrawProcess.SETEQANGLE3P);
             } else if (command.equalsIgnoreCase("cctangent")) {
-                dp.SetCurrentAction(drawProcess.SETCCTANGENT);
+                dp.SetCurrentAction(DrawProcess.SETCCTANGENT);
             } else if (command.equalsIgnoreCase("angle specification")) {
                 dp.defineSpecificAngle();
             } else if (command.equalsIgnoreCase("ra_side")) {
-                dp.SetCurrentAction(drawProcess.SETEQSIDE);
+                dp.SetCurrentAction(DrawProcess.SETEQSIDE);
                 dp.setcurrentStatus(0);
                 // ps = language.getEnglish(ps);
                 if (ps.equalsIgnoreCase(getLanguage("Other..."))) {
@@ -1496,62 +1508,62 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 //                int status = Integer.parseInt(ps);
 //                dp.setcurrentStatus(status);
             } else if (command.equalsIgnoreCase("equal distance")) {
-                dp.SetCurrentAction(drawProcess.SETEQSIDE);
+                dp.SetCurrentAction(DrawProcess.SETEQSIDE);
                 dp.setcurrentStatus(1);
                 dp.setParameter(1, 1);
             } else if (command.equalsIgnoreCase("fillpolygon")) {
-                dp.SetCurrentAction(drawProcess.DEFINEPOLY);
+                dp.SetCurrentAction(DrawProcess.DEFINEPOLY);
             } else if (command.equalsIgnoreCase("polygon")) {
-                dp.SetCurrentAction(drawProcess.D_POLYGON);
+                dp.SetCurrentAction(DrawProcess.D_POLYGON);
             } else if (command.equalsIgnoreCase("square")) {
-                dp.SetCurrentAction(drawProcess.D_SQUARE);
+                dp.SetCurrentAction(DrawProcess.D_SQUARE);
             } else if (command.equalsIgnoreCase("radical of two circles")) {
-                dp.SetCurrentAction(drawProcess.D_CCLINE);
+                dp.SetCurrentAction(DrawProcess.D_CCLINE);
             } else if (command.equalsIgnoreCase("isosceles triangle")) {
-                dp.SetCurrentAction(drawProcess.D_IOSTRI);
+                dp.SetCurrentAction(DrawProcess.D_IOSTRI);
             } else if (command.equalsIgnoreCase("fill polygon")) {
-                dp.SetCurrentAction(drawProcess.DEFINEPOLY);
+                dp.SetCurrentAction(DrawProcess.DEFINEPOLY);
             } else if (command.equalsIgnoreCase("text")) {
-                dp.SetCurrentAction(drawProcess.D_TEXT);
+                dp.SetCurrentAction(DrawProcess.D_TEXT);
             } else if (command.equalsIgnoreCase("mirror")) {
-                dp.SetCurrentAction(drawProcess.MIRROR);
+                dp.SetCurrentAction(DrawProcess.MIRROR);
             } else if (command.equalsIgnoreCase("circle by diameter")) {
-                dp.SetCurrentAction(drawProcess.D_PFOOT);
+                dp.SetCurrentAction(DrawProcess.D_PFOOT);
             } else if (command.equalsIgnoreCase("Trace")) {
-                dp.SetCurrentAction(drawProcess.SETTRACK);
+                dp.SetCurrentAction(DrawProcess.SETTRACK);
             } else if (command.equalsIgnoreCase("Locus")) {
-                dp.SetCurrentAction(drawProcess.LOCUS);
+                dp.SetCurrentAction(DrawProcess.LOCUS);
             } else if (command.equalsIgnoreCase("point by point and segment")) {
-                dp.SetCurrentAction(drawProcess.D_PTDISTANCE);
+                dp.SetCurrentAction(DrawProcess.D_PTDISTANCE);
             } else if (command.equalsIgnoreCase("propline")) {
                 String s = ((JMenuItem) src).getText();
                 // ps = language.getEnglish(ps);
                 if (ps.equalsIgnoreCase(getLanguage("Other..."))) {
-                    dp.SetCurrentAction(drawProcess.LRATIO);
+                    dp.SetCurrentAction(DrawProcess.LRATIO);
                     RatioSelectDialog dlg = new RatioSelectDialog(this);
                     dlg.setVisible(true);
                     dp.setParameter(dlg.getValue1(), dlg.getValue2());
                     this.setTipText(dlg.getValue1() + ":" + dlg.getValue2());
                 } else {
-                    dp.SetCurrentAction(drawProcess.LRATIO);
+                    dp.SetCurrentAction(DrawProcess.LRATIO);
                     int[] t = this.parse2Int(s);
                     dp.setParameter(t[0], t[1]);
                     this.setTipText(s);
                 }
             } else if (command.equalsIgnoreCase("midpoint")) {
-                dp.SetCurrentAction(drawProcess.D_MIDPOINT);
+                dp.SetCurrentAction(DrawProcess.D_MIDPOINT);
             } else if (command.equalsIgnoreCase("circumcenter")) {
-                dp.SetCurrentAction(drawProcess.CIRCUMCENTER);
+                dp.SetCurrentAction(DrawProcess.CIRCUMCENTER);
             } else if (command.equalsIgnoreCase("centroid")) {
-                dp.SetCurrentAction(drawProcess.BARYCENTER);
+                dp.SetCurrentAction(DrawProcess.BARYCENTER);
             } else if (command.equalsIgnoreCase("orthocenter")) {
-                dp.SetCurrentAction(drawProcess.ORTHOCENTER);
+                dp.SetCurrentAction(DrawProcess.ORTHOCENTER);
             } else if (command.equalsIgnoreCase("incenter")) {
-                dp.SetCurrentAction(drawProcess.INCENTER);
+                dp.SetCurrentAction(DrawProcess.INCENTER);
             } else if (command.equalsIgnoreCase("move")) {
-                dp.SetCurrentAction(drawProcess.MOVE);
+                dp.SetCurrentAction(DrawProcess.MOVE);
             } else if (command.equalsIgnoreCase("o_t_segment")) {
-                dp.SetCurrentAction(drawProcess.D_TRATIO);
+                dp.SetCurrentAction(DrawProcess.D_TRATIO);
                 String s = ((JMenuItem) src).getText();
                 // ps = language.getEnglish(ps);
                 if (ps.equalsIgnoreCase(getLanguage("Other..."))) {
@@ -1564,57 +1576,57 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     dp.setParameter(t[0], t[1]);
                 }
             } else if (command.equalsIgnoreCase("measure distance")) {
-                dp.SetCurrentAction(drawProcess.DISTANCE);
+                dp.SetCurrentAction(DrawProcess.DISTANCE);
             } else if (command.equalsIgnoreCase("Arrow")) {
-                dp.SetCurrentAction(drawProcess.ARROW);
+                dp.SetCurrentAction(DrawProcess.ARROW);
             } else if (command.equalsIgnoreCase("horizonal")) {
-                dp.SetCurrentAction(drawProcess.H_LINE);
+                dp.SetCurrentAction(DrawProcess.H_LINE);
             } else if (command.equalsIgnoreCase("vertical")) {
-                dp.SetCurrentAction(drawProcess.V_LINE);
+                dp.SetCurrentAction(DrawProcess.V_LINE);
             } else if (command.equalsIgnoreCase("eqmark")) {
-                dp.SetCurrentAction(drawProcess.EQMARK);
+                dp.SetCurrentAction(DrawProcess.EQMARK);
                 int status = Integer.parseInt(ps);
                 dp.setcurrentStatus(status);
             } else if (command.equalsIgnoreCase("triangle")) {
                 dp.setcurrentStatus(3);
-                dp.SetCurrentAction(drawProcess.D_POLYGON);
+                dp.SetCurrentAction(DrawProcess.D_POLYGON);
                 dp.setcurrentStatus(3);
             } else if (command.equalsIgnoreCase("equilateral triangle")) {
-                dp.SetCurrentAction(drawProcess.DRAWTRIALL);
+                dp.SetCurrentAction(DrawProcess.DRAWTRIALL);
             } else if (command.equalsIgnoreCase("Tri_perp")) {
-                dp.SetCurrentAction(drawProcess.D_PFOOT);
+                dp.SetCurrentAction(DrawProcess.D_PFOOT);
 
             } else if (command.equalsIgnoreCase("Tri_sq_iso")) {
-                dp.SetCurrentAction(drawProcess.DRAWTRISQISO);
+                dp.SetCurrentAction(DrawProcess.DRAWTRISQISO);
             } else if (command.equalsIgnoreCase("quadrangle")) {
                 dp.setcurrentStatus(4);
-                dp.SetCurrentAction(drawProcess.D_POLYGON);
+                dp.SetCurrentAction(DrawProcess.D_POLYGON);
                 dp.setcurrentStatus(4);
             } else if (command.equalsIgnoreCase("parallelogram")) {
-                dp.SetCurrentAction(drawProcess.PARALLELOGRAM);
+                dp.SetCurrentAction(DrawProcess.PARALLELOGRAM);
             } else if (command.equalsIgnoreCase("ra_trapezoid")) {
-                dp.SetCurrentAction(drawProcess.RA_TRAPEZOID);
+                dp.SetCurrentAction(DrawProcess.RA_TRAPEZOID);
             } else if (command.equalsIgnoreCase("trapezoid")) {
-                dp.SetCurrentAction(drawProcess.TRAPEZOID);
+                dp.SetCurrentAction(DrawProcess.TRAPEZOID);
             } else if (command.equalsIgnoreCase("rectangle")) {
-                dp.SetCurrentAction(drawProcess.RECTANGLE);
+                dp.SetCurrentAction(DrawProcess.RECTANGLE);
             } else if (command.equalsIgnoreCase("pentagon")) {
                 dp.setcurrentStatus(5);
-                dp.SetCurrentAction(drawProcess.D_POLYGON);
+                dp.SetCurrentAction(DrawProcess.D_POLYGON);
                 dp.setcurrentStatus(5);
             } else if (command.equalsIgnoreCase("polygon")) {
-                dp.SetCurrentAction(drawProcess.D_POLYGON);
+                dp.SetCurrentAction(DrawProcess.D_POLYGON);
                 dp.setcurrentStatus(9999);
             } else if (command.equalsIgnoreCase("hide object")) {
-                dp.SetCurrentAction(drawProcess.HIDEOBJECT);
+                dp.SetCurrentAction(DrawProcess.HIDEOBJECT);
             } else if (command.equalsIgnoreCase("show object")) {
-                dp.SetCurrentAction(drawProcess.SHOWOBJECT);
+                dp.SetCurrentAction(DrawProcess.SHOWOBJECT);
             } else if (command.equalsIgnoreCase("Rules for Full Angle")) {
                 getRuleDialog(1).setVisible(true);
             } else if (command.equalsIgnoreCase("Rules for GDD")) {
                 getRuleDialog(0).setVisible(true);
             } else if (command.equalsIgnoreCase("sangle")) {
-                dp.SetCurrentAction(drawProcess.SANGLE);
+                dp.SetCurrentAction(DrawProcess.SANGLE);
                 try {
                     int n = 0;
                     ps = language.getEnglish(ps);
@@ -1631,15 +1643,15 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     JOptionPane.showMessageDialog(this, ee.getMessage(), "Information", JOptionPane.WARNING_MESSAGE);
                 }
             } else if (command.equalsIgnoreCase("equal ratio")) {
-                dp.SetCurrentAction(drawProcess.RATIO);
+                dp.SetCurrentAction(DrawProcess.RATIO);
             } else if (command.equalsIgnoreCase("RAMark"))
-                dp.SetCurrentAction(drawProcess.RAMARK);
+                dp.SetCurrentAction(DrawProcess.RAMARK);
             else if (command.equalsIgnoreCase("Transform"))
-                dp.SetCurrentAction(drawProcess.TRANSFORM);
+                dp.SetCurrentAction(DrawProcess.TRANSFORM);
             else if (command.equalsIgnoreCase("Equivalence"))
-                dp.SetCurrentAction(drawProcess.EQUIVALENCE);
+                dp.SetCurrentAction(DrawProcess.EQUIVALENCE);
             else if (command.equalsIgnoreCase("Free Transform"))
-                dp.SetCurrentAction(drawProcess.FREE_TRANSFORM);
+                dp.SetCurrentAction(DrawProcess.FREE_TRANSFORM);
             else if (command.equalsIgnoreCase("Calculation")) {
                 TextValueEditor dlg = new TextValueEditor(this);
                 this.centerDialog(dlg);
@@ -1671,7 +1683,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
         try {
             DataOutputStream out = dp.openOutputFile(ff.getPath());
-            String program = PanelProve1.graphvizProgram;
+            String program = PanelProve.graphvizProgram;
             out.writeBytes(program);
             out.close();
         } catch (Exception ee) {
@@ -2014,7 +2026,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
         int v = 1000 / am.getInitValue();
 
-        GifProcessDialog dlg1 = new GifProcessDialog(this.getFrame());
+        GIFProcessDialog dlg1 = new GIFProcessDialog(this.getFrame());
         this.centerDialog(dlg1);
         dlg1.setTotal(n);
 

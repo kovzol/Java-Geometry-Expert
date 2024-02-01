@@ -91,10 +91,10 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
     private void createCheckBox(CheckBoxNode[] list, Vector vlist, int t1, int t2) {
         int index = 0;
         for (int i = t1; i < vlist.size() && i <= t2; i++) {
-            grule r = (grule) vlist.get(i);
+            GRule r = (GRule) vlist.get(i);
             int t = r.type;
             list[index++] = new CheckBoxNode(t, t + ".  " +
-                    GExpert.getLanguage(r.discription), true, r);
+                    GExpert.getLanguage(r.description), true, r);
         }
     }
 
@@ -107,7 +107,7 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
             treef.expandRow(i);
     }
 
-    public grule getSelectedRule() {
+    public GRule getSelectedRule() {
         DefaultMutableTreeNode nd = null;
         JTree tt = null;
 
@@ -123,7 +123,7 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
             Object obj = nd.getUserObject();
             if (obj instanceof CheckBoxNode) {
                 CheckBoxNode ch = (CheckBoxNode) obj;
-                grule r = ch.getRule();
+                GRule r = ch.getRule();
                 return r;
             }
         }
@@ -141,14 +141,14 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
                 tt = treef;
             }
 
-            grule r = this.getSelectedRule();
+            GRule r = this.getSelectedRule();
             if (r != null) {
                 ppMenu m = new ppMenu(r);
                 m.show(tt, e.getX(), e.getY());
             }
         } else {
             if (e.getClickCount() > 1) {
-                grule r = this.getSelectedRule();
+                GRule r = this.getSelectedRule();
                 this.showRuleDialog(r);
             }
         }
@@ -314,16 +314,16 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         private String text;
         private boolean selected;
         private int v;
-        private grule rule;
+        private GRule rule;
 
-        public CheckBoxNode(int n, String text, boolean selected, grule rl) {
+        public CheckBoxNode(int n, String text, boolean selected, GRule rl) {
             this.text = text;
             this.selected = selected;
             this.v = n;
             rule = rl;
         }
 
-        public grule getRule() {
+        public GRule getRule() {
             return rule;
         }
 
@@ -374,7 +374,7 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
     }
 
 
-    public void showRuleDialog(grule r) {
+    public void showRuleDialog(GRule r) {
         if (r != null) {
             if (r.isGDDRule()) {
                 RuleListDialog dlg = new RuleListDialog(gxInstance);
@@ -394,7 +394,7 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         if (cm.equals("Show Detail")) {
             JMenuItem m1 = (JMenuItem) e.getSource();
             ppMenu m = (ppMenu) m1.getParent();
-            grule r = m.getRule();
+            GRule r = m.getRule();
             showRuleDialog(r);
         }
 
@@ -402,13 +402,13 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
 
     class ppMenu extends JPopupMenu {
 
-        private grule rule;
+        private GRule rule;
 
-        public grule getRule() {
+        public GRule getRule() {
             return rule;
         }
 
-        public ppMenu(grule r) {
+        public ppMenu(GRule r) {
             super();
             rule = r;
 

@@ -21,10 +21,10 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
 
     private GExpert gxInstance;
     private DPanel dpane;
-    private drawTextProcess dpp;
+    private DrawTextProcess dpp;
 
 
-    private drawTextProcess dx;
+    private DrawTextProcess dx;
     private rulePanel rpanel;
     private ruleViewPanel rvpanel;
     private ruleAppPanel rapanel;
@@ -37,7 +37,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
     private JDialog ruleDialog;
 
 
-    public RuleApplicationDialog(GExpert gx, DPanel d, drawTextProcess dp) {
+    public RuleApplicationDialog(GExpert gx, DPanel d, DrawTextProcess dp) {
         super(gx.getFrame());
         this.dpane = d;
         this.dpp = dp;
@@ -47,7 +47,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         init();
     }
 
-    public RuleApplicationDialog(DPanel d, drawTextProcess dp) {
+    public RuleApplicationDialog(DPanel d, DrawTextProcess dp) {
         this.dpane = d;
         this.dpp = dp;
         gxInstance = null;
@@ -432,10 +432,10 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             xx = yy = 0;
 
 
-            dx = new drawTextProcess();
+            dx = new DrawTextProcess();
             dx.setCurrentDrawPanel(this);
             dx.setRecal(false);
-            dx.SetCurrentAction(drawProcess.MOVE);
+            dx.SetCurrentAction(DrawProcess.MOVE);
             this.addMouseListener(this);
             this.setBackground(Color.white);
             this.addMouseMotionListener(this);
@@ -475,7 +475,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
 
 
-        public Object addCyclicCircle(cond c, drawProcess dp) {
+        public Object addCyclicCircle(cond c, DrawProcess dp) {
             Object o = null;
             if (c.pred == gib.CO_CYCLIC) {
                 if (c.p[0] == 0) {
@@ -538,7 +538,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
 
         private CLine addLine(int a, int b) {
-            drawTextProcess dp = dpp;
+            DrawTextProcess dp = dpp;
             CPoint p1 = dp.fd_point(a);
             CPoint p2 = dp.fd_point(b);
             if (p1 == null || p2 == null) return null;
@@ -566,7 +566,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
 
         private void addOtherObjects(cond c) {
-            drawTextProcess dp = dpp;
+            DrawTextProcess dp = dpp;
             JFlash flash = null;
 
             switch (c.pred) {
@@ -595,7 +595,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
                 case gib.CO_PERP:
                     CLine ln1 = addLine(c.p[0], c.p[1]);
                     CLine ln2 = addLine(c.p[2], c.p[3]);
-                    constraint cs = new constraint(constraint.PERPENDICULAR, ln1, ln2);
+                    Constraint cs = new Constraint(Constraint.PERPENDICULAR, ln1, ln2);
                     dx.addConstraintToList(cs);
                     flash = dp.getFlashCond(rpanel, c);
                     break;
@@ -656,7 +656,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
 
         private void addCondPts(Vector v1, cond c) {
-            drawProcess dp = dpp;
+            DrawProcess dp = dpp;
             if (c != null) {
                 int n = c.p.length;
                 if (c.pred == gib.CO_CONG)
@@ -709,7 +709,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
 
         public void LoadRule(el_term el) {
-            drawProcess dp = dpp;
+            DrawProcess dp = dpp;
             cond c = el.co;
             Vector v1 = new Vector();
             while (c != null) {

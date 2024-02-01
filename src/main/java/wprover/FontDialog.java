@@ -11,7 +11,7 @@ import javax.swing.*;
  */
 public class FontDialog extends JPanel {
 
-    public FontDialog(PanelProve1 pproof) {
+    public FontDialog(PanelProve pproof) {
         super();
 
 

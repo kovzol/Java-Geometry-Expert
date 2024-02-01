@@ -7,7 +7,6 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.Map;
 
 
 public class MiscDialog extends JBaseDialog implements FocusListener, ActionListener {
@@ -218,9 +217,9 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (JOptionPane.OK_OPTION ==
-                            vFontChooser.showDialog(gxInstance, CMisc.nameFont,
+                            VFontChooser.showDialog(gxInstance, CMisc.nameFont,
                                     GExpert.getLanguage("Choose default font for point's text"), Color.black)) {
-                        CMisc.nameFont = vFontChooser.getReturnFont();
+                        CMisc.nameFont = VFontChooser.getReturnFont();
                         JButton b = (JButton) e.getSource();
                         b.setText(CMisc.nameFont.getName() + " " + CMisc.nameFont.getSize());
                     }
@@ -293,8 +292,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
                 public void actionPerformed(ActionEvent e) {
 
                     if (JOptionPane.OK_OPTION ==
-                            vFontChooser.showDialog(gxInstance, CMisc.angleNameFont, Color.black)) {
-                        CMisc.angleNameFont = vFontChooser.getReturnFont();
+                            VFontChooser.showDialog(gxInstance, CMisc.angleNameFont, Color.black)) {
+                        CMisc.angleNameFont = VFontChooser.getReturnFont();
                         JButton button = (JButton) e.getSource();
                         button.setText(CMisc.angleNameFont.getName() + " " + CMisc.angleNameFont.getSize());
                     }
@@ -474,8 +473,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (JOptionPane.OK_OPTION ==
-                            vFontChooser.showDialog(gxInstance, CMisc.nameFont, Color.black)) {
-                        CMisc.nameFont = vFontChooser.getReturnFont();
+                            VFontChooser.showDialog(gxInstance, CMisc.nameFont, Color.black)) {
+                        CMisc.nameFont = VFontChooser.getReturnFont();
                         JButton button = (JButton) e.getSource();
                         button.setText(CMisc.nameFont.getName() + " " + CMisc.nameFont.getSize());
                     }
@@ -493,8 +492,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (JOptionPane.OK_OPTION ==
-                            vFontChooser.showDialog(gxInstance, CMisc.thmFont, Color.black)) {
-                        CMisc.thmFont = vFontChooser.getReturnFont();
+                            VFontChooser.showDialog(gxInstance, CMisc.thmFont, Color.black)) {
+                        CMisc.thmFont = VFontChooser.getReturnFont();
                         JButton button = (JButton) e.getSource();
                         button.setText(CMisc.thmFont.getName() + " " + CMisc.thmFont.getSize());
                     }
@@ -512,8 +511,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (JOptionPane.OK_OPTION ==
-                            vFontChooser.showDialog(gxInstance, CMisc.fullFont, Color.black)) {
-                        CMisc.fullFont = vFontChooser.getReturnFont();
+                            VFontChooser.showDialog(gxInstance, CMisc.fullFont, Color.black)) {
+                        CMisc.fullFont = VFontChooser.getReturnFont();
                         JButton button = (JButton) e.getSource();
                         button.setText(CMisc.fullFont.getName() + " " + CMisc.fullFont.getSize());
                     }
@@ -531,8 +530,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (JOptionPane.OK_OPTION ==
-                            vFontChooser.showDialog(gxInstance, CMisc.areaFont, Color.black)) {
-                        CMisc.areaFont = vFontChooser.getReturnFont();
+                            VFontChooser.showDialog(gxInstance, CMisc.areaFont, Color.black)) {
+                        CMisc.areaFont = VFontChooser.getReturnFont();
                         JButton button = (JButton) e.getSource();
                         button.setText(CMisc.areaFont.getName() + " " + CMisc.areaFont.getSize());
                     }
@@ -550,8 +549,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (JOptionPane.OK_OPTION ==
-                            vFontChooser.showDialog(gxInstance, CMisc.manualFont, Color.black)) {
-                        CMisc.manualFont = vFontChooser.getReturnFont();
+                            VFontChooser.showDialog(gxInstance, CMisc.manualFont, Color.black)) {
+                        CMisc.manualFont = VFontChooser.getReturnFont();
                         JButton button = (JButton) e.getSource();
                         button.setText(CMisc.manualFont.getName() + " " + CMisc.manualFont.getSize());
                     }
@@ -569,8 +568,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (JOptionPane.OK_OPTION ==
-                            vFontChooser.showDialog(gxInstance, CMisc.fixFont, Color.black)) {
-                        CMisc.fixFont = vFontChooser.getReturnFont();
+                            VFontChooser.showDialog(gxInstance, CMisc.fixFont, Color.black)) {
+                        CMisc.fixFont = VFontChooser.getReturnFont();
                         JButton button = (JButton) e.getSource();
                         button.setText(CMisc.fixFont.getName() + " " + CMisc.fixFont.getSize());
                     }
@@ -589,8 +588,8 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (JOptionPane.OK_OPTION ==
-                            vFontChooser.showDialog(gxInstance, CMisc.algebraFont, Color.black)) {
-                        CMisc.algebraFont = vFontChooser.getReturnFont();
+                            VFontChooser.showDialog(gxInstance, CMisc.algebraFont, Color.black)) {
+                        CMisc.algebraFont = VFontChooser.getReturnFont();
                         JButton button = (JButton) e.getSource();
                         button.setText(CMisc.algebraFont.getName() + " " + CMisc.algebraFont.getSize());
                     }

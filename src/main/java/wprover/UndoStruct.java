@@ -7,8 +7,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -100,14 +98,14 @@ class UndoStruct {
         if (dlist.size() == 0) {
             return msg;
         } else {
-            if (action == drawbase.D_PARELINE) {
+            if (action == DrawBase.D_PARELINE) {
                 CLine ln1 = ((CLine) dlist.get(0));
                 CLine ln2 = ((CLine) dlist.get(1));
                 CPoint p = ((CPoint) dlist.get(2));
                 return ln1.getDiscription() + " paral " + ln2.getDiscription() +
                         " passing " + p.getname();
 
-            } else if (action == drawbase.D_PERPLINE) {
+            } else if (action == DrawBase.D_PERPLINE) {
                 CLine ln1 = ((CLine) dlist.get(0));
                 CLine ln2 = ((CLine) dlist.get(1));
                 CPoint p = ((CPoint) dlist.get(2));
@@ -233,7 +231,7 @@ class UndoStruct {
         }
     }
 
-    public Vector getAllObjects(drawProcess dp) {
+    public Vector getAllObjects(DrawProcess dp) {
         Vector v = new Vector();
 
         if (this.m_type == T_UNDO_NODE) {
@@ -277,7 +275,7 @@ class UndoStruct {
         }
     }
 
-    public Vector ReadList(DataInputStream in, drawProcess dp) throws
+    public Vector ReadList(DataInputStream in, DrawProcess dp) throws
             IOException {
         int size = in.readInt();
         Vector v = new Vector();
@@ -343,7 +341,7 @@ class UndoStruct {
         }
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         if (CMisc.version_load_now >= 0.019) {
             m_id = in.readInt();
 

@@ -1,8 +1,6 @@
 package wprover;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.awt.*;
@@ -16,7 +14,7 @@ import java.io.DataOutputStream;
 public class MProveTree extends JTree implements ActionListener {
     private GExpert gxInstance;
     private DPanel dpane;
-    private drawTextProcess dp;
+    private DrawTextProcess dp;
 
     private DefaultMutableTreeNode top;
     private DefaultTreeModel model;
@@ -374,7 +372,7 @@ public class MProveTree extends JTree implements ActionListener {
 
     }
 
-    public MProveTree(GExpert gx, DPanel dd, drawTextProcess dpp) {
+    public MProveTree(GExpert gx, DPanel dd, DrawTextProcess dpp) {
         this.gxInstance = gx;
         this.dpane = dd;
         this.dp = dpp;
@@ -953,7 +951,7 @@ class mnode extends Vector {
         return null;
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         int n1 = in.readInt();
         int n2 = in.readInt();
         int n3 = in.readInt();
@@ -1050,7 +1048,7 @@ class msymbol extends mobject {
         return (ImageIcon) vlist.get(type1);
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         type1 = in.readInt();
     }
@@ -1095,7 +1093,7 @@ class mprefix extends mobject {
             return "????"; // FIXME: What is this?
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         type1 = in.readInt();
         if (CMisc.version_load_now < 0.037) {
@@ -1174,7 +1172,7 @@ class mdraw extends mobject {
         }
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         int n = in.readInt();
         for (int i = 0; i < n; i++) {
@@ -1221,7 +1219,7 @@ class mtext extends mobject {
         str = s;
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         str = ReadString(in);
     }
@@ -1318,7 +1316,7 @@ class mdrobj extends mobject {
         CPoint p2 = (CPoint) objlist.get(1);
         CPoint p3 = (CPoint) objlist.get(2);
         CPoint p4 = (CPoint) objlist.get(3);
-        return drawbase.check_para(p1, p2, p3, p4) && drawbase.check_para(p1, p4, p2, p3);
+        return DrawBase.check_para(p1, p2, p3, p4) && DrawBase.check_para(p1, p4, p2, p3);
     }
 
 
@@ -1328,7 +1326,7 @@ class mdrobj extends mobject {
         CPoint p3 = (CPoint) objlist.get(2);
         CPoint p4 = (CPoint) objlist.get(3);
 
-        return drawbase.check_eqdistance(p1, p2, p2, p3) && ck_rectangle();
+        return DrawBase.check_eqdistance(p1, p2, p2, p3) && ck_rectangle();
     }
 
     public boolean ck_trapezoid() {
@@ -1336,7 +1334,7 @@ class mdrobj extends mobject {
         CPoint p2 = (CPoint) objlist.get(1);
         CPoint p3 = (CPoint) objlist.get(2);
         CPoint p4 = (CPoint) objlist.get(3);
-        return drawbase.check_para(p1, p2, p3, p4) || drawbase.check_para(p1, p4, p2, p3);
+        return DrawBase.check_para(p1, p2, p3, p4) || DrawBase.check_para(p1, p4, p2, p3);
     }
 
     public boolean ck_rectangle() {
@@ -1345,7 +1343,7 @@ class mdrobj extends mobject {
         CPoint p3 = (CPoint) objlist.get(2);
         CPoint p4 = (CPoint) objlist.get(3);
 
-        return drawbase.check_perp(p1, p2, p2, p3) && ck_parallelogram();
+        return DrawBase.check_perp(p1, p2, p2, p3) && ck_parallelogram();
     }
 
 
@@ -1491,7 +1489,7 @@ class mdrobj extends mobject {
         return s1;
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         type1 = in.readInt();
         int n = in.readInt();
@@ -1608,7 +1606,7 @@ class mobject {
         return s;
     }
 
-    public static mobject load(DataInputStream in, drawProcess dp) throws
+    public static mobject load(DataInputStream in, DrawProcess dp) throws
             IOException {
         int t = in.readInt();
         switch (t) {
@@ -1656,7 +1654,7 @@ class mobject {
         return null;
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         type = in.readInt();
     }
 
@@ -1698,7 +1696,7 @@ class mrule extends mobject {
         rindex = n;
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         rindex = in.readInt();
     }
@@ -1734,7 +1732,7 @@ class mequation extends mobject {
         return (meqterm) vlist.get(index);
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         int n = in.readInt();
         for (int i = 0; i < n; i++) {
@@ -1795,7 +1793,7 @@ class meqterm {
         return obj;
     }
 
-    public static meqterm Load(DataInputStream in, drawProcess dp) throws
+    public static meqterm Load(DataInputStream in, DrawProcess dp) throws
             IOException {
         int t = in.readInt();
         mdrobj o = new mdrobj(0);
@@ -2129,7 +2127,7 @@ class massertion extends mobject {
         return s;
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         type1 = in.readInt();
         int n = in.readInt();

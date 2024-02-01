@@ -1,6 +1,6 @@
 package gprover;
 
-public class rules {
+public class Rules {
 
     // All of these translations are now in the keys.pot and *.po files in the gettext system.
     // In case you edit these entries, make sure that the other files will also be updated.

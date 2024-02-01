@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
  * Time: 11:20:51
  * To change this template use File | Settings | File Templates.
  */
+
+// TODO. This class should be renamed.
 public class RectChooser1 extends JBaseDialog implements MouseListener, MouseMotionListener,
         ComponentListener, ActionListener, Runnable {
 
@@ -29,7 +31,7 @@ public class RectChooser1 extends JBaseDialog implements MouseListener, MouseMot
     }
 
     public RectChooser1(GExpert gx) {
-        super(gx.getFrame(), "Choose Rect", true);
+        super(gx.getFrame(), GExpert.getLanguage("Choose a rectangle"), true);
         JPanel ppp = new JPanel();
         ppp.setLayout(new BoxLayout(ppp, BoxLayout.Y_AXIS));
 

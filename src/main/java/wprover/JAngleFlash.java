@@ -5,8 +5,6 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import gprover.*;
-
 /**
  * Created by IntelliJ IDEA.
  * User: yezheng
@@ -84,7 +82,7 @@ public class JAngleFlash extends JFlash implements ActionListener {
     public boolean draw(Graphics2D g2) {
         if (n % 2 == 0) {
             g2.setColor(color);
-            if (drawbase.check_para(p1, p2, p3, p4)) {
+            if (DrawBase.check_para(p1, p2, p3, p4)) {
                 g2.setStroke(BStroke2);
                 g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) p2.getx(),
                         (int) p2.gety());
@@ -249,7 +247,7 @@ public class JAngleFlash extends JFlash implements ActionListener {
         } else if (ftype == 3) {
             Composite ac = g2.getComposite();
             g2.setComposite(CMisc.getFillComposite());
-            g2.setColor(drawData.getColor(value1));
+            g2.setColor(DrawData.getColor(value1));
             g2.fillArc(x, y, w, w, ri1, (int) dr);
             g2.setComposite(ac);
             g2.setColor(super.getColor());

@@ -2,7 +2,6 @@ package wprover;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.PopupMenuListener;
@@ -11,7 +10,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 import java.io.File;
-import java.net.URL;
 
 
 public class CDialogProve extends JBaseDialog {
@@ -220,7 +218,7 @@ class ProvePane extends JPanel
         if (obj == this.b_select) {
             listModel.clear();
             vlist.clear();
-            gxInstance.dp.SetCurrentAction(drawProcess.SELECT);
+            gxInstance.dp.SetCurrentAction(DrawProcess.SELECT);
         } else if (obj == this.b_ok) {
             cptext.setHead(captainField.getText());
             cptext.setMessage(proveField.getText());

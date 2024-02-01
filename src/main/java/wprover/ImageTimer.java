@@ -53,7 +53,7 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
 
 
     public ImageTimer(GExpert f) {
-        super(f.getFrame(), "Saving Proof as GIF File", true);
+        super(f.getFrame(), GExpert.getLanguage("Saving Proof as GIF File"), true);
         gxInstance = f;
         nf = 0;
         n1 = 0;
@@ -68,9 +68,9 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
         JPanel p2 = new JPanel();
         p2.setLayout(new GridLayout(3, 1));
         p2.setBorder(BorderFactory.createEmptyBorder(3, 13, 3, 13));
-        p2.add(new JLabel("Defaut Delay"));
-        p2.add(new JLabel("Delay at Begin"));
-        p2.add(new JLabel("Delay at End"));
+        p2.add(new JLabel(GExpert.getLanguage("Default Delay")));
+        p2.add(new JLabel(GExpert.getLanguage("Delay at Begin")));
+        p2.add(new JLabel(GExpert.getLanguage("Delay at End")));
         pp.add(p2);
 
         p2 = new JPanel();
@@ -109,7 +109,7 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
         p.add(pp);
 
 
-        label1 = new JLabel("0 frame(s) added");
+        label1 = new JLabel(GExpert.getTranslationViaGettext("{0} frame(s) added", "0"));
         p.add(label1);
 
 
@@ -117,6 +117,7 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
         p3.setLayout(new BoxLayout(p3, BoxLayout.X_AXIS));
         p3.add(Box.createHorizontalGlue());
         JButton bok = new JButton(GExpert.getLanguage("Start"));
+        bok.setActionCommand("Start");
         JButton bcancel = new JButton(GExpert.getLanguage("Cancel"));
         bok.addActionListener(this);
         bcancel.addActionListener(this);
@@ -187,7 +188,7 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
             n2++;
             nimage[n2] = i;
             nf++;
-            label1.setText(nf + " frame(s) added");
+            label1.setText(GExpert.getTranslationViaGettext("{0} frame(s) added", nf + ""));
         }
     }
 

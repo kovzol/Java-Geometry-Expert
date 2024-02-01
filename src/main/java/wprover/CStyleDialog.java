@@ -48,11 +48,11 @@ public class CStyleDialog extends FloatableToolBar {
     }
 
     public void reset() {
-        rColor.index = drawData.cindex;
-        rStyle.index = drawData.dindex;
-        rWidth.index = drawData.windex;
+        rColor.index = DrawData.cindex;
+        rStyle.index = DrawData.dindex;
+        rWidth.index = DrawData.windex;
         if (pgColor != null)
-            pgColor.index = drawData.polygoncolor;
+            pgColor.index = DrawData.polygoncolor;
     }
 
     public void setAction(int actionType) ////-1. ByPass Action;     0. defalut;
@@ -87,7 +87,7 @@ public class CStyleDialog extends FloatableToolBar {
 
                 if (pgColor == null) {
                     pgColor = new DrawStylePanel(0);
-                    pgColor.index = drawData.polygoncolor;
+                    pgColor.index = DrawData.polygoncolor;
                     pgRender = new PolygonFillPopComboRender(0);
                     pgColor.selector = pgRender;
                     pgColor.label = new JLabel(GExpert.getLanguage("Color"));
@@ -212,12 +212,12 @@ public class CStyleDialog extends FloatableToolBar {
             int w = (width) / 6;
             int gap = (height) / 6;
             if (type == 0) {
-                if (index < drawData.getColorCounter() && index >= 0) {
-                    g2.setColor(drawData.getColor(index));
+                if (index < DrawData.getColorCounter() && index >= 0) {
+                    g2.setColor(DrawData.getColor(index));
                     g2.fillRect(5, gap + 1, width - 10, height - 2 * gap - 3);
                     g2.setColor(Color.black);
                     g2.drawRect(5, gap + 1, width - 10, height - 2 * gap - 3);
-                } else if (index == drawData.getColorCounter()) {
+                } else if (index == DrawData.getColorCounter()) {
                     int w2 = height / 2 - gap;
                     gap *= 2;
                     g2.setColor(Color.PINK);
@@ -232,7 +232,7 @@ public class CStyleDialog extends FloatableToolBar {
                     g2.drawRect(gap - 1, w2, gap * 4, gap);
                 }
             } else if (type == 1) {
-                float ww = (float) drawData.getWidth(index);
+                float ww = (float) DrawData.getWidth(index);
                 g2.setStroke(new BasicStroke(ww));
                 g2.setColor(Color.black);
                 g2.drawLine(5, height / 2, (width - 5), height / 2);
@@ -242,7 +242,7 @@ public class CStyleDialog extends FloatableToolBar {
                 if (index <= 0) {
                     g2.setStroke(new BasicStroke(1.5f));
                 } else {
-                    ds = (float) drawData.getDash(index);
+                    ds = (float) DrawData.getDash(index);
                     float dash[] = {ds};
                     g2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 5.0f, dash, 0.0f));
                 }
@@ -297,7 +297,7 @@ public class CStyleDialog extends FloatableToolBar {
             switch (type) {
                 case 0:       //Color
                 {
-                    int n = drawData.getColorCounter();
+                    int n = DrawData.getColorCounter();
                     for (int i = 0; i < n; i++) {
                         PopComboRenderCell r = new PopComboRenderCell(0, 100, 20);
                         r.index = i;
@@ -309,7 +309,7 @@ public class CStyleDialog extends FloatableToolBar {
                 break;
                 case 1:       //Width
                 {
-                    int n = drawData.getWidthCounter();
+                    int n = DrawData.getWidthCounter();
                     if (n > 20)
                         n = 20;
                     for (int i = 0; i < n; i++) {
@@ -323,7 +323,7 @@ public class CStyleDialog extends FloatableToolBar {
                 break;
                 case 2:       //Style
                 {
-                    int n = drawData.getDashCounter();
+                    int n = DrawData.getDashCounter();
                     for (int i = 0; i < n; i++) {
                         PopComboRenderCell r = new PopComboRenderCell(2, 100, 20);
                         r.index = i;
@@ -402,15 +402,15 @@ public class CStyleDialog extends FloatableToolBar {
             int idx = c.index;
             switch (t) {
                 case 0:
-                    drawData.cindex = idx;
+                    DrawData.cindex = idx;
                     rColor.index = idx;
                     break;
                 case 2:
-                    drawData.dindex = idx;
+                    DrawData.dindex = idx;
                     rStyle.index = idx;
                     break;
                 case 1:
-                    drawData.windex = idx;
+                    DrawData.windex = idx;
                     rWidth.index = idx;
                     break;
             }
@@ -429,7 +429,7 @@ public class CStyleDialog extends FloatableToolBar {
             PopComboRenderCell c = (PopComboRenderCell) e.getSource();
             int t = c.type;
             int idx = c.index;
-            drawData.polygoncolor = idx;
+            DrawData.polygoncolor = idx;
             if (pgColor != null)
                 pgColor.index = idx;
         }
@@ -445,7 +445,7 @@ public class CStyleDialog extends FloatableToolBar {
             PopComboRenderCell c = (PopComboRenderCell) e.getSource();
             int t = c.type;
             int idx = c.index;
-            drawData.polygoncolor = idx;
+            DrawData.polygoncolor = idx;
             if (pgColor != null)
                 pgColor.index = idx;
         }

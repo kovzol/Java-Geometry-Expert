@@ -1,7 +1,6 @@
 package wprover;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
@@ -106,7 +105,7 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         } else if (command.equals("Color")) {
             JMenuItem it = (JMenuItem) e.getSource();
             Color c = it.getForeground();
-            int ci = drawData.getColorIndex(c);
+            int ci = DrawData.getColorIndex(c);
             cc.setColor(ci);
             gxInstance.d.repaint();
         } else if (command.equals("Move")) {
@@ -229,11 +228,11 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         if (!t)
             return;
 
-        int n = drawData.getColorCounter();
+        int n = DrawData.getColorCounter();
         Dimension dm = new Dimension(90, 15);
         for (int i = 0; i < n; i++) {
             JMenuItem it = new JMenuItem();
-            Color c = drawData.getColor(i);
+            Color c = DrawData.getColor(i);
             it.add(new colorPanel(c));
             it.setForeground(c);
             it.setBorder(BorderFactory.createEmptyBorder(2, 1, 2, 1));

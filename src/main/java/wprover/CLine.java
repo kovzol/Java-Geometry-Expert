@@ -163,7 +163,7 @@ public class CLine extends CClass {
             drawLLine(line, g2);
             return;
         }
-        constraint cs = line.getconsByType(constraint.BLINE);
+        Constraint cs = line.getconsByType(Constraint.BLINE);
         CPoint p1 = (CPoint) cs.getelement(1);
         CPoint p2 = (CPoint) cs.getelement(2);
 
@@ -178,10 +178,10 @@ public class CLine extends CClass {
             drawLLine(line, g2);
             return;
         }
-        constraint cs = null;
+        Constraint cs = null;
         for (int i = 0; i < line.cons.size(); i++) {
-            cs = (constraint) line.getcons(i);
-            if (cs.GetConstraintType() == constraint.CCLine)
+            cs = (Constraint) line.getcons(i);
+            if (cs.GetConstraintType() == Constraint.CCLine)
                 break;
         }
         if (cs == null) return;
@@ -222,7 +222,7 @@ public class CLine extends CClass {
             drawLLine(line, g2);
             return;
         }
-        constraint cs = (constraint) line.getcons(0);
+        Constraint cs = (Constraint) line.getcons(0);
         CLine l = (CLine) cs.getelement(0);
         CLine l1 = (CLine) cs.getelement(1);
         CPoint p = l1.getfirstPoint();
@@ -256,7 +256,7 @@ public class CLine extends CClass {
             return;
         }
 
-        constraint cs = (constraint) line.getcons(0);
+        Constraint cs = (Constraint) line.getcons(0);
         CLine l = (CLine) cs.getelement(1);
         CPoint p = (CPoint) line.points.get(0);
         double k = l.getK();
@@ -269,7 +269,7 @@ public class CLine extends CClass {
             return;
         }
 
-        constraint cs = (constraint) line.getcons(0);
+        Constraint cs = (Constraint) line.getcons(0);
         CLine l = (CLine) cs.getelement(1);
         if (line.points.size() == 0)
             return;
@@ -427,8 +427,8 @@ public class CLine extends CClass {
         if (type != PLine)
             return false;
         for (int i = 0; i < cons.size(); i++) {
-            constraint cs = (constraint) cons.get(i);
-            if (cs.GetConstraintType() != constraint.PARALLEL)
+            Constraint cs = (Constraint) cons.get(i);
+            if (cs.GetConstraintType() != Constraint.PARALLEL)
                 continue;
             CLine line1 = (CLine) cs.getelement(0);
             CLine line2 = (CLine) cs.getelement(1);
@@ -447,8 +447,8 @@ public class CLine extends CClass {
 
     public boolean isVertical(CLine line) {
         for (int i = 0; i < cons.size(); i++) {
-            constraint cs = (constraint) cons.get(i);
-            if (cs.GetConstraintType() != constraint.PERPENDICULAR)
+            Constraint cs = (Constraint) cons.get(i);
+            if (cs.GetConstraintType() != Constraint.PERPENDICULAR)
                 continue;
             CLine line1 = (CLine) cs.getelement(0);
             CLine line2 = (CLine) cs.getelement(1);
@@ -576,15 +576,15 @@ public class CLine extends CClass {
         return pl;
     }
 
-    public constraint getcons(int i) {
+    public Constraint getcons(int i) {
         if (i >= 0 && i < cons.size())
-            return (constraint) cons.get(i);
+            return (Constraint) cons.get(i);
         return null;
     }
 
-    public constraint getconsByType(int t) {
+    public Constraint getconsByType(int t) {
         for (int i = 0; i < cons.size(); i++) {
-            constraint c = (constraint) cons.get(i);
+            Constraint c = (Constraint) cons.get(i);
             if (c.GetConstraintType() == t) return c;
         }
         return null;
@@ -621,24 +621,24 @@ public class CLine extends CClass {
             return false;
         }
 
-        constraint cs = null;
+        Constraint cs = null;
         for (int i = 0; i < cons.size(); i++) {
-            cs = (constraint) cons.get(i);
+            cs = (Constraint) cons.get(i);
             switch (cs.GetConstraintType()) {
-                case constraint.PARALLEL: {
+                case Constraint.PARALLEL: {
                     CLine line = (CLine) cs.getelement(1);
                     return line.isVertical();
                 }
-                case constraint.PERPENDICULAR: {
+                case Constraint.PERPENDICULAR: {
                     CLine line = (CLine) cs.getelement(1);
                     return line.isHorizonal();
                 }
-                case constraint.CCLine: {
+                case Constraint.CCLine: {
                     Circle c1 = (Circle) cs.getelement(1);
                     Circle c2 = (Circle) cs.getelement(2);
                     return (Math.abs(c1.o.getx() - c2.o.getx()) < CMisc.HV_ZERO);
                 }
-                case constraint.ALINE: {
+                case Constraint.ALINE: {
                     CLine ln0 = (CLine) cs.getelement(0);
                     CLine ln1 = (CLine) cs.getelement(1);
                     CLine ln2 = (CLine) cs.getelement(2);
@@ -660,19 +660,19 @@ public class CLine extends CClass {
             return false;
         }
 
-        constraint cs = null;
+        Constraint cs = null;
         for (int i = 0; i < cons.size(); i++) {
-            cs = (constraint) cons.get(i);
+            cs = (Constraint) cons.get(i);
             switch (cs.GetConstraintType()) {
-                case constraint.PARALLEL: {
+                case Constraint.PARALLEL: {
                     CLine line = (CLine) cs.getelement(1);
                     return line.isHorizonal();
                 }
-                case constraint.PERPENDICULAR: {
+                case Constraint.PERPENDICULAR: {
                     CLine line = (CLine) cs.getelement(1);
                     return line.isVertical();
                 }
-                case constraint.CCLine: {
+                case Constraint.CCLine: {
                     Circle c1 = (Circle) cs.getelement(1);
                     Circle c2 = (Circle) cs.getelement(2);
                     return (Math.abs(c1.o.gety() - c2.o.gety()) < CMisc.HV_ZERO);
@@ -689,31 +689,31 @@ public class CLine extends CClass {
             return (p2.gety() - p1.gety()) / (p2.getx() - p1.getx());
         }
 
-        constraint cs = null;
+        Constraint cs = null;
         for (int i = 0; i < cons.size(); i++) {
-            cs = (constraint) cons.get(i);
+            cs = (Constraint) cons.get(i);
             switch (cs.GetConstraintType()) {
-                case constraint.PARALLEL: {
+                case Constraint.PARALLEL: {
                     CLine line = (CLine) cs.getelement(1);
                     return line.getK();
                 }
-                case constraint.PERPENDICULAR: {
+                case Constraint.PERPENDICULAR: {
                     CLine line = (CLine) cs.getelement(1);
                     return -1.0 / line.getK();
                 }
-                case constraint.CCLine: {
+                case Constraint.CCLine: {
                     Circle c1 = (Circle) cs.getelement(1);
                     Circle c2 = (Circle) cs.getelement(2);
                     return ((c1.o.getx() - c2.o.getx()) / (c1.o.gety() - c2.o.gety()));
                 }
-                case constraint.ALINE: {
+                case Constraint.ALINE: {
                     CLine ln0 = (CLine) cs.getelement(0);
                     CLine ln1 = (CLine) cs.getelement(1);
                     CLine ln2 = (CLine) cs.getelement(2);
                     double k = CLine.getALineK(ln0, ln1, ln2);
                     return k;
                 }
-                case constraint.NTANGLE: {
+                case Constraint.NTANGLE: {
                     CLine ln = (CLine) cs.getelement(0);
                     CLine ln1 = (CLine) cs.getelement(1);
                     CLine ln2 = (CLine) cs.getelement(2);
@@ -731,30 +731,30 @@ public class CLine extends CClass {
                     double k = (k3 * k2 * k1 + k3 + k2 - k1) / (1 + k3 * k1 + k2 * k1 - k3 * k2);
                     return k;
                 }
-                case constraint.SANGLE: {
+                case Constraint.SANGLE: {
                     CLine ln = (CLine) cs.getelement(0);
                     Integer I = (Integer) cs.getelement(2);
                     double k = ln.getK();
                     int v = I.intValue();
-                    double k1 = -constraint.get_sp_ag_value(v);
+                    double k1 = -Constraint.get_sp_ag_value(v);
                     if (ln.isVertical()) {
                         return -1 / k1;
                     } else
                         return (k1 + k) / (1 - k1 * k);
                 }
-                case constraint.BLINE: {
+                case Constraint.BLINE: {
                     CPoint p1 = (CPoint) cs.getelement(1);
                     CPoint p2 = (CPoint) cs.getelement(2);
                     return -(p1.getx() - p2.getx()) / (p1.gety() - p2.gety());
                 }
-                case constraint.TCLINE: {
+                case Constraint.TCLINE: {
                     CLine ln = (CLine) cs.getelement(1);
                     Circle c = (Circle) cs.getelement(0);
                     CPoint p2 = (CPoint) cs.getelement(2);
                     CPoint p1 = c.o;
                     return -(p1.getx() - p2.getx()) / (p1.gety() - p2.gety());
                 }
-                case constraint.ANGLE_BISECTOR:
+                case Constraint.ANGLE_BISECTOR:
                     CPoint p1 = (CPoint) cs.getelement(0);
                     CPoint p2 = (CPoint) cs.getelement(1);
                     CPoint p3 = (CPoint) cs.getelement(2);
@@ -833,7 +833,7 @@ public class CLine extends CClass {
         points.add(a);
     }
 
-    public void addconstraint(constraint cs) {
+    public void addconstraint(Constraint cs) {
         if (cs == null) return;
         if (!cons.contains(cs))
             cons.add(cs);
@@ -948,10 +948,10 @@ public class CLine extends CClass {
         int n = ln.getPtsSize();
         if (n < 2) {
             if (ln.type == CCLine) {
-                constraint cs = null;
+                Constraint cs = null;
                 for (int i = 0; i < ln.cons.size(); i++) {
-                    cs = (constraint) ln.getcons(i);
-                    if (cs.GetConstraintType() == constraint.CCLine)
+                    cs = (Constraint) ln.getcons(i);
+                    if (cs.GetConstraintType() == Constraint.CCLine)
                         break;
                 }
                 if (cs == null) return -1.0;
@@ -970,7 +970,7 @@ public class CLine extends CClass {
                 r = r / (2 * Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
                 return r;
             } else if (ln.type == BLine) {
-                constraint cs = ln.getconsByType(constraint.BLINE);
+                Constraint cs = ln.getconsByType(Constraint.BLINE);
                 CPoint p1 = (CPoint) cs.getelement(1);
                 CPoint p2 = (CPoint) cs.getelement(2);
                 double x0 = (p1.getx() + p2.getx()) / 2;
@@ -1167,7 +1167,7 @@ public class CLine extends CClass {
         x1 = y1 = 0;
         if (p == null) {
             if (type == BLine) {
-                constraint cs = getconsByType(constraint.BLINE);
+                Constraint cs = getconsByType(Constraint.BLINE);
                 CPoint p1 = (CPoint) cs.getelement(1);
                 CPoint p2 = (CPoint) cs.getelement(2);
                 x1 = (p1.getx() + p2.getx()) / 2;
@@ -1375,7 +1375,7 @@ public class CLine extends CClass {
         }
         out.writeInt(cons.size());
         for (int i = 0; i < cons.size(); i++) {
-            constraint cs = (constraint) cons.get(i);
+            Constraint cs = (Constraint) cons.get(i);
             if (cs != null)
                 out.writeInt(cs.id);
             else
@@ -1384,10 +1384,10 @@ public class CLine extends CClass {
         out.writeInt(extent);
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         if (CMisc.version_load_now < 0.01) {
             m_id = in.readInt();
-            drawType drawt = new drawType();
+            DrawType drawt = new DrawType();
             drawt.Load(in);
             m_color = drawt.color_index;
             {
@@ -1419,7 +1419,7 @@ public class CLine extends CClass {
             int nc = 0;
             for (int i = 0; i < size; i++) {
                 int d = in.readInt();
-                constraint c = dp.getConstraintByid(d);
+                Constraint c = dp.getConstraintByid(d);
                 if (c == null)
                     nc++;
                 else

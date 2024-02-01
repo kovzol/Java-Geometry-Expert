@@ -1,8 +1,5 @@
 package wprover;
 
-import wprover.CMisc;
-import wprover.CPoint;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -79,7 +76,7 @@ public class JCgFlash extends JFlash implements ActionListener {
         for (int i = 0; i < num; i++) {
             CPoint p1 = (CPoint) vlist.get(i * 2);
             CPoint p2 = (CPoint) vlist.get(i * 2 + 1);
-            double r1 = drawbase.sdistance(p1, p2);
+            double r1 = DrawBase.sdistance(p1, p2);
 
             if (r < 0)
                 r = r1;
@@ -108,10 +105,10 @@ public class JCgFlash extends JFlash implements ActionListener {
             CPoint p2 = (CPoint) vlist.get(i * 2 + 1);
             if (n % 2 == 0) {
                 g2.setStroke(BStroke);
-                g2.setColor(drawData.getColor(i + 3));
+                g2.setColor(DrawData.getColor(i + 3));
                 if (r < 0 || all_eq) { /*dnum = 2;*/
                 } else
-                    dnum = (int) (drawbase.sdistance(p1, p2) / r + 0.5);
+                    dnum = (int) (DrawBase.sdistance(p1, p2) / r + 0.5);
 
                 draw(g2, p1, p2);
                 g2.setStroke(Dash);

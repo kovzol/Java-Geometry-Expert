@@ -150,7 +150,7 @@ public class CArrow extends CClass {
 
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         st = dp.getPointById(in.readInt());
         ed = dp.getPointById(in.readInt());

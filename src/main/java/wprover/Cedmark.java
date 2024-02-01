@@ -255,7 +255,7 @@ public class Cedmark extends CClass {
 
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         int id = in.readInt();
         p1 = dp.getPointById(id);

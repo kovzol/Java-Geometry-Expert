@@ -117,8 +117,8 @@ public class Circle extends CClass {
             return GExpert.getTranslationViaGettext("Circle {0}", "(" + o.getname() + "," + p1.getname() + p2.getname() + p3.getname() + ")");
             // return st + "(" + o.getname() + "," + p1.getname() + p2.getname() + p3.getname() + ")";
         } else if (type == RCircle) {
-            constraint cs = (constraint) cons.get(0);
-            if (cs.GetConstraintType() == constraint.RCIRCLE) {
+            Constraint cs = (Constraint) cons.get(0);
+            if (cs.GetConstraintType() == Constraint.RCIRCLE) {
                 CClass p1 = (CClass) cs.getelement(0);
                 CClass p2 = (CClass) cs.getelement(1);
                 return GExpert.getTranslationViaGettext("Circle {0}","(" + o.m_name + "," + p1.getname() + p2.getname() + ")");
@@ -188,8 +188,8 @@ public class Circle extends CClass {
         if (type == RCircle) {
             //constraint cs = null;
             for (int i = 0; i < cons.size(); i++) {
-                constraint c = (constraint) cons.get(i);
-                if (c.GetConstraintType() == constraint.RCIRCLE) {
+                Constraint c = (Constraint) cons.get(i);
+                if (c.GetConstraintType() == Constraint.RCIRCLE) {
                     CPoint p1 = (CPoint) c.getelement(0);
                     CPoint p2 = (CPoint) c.getelement(1);
                     return Math.sqrt(Math.pow(p1.getx() - p2.getx(), 2) + Math.pow(p1.gety() - p2.gety(), 2));
@@ -206,8 +206,8 @@ public class Circle extends CClass {
         CPoint[] pl = new CPoint[2];
         if (type == Circle.RCircle) {
             for (int i = 0; i < cons.size(); i++) {
-                constraint cs = (constraint) cons.get(i);
-                if (cs.GetConstraintType() == constraint.RCIRCLE) {
+                Constraint cs = (Constraint) cons.get(i);
+                if (cs.GetConstraintType() == Constraint.RCIRCLE) {
                     pl[0] = (CPoint) cs.getelement(0);
                     pl[1] = (CPoint) cs.getelement(1);
                     return pl;
@@ -254,7 +254,7 @@ public class Circle extends CClass {
         this.type = type;
     }
 
-    public void addConstraint(constraint cs) {
+    public void addConstraint(Constraint cs) {
         cons.add(cs);
     }
 
@@ -376,18 +376,18 @@ public class Circle extends CClass {
         }
         out.writeInt(cons.size());
         for (int i = 0; i < cons.size(); i++) {
-            constraint cs = (constraint) cons.get(i);
+            Constraint cs = (Constraint) cons.get(i);
             out.writeInt(cs.id);
         }
 
 
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         if (CMisc.version_load_now < 0.010) {
             m_id = in.readInt();
 
-            drawType drawt = new drawType();
+            DrawType drawt = new DrawType();
             drawt.Load(in);
             m_color = drawt.color_index;
             {

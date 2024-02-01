@@ -1,7 +1,6 @@
 package wprover;
 
 import java.awt.*;
-import java.util.*;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -408,8 +407,8 @@ public abstract class JFlash {
     }
 
     protected static Color getRatioColor(int c1, int c2, double ra) {
-        Color o1 = drawData.getColor(c1);
-        Color o2 = drawData.getColor(c2);
+        Color o1 = DrawData.getColor(c1);
+        Color o2 = DrawData.getColor(c2);
         double r1 = ra;
         double r2 = 1 - ra;
 

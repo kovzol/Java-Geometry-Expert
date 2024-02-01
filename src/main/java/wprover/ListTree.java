@@ -9,13 +9,11 @@ package wprover;
  */
 
 import javax.swing.*;
-import javax.swing.tree.*;
 import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
-import java.net.URL;
 
 public class ListTree extends JTabbedPane
         implements ActionListener, MouseListener, ListSelectionListener {
@@ -157,7 +155,7 @@ public class ListTree extends JTabbedPane
         model.removeAllElements();
         modelx.removeAllElements();
 
-        drawProcess dp = gxInstance.dp;
+        DrawProcess dp = gxInstance.dp;
 
         Vector v = dp.undolist;
         undolist.addAll(v);

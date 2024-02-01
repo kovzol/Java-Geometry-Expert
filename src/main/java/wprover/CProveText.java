@@ -382,7 +382,7 @@ public class CProveText {
             this.setExpanded(true);
     }
 
-    public CProveText redo_invisible_head(drawProcess dp) {
+    public CProveText redo_invisible_head(DrawProcess dp) {
         if (cpfield == null) return this;
         if (!this.isexpand) return this;
 
@@ -399,7 +399,7 @@ public class CProveText {
         }
     }
 
-    public void getFlashObjectList(Vector v, drawProcess dp) {
+    public void getFlashObjectList(Vector v, DrawProcess dp) {
         if (m_undo.m_type != UndoStruct.T_PROVE_NODE) {
             v.addAll(m_undo.getAllObjects(dp));
             return;
@@ -429,7 +429,7 @@ public class CProveText {
     }
 
 
-    public CProveText next_prove_step(drawProcess dp, CProveText cpt, CBoolean find) {
+    public CProveText next_prove_step(DrawProcess dp, CProveText cpt, CBoolean find) {
 
         if (find.getValue() == false) {
             if (cpt == this) {
@@ -523,7 +523,7 @@ public class CProveText {
         return whead;
     }
 
-    public boolean run_to_begin(drawProcess dp) {
+    public boolean run_to_begin(DrawProcess dp) {
         if (m_undo == null) return false;
         if (cpfield != null)
             cpfield.run_to_begin(dp);
@@ -532,7 +532,7 @@ public class CProveText {
         return true;
     }
 
-    public boolean undo_default(drawProcess dp) {
+    public boolean undo_default(DrawProcess dp) {
         if (m_undo == null) return false;
         if (cpfield != null)
             cpfield.undo_default(dp);
@@ -541,7 +541,7 @@ public class CProveText {
         return true;
     }
 
-    public boolean undo_to_head(drawProcess dp) {
+    public boolean undo_to_head(DrawProcess dp) {
         if (m_undo == null) return false;
         if (cpfield != null)
             cpfield.undo_to_head(dp);
@@ -767,7 +767,7 @@ public class CProveText {
 
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
 
         head = this.ReadString(in);
         msg = this.ReadString(in);

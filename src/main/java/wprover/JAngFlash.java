@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.*;
-import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,7 +40,7 @@ public class JAngFlash extends JFlash implements ActionListener {
     public boolean draw(Graphics2D g2) {
         if (type == 0) {
             g2.setColor(color);
-            if (drawbase.check_para(a1, b1, a2, b2)) {
+            if (DrawBase.check_para(a1, b1, a2, b2)) {
                 g2.setStroke(BStroke2);
                 g2.drawLine((int) a1.getx(), (int) a1.gety(), (int) b1.getx(),
                         (int) b1.gety());

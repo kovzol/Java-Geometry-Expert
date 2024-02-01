@@ -215,8 +215,8 @@ public class JPolygonFlash extends JFlash implements ActionListener {
         Composite ac = g2.getComposite();
         g2.setComposite(CMisc.getFillComposite());
 
-        Color o1 = drawData.getColor(c1);
-        Color o2 = drawData.getColor(c2);
+        Color o1 = DrawData.getColor(c1);
+        Color o2 = DrawData.getColor(c2);
         double r1 = ((double) index) / n;
         double r2 = 1 - r1;
 

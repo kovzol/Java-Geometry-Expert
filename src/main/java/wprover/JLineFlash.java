@@ -27,18 +27,18 @@ public class JLineFlash extends JFlash implements ActionListener {
     }
 
     public int addALine() {
-        J_Line ln = new J_Line();
+        JLine ln = new JLine();
         vlist.add(ln);
         return vlist.size() - 1;
     }
 
     public void setInfinitLine(int n) {
-        J_Line ln = (J_Line) vlist.get(n);
+        JLine ln = (JLine) vlist.get(n);
         ln.setDrawInfinite(true);
     }
 
     public void addAPoint(int index, CPoint p) {
-        J_Line ln = (J_Line) vlist.get(index);
+        JLine ln = (JLine) vlist.get(index);
 
         if (p != null && ln != null) {
             ln.addAPoint(p);
@@ -54,7 +54,7 @@ public class JLineFlash extends JFlash implements ActionListener {
 
     public boolean draw(Graphics2D g2) {
 
-        int cindex = drawData.RED;
+        int cindex = DrawData.RED;
 
 
         if (alter == false && n % 2 == 0) {
@@ -63,12 +63,12 @@ public class JLineFlash extends JFlash implements ActionListener {
             g2.setColor(color);
             g2.setStroke(BStroke2);
             for (int i = 0; i < vlist.size(); i++) {
-                J_Line ln = (J_Line) vlist.get(i);
+                JLine ln = (JLine) vlist.get(i);
                 ln.drawLine(g2);
             }
 
             for (int i = 0; i < vlist.size(); i++) {
-                J_Line ln = (J_Line) vlist.get(i);
+                JLine ln = (JLine) vlist.get(i);
                 ln.fillPt(g2);
                 g2.setColor(color);
                 ln.drawPt(g2);
@@ -78,8 +78,8 @@ public class JLineFlash extends JFlash implements ActionListener {
             g2.setColor(color);
             g2.setStroke(BStroke2);
             if (an < vlist.size()) {
-                g2.setColor(drawData.getColor(cindex++));
-                J_Line ln = (J_Line) vlist.get(an);
+                g2.setColor(DrawData.getColor(cindex++));
+                JLine ln = (JLine) vlist.get(an);
                 ln.drawLine(g2);
             }
         }
@@ -94,7 +94,7 @@ public class JLineFlash extends JFlash implements ActionListener {
                 super.stop();
             } else {
                 for (int i = 0; i < vlist.size(); i++) {
-                    J_Line ln = (J_Line) vlist.get(i);
+                    JLine ln = (JLine) vlist.get(i);
                     if (n % 2 == 0) {
                         ln.setInFlashMode(true);
                     } else {
@@ -110,7 +110,7 @@ public class JLineFlash extends JFlash implements ActionListener {
             if (an >= vlist.size()) {
                 timer.stop();
             } else {
-                J_Line ln = (J_Line) vlist.get(an);
+                JLine ln = (JLine) vlist.get(an);
                 if (n % 2 == 0) {
                     ln.setInFlashMode(true);
                 } else {
@@ -125,7 +125,7 @@ public class JLineFlash extends JFlash implements ActionListener {
     public void stop() {
         super.stop();
         for (int i = 0; i < vlist.size(); i++) {
-            J_Line ln = (J_Line) vlist.get(i);
+            JLine ln = (JLine) vlist.get(i);
             ln.setInFlashMode(false);
         }
     }

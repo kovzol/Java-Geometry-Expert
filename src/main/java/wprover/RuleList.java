@@ -1,12 +1,9 @@
 package wprover;
 
 import gprover.gib;
-import gprover.rules;
+import gprover.Rules;
 
-import java.io.*;
 import java.util.Vector;
-import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,18 +38,18 @@ public class RuleList {
         return v;
     }
 
-    final public static grule getGrule(int n) {
+    final public static GRule getGrule(int n) {
         n--;
         if (n < 0 || n > GDDLIST.size())
             return null;
-        return (grule) GDDLIST.get(n);
+        return (GRule) GDDLIST.get(n);
     }
 
-    final public static grule getFrule(int n) {
+    final public static GRule getFrule(int n) {
         n--;
         if (n < 0 || n > FULLLIST.size())
             return null;
-        return (grule) FULLLIST.get(n);
+        return (GRule) FULLLIST.get(n);
     }
 
 
@@ -75,7 +72,7 @@ public class RuleList {
 
             if (t.length() != 0) {
                 if (s != null && t.startsWith("*")) {
-                    grule r = new grule(id++, s, s1, s2, type);
+                    GRule r = new GRule(id++, s, s1, s2, type);
                     vs.add(r);
                     s = t;
                     s1 = s2 = null;
@@ -96,8 +93,8 @@ public class RuleList {
     }
 
     final public static void loadRules() {
-     loadRules(rules.GDD_English, GDDLIST, 0);
-     loadRules(rules.FULL_English, FULLLIST, 1);
+     loadRules(Rules.GDD_English, GDDLIST, 0);
+     loadRules(Rules.FULL_English, FULLLIST, 1);
     }
 
     final public static boolean getValue(int n) {

@@ -16,8 +16,8 @@ public class CCoBox extends JComboBox {
     int defaultindex = 0;
 
     public static CCoBox CreateAInstance() {
-        Integer[] intArray = new Integer[drawData.getColorCounter() + 1];
-        for (int i = 0; i <= drawData.getColorCounter(); i++) {
+        Integer[] intArray = new Integer[DrawData.getColorCounter() + 1];
+        for (int i = 0; i <= DrawData.getColorCounter(); i++) {
             intArray[i] = i;
         }
         CCoBox cb = new CCoBox(intArray);
@@ -47,7 +47,7 @@ public class CCoBox extends JComboBox {
     public static void reGenerateAll() {
         for (int i = 0; i < instanceList.size(); i++) {
             CCoBox cb = (CCoBox) instanceList.get(i);
-            int co = drawData.getColorCounter();
+            int co = DrawData.getColorCounter();
             int n = cb.getItemCount();
 
             if (co >= n)
@@ -58,12 +58,12 @@ public class CCoBox extends JComboBox {
     }
 
     public static void resetAll() {
-        drawData.reset();
+        DrawData.reset();
 
         for (int i = 0; i < instanceList.size(); i++) {
             CCoBox cb = (CCoBox) instanceList.get(i);
             cb.setSelectedIndex(cb.defaultindex);
-            int num = drawData.getColorCounter();
+            int num = DrawData.getColorCounter();
             for(int j=num+1; j<cb.getItemCount(); j++)
                 cb.removeItemAt(j);
         }

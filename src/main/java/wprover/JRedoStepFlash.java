@@ -13,9 +13,9 @@ import java.awt.*;
 public class JRedoStepFlash extends JFlash {
 
 
-    drawProcess dp;
+    DrawProcess dp;
 
-    public JRedoStepFlash(JPanel p, drawProcess dp) {
+    public JRedoStepFlash(JPanel p, DrawProcess dp) {
         super(p);
         this.dp = dp;
         vType = true;

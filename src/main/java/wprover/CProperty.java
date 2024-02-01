@@ -7,7 +7,6 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.awt.*;
 import java.net.URL;
 import java.util.EventObject;
@@ -254,8 +253,8 @@ public class CProperty extends JPanel implements ActionListener {
             cn.setCellEditor(new DefaultCellEditor(color));
             add(tb1);
 
-            Integer[] array1 = new Integer[drawData.getDashCounter()];
-            for (int i = 0; i < drawData.getDashCounter(); i++)
+            Integer[] array1 = new Integer[DrawData.getDashCounter()];
+            for (int i = 0; i < DrawData.getDashCounter(); i++)
                 array1[i] = i;
             line_type = new JComboBox(array1);
             line_type.setMaximumRowCount(20);
@@ -322,7 +321,7 @@ public class CProperty extends JPanel implements ActionListener {
                                 "Choose Color",
                                 Color.white);
                         if (newColor != null) {
-                            int id = drawData.addColor(newColor);
+                            int id = DrawData.addColor(newColor);
                             CCoBox.reGenerateAll();
                             color.setSelectedIndex(id - 1);
                             index = id - 1;

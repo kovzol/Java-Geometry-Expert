@@ -1328,7 +1328,7 @@ msgstr "Adj meg két egész számot"
 
 #: ../wprover/RectChooser.java:36
 msgid "Please choose the client area"
-msgstr "Választ ki a kívánt területet"
+msgstr "Válaszd ki a kívánt területet"
 
 #: ../wprover/RightClickPopMenu.java:20
 msgid "Cancel Action"
@@ -2508,10 +2508,10 @@ msgid "Select two points to determine a line"
 msgstr "Válassz két pontot az egyenes megadásához"
 
 msgid ""
-"Please use the menu \"Action -> Animation\" to define an animation first"
+"Please use the menu \"Action -> Animation\" to define an animation first."
 msgstr ""
 "Előbb használd a \"Tevékenység -> Animáció\" menüpontot az animáció "
-"megadásához"
+"megadásához."
 
 msgid "Groebner Basis Method"
 msgstr "Gröbner-bázis módszer"
@@ -2648,8 +2648,8 @@ msgstr "Derékszögű"
 msgid "Building GIF File"
 msgstr "GIF fájl készítése"
 
-msgid "0 frame(s) added"
-msgstr "0 képkocka készült el"
+msgid "{0} frame(s) added"
+msgstr "{0} képkocka készült el"
 
 msgid "Next"
 msgstr "Következő"
@@ -3481,3 +3481,36 @@ msgstr "Az aktuális megoldás:"
 
 msgid "Filter"
 msgstr "Szűrő"
+
+msgid "Choose a rectangle"
+msgstr "Téglalap rajzolása"
+
+msgid "Saving Proof as GIF File"
+msgstr "A bizonyítás mentése GIF fájlként"
+
+msgid "Default Delay"
+msgstr "Alapértelmezett késleltetés"
+
+msgid "Delay at Begin"
+msgstr "Késleltetés az elején"
+
+msgid "Delay at End"
+msgstr "Késleltetés a végén"
+
+msgid "Look in:"
+msgstr "Keresés itt:"
+
+msgid "File name:"
+msgstr "Fájlnév:"
+
+msgid "Files of type:"
+msgstr "Fájltípus:"
+
+msgid "Save in:"
+msgstr "Mentés ide:"
+
+msgid "Save As"
+msgstr "Mentés mint"
+
+msgid "All Files"
+msgstr "Minden fájl"

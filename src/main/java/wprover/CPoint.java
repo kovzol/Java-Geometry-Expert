@@ -31,9 +31,9 @@ public class CPoint extends CClass {
         ptext = new CText(this, 5, -20, CText.NAME_TEXT);
     }
 
-    public constraint getConstraint() {
+    public Constraint getConstraint() {
         if (cons.size() == 0) return null;
-        return (constraint) cons.get(0);
+        return (Constraint) cons.get(0);
     }
 
     public CPoint(int type, param X, param Y) {
@@ -255,15 +255,15 @@ public class CPoint extends CClass {
             return;
         }
         if (!x1.Solved && !y1.Solved) {
-            this.m_color = drawData.pointcolor;
+            this.m_color = DrawData.pointcolor;
         } else if (x1.Solved && y1.Solved) {
-            this.m_color = drawData.pointcolor_decided;
+            this.m_color = DrawData.pointcolor_decided;
         } else {
-            this.m_color = drawData.pointcolor_half_decided;
+            this.m_color = DrawData.pointcolor_half_decided;
         }
     }
 
-    public void addcstoPoint(constraint cs) {
+    public void addcstoPoint(Constraint cs) {
         if (cs != null && !cons.contains(cs)) {
             cons.add(cs);
         }
@@ -271,7 +271,7 @@ public class CPoint extends CClass {
 
     public boolean check_xy_valid(double x, double y) {
         for (int i = 0; i < cons.size(); i++) {
-            constraint cs = (constraint) cons.get(i);
+            Constraint cs = (Constraint) cons.get(i);
             if (!cs.check_constraint(x, y))
                 return false;
         }
@@ -419,7 +419,7 @@ public class CPoint extends CClass {
         int size = cons.size();
         out.writeInt(size);
         for (int i = 0; i < size; i++) {
-            constraint cs = (constraint) cons.get(i);
+            Constraint cs = (Constraint) cons.get(i);
             if (cs != null)
                 out.writeInt(cs.id);
             else out.writeInt(-1);
@@ -429,14 +429,14 @@ public class CPoint extends CClass {
         out.writeBoolean(freezed);
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         if (CMisc.version_load_now < 0.01) {
             m_id = in.readInt();
-            drawType drawt;
+            DrawType drawt;
             if (in.readInt() == 0) {
                 drawt = null;
             } else {
-                drawt = new drawType();
+                drawt = new DrawType();
                 drawt.Load(in);
                 m_color = drawt.color_index;
                 m_dash = drawt.dash;
@@ -479,7 +479,7 @@ public class CPoint extends CClass {
             int size = in.readInt();
             for (int i = 0; i < size; i++) {
                 int id = in.readInt();
-                constraint cs = dp.getConstraintByid(id);
+                Constraint cs = dp.getConstraintByid(id);
                 addcstoPoint(cs);
             }
             visible = in.readBoolean();

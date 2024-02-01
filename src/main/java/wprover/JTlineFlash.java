@@ -1,27 +1,26 @@
 package wprover;
 
 import javax.swing.*;
-import java.util.Vector;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class JTlineFlash extends JFlash implements ActionListener {
-    J_Line ln1, ln2;
+    JLine ln1, ln2;
 
     public JTlineFlash(JPanel p) {
         super(p);
         timer = new Timer(TIME_INTERVAL, this);
-        ln1 = new J_Line();
-        ln2 = new J_Line();
+        ln1 = new JLine();
+        ln2 = new JLine();
     }
 
     public JTlineFlash(JPanel p, CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         super(p);
         timer = new Timer(TIME_INTERVAL, this);
-        ln1 = new J_Line();
-        ln2 = new J_Line();
+        ln1 = new JLine();
+        ln2 = new JLine();
         ln1.addAPoint(p1);
         ln1.addAPoint(p2);
         ln2.addAPoint(p3);

@@ -2565,9 +2565,8 @@ msgstr "Upotrebite levi taster miša za izbor pozicije"
 msgid "Select two points to determine a line"
 msgstr "Izaberite dve tačke da biste odredili liniju"
 
-#, fuzzy
 msgid ""
-"Please use the menu \"Action -> Animation\" to define an animation first"
+"Please use the menu \"Action -> Animation\" to define an animation first."
 msgstr ""
 "Molimo koristite meni \"Akcija -> Animacija\" da  najpre definišete "
 "animaciju."
@@ -2730,7 +2729,7 @@ msgstr ""
 msgid "Building GIF File"
 msgstr ""
 
-msgid "0 frame(s) added"
+msgid "{0} frame(s) added"
 msgstr ""
 
 msgid "Next"
@@ -3589,6 +3588,45 @@ msgstr "Zaključak"
 msgid "Filter"
 msgstr ""
 
+#, fuzzy
+msgid "Choose a rectangle"
+msgstr "Pravougaonik"
+
+msgid "Saving Proof as GIF File"
+msgstr ""
+
+#, fuzzy
+msgid "Default Delay"
+msgstr "Zadano"
+
+msgid "Delay at Begin"
+msgstr ""
+
+msgid "Delay at End"
+msgstr ""
+
+msgid "Look in:"
+msgstr ""
+
+#, fuzzy
+msgid "File name:"
+msgstr "Datoteka je preuzeta!"
+
+msgid "Files of type:"
+msgstr ""
+
+#, fuzzy
+msgid "Save in:"
+msgstr "Sačuvaj"
+
+#, fuzzy
+msgid "Save As"
+msgstr "Sačuvaj"
+
+#, fuzzy
+msgid "All Files"
+msgstr "Datoteka"
+
 #~ msgid "animate_start"
 #~ msgstr "animacija početak"
 
@@ -3698,9 +3736,6 @@ msgstr ""
 
 #~ msgid "Available JGEX version:"
 #~ msgstr "raspoloživa JGEX verzija:"
-
-#~ msgid "File Downloaded"
-#~ msgstr "Datoteka je preuzeta!"
 
 #~ msgid "Algebra Method"
 #~ msgstr "Metoda površina"

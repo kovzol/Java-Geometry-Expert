@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
-import java.util.Vector;
 
 public class CTMark extends CClass {
 
@@ -23,7 +22,7 @@ public class CTMark extends CClass {
         super(TMARK);
         m_color = 3;
         m_dash = 0;
-        m_color = drawData.RED;
+        m_color = DrawData.RED;
     }
 
     public CTMark(CLine ln1, CLine ln2) {
@@ -158,7 +157,7 @@ public class CTMark extends CClass {
         out.writeInt(length);
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         int d = in.readInt();
         ln1 = dp.getLineByid(d);

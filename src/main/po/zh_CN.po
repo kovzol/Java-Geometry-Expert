@@ -2561,9 +2561,8 @@ msgstr "左键选择一个位置"
 msgid "Select two points to determine a line"
 msgstr "选择两个点来确定一条直线"
 
-#, fuzzy
 msgid ""
-"Please use the menu \"Action -> Animation\" to define an animation first"
+"Please use the menu \"Action -> Animation\" to define an animation first."
 msgstr "请使用菜单“操作 -> 动画”先定义一个动画！"
 
 msgid "Groebner Basis Method"
@@ -2724,7 +2723,7 @@ msgstr ""
 msgid "Building GIF File"
 msgstr ""
 
-msgid "0 frame(s) added"
+msgid "{0} frame(s) added"
 msgstr ""
 
 msgid "Next"
@@ -3510,6 +3509,45 @@ msgstr "所有作图结果"
 msgid "Filter"
 msgstr ""
 
+#, fuzzy
+msgid "Choose a rectangle"
+msgstr "矩形"
+
+msgid "Saving Proof as GIF File"
+msgstr ""
+
+#, fuzzy
+msgid "Default Delay"
+msgstr "恢复默认"
+
+msgid "Delay at Begin"
+msgstr ""
+
+msgid "Delay at End"
+msgstr ""
+
+msgid "Look in:"
+msgstr ""
+
+#, fuzzy
+msgid "File name:"
+msgstr "文件已下载"
+
+msgid "Files of type:"
+msgstr ""
+
+#, fuzzy
+msgid "Save in:"
+msgstr "保存"
+
+#, fuzzy
+msgid "Save As"
+msgstr "保存"
+
+#, fuzzy
+msgid "All Files"
+msgstr "文件"
+
 #~ msgid "animate_start"
 #~ msgstr "播放动画"
 
@@ -3609,9 +3647,6 @@ msgstr ""
 
 #~ msgid "Available JGEX version:"
 #~ msgstr "最新版本是"
-
-#~ msgid "File Downloaded"
-#~ msgstr "文件已下载"
 
 #~ msgid "Algebra Method"
 #~ msgstr "代数方法"

@@ -8,7 +8,7 @@ import java.net.URL;
 
 class JExPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener, ComponentListener
 {
-      drawProcess dp;
+      DrawProcess dp;
       static ImageIcon icoa;
       static ImageIcon icos;
       JToggleButton button;
@@ -59,7 +59,7 @@ class JExPanel extends JPanel implements ActionListener, MouseListener, MouseMot
             return new Dimension(600, 400);
       }
 
-      public void setdrawP(drawProcess dp)
+      public void setdrawP(DrawProcess dp)
       {
             this.dp = dp;
             if (timer != null) timer.stop();

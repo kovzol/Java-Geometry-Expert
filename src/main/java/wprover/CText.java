@@ -99,7 +99,7 @@ public class CText extends CClass {
     public CText(CClass f, double dx, double dy, int type) {
         super(CClass.TEXT);
         str = new String();
-        this.m_color = drawData.getColorIndex(Color.black);
+        this.m_color = DrawData.getColorIndex(Color.black);
         this.type = type;
         font = CMisc.nameFont;
         x += dx;
@@ -655,7 +655,7 @@ public class CText extends CClass {
 
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
 
         if (CMisc.version_load_now < 0.010) {
             m_id = in.readInt();
@@ -679,15 +679,15 @@ public class CText extends CClass {
 
                 if (CMisc.version_load_now == 0.006) {
                     if (rgb <= 0)
-                        m_color = drawData.getColorIndex(Color.black);
+                        m_color = DrawData.getColorIndex(Color.black);
                     else
                         m_color = rgb;
                 } else {
                     if (rgb < 0)
-                        m_color = drawData.getColorIndex(Color.black);
+                        m_color = DrawData.getColorIndex(Color.black);
                     else {
                         if (rgb == 9)
-                            m_color = drawData.getColorIndex(Color.black);
+                            m_color = DrawData.getColorIndex(Color.black);
                         else
                             m_color = (rgb);
                     }

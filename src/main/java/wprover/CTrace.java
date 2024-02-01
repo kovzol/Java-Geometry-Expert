@@ -1,6 +1,5 @@
 package wprover;
 
-import java.util.Vector;
 import java.awt.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -195,7 +194,7 @@ public class CTrace extends CClass {
         out.writeBoolean(dlns);
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         if (CMisc.version_load_now >= 0.011) {
             int id = in.readInt();

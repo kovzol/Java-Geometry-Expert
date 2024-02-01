@@ -22,7 +22,7 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
     JLabel b2;
     Color color = new Color(206, 223, 242);
     GExpert gx;
-    wuTextPane pane;
+    WuTextPane pane;
 
 
     public AboutDialog(GExpert f) {
@@ -57,7 +57,7 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
         lv = new JLabel(GExpert.getLanguage("Java version") + " " + System.getProperty("java.version"));
         lv.setHorizontalTextPosition(JLabel.LEFT);
         panel2.add(lv);
-        pane = new wuTextPane();
+        pane = new WuTextPane();
         pane.addMouseListener(this);
 //        String s = "\n" +
         addString("\n", "regular");

@@ -2564,10 +2564,9 @@ msgstr "Use a tecla ESQUERDA para escolher uma posição"
 msgid "Select two points to determine a line"
 msgstr "Selecione dois pontos para determinar uma reta"
 
-#, fuzzy
 msgid ""
-"Please use the menu \"Action -> Animation\" to define an animation first"
-msgstr "Primeiro use o menu \"Ação -> Animação\" para definir uma animação"
+"Please use the menu \"Action -> Animation\" to define an animation first."
+msgstr "Primeiro use o menu \"Ação -> Animação\" para definir uma animação."
 
 msgid "Groebner Basis Method"
 msgstr "Método de base de Groebner"
@@ -2727,7 +2726,7 @@ msgstr ""
 msgid "Building GIF File"
 msgstr ""
 
-msgid "0 frame(s) added"
+msgid "{0} frame(s) added"
 msgstr ""
 
 msgid "Next"
@@ -3515,6 +3514,45 @@ msgstr "Todas as soluções"
 msgid "Filter"
 msgstr ""
 
+#, fuzzy
+msgid "Choose a rectangle"
+msgstr "retângulo"
+
+msgid "Saving Proof as GIF File"
+msgstr ""
+
+#, fuzzy
+msgid "Default Delay"
+msgstr "Fonte padrão"
+
+msgid "Delay at Begin"
+msgstr ""
+
+msgid "Delay at End"
+msgstr ""
+
+msgid "Look in:"
+msgstr ""
+
+#, fuzzy
+msgid "File name:"
+msgstr "Arquivo baixado"
+
+msgid "Files of type:"
+msgstr ""
+
+#, fuzzy
+msgid "Save in:"
+msgstr "Salvar"
+
+#, fuzzy
+msgid "Save As"
+msgstr "Salvar"
+
+#, fuzzy
+msgid "All Files"
+msgstr "Arquivo"
+
 #~ msgid "animate_start"
 #~ msgstr "iniciar animação"
 
@@ -3620,9 +3658,6 @@ msgstr ""
 
 #~ msgid "Available JGEX version:"
 #~ msgstr "VVersão JGEX disponível:"
-
-#~ msgid "File Downloaded"
-#~ msgstr "Arquivo baixado"
 
 #~ msgid "Algebra Method"
 #~ msgstr "Método algébrico"

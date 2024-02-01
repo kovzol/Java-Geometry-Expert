@@ -552,7 +552,7 @@ public class CAngle extends CClass {
             Composite ac = g2.getComposite();
             g2.setComposite(CMisc.getFillComposite());
 
-            g2.setColor(drawData.getColor(value1));
+            g2.setColor(DrawData.getColor(value1));
             g2.fillArc(x, y, w, w, (int) ri1, (int) dr);
             g2.setComposite(ac);
             g2.setColor(super.getColor());
@@ -792,7 +792,7 @@ public class CAngle extends CClass {
         out.writeInt(value1);
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
 
         if (CMisc.version_load_now < 0.01) {
             m_id = in.readInt();
@@ -807,7 +807,7 @@ public class CAngle extends CClass {
             int py = in.readInt();
             pend = dp.getPointById(py);
 
-            drawType drawt = new drawType();
+            DrawType drawt = new DrawType();
             drawt.Load(in);
 
             m_color = drawt.color_index;

@@ -62,7 +62,7 @@ public class RuleListDialog extends JBaseDialog {
     }
 
     public boolean loadRule(int t, int n) {
-        grule r;
+        GRule r;
         if (t == 0)
             r = RuleList.getGrule(n);
         else
@@ -110,7 +110,7 @@ public class RuleListDialog extends JBaseDialog {
             this.add(epane);
         }
 
-        public void setRule(int t, grule r) {
+        public void setRule(int t, GRule r) {
             rt1 = t;
             rt2 = r.type;
 
@@ -126,7 +126,7 @@ public class RuleListDialog extends JBaseDialog {
             if (r.name != null)
                 label2.setText(GExpert.getLanguage(r.name));
             label1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            String s = GExpert.getLanguage(r.discription);
+            String s = GExpert.getLanguage(r.description);
             if (r.exstring != null)
                 s += '\n' + GExpert.getLanguage(r.exstring);
             epane.setText(s);
@@ -157,7 +157,7 @@ public class RuleListDialog extends JBaseDialog {
     }
 
     class RuleViewPane extends JPanel implements MouseListener, ComponentListener, MouseMotionListener {
-        drawTextProcess dx;
+        DrawTextProcess dx;
         int xx, yy;
         double scale = 1.0;
         protected Rectangle rc = new Rectangle(0, 0, 0, 0);
@@ -252,10 +252,10 @@ public class RuleListDialog extends JBaseDialog {
         public RuleViewPane(GExpert gx) {
             gxInstance = gx;
             xx = yy = 0;
-            dx = new drawTextProcess();
+            dx = new DrawTextProcess();
             dx.setCurrentDrawPanel(this);
             dx.setRecal(false);
-            dx.SetCurrentAction(drawProcess.MOVE);
+            dx.SetCurrentAction(DrawProcess.MOVE);
             this.addMouseListener(this);
             this.setBackground(Color.white);
             this.addMouseMotionListener(this);

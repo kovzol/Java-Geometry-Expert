@@ -224,7 +224,7 @@ public class CDistance extends CClass {
         out.writeDouble(len);
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         if (CMisc.version_load_now < 0.01) {
             m_id = in.readInt();

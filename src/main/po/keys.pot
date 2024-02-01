@@ -2491,7 +2491,7 @@ msgid "Select two points to determine a line"
 msgstr ""
 
 msgid ""
-"Please use the menu \"Action -> Animation\" to define an animation first"
+"Please use the menu \"Action -> Animation\" to define an animation first."
 msgstr ""
 
 msgid "Groebner Basis Method"
@@ -2626,7 +2626,7 @@ msgstr ""
 msgid "Building GIF File"
 msgstr ""
 
-msgid "0 frame(s) added"
+msgid "{0} frame(s) added"
 msgstr ""
 
 msgid "Next"
@@ -3271,5 +3271,38 @@ msgid "Current Solution:"
 msgstr ""
 
 msgid "Filter"
+msgstr ""
+
+msgid "Choose a rectangle"
+msgstr ""
+
+msgid "Saving Proof as GIF File"
+msgstr ""
+
+msgid "Default Delay"
+msgstr ""
+
+msgid "Delay at Begin"
+msgstr ""
+
+msgid "Delay at End"
+msgstr ""
+
+msgid "Look in:"
+msgstr ""
+
+msgid "File name:"
+msgstr ""
+
+msgid "Files of type:"
+msgstr ""
+
+msgid "Save in:"
+msgstr ""
+
+msgid "Save As"
+msgstr ""
+
+msgid "All Files"
 msgstr ""
 

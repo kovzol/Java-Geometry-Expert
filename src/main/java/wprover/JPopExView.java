@@ -1,6 +1,5 @@
 package wprover;
 
-import javax.swing.*;
 import java.io.IOException;
 
 /**
@@ -31,7 +30,7 @@ public class JPopExView extends JBaseDialog
         String f = GExpert.getUserDir();
         String sp = GExpert.getFileSeparator();
 
-        drawProcess dp = new drawProcess();
+        DrawProcess dp = new DrawProcess();
         dp.clearAll();
         try
         {

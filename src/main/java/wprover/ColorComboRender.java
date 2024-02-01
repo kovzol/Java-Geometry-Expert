@@ -63,12 +63,12 @@ class ColorComboRender extends JPanel
         int w = (height) / 4;
         int gap = (height) / 4;
         if (type == 0) {
-            if (index < drawData.getColorCounter() && index >= 0) {
-                g2.setColor(drawData.getColor(index));
+            if (index < DrawData.getColorCounter() && index >= 0) {
+                g2.setColor(DrawData.getColor(index));
                 g2.fillRect(gap, gap, width - gap * 4, gap + w);
                 g2.setColor(Color.black);
                 g2.drawRect(gap, gap, width - gap * 4, gap + w);
-            } else if (index == drawData.getColorCounter()) {
+            } else if (index == DrawData.getColorCounter()) {
                 int w2 = height / 2 - gap;
                 gap *= 2;
                 g2.setColor(Color.PINK);
@@ -84,7 +84,7 @@ class ColorComboRender extends JPanel
                 g2.drawString("Other ...", gap * 5 + 10, height * 3 / 4);
             }
         } else if (type == 1) {
-            float ww = (float) drawData.getWidth(index);
+            float ww = (float) DrawData.getWidth(index);
             g2.setStroke(new BasicStroke(ww));
             g2.setColor(Color.black);
             g2.drawLine(5, height / 2, (width - 40), height / 2);
@@ -95,7 +95,7 @@ class ColorComboRender extends JPanel
             if (index <= 0) {
                 g2.setStroke(new BasicStroke(1.5f));
             } else {
-                ds = (float) drawData.getDash(index);
+                ds = (float) DrawData.getDash(index);
                 float dash[] = {ds};
                 g2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 5.0f, dash, 0.0f));
             }

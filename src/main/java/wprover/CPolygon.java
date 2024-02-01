@@ -801,7 +801,7 @@ public class CPolygon extends CClass {
         }
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         if (CMisc.version_load_now < 0.010) {
             m_id = in.readInt();
             int size = in.readInt();
@@ -809,7 +809,7 @@ public class CPolygon extends CClass {
                 int d = in.readInt();
                 pointlist.add(dp.getPointById(d));
             }
-            drawType drawt = new drawType();
+            DrawType drawt = new DrawType();
             drawt.Load(in);
             m_color = drawt.color_index;
             {

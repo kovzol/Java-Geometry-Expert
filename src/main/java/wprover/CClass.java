@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.FileOutputStream;
-import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -86,29 +85,29 @@ abstract public class CClass {
             m_id = CMisc.getObjectId();
         else m_id = -1;
 
-        m_dash = drawData.dindex;
-        m_width = drawData.windex;
+        m_dash = DrawData.dindex;
+        m_width = DrawData.windex;
 
 
         if (type == TEMP_POINT) {
-            m_color = drawData.pointcolor;
+            m_color = DrawData.pointcolor;
             return;
         }
         if (type == POINT) {
-            m_color = drawData.pointcolor;
+            m_color = DrawData.pointcolor;
             m_width = 2;
         } else if (type == ANGLE) {
-            m_color = drawData.anglecolor;
-            m_dash = drawData.angledash;
-            m_width = drawData.anglewidth;
+            m_color = DrawData.anglecolor;
+            m_dash = DrawData.angledash;
+            m_width = DrawData.anglewidth;
         } else if (type == POLYGON)
-            m_color = drawData.polygoncolor;
+            m_color = DrawData.polygoncolor;
         else if (type == TRACE)
-            m_color = drawData.tractcolor;
+            m_color = DrawData.tractcolor;
         else if (type == ARROW)
             m_color = 16;
         else
-            m_color = drawData.cindex;
+            m_color = DrawData.cindex;
 
         if (type == EQMARK) {
             m_width = 3;
@@ -117,9 +116,9 @@ abstract public class CClass {
     }
 
     public void setAttrAux() {
-        m_color = drawData.RED;
-        m_dash = drawData.DASH8;
-        m_width = drawData.WIDTH2;
+        m_color = DrawData.RED;
+        m_dash = DrawData.DASH8;
+        m_width = DrawData.WIDTH2;
     }
 
     public void setAttr(CClass c) {
@@ -153,7 +152,7 @@ abstract public class CClass {
     }
 
     public Color getColor() {
-        return drawData.getColor(m_color);
+        return DrawData.getColor(m_color);
     }
 
     public int getColorIndex() {
@@ -188,7 +187,7 @@ abstract public class CClass {
     }
 
     void setDrawSelect(Graphics2D g2) {
-        float w = (float) drawData.getWidth(m_width);
+        float w = (float) DrawData.getWidth(m_width);
         g2.setStroke(new BasicStroke(w + 5));
         Color c = CMisc.SelectObjectColor;
         g2.setColor(c);
@@ -202,15 +201,15 @@ abstract public class CClass {
     }
 
     void setDraw(Graphics2D g2) {
-        float w = (float) drawData.getWidth(m_width);
+        float w = (float) DrawData.getWidth(m_width);
         if (m_dash > 0) {
-            float d = (float) drawData.getDash(m_dash);
+            float d = (float) DrawData.getDash(m_dash);
             float dash[] = {d};
             g2.setStroke(new BasicStroke(w, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 5.0f, dash, 0.0f));
         } else
             g2.setStroke(new BasicStroke(w));
 
-        Color c = drawData.getColor(m_color);
+        Color c = DrawData.getColor(m_color);
         if (CMisc.ColorMode == 1) {
             float gray = (float) (0.11 * c.getRed() + 0.59 * c.getGreen() + 0.3 * c.getBlue()) / 255;
             c = new Color(gray, gray, gray);
@@ -299,7 +298,7 @@ abstract public class CClass {
 
     }
 
-    public void Load(DataInputStream in, drawProcess dp) throws IOException {
+    public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         m_id = in.readInt();
 
         int size = in.readInt();

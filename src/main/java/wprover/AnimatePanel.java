@@ -3,8 +3,6 @@ package wprover;
 import UI.EntityButtonUI;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.*;
@@ -24,10 +22,10 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
                       
     boolean first = true;
     JPanel d;
-    drawProcess dp;
+    DrawProcess dp;
     JPopupMenu menu;
 
-    public AnimatePanel(GExpert exp, JPanel pn, drawProcess d) {
+    public AnimatePanel(GExpert exp, JPanel pn, DrawProcess d) {
 
         expert = exp;
         this.d = pn;
