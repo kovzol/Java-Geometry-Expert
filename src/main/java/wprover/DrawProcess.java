@@ -17,7 +17,7 @@ import java.util.zip.ZipFile;
 
 import maths.TPoly;
 import maths.TMono;
-import maths.param;
+import maths.Param;
 import maths.PolyBasic;
 import maths.CharSet;
 import org.w3c.dom.*;
@@ -109,7 +109,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected gterm gt;
+    protected GTerm gt;
     protected int nd = 1;
 
     ////////////////
@@ -130,7 +130,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         CAL_MODE = 0;
     }
 
-    public gterm gterm() {
+    public GTerm gterm() {
         if (gt == null)
             gt = gxInstance.getpprove().getConstructionTerm();
         return gt;
@@ -183,7 +183,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
     }
 
 
-    public param getParameterByindex(int index) {
+    public Param getParameterByindex(int index) {
         for (int i = 0; i < paraCounter - 1; i++) {
             if (parameter[i].xindex == index) {
                 return parameter[i];
@@ -989,7 +989,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
 
         for (int t = 0; t < paraCounter; t++) {
-            param pm = parameter[t];
+            Param pm = parameter[t];
             if (pm == null)
                 continue;
             TMono m1 = pm.m;
@@ -1246,8 +1246,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
     }
 
     public boolean calculate_lccc(CPoint cp, double[] r) {
-        param pm1 = cp.x1;
-        param pm2 = cp.y1;
+        Param pm1 = cp.x1;
+        Param pm2 = cp.y1;
 
         TMono m1 = pm1.m;
         TMono m2 = pm2.m;
@@ -1386,8 +1386,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         if (p == null || p.isAFreePoint())
             return true;
         CPoint cp = p;
-        param pm1 = cp.x1;
-        param pm2 = cp.y1;
+        Param pm1 = cp.x1;
+        Param pm2 = cp.y1;
 
         TMono m1 = pm1.m;
         TMono m2 = pm2.m;
@@ -1628,7 +1628,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         }
     }
 
-    public double[] calform(int lv, param p[]) {
+    public double[] calform(int lv, Param p[]) {
         TPoly plist = pblist;
         TMono m1, m2;
         m1 = m2 = null;
@@ -2256,7 +2256,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         for (int i = 0; i < v.size(); i++) {
             Integer in = (Integer) v.get(i);
             int value = in.intValue();
-            param p1 = parameter[paraCounter - 1] = new param(paraCounter, 0);
+            Param p1 = parameter[paraCounter - 1] = new Param(paraCounter, 0);
             p1.type = value;
             paraCounter++;
             Constraint cs = new Constraint(Constraint.SPECIFIC_ANGEL, p1, value);
@@ -2267,23 +2267,23 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 //            paraCounter += 2;
 //            parameter[paraCounter-1] = new param(0,0);
 //            parameter[paraCounter-2] = new param(0,0);
-            parameter[paraCounter - 1] = new param(0, 0);
+            parameter[paraCounter - 1] = new Param(0, 0);
             paraCounter += 1;
-            parameter[paraCounter - 1] = new param(0, 0);
+            parameter[paraCounter - 1] = new Param(0, 0);
             paraCounter += 1;
         } else {
-            parameter[paraCounter - 1] = new param(0, 0);
+            parameter[paraCounter - 1] = new Param(0, 0);
             paraCounter += 1;
         }
 
     }
 
-    public param getParaForSpecificAngle(int ang) {
+    public Param getParaForSpecificAngle(int ang) {
         for (int i = 0; i < constraintlist.size(); i++) {
             Constraint cs = (Constraint) constraintlist.get(i);
             if (cs.GetConstraintType() == Constraint.SPECIFIC_ANGEL) {
                 if (cs.proportion == ang) {
-                    param pm = (param) cs.getelement(0);
+                    Param pm = (Param) cs.getelement(0);
                     return pm;
                 }
             }
@@ -4149,7 +4149,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                     if (v.size() == 1) {
                         Integer in = (Integer) v.get(0);
                         int va = in.intValue();
-                        param pm = this.getParaForSpecificAngle(va);
+                        Param pm = this.getParaForSpecificAngle(va);
 
                         Constraint cs = new Constraint(Constraint.EQANGLE3P, ag1, ag2, ag, pm, va);
                         this.addConstraintToList(cs);
@@ -5339,7 +5339,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             if (cs.csd1 != null)
                 alist.add(cs.csd1);
         }
-        cons st = new cons(gib.C_POINT, pointlist.size());
+        Cons st = new Cons(Gib.C_POINT, pointlist.size());
         for (int i = 0; i < pointlist.size(); i++)
             st.add_pt(pointlist.get(i));
         alist.add(0, st);
@@ -8079,10 +8079,10 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             return null;
         }
 
-        param p1 = parameter[paraCounter -
-                1] = new param(paraCounter++, x);
-        param p2 = parameter[paraCounter -
-                1] = new param(paraCounter++, y);
+        Param p1 = parameter[paraCounter -
+                1] = new Param(paraCounter++, x);
+        Param p2 = parameter[paraCounter -
+                1] = new Param(paraCounter++, y);
         CPoint p = new CPoint(p1, p2);
         //       this.setTextPositionAutomatically(p.ptext);
         return p;
@@ -8094,10 +8094,10 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             return null;
         }
 
-        param p1 = parameter[paraCounter -
-                1] = new param(paraCounter++, x);
-        param p2 = parameter[paraCounter -
-                1] = new param(paraCounter++, y);
+        Param p1 = parameter[paraCounter -
+                1] = new Param(paraCounter++, x);
+        Param p2 = parameter[paraCounter -
+                1] = new Param(paraCounter++, y);
         CPoint p = new CPoint(name, p1, p2);
         //       this.setTextPositionAutomatically(p.ptext);
         return p;
@@ -8890,7 +8890,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         paraCounter = in.readInt();
 
         for (int i = 0; i < this.paraCounter - 1; i++) {
-            param pm = new param();
+            Param pm = new Param();
             pm.Load(in);
             this.parameter[i] = pm;
         }
@@ -10016,7 +10016,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         if (index <= 0) {
             return null;
         }
-        Pro_point p = gterm().getProPoint(index);
+        ProPoint p = gterm().getProPoint(index);
         if (p != null) {
             String s = p.name;
             for (int i = 0; i < pointlist.size(); i++) {
@@ -10231,16 +10231,16 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         this.panel = gx.d;
     }
 
-    public param getANewParam() {
+    public Param getANewParam() {
         int n = paraCounter;
-        param p1 = parameter[paraCounter - 1] = new param(paraCounter++, 0);
+        Param p1 = parameter[paraCounter - 1] = new Param(paraCounter++, 0);
         return p1;
     }
 
 
     public int add_sp_angle_value(int v) {
         int n = paraCounter;
-        param p1 = parameter[paraCounter - 1] = new param(paraCounter++, 0);
+        Param p1 = parameter[paraCounter - 1] = new Param(paraCounter++, 0);
         p1.value = Constraint.get_sp_ag_value(v);
         p1.setParameterStatic();
         return p1.xindex;

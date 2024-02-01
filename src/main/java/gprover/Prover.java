@@ -4,15 +4,15 @@ import java.util.Vector;
 
 
 public class Prover {
-    private static gdd_bc db = null;
+    private static GDDBc db = null;
     private static Full dbfull = null;
-    private static gterm gt = null;
+    private static GTerm gt = null;
     private static boolean aux = false;
 
     private Prover() {
     }
 
-    public static void set_gterm(gterm g) {
+    public static void set_gterm(GTerm g) {
         gt = g;
     }
 
@@ -46,9 +46,9 @@ public class Prover {
         return db.getNumberofProperties();
     }
 
-    public static boolean fixpoint(gterm gt) {
+    public static boolean fixpoint(GTerm gt) {
         try {
-            db = new gdd_bc();
+            db = new GDDBc();
             db.init_dbase();
             db.setPrintToString();
             db.setExample(gt);
@@ -64,7 +64,7 @@ public class Prover {
     public static boolean prove() {
         try {
             aux = false;
-            db = new gdd_bc();
+            db = new GDDBc();
             db.init_dbase();
 
             db.setExample(gt);
@@ -88,15 +88,15 @@ public class Prover {
         }
     }
 
-    public static auxpt getConstructedAuxPoint() {
+    public static AuxPt getConstructedAuxPoint() {
         if (!aux) return null;
         return db.axptc;
     }
 
-    public static boolean prove(cond co) {
+    public static boolean prove(Cond co) {
         try {
             if (db == null)
-                db = new gdd_bc();
+                db = new GDDBc();
 
             db.setConc(co);
             if (db.docc()) {
@@ -115,7 +115,7 @@ public class Prover {
         return db != null;
     }
 
-    public static gdd_bc get_gddbase() {
+    public static GDDBc get_gddbase() {
         return db;
     }
 
@@ -124,11 +124,11 @@ public class Prover {
     }
 
 
-    public static cond getProveHead() {
+    public static Cond getProveHead() {
         try {
             if (db != null) {
                 db.show_allpred();
-                cond co = db.all_nd.nx;
+                Cond co = db.all_nd.nx;
                 return co;
             } else
                 return null;
@@ -139,7 +139,7 @@ public class Prover {
 
     }
 
-    public static l_list getProveHead_ls(l_list ls) {
+    public static LList getProveHead_ls(LList ls) {
         return db.get_next_ls_prove_head(ls);
     }
 
@@ -150,13 +150,13 @@ public class Prover {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public static cond getFullconc() {
-        cond co = gt.getConc();
+    public static Cond getFullconc() {
+        Cond co = gt.getConc();
         dbfull.show_pred(co);
         return co;
     }
 
-    public static gr_term proveFull(gterm gt) {
+    public static GrTerm proveFull(GTerm gt) {
 
         try {
             Prover.gt = gt;
@@ -168,7 +168,7 @@ public class Prover {
 
             dbfull.prove_full();
             if (dbfull.print_prooftext()) {
-                gr_term gr = dbfull.getFullAngleProofHead();
+                GrTerm gr = dbfull.getFullAngleProofHead();
                 return gr;
             }
             return null;
@@ -178,7 +178,7 @@ public class Prover {
         }
     }
 
-    public static boolean getAllNdgs(gterm gt, Vector v1, Vector v2, Vector v3, Vector v4) {
+    public static boolean getAllNdgs(GTerm gt, Vector v1, Vector v2, Vector v3, Vector v4) {
         try {
             Prover.gt = gt;
             if (dbfull == null)
@@ -211,9 +211,9 @@ public class Prover {
         return dbfull.getErrorType();
     }
 
-    public static void showFullPred(cond co) {
+    public static void showFullPred(Cond co) {
         try {
-            cond c = new cond(co);
+            Cond c = new Cond(co);
             dbfull.conc = c;
             if (dbfull.docc())
                 dbfull.show_fproof();
@@ -235,16 +235,16 @@ public class Prover {
         return dbfull.getlnNum();
     }
 
-    public static void showCondTextF(cond co) {
+    public static void showCondTextF(Cond co) {
         dbfull.show_pred(co);
     }
 
-    public static void showCondText(cond co) {
+    public static void showCondText(Cond co) {
         if (db != null)
             db.show_pred(co);
     }
 
-    public static gr_term proveArea(Vector v) {
+    public static GrTerm proveArea(Vector v) {
         return null;
     }
 

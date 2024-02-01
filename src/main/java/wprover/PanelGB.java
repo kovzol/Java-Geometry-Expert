@@ -1,8 +1,8 @@
 package wprover;
 
-import gprover.cndg;
-import gprover.cons;
-import gprover.gterm;
+import gprover.CNdg;
+import gprover.Cons;
+import gprover.GTerm;
 import maths.PolyBasic;
 import maths.TDono;
 import maths.TMono;
@@ -49,7 +49,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
     }
 
 
-    public void prove(gterm tm, DrawProcess dp) {
+    public void prove(GTerm tm, DrawProcess dp) {
         if (running)
             return;
 
@@ -122,7 +122,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         return 1;
     }
 
-    protected TMono getTMono(cons c) {
+    protected TMono getTMono(Cons c) {
         return dp.getTMono(c);
     }
 
@@ -161,7 +161,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
 
         if (t == 0 || t == 3) {     // from FULL
             for (int i = 0; i < vndgs.size(); i++) {
-                cndg nd = (cndg) vndgs.get(i);
+                CNdg nd = (CNdg) vndgs.get(i);
                 TMono m = gp.mm_poly(nd, dp);
                 addString1(nd.toString() + "\n");
                 if (m != null) {
@@ -205,7 +205,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
     public void gbasis1() {
 
         String sc = gt.getConcText();
-        cons cc = gt.getConclusion();
+        Cons cc = gt.getConclusion();
 
         TMono mc = getTMono(cc);
         if (mc == null) {
@@ -667,7 +667,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
     public void gbasis() {
         GeoPoly basic = GeoPoly.getPoly();
         String sc = gt.getConcText();
-        cons cc = gt.getConclusion();
+        Cons cc = gt.getConclusion();
         TMono mc = getTMono(cc);
         if (mc == null) {
             running = false;
@@ -791,7 +791,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
 
     public void writeMaple(FileOutputStream out) throws IOException {
         GeoPoly basic = GeoPoly.getPoly();
-        cons cc = gt.getConclusion();
+        Cons cc = gt.getConclusion();
         TMono mc = getTMono(cc);
 
         // Part 1: Order for the variables.

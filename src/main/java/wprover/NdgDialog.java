@@ -15,7 +15,7 @@ public class NdgDialog extends JBaseDialog implements ActionListener, MouseMotio
     private DrawProcess dp;
     private static int WD = 700;
     private static int HD = 500;
-    private gterm gt;
+    private GTerm gt;
     JTable tabel1, tabel2, tabel3;
     ndgTableModel model1;
     ndgTableModel1 model2, model3;
@@ -27,7 +27,7 @@ public class NdgDialog extends JBaseDialog implements ActionListener, MouseMotio
 
     private GExpert gxInstance;
 
-    public NdgDialog(GExpert gx, gterm gt, DrawProcess dp) {
+    public NdgDialog(GExpert gx, GTerm gt, DrawProcess dp) {
         super(gx.getFrame(), gx.getLanguage("Nondegenerate Conditions"));
         gxInstance = gx;
 
@@ -116,13 +116,13 @@ public class NdgDialog extends JBaseDialog implements ActionListener, MouseMotio
 
     public void valueChanged(ListSelectionEvent e) {
         int n = tabel1.getSelectedRow();
-        cons c = (cons) model1.getValueAt(n, 0);
+        Cons c = (Cons) model1.getValueAt(n, 0);
         if (gxInstance != null)
             gxInstance.getpprove().setSelectedConstruction(c);
         Object o = model1.getValueAt(n, 1);
-        if (o != null && o instanceof cndg) {
+        if (o != null && o instanceof CNdg) {
 
-            cndg dd = (cndg) o;
+            CNdg dd = (CNdg) o;
 
             for (int i = 0; i < model2.getRowCount(); i++) {
                 if (model2.getValueAt(i, 0) == dd.equ) {
@@ -176,26 +176,26 @@ public class NdgDialog extends JBaseDialog implements ActionListener, MouseMotio
         model3.reset();
 
         for (int i = 0; i < v1.size(); i++) {
-            cons c = (cons) v1.get(i);
-            cndg d = fd_ndg(c, v2);
+            Cons c = (Cons) v1.get(i);
+            CNdg d = fd_ndg(c, v2);
             model1.addElement(c, d);
         }
 
         for (int i = 0; i < v3.size(); i++) {
-            cndg c = (cndg) v3.get(i);
+            CNdg c = (CNdg) v3.get(i);
             model2.addElement(c);
         }
 
 
         for (int i = 0; i < v4.size(); i++) {
-            cndg c = (cndg) v4.get(i);
+            CNdg c = (CNdg) v4.get(i);
             model3.addElement(c);
         }
         model3.addElement(" ");
 
         GeoPoly poly = GeoPoly.getPoly();
         for (int i = 0; i < v4.size(); i++) {
-            cndg c = (cndg) v4.get(i);
+            CNdg c = (CNdg) v4.get(i);
             model3.addElement(poly.getAllPrinted(getTMono(c)));
         }
 
@@ -215,28 +215,28 @@ public class NdgDialog extends JBaseDialog implements ActionListener, MouseMotio
         return pt.y1.xindex;
     }
 
-    public TMono getTMono(cndg d) {
+    public TMono getTMono(CNdg d) {
         if (d == null)
             return null;
         GeoPoly poly = GeoPoly.getPoly();
         switch (d.type) {
-            case gib.NDG_COLL:
+            case Gib.NDG_COLL:
                 return poly.collinear(dxindex(d.p[0]), dyindex(d.p[0]), dxindex(d.p[1]), dyindex(d.p[1]), dxindex(d.p[2]), dyindex(d.p[2]));
-            case gib.NDG_NEQ:
-            case gib.NDG_NON_ISOTROPIC:
+            case Gib.NDG_NEQ:
+            case Gib.NDG_NON_ISOTROPIC:
                 return poly.perpendicular(dxindex(d.p[0]), dyindex(d.p[0]), dxindex(d.p[1]), dyindex(d.p[1]),
                         dxindex(d.p[0]), dyindex(d.p[0]), dxindex(d.p[1]), dyindex(d.p[1]));
-            case gib.NDG_PARA:
+            case Gib.NDG_PARA:
                 return poly.parallel(dxindex(d.p[0]), dyindex(d.p[0]), dxindex(d.p[1]), dyindex(d.p[1]),
                         dxindex(d.p[2]), dyindex(d.p[2]), dxindex(d.p[3]), dyindex(d.p[3]));
-            case gib.NDG_PERP:
+            case Gib.NDG_PERP:
                 return poly.perpendicular(dxindex(d.p[0]), dyindex(d.p[0]), dxindex(d.p[1]), dyindex(d.p[1]),
                         dxindex(d.p[2]), dyindex(d.p[2]), dxindex(d.p[3]), dyindex(d.p[3]));
 
-            case gib.NDG_CYCLIC:
+            case Gib.NDG_CYCLIC:
                 return poly.cyclic(dxindex(d.p[0]), dyindex(d.p[0]), dxindex(d.p[1]), dyindex(d.p[1]),
                         dxindex(d.p[2]), dyindex(d.p[2]), dxindex(d.p[3]), dyindex(d.p[3]));
-            case gib.NDG_CONG:
+            case Gib.NDG_CONG:
                 return poly.eqdistance(dxindex(d.p[0]), dyindex(d.p[0]), dxindex(d.p[1]), dyindex(d.p[1]),
                         dxindex(d.p[2]), dyindex(d.p[2]), dxindex(d.p[3]), dyindex(d.p[3]));
             default:
@@ -245,9 +245,9 @@ public class NdgDialog extends JBaseDialog implements ActionListener, MouseMotio
         return null;
     }
 
-    public cndg fd_ndg(cons c, Vector v2) {
+    public CNdg fd_ndg(Cons c, Vector v2) {
         for (int i = 0; i < v2.size(); i++) {
-            cndg d = (cndg) v2.get(i);
+            CNdg d = (CNdg) v2.get(i);
             if (d.dep == c)
                 return d;
         }

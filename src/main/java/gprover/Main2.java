@@ -8,7 +8,6 @@
 package gprover;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.io.*;
 
 public class Main2 {
@@ -29,10 +28,10 @@ public class Main2 {
         chooser.setCurrentDirectory(new File(dr));
         int result = chooser.showOpenDialog(null);
         if (result == JFileChooser.CANCEL_OPTION) return;
-        gterm gt = new gterm();
+        GTerm gt = new GTerm();
         try {
             gt.readAterm(new BufferedReader(new FileReader(chooser.getSelectedFile())));
-            gdd_bc db = new gdd_bc();
+            GDDBc db = new GDDBc();
             db.init_dbase();
 //            db.proc_exam(gdd.CM_EX_PARA);
 

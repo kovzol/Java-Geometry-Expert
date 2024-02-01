@@ -1,11 +1,9 @@
 package wprover;
 
-import gprover.cclass;
+import gprover.CClass;
 import gprover.Prover;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -79,7 +77,7 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
             public void mouseClicked(MouseEvent e) {
                 Object o = list.getSelectedValue();
                 if (o != null)
-                    gxInstance.getpprove().high_light_a_fact((cclass) o);
+                    gxInstance.getpprove().high_light_a_fact((CClass) o);
             }
 
             public void mousePressed(MouseEvent e) {
@@ -160,7 +158,7 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
                 for (int i = 0; i < v.size(); i++)
                     model.addElement(v.get(i));
                 if (v.size() == 1) {
-                    gxInstance.getpprove().high_light_a_fact((cclass) v.get(0));
+                    gxInstance.getpprove().high_light_a_fact((CClass) v.get(0));
                     list.setSelectedIndex(0);
                 }
             }

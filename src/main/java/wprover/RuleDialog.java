@@ -1,7 +1,7 @@
 package wprover;
 
 
-import gprover.gib;
+import gprover.Gib;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -345,7 +345,7 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
 
         public void updateValue(boolean r) {
             selected = r;
-            gib.setValue(v, r);
+            Gib.setValue(v, r);
 
         }
 

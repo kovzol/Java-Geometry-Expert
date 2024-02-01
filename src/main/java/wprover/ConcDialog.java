@@ -62,10 +62,10 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         bok.addActionListener(ls);
     }
 
-    public void setCns(cons c) {
+    public void setCns(Cons c) {
         if (c == null)
             return;
-        if (c.type == gib.CO_COLL) {
+        if (c.type == Gib.CO_COLL) {
             bt.setSelectedIndex(0);
             for (int i = 0; i < 3; i++) {
                 JComboBox b = (JComboBox) vlist.get(i);
@@ -287,7 +287,7 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         } else {
 
             if (model == false && inputFinished()) {
-                cons c = this.getProve();
+                Cons c = this.getProve();
 
                 bok.setEnabled(true);
                 if (c != null)
@@ -634,7 +634,7 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         return ass;
     }
 
-    public cons getProve() {
+    public Cons getProve() {
         JComboBox box1 = (JComboBox) vlist.get(0);
         if (box1.getItemCount() == 0) return null;
         int nd = bt.getSelectedIndex();
@@ -648,10 +648,10 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
 
         if (p == 0) return null;
 
-        cons c = new cons(p);
+        Cons c = new Cons(p);
         int index = 0;
         String sn = "";
-        if (p == gib.CO_NANG || p == gib.CO_NSEG) {
+        if (p == Gib.CO_NANG || p == Gib.CO_NSEG) {
             sn = Pane2.getValue();
             c.setText(sn);
             return c;
@@ -674,13 +674,13 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             }
         }
 
-        if (p == gib.CO_RATIO) {
+        if (p == Gib.CO_RATIO) {
             Object o1 = bx1.getSelectedItem();
             Object o2 = bx2.getSelectedItem();
             c.add_pt(o1, 4);
             c.add_pt(o2, 5);
             sn += " " + o1 + " " + o2;
-        } else if (p == gib.CO_TANG) {
+        } else if (p == Gib.CO_TANG) {
             Object o1 = bx1.getSelectedItem();
             c.add_pt(o1, 4);
             sn += " " + o1;

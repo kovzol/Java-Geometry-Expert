@@ -7,7 +7,7 @@ package gprover;
  * Time: 13:47:59
  * To change this template use File | Settings | File Templates.
  */
-public class MathBase extends gdd_bc {
+public class MathBase extends GDDBc {
     int strcmp(char[] p1, char[] p2) {
         int l1, l2;
         if (p1 == null && p2 == null)
@@ -48,23 +48,23 @@ public class MathBase extends gdd_bc {
         return true;
     }
 
-    boolean numberp(xterm p) {
+    boolean numberp(XTerm p) {
         return (p.var == null);
     }
 
-    boolean npoly(xterm p) {
+    boolean npoly(XTerm p) {
         return (p.var == null);
     }
 
-    boolean pzerop(xterm p) {
+    boolean pzerop(XTerm p) {
         return ((p.var == null) && (num_zop(p.c)));
     }
 
-    boolean unitp(xterm p) {
+    boolean unitp(XTerm p) {
         return ((p.var == null) && (p.c == mk_num(1L)));
     }
 
-    boolean nunitp(xterm p) {
+    boolean nunitp(XTerm p) {
         return ((p.var == null) && (p.c == mk_num(-1L)));
     }
 

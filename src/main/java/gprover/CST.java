@@ -240,7 +240,7 @@ public class CST {
     public static String getDString(Object[] pss, int t, boolean d) {
 
         switch (t) {
-            case gib.C_POINT: {
+            case Gib.C_POINT: {
                 String s = "";
                 int i = 0;
                 for (i = 0; i < pss.length && pss[i] != null; i++)
@@ -252,53 +252,53 @@ public class CST {
                 // return "Point: " + s;
                 return GExpert.getTranslationViaGettext("Point {0}", s);
             }
-            case gib.C_LINE:
+            case Gib.C_LINE:
                 // return "Line " + pss[0] + pss[1];
                 return GExpert.getTranslationViaGettext("Line {0}", pss[0] + "" + pss[1]);
-            case gib.C_O_L:
+            case Gib.C_O_L:
                 if (d)
                     return pss[0] + ": " + GExpert.getTranslationViaGettext("on line {0}", "" + pss[1] + pss[2]);
                 else
                     return GExpert.getTranslationViaGettext("{0} is on line {1}",
                             "" + pss[0], "" + pss[1] + pss[2]);
 
-            case gib.C_O_P:
+            case Gib.C_O_P:
                 if (d)
                     return pss[0] + "" + pss[1] + Cm.PARALLEL_SIGN + pss[2] + "" + pss[3];
                 else
                     return GExpert.getTranslationViaGettext("{0} is parallel to {1}",
                             pss[0] + "" + pss[1], "" + pss[2] + pss[3]);
-            case gib.C_O_T:
+            case Gib.C_O_T:
                 if (d)
                     return pss[0] + "" + pss[1] + Cm.PERPENDICULAR_SIGN + pss[2] + "" + pss[3];
                 else
                     return GExpert.getTranslationViaGettext("{0} is perpendicular to {1}",
                             pss[0] + "" + pss[1], "" + pss[2] + pss[3]);
-            case gib.C_O_B:
+            case Gib.C_O_B:
                 if (d)
                     return pss[0] + ": " + GExpert.getTranslationViaGettext("on the perpendicular bisector of",
                             "" + pss[1] + pss[2]);
                 else
                     return GExpert.getTranslationViaGettext("{0} is on the perpendicular bisector of {1}",
                         pss[0] + "", "" + pss[1] + pss[2]);
-            case gib.C_O_A:
-            case gib.C_EQANGLE: {
+            case Gib.C_O_A:
+            case Gib.C_EQANGLE: {
                 if (pss[6] != null && pss[7] != null)
                     return Cm.ANGLE_SIGN + "[" + pss[0] + pss[1] + ", " + pss[2] + pss[3] + "] = " + Cm.ANGLE_SIGN + "[" + pss[4] + pss[5] + ", " + pss[6] + pss[7] + "]";
                 else
                     return Cm.ANGLE_SIGN + "[" + pss[0] + pss[1] + pss[2] + "] = " + Cm.ANGLE_SIGN + "[" + pss[3] + pss[4] + pss[5] + "]";
             }
-            case gib.C_FOOT:
+            case Gib.C_FOOT:
                 return pss[0] + "" + pss[1] + Cm.PERPENDICULAR_SIGN + pss[2] + "" + pss[3] + " " + GExpert.getTranslationViaGettext("with foot {0}",
                         "" + pss[0]);
-            case gib.C_CIRCLE: {
+            case Gib.C_CIRCLE: {
                 String st = "(" + pss[0] + ",";
                 for (int i = 1; i < pss.length && pss[i] != null; i++)
                     st += pss[i];
                 st += ")";
                 return GExpert.getTranslationViaGettext("Circle {0}", st);
             }
-            case gib.C_O_C:
+            case Gib.C_O_C:
                 if (d)
                     return pss[0] + ": " + GExpert.getTranslationViaGettext("on circle {0}",
                            "(" + pss[1] + "," + pss[2] + ")");
@@ -306,7 +306,7 @@ public class CST {
                     return GExpert.getTranslationViaGettext("{0} on circle {1}",
                         pss[0] + "", "(" + pss[1] + "," + pss[2] + ")");
 
-            case gib.C_CIRCUM:
+            case Gib.C_CIRCUM:
                 if (d)
                     return pss[0] + ": " + GExpert.getTranslationViaGettext("circumcenter of {0}",
                             "" + pss[1] + pss[2] + pss[3]);
@@ -314,7 +314,7 @@ public class CST {
                     return GExpert.getTranslationViaGettext("{0} is the circumcenter of {1}",
                             "" + pss[0], "" + pss[1] + pss[2] + pss[3]);
 
-            case gib.C_O_R:
+            case Gib.C_O_R:
                 if (d)
                     return pss[0] + ": " + GExpert.getTranslationViaGettext("on circle {0}",
                             "(" + pss[1] + "," + pss[2] + pss[3] + ")");
@@ -322,13 +322,13 @@ public class CST {
                     return GExpert.getTranslationViaGettext("{0} on circle {1}",
                             pss[0] + "", "(" + pss[1] + "," + pss[2] + pss[3] + ")");
 
-            case gib.C_MIDPOINT:
+            case Gib.C_MIDPOINT:
                 if (d)
                     return pss[0] + ": " + GExpert.getTranslationViaGettext("midpoint of {0}", "" + pss[1] + pss[2]);
                 else
                     return GExpert.getTranslationViaGettext("{0} is the midpoint of {1}",
                             "" + pss[0], "" + pss[1] + pss[2]);
-            case gib.C_EQDISTANCE: {
+            case Gib.C_EQDISTANCE: {
                 String st = "";
                 for (int i = 0; i < pss.length / 2; i++) {
                     if (pss[i * 2] == null || pss[i * 2 + 1] == null)
@@ -353,11 +353,11 @@ public class CST {
                         pss[2] + "" + pss[3]);
             case 20:
                 return "????"; // FIXME: What's this?
-            case gib.C_TRIANGLE:
+            case Gib.C_TRIANGLE:
                 return GExpert.getTranslationViaGettext("Triangle {0}", "" + pss[0] + pss[1] + pss[2]);
-            case gib.C_QUADRANGLE:
+            case Gib.C_QUADRANGLE:
                 return GExpert.getTranslationViaGettext("Quadrangle {0}", "" + pss[0] + pss[1] + pss[2] + pss[3]);
-            case gib.C_PENTAGON:
+            case Gib.C_PENTAGON:
                 return GExpert.getTranslationViaGettext("Pentagon {0}", "" + pss[0] + pss[1] + pss[2] + pss[3] + pss[4]);
             case 27:
                 return GExpert.getTranslationViaGettext("Isosceles triangle {0}", "" + pss[0] + pss[1] + pss[2]);
@@ -402,190 +402,190 @@ public class CST {
             case 46:
                 return "circle(" + pss[0] + "," + pss[1] + ") tangent to circle(" + pss[2] + "," + pss[3] + ")";
 
-            case gib.C_I_LL:
+            case Gib.C_I_LL:
                 if (d)
                     return pss[0] + " = " + pss[1] + pss[2] + Cm.INTERSECT_SIGN + pss[3] + pss[4];
                 else
                     return pss[0] + " is the intersection of " + pss[1] + pss[2] + " and " + pss[3] + pss[4];
-            case gib.C_I_LP:
+            case Gib.C_I_LP:
                 if (d)
                     return pss[0] + " = " + pss[1] + pss[2] + Cm.INTERSECT_SIGN + "P(" + pss[3] + ", " + pss[4] + pss[5] + ")";
                 else
                     return pss[0] + " is on " + pss[1] + pss[2] + " and " + pss[0] + pss[3] + " is parallel to " + pss[4] + pss[5] + ")";
-            case gib.C_I_LC:
+            case Gib.C_I_LC:
                 if (d)
                     return pss[0] + " = " + pss[1] + pss[2] + Cm.INTERSECT_SIGN + "C(" + pss[3] + pss[4] + ")";
                 else
                     return pss[0] + " is the intersection of line " + pss[1] + pss[2] + " and circle(" + pss[3] + pss[4] + ")";
 
-            case gib.C_I_LB:
+            case Gib.C_I_LB:
                 if (d)
                     return pss[0] + " = " + pss[1] + pss[2] + Cm.INTERSECT_SIGN + "B(" + pss[3] + pss[4] + ")";
                 else
                     return pss[0] + " is the intersection of " + pss[1] + pss[2] + " and perp-bisector of " + pss[3] + pss[4] + "";
 
-            case gib.C_I_LT:
+            case Gib.C_I_LT:
                 if (d)
                     return pss[0] + " = " + pss[1] + pss[2] + Cm.INTERSECT_SIGN + "T(" + pss[3] + ", " + pss[4] + pss[5] + ")";
                 else
                     return pss[0] + " is on line " + pss[1] + pss[2] + " and " + pss[0] + pss[3] + " is parallel to " + pss[4] + pss[5];
-            case gib.C_I_LR:
+            case Gib.C_I_LR:
                 if (d)
                     return pss[0] + " = " + pss[1] + pss[2] + Cm.INTERSECT_SIGN + "R(" + pss[3] + ", " + pss[4] + pss[5] + ")";
                 else
                     return pss[0] + " is the intersection of " + pss[1] + pss[2] + " and circle(" + pss[3] + "," + pss[4] + pss[5] + ")";
-            case gib.C_I_LS:
+            case Gib.C_I_LS:
                 return null;
-            case gib.C_I_LA:
+            case Gib.C_I_LA:
                 return pss[0] + " = " + pss[1] + pss[2] + Cm.INTERSECT_SIGN + "A(" + vprint(3, 9, pss) + ")";
-            case gib.C_I_PP:
+            case Gib.C_I_PP:
                 if (d)
                     return pss[0] + " = P(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "P(" + pss[4] + "," + pss[5] + pss[6] + ")";
                 else
                     return pss[0] + "" + pss[1] + " is parallel to " + pss[2] + pss[3] + " and " + pss[0] + pss[4] + " is parallel to " + pss[5] + pss[6];
-            case gib.C_I_PC:
+            case Gib.C_I_PC:
                 if (d)
                     return pss[0] + " = P(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "C(" + pss[4] + pss[5] + ")";
                 else
                     return pss[0] + "" + pss[1] + " is parallel to " + pss[2] + pss[3] + " and " + pss[0] + " is on circle(" + pss[4] + pss[5] + ")";
-            case gib.C_I_PR:
+            case Gib.C_I_PR:
                 if (d)
                     return pss[0] + " = P(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "R(" + pss[4] + "," + pss[5] + pss[6] + ")";
                 else
                     return pss[0] + "" + pss[1] + " is parallel to " + pss[2] + pss[3] + " and " + pss[0] + " is on circle(" + pss[4] + "," + pss[5] + pss[6] + ")";
-            case gib.C_I_PT:
+            case Gib.C_I_PT:
                 if (d)
                     return pss[0] + " = P(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "T(" + pss[4] + "," + pss[5] + pss[6] + ")";
                 else
                     return pss[0] + "" + pss[1] + " is parallel to " + pss[2] + pss[3] + " and " + pss[0] + pss[4] + " is perpendicular to" + pss[5] + pss[6];
-            case gib.C_I_PB:
+            case Gib.C_I_PB:
                 if (d)
                     return pss[0] + " = P(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "B(" + pss[4] + "," + pss[5] + pss[6] + ")";
                 else
                     return pss[0] + "" + pss[1] + " is parallel to " + pss[2] + pss[3] + " and " + pss[0] + " is on the perep-bisector of" + pss[4] + pss[5];
-            case gib.C_I_PA:
+            case Gib.C_I_PA:
                 return pss[0] + " = P(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "A(" + vprint(3, 9, pss) + ")";
 
-            case gib.C_I_TT:
+            case Gib.C_I_TT:
                 if (d)
                     return pss[0] + " = T(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "T(" + pss[4] + "," + pss[5] + pss[6] + ")";
                 else
                     return pss[0] + "" + pss[1] + " is perpendicular to " + pss[2] + pss[3] + " and " + pss[0] + pss[4] + " is perependicular to " + pss[5] + pss[6];
 
-            case gib.C_I_TC:
+            case Gib.C_I_TC:
                 if (d)
                     return pss[0] + " = T(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "C(" + pss[4] + pss[5] + ")";
                 else
                     return pss[0] + "" + pss[1] + " is perpendicular to " + pss[2] + pss[3] + " and " + pss[0] + " is on circle(" + pss[4] + pss[5] + ")";
 
-            case gib.C_I_TR:
+            case Gib.C_I_TR:
                 if (d)
                     return pss[0] + " = T(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "R(" + pss[4] + "," + pss[5] + pss[6] + ")";
                 else
                     return pss[0] + "" + pss[1] + " is perpendicular to " + pss[2] + pss[3] + " and " + pss[0] + " is on circle(" + pss[4] + "," + pss[5] + pss[6] + ")";
-            case gib.C_I_TB:
+            case Gib.C_I_TB:
                 if (d)
                     return pss[0] + " = T(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "B(" + pss[4] + "," + pss[5] + pss[6] + ")";
                 else
                     return pss[0] + "" + pss[1] + " is perpendicular to " + pss[2] + pss[3] + " and " + pss[0] + " is on the perp-bisecotr of " + pss[4] + pss[5];
-            case gib.C_I_TA:
+            case Gib.C_I_TA:
                 return pss[0] + " = T(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "A(" + vprint(3, 9, pss) + ")";
 
-            case gib.C_I_BB:
+            case Gib.C_I_BB:
                 if (d)
                     return pss[0] + " = B(" + pss[1] + pss[2] + ")" + Cm.INTERSECT_SIGN + "B(" + pss[3] + pss[4] + ")";
                 else
                     return pss[0] + " is the intersection of perp-bisector of " + pss[1] + pss[2] + " and " + "perp-bisector of " + pss[3] + pss[4];
-            case gib.C_I_BC:
+            case Gib.C_I_BC:
                 if (d)
                     return pss[0] + " = B(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "C(" + pss[4] + pss[5] + ")";
                 else
                     return pss[0] + " is the intersection of perp-bisector of " + pss[1] + pss[2] + " and circle(" + pss[3] + pss[4] + ")";
-            case gib.C_I_BR:
+            case Gib.C_I_BR:
                 if (d)
                     return pss[0] + " = B(" + pss[1] + "," + pss[2] + pss[3] + ")" + Cm.INTERSECT_SIGN + "R(" + pss[4] + "," + pss[5] + pss[6] + ")";
                 else
                     return pss[0] + " is the intersection of perp-bisector of " + pss[1] + pss[2] + " and circle(" + pss[3] + "," + pss[4] + pss[5] + ")";
-            case gib.C_I_CC:
+            case Gib.C_I_CC:
                 if (d)
                     return pss[0] + " = C(" + pss[1] + pss[2] + ")" + Cm.INTERSECT_SIGN + "C(" + pss[3] + pss[4] + ")";
                 else
                     return pss[0] + " is the intersection of circle(" + pss[1] + pss[2] + ") and circle(" + pss[3] + pss[4] + ")";
-            case gib.C_I_CR:
+            case Gib.C_I_CR:
                 if (d)
                     return pss[0] + " = C(" + pss[1] + pss[2] + ")" + Cm.INTERSECT_SIGN + "R(" + pss[3] + ", " + pss[4] + pss[5] + ")";
                 else
                     return pss[0] + " is the intersection of circle(" + pss[1] + pss[2] + ") and circle(" + pss[3] + "," + pss[4] + pss[5] + ")";
 
-            case gib.CO_COLL:
+            case Gib.CO_COLL:
                 return GExpert.getTranslationViaGettext("{0} are collinear", pss[0] + ", " + pss[1] + ", " + pss[2]);
-            case gib.CO_PARA:
+            case Gib.CO_PARA:
                 if (d)
                     return pss[0] + "" + pss[1] + Cm.PARALLEL_SIGN + pss[2] + "" + pss[3];
                 else
                     return pss[0] + "" + pss[1] + " is parallel to " + pss[2] + "" + pss[3];
-            case gib.CO_PERP:
+            case Gib.CO_PERP:
                 if (d)
                     return pss[0] + "" + pss[1] + Cm.PERPENDICULAR_SIGN + pss[2] + "" + pss[3];
                 else
                     return pss[0] + "" + pss[1] + " is perpendicular to " + pss[2] + "" + pss[3];
-            case gib.CO_MIDP:
+            case Gib.CO_MIDP:
                 if (d)
                     return pss[0] + " : midpoint(" + pss[1] + pss[2] + ")";
                 else
                     return pss[0] + " is the midpoint of " + pss[1] + pss[2];
-            case gib.CO_CYCLIC:
+            case Gib.CO_CYCLIC:
                 // if (d)
                     return GExpert.getTranslationViaGettext("{0} are concyclic", pss[0] + "," + pss[1] + "," + pss[2] + "," + pss[3]);
                 // else
                 //    return pss[0] + ", " + pss[1] + ", " + pss[2] + ", " + pss[3] + " are cyclic";
-            case gib.CO_CONG:
+            case Gib.CO_CONG:
                 return "|" + pss[0] + pss[1] + "| = |" + pss[2] + pss[3] + "|";
-            case gib.CO_ACONG: {
+            case Gib.CO_ACONG: {
                 if (pss[6] != null && pss[7] != null)
                     return Cm.ANGLE_SIGN + "[" + pss[0] + pss[1] + ", " + pss[2] + pss[3] + "] = " + Cm.ANGLE_SIGN + "[" + pss[4] + pss[5] + ", " + pss[6] + pss[7] + "]";
                 else
                     return Cm.ANGLE_SIGN + "[" + pss[0] + pss[1] + pss[2] + "] = " + Cm.ANGLE_SIGN + "[" + pss[3] + pss[4] + pss[5] + "]";
             }
-            case gib.CO_PBISECT:
+            case Gib.CO_PBISECT:
                 return GExpert.getLanguage("To Prove:") + " " + "??"; // TODO: Find some better method to express the content here.
-            case gib.CO_STRI:
+            case Gib.CO_STRI:
                 return Cm.TRIANGLE_SIGN + pss[0] + pss[1] + pss[2] + Cm.SIMILAR_SIGN + Cm.TRIANGLE_SIGN + pss[3] + pss[4] + pss[5];
-            case gib.CO_CTRI:
+            case Gib.CO_CTRI:
                 return Cm.TRIANGLE_SIGN + pss[0] + pss[1] + pss[2] + Cm.EQUAL_SIGN + Cm.TRIANGLE_SIGN + pss[3] + pss[4] + pss[5];
 
 
-            case gib.NDG_NEQ:
+            case Gib.NDG_NEQ:
                 return pss[0] + " != " + pss[1];
-            case gib.NDG_COLL:
+            case Gib.NDG_COLL:
                 return pss[0] + "," + pss[1] + "," + pss[2] + " are not collinear";
-            case gib.NDG_CONG:
+            case Gib.NDG_CONG:
                 return pss[0] + "" + pss[1] + " != " + pss[2] + pss[3];
-            case gib.NDG_PARA:
+            case Gib.NDG_PARA:
                 return pss[0] + "" + pss[1] + " is not parallel to " + pss[2] + "" + pss[3];
-            case gib.NDG_PERP:
+            case Gib.NDG_PERP:
                 return pss[0] + "" + pss[1] + " is not perpendicular to " + pss[2] + "" + pss[3];
-            case gib.NDG_NON_ISOTROPIC:
+            case Gib.NDG_NON_ISOTROPIC:
                 return pss[0] + "" + pss[1] + " is non-isotropic";
-            case gib.NDG_ACONG: {
+            case Gib.NDG_ACONG: {
                 if (pss[6] != null && pss[7] != null)
                     return Cm.ANGLE_SIGN + "[" + pss[0] + pss[1] + ", " + pss[2] + pss[3] + "] != " + Cm.ANGLE_SIGN + "[" + pss[4] + pss[5] + ", " + pss[6] + pss[7] + "]";
                 else
                     return Cm.ANGLE_SIGN + "[" + pss[0] + pss[1] + pss[2] + "] != " + Cm.ANGLE_SIGN + "[" + pss[3] + pss[4] + pss[5] + "]";
             }
-            case gib.NDG_CYCLIC:
+            case Gib.NDG_CYCLIC:
                 return pss[0] + "" + pss[1] + "" + pss[2] + "" + pss[3] + " is not cyclic";
-            case gib.IN_AG_INSIDE:
+            case Gib.IN_AG_INSIDE:
                 return pss[0] + " is inside " + Cm.ANGLE_SIGN + pss[1] + pss[2] + pss[3];
-            case gib.IN_AG_OUTSIDE:
+            case Gib.IN_AG_OUTSIDE:
                 return pss[0] + " is outside " + Cm.ANGLE_SIGN + pss[1] + pss[2] + pss[3];
-            case gib.IN_BETWEEN:
+            case Gib.IN_BETWEEN:
                 return pss[0] + " is between " + pss[1] + pss[2];
-            case gib.IN_OPP_SIDE:
+            case Gib.IN_OPP_SIDE:
                 return pss[0] + "" + pss[1] + " are on the opposite side of " + pss[2] + pss[3];
-            case gib.IN_PARA_INSIDE:
+            case Gib.IN_PARA_INSIDE:
                 return pss[0] + " is inside the parallelogram " + pss[1] + pss[2] + pss[3] + pss[4];
-            case gib.IN_PG_CONVEX: {
+            case Gib.IN_PG_CONVEX: {
                 String str = "polygon ";
                 int i = 0;
                 while (i < pss.length && pss[i] != null) {
@@ -594,15 +594,15 @@ public class CST {
                 }
                 return str + " is convex";
             }
-            case gib.IN_SAME_SIDE:
+            case Gib.IN_SAME_SIDE:
                 return pss[0] + " and " + pss[1] + " is on the same side of line " + pss[2] + pss[3];
-            case gib.IN_TRI_INSIDE:
+            case Gib.IN_TRI_INSIDE:
                 return pss[0] + " is inside the triangle " + pss[1] + pss[2] + pss[3];
-            case gib.C_O_S:
+            case Gib.C_O_S:
                 return pss[0] + " is on circle(" + pss[1] + pss[2] + pss[3] + ")";
-            case gib.C_O_AB:
+            case Gib.C_O_AB:
                 return pss[0] + " is on the bisector of " + Cm.ANGLE_SIGN + "[" + pss[1] + pss[2] + pss[3] + "]";
-            case gib.C_O_D:
+            case Gib.C_O_D:
                 return pss[0] + " is on the circle D(" + pss[1] + pss[2] + ")";
 
             default: {
@@ -624,12 +624,12 @@ public class CST {
         return s;
     }
 
-    public static cons charCons(int pt, cons c1, cons c2, Object[] pss) {
+    public static Cons charCons(int pt, Cons c1, Cons c2, Object[] pss) {
         if (c1 == null) {
             c1 = c2;
             c2 = null;
         } else if (c1 != null && c2 != null && c1.type > c2.type) {
-            cons c = c1;
+            Cons c = c1;
             c1 = c2;
             c2 = c;
         }
@@ -674,125 +674,125 @@ public class CST {
             rt = t1;
         } else {
             switch (t1) {
-                case gib.C_O_L: {
+                case Gib.C_O_L: {
                     switch (t2) {
-                        case gib.C_O_L:
-                            rt = gib.C_I_LL;
+                        case Gib.C_O_L:
+                            rt = Gib.C_I_LL;
                             break;
-                        case gib.C_O_P:
-                            rt = gib.C_I_LP;
+                        case Gib.C_O_P:
+                            rt = Gib.C_I_LP;
                             break;
-                        case gib.C_O_T:
-                            rt = gib.C_I_LT;
+                        case Gib.C_O_T:
+                            rt = Gib.C_I_LT;
                             rt = ge_lt_foot(rt, p);
                             break;
-                        case gib.C_O_B:
-                            rt = gib.C_I_LB;
+                        case Gib.C_O_B:
+                            rt = Gib.C_I_LB;
                             break;
-                        case gib.C_O_A:
-                            rt = gib.C_I_LA;
+                        case Gib.C_O_A:
+                            rt = Gib.C_I_LA;
                             break;
-                        case gib.C_O_C:
-                            rt = gib.C_I_LC;
+                        case Gib.C_O_C:
+                            rt = Gib.C_I_LC;
                             break;
-                        case gib.C_O_R:
-                            rt = gib.C_I_LR;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                }
-                case gib.C_O_P: {
-                    switch (t2) {
-                        case gib.C_O_P:
-                            rt = gib.C_I_PP;
-                            break;
-                        case gib.C_O_T:
-                            rt = gib.C_I_PT;
-                            break;
-                        case gib.C_O_B:
-                            rt = gib.C_I_PB;
-                            break;
-                        case gib.C_O_A:
-                            rt = gib.C_I_PA;
-                            break;
-                        case gib.C_O_C:
-                            rt = gib.C_I_PC;
-                            break;
-                        case gib.C_O_R:
-                            rt = gib.C_I_PR;
+                        case Gib.C_O_R:
+                            rt = Gib.C_I_LR;
                             break;
                         default:
                             break;
                     }
                     break;
                 }
-                case gib.C_O_T: {
+                case Gib.C_O_P: {
                     switch (t2) {
-                        case gib.C_O_T:
-                            rt = gib.C_I_TT;
+                        case Gib.C_O_P:
+                            rt = Gib.C_I_PP;
                             break;
-                        case gib.C_O_B:
-                            rt = gib.C_I_TB;
+                        case Gib.C_O_T:
+                            rt = Gib.C_I_PT;
                             break;
-                        case gib.C_O_A:
-                            rt = gib.C_I_TA;
+                        case Gib.C_O_B:
+                            rt = Gib.C_I_PB;
                             break;
-                        case gib.C_O_C:
-                            rt = gib.C_I_TC;
+                        case Gib.C_O_A:
+                            rt = Gib.C_I_PA;
                             break;
-                        case gib.C_O_R:
-                            rt = gib.C_I_TR;
+                        case Gib.C_O_C:
+                            rt = Gib.C_I_PC;
+                            break;
+                        case Gib.C_O_R:
+                            rt = Gib.C_I_PR;
                             break;
                         default:
                             break;
                     }
                     break;
                 }
-                case gib.C_O_B: {
+                case Gib.C_O_T: {
                     switch (t2) {
-                        case gib.C_O_B:
-                            rt = gib.C_I_BB;
+                        case Gib.C_O_T:
+                            rt = Gib.C_I_TT;
                             break;
-                        case gib.C_O_A:
-                            rt = gib.C_I_BA;
+                        case Gib.C_O_B:
+                            rt = Gib.C_I_TB;
                             break;
-                        case gib.C_O_C:
-                            rt = gib.C_I_BC;
+                        case Gib.C_O_A:
+                            rt = Gib.C_I_TA;
                             break;
-                        case gib.C_O_R:
-                            rt = gib.C_I_BR;
+                        case Gib.C_O_C:
+                            rt = Gib.C_I_TC;
+                            break;
+                        case Gib.C_O_R:
+                            rt = Gib.C_I_TR;
                             break;
                         default:
                             break;
                     }
                     break;
                 }
-                case gib.C_O_A: {
+                case Gib.C_O_B: {
                     switch (t2) {
-                        case gib.C_O_A:
-                            rt = gib.C_I_AA;
+                        case Gib.C_O_B:
+                            rt = Gib.C_I_BB;
+                            break;
+                        case Gib.C_O_A:
+                            rt = Gib.C_I_BA;
+                            break;
+                        case Gib.C_O_C:
+                            rt = Gib.C_I_BC;
+                            break;
+                        case Gib.C_O_R:
+                            rt = Gib.C_I_BR;
                             break;
                         default:
                             break;
                     }
                     break;
                 }
-                case gib.C_O_C: {
+                case Gib.C_O_A: {
                     switch (t2) {
-                        case gib.C_O_C:
-                            rt = gib.C_I_CC;
+                        case Gib.C_O_A:
+                            rt = Gib.C_I_AA;
                             break;
                         default:
                             break;
                     }
                     break;
                 }
-                case gib.C_O_R: {
+                case Gib.C_O_C: {
                     switch (t2) {
-                        case gib.C_O_R:
-                            rt = gib.C_I_RR;
+                        case Gib.C_O_C:
+                            rt = Gib.C_I_CC;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                }
+                case Gib.C_O_R: {
+                    switch (t2) {
+                        case Gib.C_O_R:
+                            rt = Gib.C_I_RR;
                             break;
                         default:
                             break;
@@ -807,7 +807,7 @@ public class CST {
         if (rt == 0)
             return null;
 
-        if (t1 == gib.C_O_L && t2 == gib.C_O_A) {
+        if (t1 == Gib.C_O_L && t2 == Gib.C_O_A) {
 
             int i = 0;
             for (; p2[i] != 0; i++) ;
@@ -828,7 +828,7 @@ public class CST {
                         a = b = c = 0;
                     }
                     if (a != 0) {
-                        rt = gib.C_FOOT;
+                        rt = Gib.C_FOOT;
                         p[0] = pt;
                         p[1] = c;
                         p[2] = a;
@@ -839,7 +839,7 @@ public class CST {
         }
 
 
-        cons c = new cons(rt, p.length);
+        Cons c = new Cons(rt, p.length);
         int i = 0;
         for (i = 0; i < p.length && p[i] != 0; i++)
             c.ps[i] = p[i];
@@ -850,15 +850,15 @@ public class CST {
     }
 
 
-    public static void spec(int pt, cons c) {
+    public static void spec(int pt, Cons c) {
         if (c == null) return;
 
         switch (c.type) {
-            case gib.C_O_A: {
+            case Gib.C_O_A: {
                 int n = c.getPts();
                 if (n == 8) {
                     if (c.ps[0] == c.ps[4] && c.ps[3] == c.ps[7] && pt == c.ps[1] && pt == c.ps[2] && c.ps[5] == c.ps[6]) {
-                        c.type = gib.C_O_S;
+                        c.type = Gib.C_O_S;
                         c.ps[0] = pt;
                         c.ps[1] = c.ps[4];
                         c.ps[2] = c.ps[5];
@@ -866,7 +866,7 @@ public class CST {
                         c.ps[4] = c.ps[5] = c.ps[6] = c.ps[7] = 0;
                     } else
                     if (pt == c.ps[0] && pt == c.ps[7] && c.ps[1] == c.ps[2] && c.ps[5] == c.ps[6] && c.ps[1] == c.ps[5] && c.ps[3] != 4) {
-                        c.type = gib.C_O_AB;
+                        c.type = Gib.C_O_AB;
                         c.ps[0] = pt;
                         c.ps[1] = c.ps[3];
                         c.ps[2] = c.ps[2];
@@ -874,14 +874,14 @@ public class CST {
                         c.ps[4] = c.ps[5] = c.ps[6] = c.ps[7] = 0;
                     } else
                     if (pt == c.ps[0] && pt == c.ps[7] && c.ps[1] == c.ps[2] && c.ps[5] == c.ps[6] && c.ps[1] == c.ps[4] && c.ps[3] == c.ps[5]) {
-                        c.type = gib.C_O_B;
+                        c.type = Gib.C_O_B;
                         c.ps[0] = pt;
                         c.ps[2] = c.ps[3];
                         c.ps[4] = c.ps[5] = c.ps[6] = c.ps[7] = 0;
                     }
                 } else if (n == 6) {
                     if (pt == c.ps[0] && pt == c.ps[5] && c.ps[1] == c.ps[3] && c.ps[2] == c.ps[4]) {
-                        c.type = gib.C_O_B;
+                        c.type = Gib.C_O_B;
                         c.ps[0] = pt;
                         if (c.ps[1] > c.ps[2]) {
                             int t = c.ps[1];
@@ -890,14 +890,14 @@ public class CST {
                         }
                         c.ps[3] = c.ps[4] = c.ps[5] = c.ps[6] = 0;
                     } else if (c.ps[0] == c.ps[3] && c.ps[2] == c.ps[5] && pt == c.ps[1]) {
-                        c.type = gib.C_O_S;
+                        c.type = Gib.C_O_S;
                         c.ps[0] = pt;
                         c.ps[1] = c.ps[3];
                         c.ps[2] = c.ps[4];
                         c.ps[3] = c.ps[5];
                         c.ps[4] = c.ps[5] = c.ps[6] = 0;
                     } else if (pt == c.ps[0] && pt == c.ps[5] && c.ps[1] == c.ps[4] && c.ps[2] != c.ps[3]) {
-                        c.type = gib.C_O_AB;
+                        c.type = Gib.C_O_AB;
                         c.ps[0] = pt;
                         c.ps[4] = c.ps[5] = c.ps[6] = c.ps[7] = 0;
                     }
@@ -905,13 +905,13 @@ public class CST {
                 }
                 break;
             }
-            case gib.C_O_T: {
+            case Gib.C_O_T: {
                 if (c.ps[0] == c.ps[2]) {
-                    c.type = gib.C_O_D;
+                    c.type = Gib.C_O_D;
                     c.ps[2] = c.ps[3];
                     c.ps[3] = 0;
                 } else if (c.ps[0] == c.ps[3]) {
-                    c.type = gib.C_O_D;
+                    c.type = Gib.C_O_D;
                     c.ps[3] = 0;
                 }
             }
@@ -922,7 +922,7 @@ public class CST {
         }
     }
 
-    public static void addPss(cons c, Object[] pss) {
+    public static void addPss(Cons c, Object[] pss) {
         int[] p = c.ps;
         int i = 0;
         for (i = 0; i < p.length && p[i] != 0; i++) {
@@ -971,28 +971,28 @@ public class CST {
             p[3] = p[2];
             p[2] = p[1];
             p[1] = t1;
-            return gib.C_FOOT;
+            return Gib.C_FOOT;
         }
         return t;
     }
 
     public static int validate_all(int pt, int t1, int[] p1) {
 
-        if (t1 == gib.C_EQDISTANCE || t1 == gib.CO_CONG) {
+        if (t1 == Gib.C_EQDISTANCE || t1 == Gib.CO_CONG) {
             t1 = validate_cg(pt, p1);
-        } else if (t1 == gib.C_EQANGLE || t1 == gib.CO_ACONG || t1 == gib.C_O_A) {
+        } else if (t1 == Gib.C_EQANGLE || t1 == Gib.CO_ACONG || t1 == Gib.C_O_A) {
             t1 = validate_ea(pt, p1);
-        } else if (t1 == gib.CO_COLL)
+        } else if (t1 == Gib.CO_COLL)
             t1 = validate_coll(pt, p1);
-        else if (t1 == gib.CO_PARA || t1 == gib.C_O_P)
+        else if (t1 == Gib.CO_PARA || t1 == Gib.C_O_P)
             t1 = validate_p(pt, p1);
-        else if (t1 == gib.CO_PERP || t1 == gib.C_O_T)
+        else if (t1 == Gib.CO_PERP || t1 == Gib.C_O_T)
             t1 = validate_t(pt, p1);
         return t1;
     }
 
     public static int validate_ea(int pt, int[] ps) {
-        int t1 = gib.C_O_A;
+        int t1 = Gib.C_O_A;
         int i = 0;
         for (; ps[i] != 0; i++) ;
         if (i == 6) {
@@ -1017,13 +1017,13 @@ public class CST {
             }
             if (ps[1] == ps[5] && ps[2] == ps[4]) {
                 ps[4] = ps[5] = 0;
-                t1 = gib.C_O_P;
+                t1 = Gib.C_O_P;
             } else if (ps[0] == ps[5] && ps[1] == ps[4] && ps[2] == ps[3]) {
-                t1 = gib.C_O_T;
+                t1 = Gib.C_O_T;
                 ps[3] = ps[1];
                 ps[4] = ps[5] = ps[6] = 0;
             } else if (ps[0] == ps[5] && ps[1] == ps[3] && ps[2] == ps[4]) {
-                t1 = gib.C_O_B;
+                t1 = Gib.C_O_B;
                 ps[3] = ps[4] = ps[5] = ps[6] = 0;
             }
 
@@ -1041,7 +1041,7 @@ public class CST {
             exchange(0, 2, ps);
         if (ps[1] < ps[2])
             exchange(1, 2, ps);
-        return gib.C_O_L;
+        return Gib.C_O_L;
     }
 
     public static int validate_p(int pt, int[] ps) {
@@ -1053,7 +1053,7 @@ public class CST {
             exchange(0, 2, ps);
             exchange(1, 3, ps);
         }
-        return gib.C_O_P;
+        return Gib.C_O_P;
     }
 
     public static int validate_t(int pt, int[] ps) {
@@ -1065,7 +1065,7 @@ public class CST {
             exchange(0, 2, ps);
             exchange(1, 3, ps);
         }
-        return gib.C_O_T;
+        return Gib.C_O_T;
     }
 
     public static int validate_cg(int pt, int[] ps) {
@@ -1081,9 +1081,9 @@ public class CST {
         if (ps[0] == ps[2] && ps[0] == pt) {
             ps[2] = ps[3];
             ps[3] = 0;
-            return gib.C_O_B;
+            return Gib.C_O_B;
         }
-        return gib.C_O_R;
+        return Gib.C_O_R;
     }
 
     public static void exchange(int i, int j, int[] ps) {

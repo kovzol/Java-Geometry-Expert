@@ -1,11 +1,11 @@
 package wprover;
 
-import gprover.cons;
-import gprover.gib;
+import gprover.Cons;
+import gprover.Gib;
 import maths.CharSet;
 import maths.TMono;
 import maths.TPoly;
-import maths.param;
+import maths.Param;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +83,7 @@ public class DrawBase {
     protected int CatchType = 0;  // 1. middle ,  2. x pt,  3. y pt, 4: x & y.
 
 
-    protected param[] parameter = new param[1024];
+    protected Param[] parameter = new Param[1024];
     protected double[] pptrans = new double[4];
 
     protected double[] paraBackup = new double[1024];
@@ -230,8 +230,8 @@ public class DrawBase {
     }
 
     final public CPoint CreateATempPoint(double x, double y) {
-        param p1 = new param(-1, x);
-        param p2 = new param(-1, y);
+        Param p1 = new Param(-1, x);
+        Param p2 = new Param(-1, y);
         return new CPoint(CPoint.TEMP_POINT, p1, p2);
     }
 
@@ -1295,7 +1295,7 @@ public class DrawBase {
     }
 
 
-    protected CPoint[] getPoints(cons c) {
+    protected CPoint[] getPoints(Cons c) {
 
         CPoint[] pp = new CPoint[8];
         int i = 0;
@@ -1328,7 +1328,7 @@ public class DrawBase {
 
     //    }
 
-    protected TMono getTMono(cons c) {
+    protected TMono getTMono(Cons c) {
         if (c == null) return null;
 
         CPoint[] pp = getPoints(c);
@@ -1336,25 +1336,25 @@ public class DrawBase {
         TMono m = null;
 
         switch (c.type) {
-            case gib.CO_COLL:
+            case Gib.CO_COLL:
                 m = poly.collinear(pp[0].x1.xindex, pp[0].y1.xindex, pp[1].x1.xindex, pp[1].y1.xindex, pp[2].x1.xindex, pp[2].y1.xindex);
                 break;
-            case gib.CO_PARA:
+            case Gib.CO_PARA:
                 m = poly.parallel(pp[0].x1.xindex, pp[0].y1.xindex, pp[1].x1.xindex, pp[1].y1.xindex, pp[2].x1.xindex, pp[2].y1.xindex, pp[3].x1.xindex, pp[3].y1.xindex);
                 break;
-            case gib.CO_PERP:
+            case Gib.CO_PERP:
                 m = poly.perpendicular(pp[0].x1.xindex, pp[0].y1.xindex, pp[1].x1.xindex, pp[1].y1.xindex, pp[2].x1.xindex, pp[2].y1.xindex, pp[3].x1.xindex, pp[3].y1.xindex);
                 break;
-            case gib.CO_MIDP:
+            case Gib.CO_MIDP:
                 m = poly.midpoint(pp[1].x1.xindex, pp[0].x1.xindex, pp[2].x1.xindex);
                 break;
-            case gib.CO_CYCLIC:
+            case Gib.CO_CYCLIC:
                 m = poly.cyclic(pp[0].x1.xindex, pp[0].y1.xindex, pp[1].x1.xindex, pp[1].y1.xindex, pp[2].x1.xindex, pp[2].y1.xindex, pp[3].x1.xindex, pp[3].y1.xindex);
                 break;
-            case gib.CO_CONG:
+            case Gib.CO_CONG:
                 m = poly.eqdistance(pp[0].x1.xindex, pp[0].y1.xindex, pp[1].x1.xindex, pp[1].y1.xindex, pp[2].x1.xindex, pp[2].y1.xindex, pp[3].x1.xindex, pp[3].y1.xindex);
                 break;
-            case gib.CO_ACONG: {
+            case Gib.CO_ACONG: {
                 if (pp[6] != null && pp[7] != null)
                     m = poly.eqangle(pp[0].x1.xindex, pp[0].y1.xindex, pp[1].x1.xindex, pp[1].y1.xindex, pp[2].x1.xindex, pp[2].y1.xindex, pp[3].x1.xindex, pp[3].y1.xindex,
                             pp[4].x1.xindex, pp[4].y1.xindex, pp[5].x1.xindex, pp[5].y1.xindex, pp[6].x1.xindex, pp[6].y1.xindex, pp[7].x1.xindex, pp[7].y1.xindex);
@@ -1363,11 +1363,11 @@ public class DrawBase {
                             pp[3].x1.xindex, pp[3].y1.xindex, pp[4].x1.xindex, pp[4].y1.xindex, pp[5].x1.xindex, pp[5].y1.xindex);
             }
             break;
-            case gib.CO_PBISECT:
+            case Gib.CO_PBISECT:
                 break;
-            case gib.CO_STRI:
+            case Gib.CO_STRI:
                 break;
-            case gib.CO_CTRI:
+            case Gib.CO_CTRI:
                 break;
         }
 

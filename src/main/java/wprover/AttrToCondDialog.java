@@ -19,7 +19,7 @@ import java.awt.*;
 public class AttrToCondDialog extends JBaseDialog {
     final private static int ROW = 5;
     JButton bok, bcancel;
-    cond co = null;
+    Cond co = null;
     JScrollPane topPane;
     JPanel buttonPane;
     JPanel panel = new JPanel();
@@ -39,11 +39,11 @@ public class AttrToCondDialog extends JBaseDialog {
     }
 
 
-    public cond getReturnedCond() {
+    public Cond getReturnedCond() {
         return co;
     }
 
-    public AttrToCondDialog(GExpert gx, l_line ln) {
+    public AttrToCondDialog(GExpert gx, LLine ln) {
         this(gx, "Please select three points");
 
         topPane = new JScrollPane(new LnPanel(ln)) {//, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS) {
@@ -58,7 +58,7 @@ public class AttrToCondDialog extends JBaseDialog {
     }
 
 
-    public AttrToCondDialog(GExpert gx, a_cir cr) {
+    public AttrToCondDialog(GExpert gx, ACir cr) {
         this(gx, "Please select four points");
 
         topPane = new JScrollPane(new CirPanel(cr)) {//, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS) {
@@ -72,7 +72,7 @@ public class AttrToCondDialog extends JBaseDialog {
         addComp();
     }
 
-    public AttrToCondDialog(GExpert gx, angst st) {
+    public AttrToCondDialog(GExpert gx, AngSt st) {
         this(gx, "Please select two angles");
 
         topPane = new JScrollPane(new AnglePane(st)) {
@@ -87,7 +87,7 @@ public class AttrToCondDialog extends JBaseDialog {
         addComp();
     }
 
-    public AttrToCondDialog(GExpert gx, s_tris st) {
+    public AttrToCondDialog(GExpert gx, STris st) {
         this(gx, "Please select two triangles");
 
         topPane = new JScrollPane(new StriPane(st)) {//, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS) {
@@ -101,7 +101,7 @@ public class AttrToCondDialog extends JBaseDialog {
         addComp();
     }
 
-    public AttrToCondDialog(GExpert gx, c_segs cg) {
+    public AttrToCondDialog(GExpert gx, CSegs cg) {
         this(gx, "Please select two segments");
 
         topPane = new JScrollPane(new CongPane(cg)) {//, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS) {
@@ -115,7 +115,7 @@ public class AttrToCondDialog extends JBaseDialog {
         addComp();
     }
 
-    public AttrToCondDialog(GExpert gx, p_line pn) {
+    public AttrToCondDialog(GExpert gx, PLine pn) {
         this(gx, "Please select two lines");
 
         topPane = new JScrollPane(new PnPane(pn)) {
@@ -162,9 +162,9 @@ public class AttrToCondDialog extends JBaseDialog {
 
     class CirPanel extends JPanel implements ItemListener {
 
-        private a_cir cir = null;
+        private ACir cir = null;
 
-        public CirPanel(a_cir cir) {
+        public CirPanel(ACir cir) {
             CirPanel.this.cir = cir;
 
             this.setLayout(new GridLayout(0, ROW));
@@ -179,10 +179,10 @@ public class AttrToCondDialog extends JBaseDialog {
             }
         }
 
-        public cond getReturnCond() {
+        public Cond getReturnCond() {
 
-            cond c = new cond();
-            c.pred = gib.CO_CYCLIC;
+            Cond c = new Cond();
+            c.pred = Gib.CO_CYCLIC;
             int n = 1;
             for (int i = 0; i < this.getComponentCount(); i++) {
                 JCheckBox b = (JCheckBox) this.getComponent(i);
@@ -214,9 +214,9 @@ public class AttrToCondDialog extends JBaseDialog {
 
     class LnPanel extends JPanel implements ItemListener {
 
-        private l_line ln = null;
+        private LLine ln = null;
 
-        public LnPanel(l_line ln) {
+        public LnPanel(LLine ln) {
             this.ln = ln;
             this.setLayout(new GridLayout(0, ROW));
 
@@ -234,10 +234,10 @@ public class AttrToCondDialog extends JBaseDialog {
             return super.getPreferredSize();
         }
 
-        public cond getReturnCond() {
+        public Cond getReturnCond() {
 
-            cond c = new cond();
-            c.pred = gib.CO_COLL;
+            Cond c = new Cond();
+            c.pred = Gib.CO_COLL;
             int n = 0;
             for (int i = 0; i < this.getComponentCount(); i++) {
                 JCheckBox b = (JCheckBox) this.getComponent(i);
@@ -269,19 +269,19 @@ public class AttrToCondDialog extends JBaseDialog {
 
     class AnglePane extends JPanel implements ItemListener {
 
-        private angst as = null;
+        private AngSt as = null;
 
-        public AnglePane(angst as) {
+        public AnglePane(AngSt as) {
             this.as = as;
             this.setLayout(new GridLayout(0, ROW));
 
             for (int i = 0; i < as.no; i++) {
-                l_line l1 = as.ln1[i];
-                l_line l2 = as.ln2[i];
+                LLine l1 = as.ln1[i];
+                LLine l2 = as.ln2[i];
 
-                int t = l_line.inter_lls(l1, l2);
-                int t1 = l_line.get_lpt1(l1, t);
-                int t2 = l_line.get_lpt1(l2, t);
+                int t = LLine.inter_lls(l1, l2);
+                int t1 = LLine.get_lpt1(l1, t);
+                int t2 = LLine.get_lpt1(l2, t);
 
                 if (t != 0 && t1 != 0 && t2 != 0) {
                     String s1 = Prover.get_pt_name(t1);
@@ -294,10 +294,10 @@ public class AttrToCondDialog extends JBaseDialog {
             }
         }
 
-        public cond getReturnCond() {
+        public Cond getReturnCond() {
 
-            cond c = new cond();
-            c.pred = gib.CO_ACONG;
+            Cond c = new Cond();
+            c.pred = Gib.CO_ACONG;
             int n1, n2;
             n1 = n2 = -1;
 
@@ -311,21 +311,21 @@ public class AttrToCondDialog extends JBaseDialog {
                 }
             }
 
-            l_line l1 = as.ln1[n1];
-            l_line l2 = as.ln2[n1];
-            int t = l_line.inter_lls(l1, l2);
-            c.p[0] = l_line.get_lpt1(l1, t);
+            LLine l1 = as.ln1[n1];
+            LLine l2 = as.ln2[n1];
+            int t = LLine.inter_lls(l1, l2);
+            c.p[0] = LLine.get_lpt1(l1, t);
             c.p[1] = t;
             c.p[2] = t;
-            c.p[3] = l_line.get_lpt1(l2, t);
+            c.p[3] = LLine.get_lpt1(l2, t);
 
             l1 = as.ln1[n2];
             l2 = as.ln2[n2];
-            t = l_line.inter_lls(l1, l2);
-            c.p[4] = l_line.get_lpt1(l1, t);
+            t = LLine.inter_lls(l1, l2);
+            c.p[4] = LLine.get_lpt1(l1, t);
             c.p[5] = t;
             c.p[6] = t;
-            c.p[7] = l_line.get_lpt1(l2, t);
+            c.p[7] = LLine.get_lpt1(l2, t);
 
             return c;
         }
@@ -350,9 +350,9 @@ public class AttrToCondDialog extends JBaseDialog {
 
     class StriPane extends JPanel implements ItemListener {
 
-        private s_tris st = null;
+        private STris st = null;
 
-        public StriPane(s_tris st) {
+        public StriPane(STris st) {
             this.st = st;
             this.setLayout(new GridLayout(0, ROW));
 
@@ -374,13 +374,13 @@ public class AttrToCondDialog extends JBaseDialog {
             }
         }
 
-        public cond getReturnCond() {
+        public Cond getReturnCond() {
 
-            cond c = new cond();
+            Cond c = new Cond();
             if (st.st == 0)
-                c.pred = gib.CO_STRI;
+                c.pred = Gib.CO_STRI;
             else
-                c.pred = gib.CO_CTRI;
+                c.pred = Gib.CO_CTRI;
 
             int n1, n2;
             n1 = n2 = -1;
@@ -424,9 +424,9 @@ public class AttrToCondDialog extends JBaseDialog {
 
     class CongPane extends JPanel implements ItemListener {
 
-        private c_segs cg = null;
+        private CSegs cg = null;
 
-        public CongPane(c_segs cg) {
+        public CongPane(CSegs cg) {
             this.cg = cg;
             this.setLayout(new GridLayout(0, ROW));
 
@@ -446,10 +446,10 @@ public class AttrToCondDialog extends JBaseDialog {
             }
         }
 
-        public cond getReturnCond() {
+        public Cond getReturnCond() {
 
-            cond c = new cond();
-            c.pred = gib.CO_CONG;
+            Cond c = new Cond();
+            c.pred = Gib.CO_CONG;
             int n1, n2;
             n1 = n2 = -1;
 
@@ -489,9 +489,9 @@ public class AttrToCondDialog extends JBaseDialog {
 
     class PnPane extends JPanel implements ItemListener {
 
-        private p_line pn = null;
+        private PLine pn = null;
 
-        public PnPane(p_line pn) {
+        public PnPane(PLine pn) {
             this.pn = pn;
             this.setLayout(new GridLayout(0, ROW));
 
@@ -510,10 +510,10 @@ public class AttrToCondDialog extends JBaseDialog {
             }
         }
 
-        public cond getReturnCond() {
+        public Cond getReturnCond() {
 
-            cond c = new cond();
-            c.pred = gib.CO_PARA;
+            Cond c = new Cond();
+            c.pred = Gib.CO_PARA;
             int n1, n2;
             n1 = n2 = -1;
 

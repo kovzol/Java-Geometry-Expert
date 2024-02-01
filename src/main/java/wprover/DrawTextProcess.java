@@ -1,7 +1,7 @@
 package wprover;
 
 import gprover.*;
-import maths.param;
+import maths.Param;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,7 @@ public class DrawTextProcess extends DrawProcess {
         return nd > n;
     }
 
-    public void setConstructLines(gterm g) {
+    public void setConstructLines(GTerm g) {
         cleardText();
         this.clearAll();
         this.gt = g;
@@ -60,7 +60,7 @@ public class DrawTextProcess extends DrawProcess {
         return true;
     }
 
-    public void autoConstruct(gterm g) {
+    public void autoConstruct(GTerm g) {
 
         cleardText();
         this.clearAll();
@@ -100,7 +100,7 @@ public class DrawTextProcess extends DrawProcess {
                 public void actionPerformed(ActionEvent e) {
                     if (!DrawTextProcess.this.isConsFinished()) {
                         int index = nd;
-                        Pro_point pt = gterm().getProPoint(index);
+                        ProPoint pt = gterm().getProPoint(index);
                         if (pt != null) {
                             DrawTextProcess.this.mouseDown(pt.getX(), pt.getY());
                         }
@@ -152,7 +152,7 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
-    public void addAuxPoint(auxpt ax) {
+    public void addAuxPoint(AuxPt ax) {
         if (this.isConsFinished()) {
             int act = gxInstance.dp.CurrentAction;
 
@@ -163,10 +163,10 @@ public class DrawTextProcess extends DrawProcess {
 
             int no = ax.getPtsNo();
             for (int i = 0; i < no; i++) {
-                Pro_point pt = ax.getPtsbyNo(i);
-                gterm gt = gterm();
+                ProPoint pt = ax.getPtsbyNo(i);
+                GTerm gt = gterm();
                 gt.addauxedPoint(pt);
-                cons cs = new cons(pt.type);
+                Cons cs = new Cons(pt.type);
                 for (int k = 0; k < pt.ps.length && pt.ps[k] != 0; k++)
                     cs.add_pt(pt.ps[k]);
                 gt.addauxedCons(cs);
@@ -191,7 +191,7 @@ public class DrawTextProcess extends DrawProcess {
         pt.setColor(8);
     }
 
-    public boolean addFreePt(cons c) {
+    public boolean addFreePt(Cons c) {
         int[] pp = c.ps;
         for (int i = 0; i < pp.length && pp[i] != 0; i++) {
             if (isFreePoint(pp[i])) {
@@ -201,7 +201,7 @@ public class DrawTextProcess extends DrawProcess {
         return false;
     }
 
-    public boolean addGTPt(cons c) {
+    public boolean addGTPt(Cons c) {
         int[] pp = c.ps;
         int i = 0;
 
@@ -220,7 +220,7 @@ public class DrawTextProcess extends DrawProcess {
     public CPoint addPt2(int n) {
         int x = gt.getPointsNum();
         for (int i = 1; i <= x && i < n; i++) {
-            Pro_point pt = gt.getProPoint(i);
+            ProPoint pt = gt.getProPoint(i);
             if (findPoint(pt.getName()) == null)
                 return addPt(i);
         }
@@ -251,7 +251,7 @@ public class DrawTextProcess extends DrawProcess {
             CPoint cp = null;
             if (nd <= gt.getCons_no()) {
                 int index = nd;
-                cons pt = gterm().getPcons(index);
+                Cons pt = gterm().getPcons(index);
                 if (pt != null) {
                     int[] pp = pt.ps;
                     int type = pt.type;
@@ -262,7 +262,7 @@ public class DrawTextProcess extends DrawProcess {
                             this.UndoAdded(pt.toDString(), false);
                     } else {
                         Vector v = addCondAux(gterm().getConclusion(), false);
-                        cond cc1 = gterm().getConc();
+                        Cond cc1 = gterm().getConc();
                         addConcLineOrCircle(cc1);
                         if (gterm().isTermAnimated()) {
                             String s = gterm().getAnimateString();
@@ -283,9 +283,9 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
-    public void pointAdded(cons pt, int type, int[] pp, boolean cc, int index, double x, double y, CPoint cp, Object[] pss) {
+    public void pointAdded(Cons pt, int type, int[] pp, boolean cc, int index, double x, double y, CPoint cp, Object[] pss) {
         switch (pt.type) {
-            case gddbase.C_POINT: {
+            case GDDBase.C_POINT: {
 
                 if (!addFreePt(pt)) {
                     nd++;
@@ -293,7 +293,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gddbase.C_FOOT: {
+            case GDDBase.C_FOOT: {
                 if (!addGTPt(pt)) {
                     Constraint cs = new Constraint(Constraint.PFOOT, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]), getPt(pp[3]));
                     this.addConstraintToList(cs);
@@ -305,8 +305,8 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.CO_MIDP:
-            case gddbase.C_MIDPOINT: {
+            case Gib.CO_MIDP:
+            case GDDBase.C_MIDPOINT: {
                 if (!addGTPt(pt)) {
                     this.addLn(pp[1], pp[2]);
                     Constraint cs = new Constraint(Constraint.MIDPOINT, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]));
@@ -318,7 +318,7 @@ public class DrawTextProcess extends DrawProcess {
             }
             break;
 
-            case gddbase.C_O_C: {
+            case GDDBase.C_O_C: {
                 if (!addGTPt(pt)) {
                     Circle c = null;
                     if ((c = fd_circle(pp[1], pp[2])) == null) { // add circle
@@ -335,7 +335,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gddbase.C_O_P: {
+            case GDDBase.C_O_P: {
                 if (!addGTPt(pt)) {
                     CLine lp = null;
                     if ((lp = this.fd_p_line(pp[1], pp[2], pp[3])) == null) {
@@ -349,7 +349,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_O_B: {
+            case Gib.C_O_B: {
                 if (!addGTPt(pt)) {
                     Constraint cs = new Constraint(Constraint.PERPBISECT, fd_point(pp[0]), fd_point(pp[1]), fd_point(pp[2]));
                     this.addConstraintToList(cs);
@@ -358,7 +358,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gddbase.C_O_L: {
+            case GDDBase.C_O_L: {
                 if (!addGTPt(pt)) {
                     CLine ln = this.addLn(pp[1], pp[2]);
                     cp = getPt(pp[0]);
@@ -372,7 +372,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_O_D: {
+            case Gib.C_O_D: {
                 if (!addGTPt(pt)) {
                     CLine ln = this.addLn(pp[1], pp[2]);
                     cp = getPt(pp[0]);
@@ -385,7 +385,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_I_BR: {
+            case Gib.C_I_BR: {
                 if (!addGTPt(pt)) {
                     cp = getPt(pp[0]);
                     Constraint cs = new Constraint(Constraint.EQDISTANCE, cp, getPt(pp[1]), cp, getPt(pp[2]));
@@ -398,7 +398,7 @@ public class DrawTextProcess extends DrawProcess {
             }
             break;
 
-            case gddbase.C_I_LL: {
+            case GDDBase.C_I_LL: {
                 if (!addGTPt(pt)) {
                     cp = getPt(pp[0]);
                     CLine ln = this.addLn(pp[1], pp[2]);
@@ -416,7 +416,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gddbase.C_I_LP: {
+            case GDDBase.C_I_LP: {
                 CLine ln = this.addLn(pp[1], pp[2]);
                 CLine lp;
                 if ((lp = this.fd_p_line(pp[3], pp[4], pp[5])) == null) {
@@ -435,7 +435,7 @@ public class DrawTextProcess extends DrawProcess {
             }
             break;
 
-            case gddbase.C_I_PP: {
+            case GDDBase.C_I_PP: {
                 CLine lp1, lp2;
                 if ((lp1 = this.fd_p_line(pp[1], pp[2], pp[3])) == null) {
                     this.addPLn(pp[1], pp[2], pp[3]);
@@ -452,7 +452,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gddbase.C_CIRCUM: {
+            case GDDBase.C_CIRCUM: {
                 if (!addGTPt(pt)) {
                     CPoint p1 = getPt(pp[1]);
                     CPoint p2 = getPt(pp[2]);
@@ -468,7 +468,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gddbase.C_I_CC: {
+            case GDDBase.C_I_CC: {
                 if (!addGTPt(pt)) {
                     cp = getPt(pp[0]);
                     Circle c1 = this.ad_circle(pp[1], pp[2]);
@@ -496,7 +496,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gddbase.C_I_LC: {
+            case GDDBase.C_I_LC: {
                 if (!addGTPt(pt)) {
                     CLine ln = this.addLn(pp[1], pp[2]);
                     Circle c = this.ad_circle(pp[3], pp[4]);
@@ -536,7 +536,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gddbase.C_I_LT: {
+            case GDDBase.C_I_LT: {
                 if (!addGTPt(pt)) {
                     CLine ln = this.addLn(pp[1], pp[2]);
                     CLine ln1 = this.addLn(pp[4], pp[5]);
@@ -551,7 +551,7 @@ public class DrawTextProcess extends DrawProcess {
             }
             break;
 
-            case gib.C_O_T: {
+            case Gib.C_O_T: {
                 if (!addGTPt(pt)) {
                     CLine ln = this.addLn(pp[0], pp[1]);
                     CLine ln1 = this.addLn(pp[2], pp[3]);
@@ -564,7 +564,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_O_A: {
+            case Gib.C_O_A: {
                 if (!addGTPt(pt)) {
                     if ((fd_line(pp[1], pp[2])) == null)
                         addLn(pp[1], pp[2]);
@@ -584,7 +584,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_O_R: {
+            case Gib.C_O_R: {
                 if (!addGTPt(pt)) {
                     {
                         Circle c = null;
@@ -602,7 +602,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_O_S: {
+            case Gib.C_O_S: {
                 while (addGTPt(pt)) ;
                 Constraint cs = new Constraint(Constraint.ONSCIRCLE, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]), getPt(pp[3]));
                 this.addConstraintToList(cs);
@@ -610,7 +610,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
                 break;
             }
-            case gib.C_O_AB: {
+            case Gib.C_O_AB: {
                 while (addGTPt(pt)) ;
                 Constraint cs = new Constraint(Constraint.ONSCIRCLE, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]), getPt(pp[3]));
                 this.addConstraintToList(cs);
@@ -621,7 +621,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
                 break;
             }
-            case gib.C_SQUARE: {
+            case Gib.C_SQUARE: {
                 while (addGTPt(pt)) ;
                 Constraint cs1 = new Constraint(Constraint.PSQUARE, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]));
                 Constraint cs2 = new Constraint(Constraint.NSQUARE, getPt(pp[1]), getPt(pp[0]), getPt(pp[3]));
@@ -637,7 +637,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
                 break;
             }
-            case gib.C_ISO_TRI: {
+            case Gib.C_ISO_TRI: {
                 while (addGTPt(pt)) ;
                 Constraint cs = new Constraint(Constraint.ISO_TRIANGLE, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]));
                 this.addConstraintToList(cs);
@@ -648,7 +648,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
                 break;
             }
-            case gib.C_EQ_TRI: {
+            case Gib.C_EQ_TRI: {
                 while (addGTPt(pt)) ;
                 CPoint p0 = getPt(pp[0]);
                 CPoint p1 = getPt(pp[1]);
@@ -666,7 +666,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
                 break;
             }
-            case gib.C_R_TRI: {
+            case Gib.C_R_TRI: {
                 while (addGTPt(pt)) ;
                 Constraint cs = new Constraint(Constraint.RIGHT_ANGLED_TRIANGLE, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]));
                 this.addConstraintToList(cs);
@@ -677,7 +677,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
                 break;
             }
-            case gib.C_R_TRAPEZOID: {
+            case Gib.C_R_TRAPEZOID: {
                 while (addGTPt(pt)) ;
                 Constraint cs = new Constraint(Constraint.RIGHT_ANGLE_TRAPEZOID, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]), getPt(pp[3]));
                 this.addConstraintToList(cs);
@@ -689,7 +689,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
                 break;
             }
-            case gib.C_TRAPEZOID: {
+            case Gib.C_TRAPEZOID: {
                 while (addGTPt(pt)) ;
                 Constraint cs = new Constraint(Constraint.TRAPEZOID, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]), getPt(pp[3]));
                 this.addConstraintToList(cs);
@@ -701,7 +701,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
                 break;
             }
-            case gib.C_PARALLELOGRAM: {
+            case Gib.C_PARALLELOGRAM: {
                 while (addGTPt(pt)) ;
                 Constraint cs = new Constraint(Constraint.PARALLELOGRAM, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]), getPt(pp[3]));
                 this.addConstraintToList(cs);
@@ -713,7 +713,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
                 break;
             }
-            case gib.C_RECTANGLE: {
+            case Gib.C_RECTANGLE: {
                 while (addGTPt(pt)) ;
                 Constraint cs = new Constraint(Constraint.RECTANGLE, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]), getPt(pp[3]));
                 this.addConstraintToList(cs);
@@ -725,7 +725,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
                 break;
             }
-            case gib.C_TRIANGLE: {
+            case Gib.C_TRIANGLE: {
                 if (!addGTPt(pt)) {
                     addAllLn(pp);
                     Constraint cs = new Constraint(Constraint.TRIANGLE, SelectList);
@@ -735,7 +735,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 break;
             }
-            case gib.C_QUADRANGLE: {
+            case Gib.C_QUADRANGLE: {
                 if (!addGTPt(pt)) {
                     addAllLn(pp);
                     Constraint cs = new Constraint(Constraint.QUADRANGLE, SelectList);
@@ -745,7 +745,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 break;
             }
-            case gib.C_PENTAGON: {
+            case Gib.C_PENTAGON: {
                 if (!addGTPt(pt)) {
                     addAllLn(pp);
                     Constraint cs = new Constraint(Constraint.PENTAGON, SelectList);
@@ -755,7 +755,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 break;
             }
-            case gib.C_POLYGON: {
+            case Gib.C_POLYGON: {
                 if (!addGTPt(pt)) {
                     addAllLn(pp);
                     Constraint cs = new Constraint(Constraint.POLYGON, SelectList);
@@ -765,9 +765,9 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 break;
             }
-            case gib.C_INVERSION:
+            case Gib.C_INVERSION:
                 break;
-            case gib.C_REF: {
+            case Gib.C_REF: {
                 cp = addPt(index, x, y);
                 CLine ln = this.fd_line(getPt(pp[3]), getPt(pp[4]));
                 Constraint cs = new Constraint(Constraint.MIRROR, cp, this.getPt(pp[1]), ln);
@@ -776,7 +776,7 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
             }
             break;
-            case gib.C_SYM: {
+            case Gib.C_SYM: {
                 cp = addPt(index);
                 Constraint cs = new Constraint(Constraint.SYMPOINT, cp,
                         getPt(pp[0]), getPt(pp[1]));
@@ -786,7 +786,7 @@ public class DrawTextProcess extends DrawProcess {
 
             }
             break;
-            case gib.C_I_RR: {
+            case Gib.C_I_RR: {
                 while (addGTPt(pt)) ;
                 cp = fd_point(pp[0]);
                 CPoint o = this.fd_point(pp[1]);
@@ -803,9 +803,9 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
             }
             break;
-            case gib.C_I_CR:
+            case Gib.C_I_CR:
                 break;
-            case gib.C_I_LR: {
+            case Gib.C_I_LR: {
                 while (addGTPt(pt)) ;
                 {
                     cp = this.fd_point(pp[0]);
@@ -820,7 +820,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 break;
             }
-            case gib.C_I_TC: {
+            case Gib.C_I_TC: {
                 while (addGTPt(pt)) ;
                 {
                     CLine lp1 = this.addTLn(pp[1], pp[2], pp[3]);
@@ -835,7 +835,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_I_TR: {
+            case Gib.C_I_TR: {
                 {
                     while (addGTPt(pt)) ;
                     addLn(pp[0], pp[1]);
@@ -850,7 +850,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_I_PC: {
+            case Gib.C_I_PC: {
 
                 {
                     while (addGTPt(pt)) ;
@@ -867,7 +867,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_I_TT: {
+            case Gib.C_I_TT: {
                 CLine lp1, lp2;
                 lp1 = lp2 = null;
                 {
@@ -883,7 +883,7 @@ public class DrawTextProcess extends DrawProcess {
 
             }
             break;
-            case gib.C_I_PT: {
+            case Gib.C_I_PT: {
                 CLine lp1, lp2;
                 lp1 = lp2 = null;
                 while (addGTPt(pt)) ;
@@ -898,7 +898,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_I_LS: {
+            case Gib.C_I_LS: {
                 CLine ln = null;
                 {
                     ln = addLn(pp[1], pp[2]);
@@ -924,7 +924,7 @@ public class DrawTextProcess extends DrawProcess {
 
             }
             break;
-            case gib.C_I_SS: {
+            case Gib.C_I_SS: {
                 Circle c1 = this.fd_circle(pp[1], pp[2], pp[3]);
                 Circle c2 = this.fd_circle(pp[4], pp[5], pp[6]);
                 Vector v = Circle.CommonPoints(c1, c2);
@@ -951,7 +951,7 @@ public class DrawTextProcess extends DrawProcess {
                 c2.addPoint(cp);
             }
             break;
-            case gib.C_I_LB: {
+            case Gib.C_I_LB: {
                 CLine lp1, lp2;
                 lp1 = lp2 = null;
                 while (addGTPt(pt)) ;
@@ -970,7 +970,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_I_TB: {
+            case Gib.C_I_TB: {
                 CLine lp1, lp2;
                 lp1 = lp2 = null;
                 while (addGTPt(pt)) ;
@@ -989,7 +989,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_I_PB: {
+            case Gib.C_I_PB: {
                 CLine lp1, lp2;
                 lp1 = lp2 = null;
                 while (addGTPt(pt)) ;
@@ -1008,7 +1008,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_I_BB: {
+            case Gib.C_I_BB: {
                 CLine lp1, lp2;
                 lp1 = lp2 = null;
                 {
@@ -1025,7 +1025,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_I_BC: {
+            case Gib.C_I_BC: {
                 CLine lp1 = null;
                 Circle c1 = null;
                 while (addGTPt(pt)) ;
@@ -1044,11 +1044,11 @@ public class DrawTextProcess extends DrawProcess {
                     nd++;
                 }
             }
-            case gib.C_NETRIANGLE: {
+            case Gib.C_NETRIANGLE: {
 
             }
             break;
-            case gib.C_PETRIANGLE: {
+            case Gib.C_PETRIANGLE: {
                 paraCounter++;
                 cp = addPt(index);
                 Constraint cs = new Constraint(Constraint.PETRIANGLE, fd_point(pp[0]), fd_point(pp[1]), fd_point(pp[2]));
@@ -1059,9 +1059,9 @@ public class DrawTextProcess extends DrawProcess {
                 nd++;
             }
             break;
-            case gib.C_ICENT1:
+            case Gib.C_ICENT1:
                 break;
-            case gib.C_ICENT: {
+            case Gib.C_ICENT: {
                 if (!addGTPt(pt)) {
                     Constraint cs = new Constraint(Constraint.INCENTER,
                             fd_point(pp[0]), fd_point(pp[1]), fd_point(pp[2]), fd_point(pp[3]));
@@ -1071,7 +1071,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_ORTH: {
+            case Gib.C_ORTH: {
                 if (!addGTPt(pt)) {
                     Constraint cs1 = new Constraint(Constraint.ORTHOCENTER,
                             fd_point(pp[0]), fd_point(pp[1]), fd_point(pp[2]), fd_point(pp[3]));
@@ -1081,9 +1081,9 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_CENT:
+            case Gib.C_CENT:
                 break;
-            case gib.C_TRATIO: {
+            case Gib.C_TRATIO: {
                 if (!addGTPt(pt)) {
                     Constraint cs = new Constraint(Constraint.TRATIO, fd_point(pp[0]), fd_point(pp[1]), fd_point(pp[2]), fd_point(pp[3]),
                             pp[4], pp[5]);
@@ -1094,7 +1094,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 break;
             }
-            case gib.C_PRATIO: {
+            case Gib.C_PRATIO: {
                 if (!addGTPt(pt)) {
                     Constraint cs = new Constraint(Constraint.PRATIO, fd_point(pp[0]), fd_point(pp[1]),
                             fd_point(pp[2]), fd_point(pp[3]), pp[4], pp[5]);
@@ -1105,7 +1105,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 break;
             }
-            case gib.C_LRATIO: {
+            case Gib.C_LRATIO: {
                 if (!addGTPt(pt)) {
                     // constraint cs = new constraint(constraint.LRATIO, fd_point(pp[0]), fd_point(pp[1]), fd_point(pp[3]),
                     //         new Integer(pp[4]), new Integer(pp[5]));
@@ -1118,15 +1118,15 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.C_CONSTANT: {
-                param p = this.getANewParam();
+            case Gib.C_CONSTANT: {
+                Param p = this.getANewParam();
                 Constraint cs = new Constraint(Constraint.CONSTANT, pss[0], pss[1], p);
                 this.addConstraintToList(cs);
                 this.charsetAndAddPoly(false);
                 nd++;
             }
             break;
-            case gib.C_LINE:
+            case Gib.C_LINE:
                 if (!addGTPt(pt)) {
                     Constraint cs = new Constraint(Constraint.LINE, getPt(pp[0]), getPt(pp[1]));
                     this.addLn(pp[0], pp[1]);
@@ -1134,7 +1134,7 @@ public class DrawTextProcess extends DrawProcess {
                     nd++;
                 }
                 break;
-            case gib.C_CIRCLE:
+            case Gib.C_CIRCLE:
                 if (!addGTPt(pt)) {
                     Constraint cs = new Constraint(Constraint.CIRCLE, getPt(pp[0]), getPt(pp[1]));
                     this.addCr(pp[0], pp[1]);
@@ -1142,7 +1142,7 @@ public class DrawTextProcess extends DrawProcess {
                     nd++;
                     break;
                 }
-            case gib.C_EQDISTANCE: // not constructable.
+            case Gib.C_EQDISTANCE: // not constructable.
             {
                 if (!addGTPt(pt)) {
                     Constraint cs = new Constraint(Constraint.EQDISTANCE, getPt(pp[0]), getPt(pp[1]), getPt(pp[2]), getPt(pp[3]));
@@ -1152,7 +1152,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 break;
             }
-            case gib.C_EQANGLE: {
+            case Gib.C_EQANGLE: {
                 if (!addGTPt(pt)) {
                     CPoint p1 = getPt(pp[0]);
                     CPoint p2 = getPt(pp[1]);
@@ -1175,7 +1175,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 break;
             }
-            case gib.C_CCTANGENT: {
+            case Gib.C_CCTANGENT: {
                 if (!addGTPt(pt)) {
                     Circle c1 = this.addCr(pp[1], pp[2]);
                     Circle c2 = this.addCr(pp[4], pp[5]);
@@ -1186,7 +1186,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 break;
             }
-            case gib.C_EQANGLE3P: {
+            case Gib.C_EQANGLE3P: {
                 if (!addGTPt(pt)) {
                     CLine l1 = this.addLn(pp[0], pp[1]);
                     CLine l2 = this.addLn(pp[1], pp[2]);
@@ -1197,7 +1197,7 @@ public class DrawTextProcess extends DrawProcess {
                     CAngle ag1 = new CAngle(l1, l2, this.fd_point(pp[0]), fd_point(pp[2]));
                     CAngle ag2 = new CAngle(l3, l4, this.fd_point(pp[3]), fd_point(pp[5]));
                     CAngle ag3 = new CAngle(l5, l6, this.fd_point(pp[6]), fd_point(pp[8]));
-                    param pm = findConstantParam(pss[9].toString());
+                    Param pm = findConstantParam(pss[9].toString());
                     Constraint cs = new Constraint(Constraint.EQANGLE3P, ag1, ag2, ag3, pm);
                     this.addConstraintToList(cs);
                     this.charsetAndAddPoly(cc);
@@ -1212,12 +1212,12 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
-    public param findConstantParam(String name) {
+    public Param findConstantParam(String name) {
         for (int i = 0; i < constraintlist.size(); i++) {
             Constraint cs = (Constraint) constraintlist.get(i);
             if (cs.GetConstraintType() == Constraint.CONSTANT) {
                 if (name.equals(cs.getelement(0).toString())) {
-                    param p = (param) cs.getelement(2);
+                    Param p = (Param) cs.getelement(2);
                     return p;
                 }
             }
@@ -1250,57 +1250,57 @@ public class DrawTextProcess extends DrawProcess {
         panel.repaint();
     }
 
-    public void flashcons(cons c) {
+    public void flashcons(Cons c) {
         if (c == null)
             return;
         switch (c.type) {
-            case gib.C_POINT:
+            case Gib.C_POINT:
 //                this.setObjectListForFlash(this.fd_line());
                 break;
-            case gib.C_O_L:
+            case Gib.C_O_L:
                 addObjectFlash(fd_point(c.ps[0]), fd_line(c.ps[1], c.ps[2]), null);
                 break;
-            case gib.C_O_P:
+            case Gib.C_O_P:
                 addObjectFlash(fd_point(c.ps[0]), fd_point(c.ps[1]), fd_line(c.ps[2], c.ps[3]));
                 break;
-            case gib.C_O_T:
+            case Gib.C_O_T:
                 addObjectFlash(fd_point(c.ps[0]), fd_point(c.ps[1]), fd_line(c.ps[2], c.ps[3]));
                 break;
-            case gib.C_O_A:
+            case Gib.C_O_A:
                 break;
-            case gib.C_O_C:
+            case Gib.C_O_C:
                 addObjectFlash(fd_point(c.ps[0]), fd_circle(c.ps[1], c.ps[2]), null);
                 break;
-            case gib.C_O_R:
+            case Gib.C_O_R:
                 addObjectFlash(fd_point(c.ps[0]), fd_circle(c.ps[1], c.ps[2], c.ps[3]), null);
                 break;
-            case gib.C_I_LL:
+            case Gib.C_I_LL:
                 addObjectFlash(fd_point(c.ps[0]), fd_line(c.ps[1], c.ps[2]), fd_line(c.ps[3], c.ps[4]));
                 break;
-            case gib.C_I_LP:
+            case Gib.C_I_LP:
                 addObjectFlash(fd_point(c.ps[0]), fd_line(c.ps[1], c.ps[2]), fd_line(c.ps[4], c.ps[5]));
                 break;
-            case gib.C_I_LT:
+            case Gib.C_I_LT:
                 addObjectFlash(fd_point(c.ps[0]), fd_line(c.ps[1], c.ps[2]), fd_line(c.ps[4], c.ps[5]));
                 break;
-            case gib.C_I_LC:
+            case Gib.C_I_LC:
                 addObjectFlash(fd_point(c.ps[0]), fd_line(c.ps[1], c.ps[2]), fd_circle(c.ps[3], c.ps[4]));
                 break;
-            case gib.C_I_PP:
-            case gib.C_I_PT:
+            case Gib.C_I_PP:
+            case Gib.C_I_PT:
                 addObjectFlash(fd_point(c.ps[0]), fd_line(c.ps[0], c.ps[1]), fd_line(c.ps[0], c.ps[4]));
                 break;
-            case gib.C_I_LR:
+            case Gib.C_I_LR:
                 break;
-            case gib.C_I_CC:
+            case Gib.C_I_CC:
                 addObjectFlash(fd_point(c.ps[0]), fd_circle(c.ps[1], c.ps[2]), fd_circle(c.ps[3], c.ps[4]));
                 break;
-            case gib.C_FOOT:
+            case Gib.C_FOOT:
                 addObjectFlash(fd_point(c.ps[0]), fd_line(c.ps[0], c.ps[1]), fd_line(c.ps[2], c.ps[3]));
                 break;
-            case gib.C_CIRCUM:
-            case gib.C_CENT:
-            case gib.C_ORTH:
+            case Gib.C_CIRCUM:
+            case Gib.C_CENT:
+            case Gib.C_ORTH:
                 addObjectFlash(fd_point(c.ps[0]), fd_circle(c.ps[1], c.ps[2], c.ps[3]), null);
                 break;
             default:
@@ -1319,17 +1319,17 @@ public class DrawTextProcess extends DrawProcess {
         this.flashCond(gterm().getConc(), true);
     }
 
-    public void addConcLineOrCircle(cond cc) {
+    public void addConcLineOrCircle(Cond cc) {
         if (cc == null) return;
 
         switch (cc.pred) {
-            case gib.CO_ACONG:
+            case Gib.CO_ACONG:
                 this.drawLineAndAdd(fd_point(cc.p[0]), fd_point(cc.p[1]));
                 this.drawLineAndAdd(fd_point(cc.p[2]), fd_point(cc.p[3]));
                 this.drawLineAndAdd(fd_point(cc.p[4]), fd_point(cc.p[5]));
                 this.drawLineAndAdd(fd_point(cc.p[6]), fd_point(cc.p[7]));
                 break;
-            case gib.CO_CONG:
+            case Gib.CO_CONG:
                 this.drawLineAndAdd(fd_point(cc.p[0]), fd_point(cc.p[1]));
                 this.drawLineAndAdd(fd_point(cc.p[2]), fd_point(cc.p[3]));
         }
@@ -1367,13 +1367,13 @@ public class DrawTextProcess extends DrawProcess {
     }
 
     public boolean isFreePoint(int n) {
-        gterm gt = gterm();
+        GTerm gt = gterm();
         return gt.isFreePoint(n);
     }
 
 
     CPoint addPt(int index) {
-        Pro_point pt = gterm().getProPoint(index);
+        ProPoint pt = gterm().getProPoint(index);
         CPoint cp = null;
         if (findPoint(pt.getName()) == null) {
             cp = CreateANewPoint(pt.getX(), pt.getY());
@@ -1560,7 +1560,7 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
-    public void flashCond(cond co, boolean fb) {
+    public void flashCond(Cond co, boolean fb) {
         if (this.pointlist.size() == 0) {
             return;
         }
@@ -1568,7 +1568,7 @@ public class DrawTextProcess extends DrawProcess {
         if (co.p[0] == 0 && co.p[1] == 0) {
             this.flashattr(co.get_attr(), panel);
         } else {
-            if (co.pred == gib.CO_ACONG || co.pred == gib.CO_ATNG) {
+            if (co.pred == Gib.CO_ACONG || co.pred == Gib.CO_ATNG) {
                 int[] vp = co.p;
                 if (vp[0] != 0) {
                     JFlash f = getAngleFlash(panel, vp[0], vp[1], vp[2], vp[3]);
@@ -1583,7 +1583,7 @@ public class DrawTextProcess extends DrawProcess {
     }
 
 
-    public JFlash getCond(cond co, boolean fb) {
+    public JFlash getCond(Cond co, boolean fb) {
         if (this.pointlist.size() == 0) {
             return null;
         }
@@ -1591,19 +1591,19 @@ public class DrawTextProcess extends DrawProcess {
         return getFlashCond(panel, co, fb);
     }
 
-    public void addCongFlash(cond co, boolean cl) {
+    public void addCongFlash(Cond co, boolean cl) {
         if (co == null) {
             return;
         }
-        if (co.pred == gib.CO_ACONG) {
+        if (co.pred == Gib.CO_ACONG) {
             addAcongFlash(co, cl);
         } else {
             this.addFlash1(this.getFlashCond(panel, co, cl));
         }
     }
 
-    public void addAcongFlash(cond co, boolean cl) {
-        if (co.pred == gib.CO_ACONG) {
+    public void addAcongFlash(Cond co, boolean cl) {
+        if (co.pred == Gib.CO_ACONG) {
             if (cl) {
                 this.clearFlash();
             }
@@ -1618,9 +1618,9 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
-    public Vector getAcongFlash(JPanel panel, cond co) {
+    public Vector getAcongFlash(JPanel panel, Cond co) {
         Vector v = new Vector();
-        if (co.pred == gib.CO_ACONG) {
+        if (co.pred == Gib.CO_ACONG) {
             int[] vp = co.p;
             if (vp[0] == 0) {
                 return null;
@@ -1655,7 +1655,7 @@ public class DrawTextProcess extends DrawProcess {
         return ln;
     }
 
-    public CPoint getPtN(cons c, int n) {
+    public CPoint getPtN(Cons c, int n) {
         if (c == null) return null;
         Object o = c.getPTN(n);
         if (o == null) return null;
@@ -1664,7 +1664,7 @@ public class DrawTextProcess extends DrawProcess {
 
     }
 
-    public Vector addCondAux(cons co, boolean aux) {
+    public Vector addCondAux(Cons co, boolean aux) {
         Vector vl = new Vector();
         if (co == null) {
             return vl;
@@ -1675,15 +1675,15 @@ public class DrawTextProcess extends DrawProcess {
         }
 
         switch (co.type) {
-            case gib.CO_COLL: {
+            case Gib.CO_COLL: {
                 CLine ln = this.addLnWC(getPtN(co, 0), getPtN(co, 1), DrawData.RED, d);
                 ln.addApoint(getPtN(co, 2));
                 vl.add(ln);
             }
             break;
-            case gib.CO_PARA:
-            case gib.CO_PERP:
-            case gib.CO_CONG:
+            case Gib.CO_PARA:
+            case Gib.CO_PERP:
+            case Gib.CO_CONG:
 
             {
                 CLine ln1 = this.addLnWC(getPtN(co, 0), getPtN(co, 1), DrawData.RED, d);
@@ -1692,9 +1692,9 @@ public class DrawTextProcess extends DrawProcess {
                 vl.add(ln2);
             }
             break;
-            case gib.CO_ACONG:
+            case Gib.CO_ACONG:
                 break;
-            case gib.CO_MIDP: {
+            case Gib.CO_MIDP: {
                 this.add_Line(getPtN(co, 0), getPtN(co, 1));
                 this.add_Line(getPtN(co, 2), getPtN(co, 3));
                 int n = getEMarkNum() / 2 + 1;
@@ -1708,27 +1708,27 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case gib.CO_CTRI:
+            case Gib.CO_CTRI:
                 break;
-            case gib.CO_CYCLIC:
+            case Gib.CO_CYCLIC:
                 break;
         }
         return vl;
     }
 
-    public JFlash getFlashCond(JPanel panel, cond co, boolean fb) {
+    public JFlash getFlashCond(JPanel panel, Cond co, boolean fb) {
         JFlash f = this.getFlashCond(panel, co);
         return f;
     }
 
-    public JFlash getFlashCond(JPanel panel, cond co) {
+    public JFlash getFlashCond(JPanel panel, Cond co) {
 
         if (this.pointlist.size() == 0) {
             return null;
         }
 
         switch (co.pred) {
-            case gib.CO_COLL: {
+            case Gib.CO_COLL: {
                 JLineFlash f = new JLineFlash(panel);
                 int d = f.addALine();
                 for (int i = 0; i < 3; i++) {
@@ -1736,7 +1736,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
                 return (f);
             }
-            case gib.CO_PARA: {
+            case Gib.CO_PARA: {
                 int[] p = co.p;
                 JLineFlash f = new JLineFlash(panel);
                 int id = f.addALine();
@@ -1749,14 +1749,14 @@ public class DrawTextProcess extends DrawProcess {
                 f.setInfinitLine(id);
                 return (f);
             }
-            case gib.CO_PERP: {
+            case Gib.CO_PERP: {
                 int[] p = co.p;
                 JTlineFlash f = new JTlineFlash(panel, fd_point(p[0]), fd_point(p[1]),
                         fd_point(p[2]), fd_point(p[3]));
                 this.addFlash1(f);
                 return (f);
             }
-            case gib.CO_CONG: {
+            case Gib.CO_CONG: {
                 int[] p = co.p;
                 if ((p[0] == p[2] && p[1] == p[3]) || (p[0] == p[3] && p[1] == p[2])) {
                     JLineFlash f = new JLineFlash(panel);
@@ -1771,14 +1771,14 @@ public class DrawTextProcess extends DrawProcess {
                     return (f);
                 }
             }
-            case gib.CO_MIDP: {
+            case Gib.CO_MIDP: {
                 int[] p = co.p;
                 JCgFlash f = new JCgFlash(panel);
                 f.addACg(fd_point(p[0]), fd_point(p[1]));
                 f.addACg(fd_point(p[0]), fd_point(p[2]));
                 return (f);
             }
-            case gib.CO_ACONG: {
+            case Gib.CO_ACONG: {
                 int[] vp = co.p;
                 if (vp[0] == 0) {
                     break;
@@ -1786,18 +1786,18 @@ public class DrawTextProcess extends DrawProcess {
                 JFlash f = getAngleFlash(panel, vp[0], vp[1], vp[2], vp[3]);
                 return (f);
             }
-            case gib.CO_TANG: {
+            case Gib.CO_TANG: {
                 JFlash f = getAngleFlash(panel, co.p[0], co.p[1], co.p[1], co.p[2]);
                 return (f);
             }
-            case gib.CO_STRI:
-            case gib.CO_CTRI: {
+            case Gib.CO_STRI:
+            case Gib.CO_CTRI: {
                 int[] p = co.p;
                 JTriFlash f = new JTriFlash(panel, fd_point(p[0]), fd_point(p[1]), fd_point(p[2]), fd_point(p[3]), fd_point(p[4]),
                         fd_point(p[5]), true, DrawData.LIGHTCOLOR);
                 return (f);
             }
-            case gib.CO_CYCLIC: {
+            case Gib.CO_CYCLIC: {
                 JCirFlash f = new JCirFlash(panel);
                 int[] p = co.p;
                 if (co.p[0] != 0) {
@@ -2258,7 +2258,7 @@ public class DrawTextProcess extends DrawProcess {
         this.addFlash1(f);
     }
 
-    public JFlash getAngleFlashLL(JPanel panel, int p, l_line l1, l_line l2) {
+    public JFlash getAngleFlashLL(JPanel panel, int p, LLine l1, LLine l2) {
         int a, b;
 
         if (p == l1.pt[0])
@@ -2273,36 +2273,36 @@ public class DrawTextProcess extends DrawProcess {
         return f;
     }
 
-    public void flashattr(cclass cc, JPanel panel) {
+    public void flashattr(gprover.CClass cc, JPanel panel) {
         if (cc == null)
             return;
 
         if (this.pointlist.size() == 0)
             return;
 
-        if (cc instanceof angles) {
-            angles ag = (angles) cc;
-            l_line ln1 = ag.l1;
-            l_line ln2 = ag.l2;
-            l_line ln3 = ag.l3;
-            l_line ln4 = ag.l4;
+        if (cc instanceof Angles) {
+            Angles ag = (Angles) cc;
+            LLine ln1 = ag.l1;
+            LLine ln2 = ag.l2;
+            LLine ln3 = ag.l3;
+            LLine ln4 = ag.l4;
             JFlash f = getAngleFlash(panel, ln1.pt[0], ln1.pt[1], ln2.pt[0], ln2.pt[1]);
             JFlash f1 = getAngleFlash(panel, ln3.pt[0], ln3.pt[1], ln4.pt[0], ln4.pt[1]);
             addFlash1(f);
             addFlash1(f1);
-        } else if (cc instanceof l_line) {
-            l_line ln = (l_line) cc;
+        } else if (cc instanceof LLine) {
+            LLine ln = (LLine) cc;
             JLineFlash f = new JLineFlash(panel);
             int id = f.addALine();
             for (int i = 0; i <= ln.no; i++) {
                 f.addAPoint(id, fd_point(ln.pt[i]));
             }
             addFlash(f);
-        } else if (cc instanceof p_line) {
-            p_line pn = (p_line) cc;
+        } else if (cc instanceof PLine) {
+            PLine pn = (PLine) cc;
             JLineFlash f = new JLineFlash(panel);
             for (int i = 0; i <= pn.no; i++) {
-                l_line ln = pn.ln[i];
+                LLine ln = pn.ln[i];
                 int nd = f.addALine();
                 f.setInfinitLine(nd);
                 for (int j = 0; j <= ln.no; j++) {
@@ -2311,18 +2311,18 @@ public class DrawTextProcess extends DrawProcess {
             }
             addFlash(f);
 
-        } else if (cc instanceof t_line) {
-            t_line tn = (t_line) cc;
-            l_line ln = tn.l1;
-            l_line ln1 = tn.l2;
+        } else if (cc instanceof TLine) {
+            TLine tn = (TLine) cc;
+            LLine ln = tn.l1;
+            LLine ln1 = tn.l2;
             JTlineFlash f = new JTlineFlash(panel);
             for (int i = 0; i <= ln.no; i++)
                 f.ln1.addAPoint(fd_point(ln.pt[i]));
             for (int i = 0; i <= ln1.no; i++)
                 f.ln2.addAPoint(fd_point(ln1.pt[i]));
             addFlash(f);
-        } else if (cc instanceof a_cir) {
-            a_cir ac = (a_cir) cc;
+        } else if (cc instanceof ACir) {
+            ACir ac = (ACir) cc;
             JCirFlash f = new JCirFlash(panel);
             f.setCenter(fd_point(ac.o));
             for (int i = 0; i <= ac.no; i++) {
@@ -2330,8 +2330,8 @@ public class DrawTextProcess extends DrawProcess {
             }
             addFlash(f);
 
-        } else if (cc instanceof sim_tri) {
-            sim_tri sm = (sim_tri) cc;
+        } else if (cc instanceof SimTri) {
+            SimTri sm = (SimTri) cc;
             this.clearFlash();
             int cn = DrawData.LIGHTCOLOR;
             JTriFlash f = new JTriFlash(panel, fd_point(sm.p1[0]), fd_point(sm.p1[1]), fd_point(sm.p1[2]),
@@ -2339,20 +2339,20 @@ public class DrawTextProcess extends DrawProcess {
                     sm.dr == 1, cn);
             addFlash1(f);
 
-        } else if (cc instanceof cong_seg) {
-            cong_seg cg = (cong_seg) cc;
+        } else if (cc instanceof CongSeg) {
+            CongSeg cg = (CongSeg) cc;
             JCgFlash f = new JCgFlash(panel);
             f.addACg(fd_point(cg.p1), fd_point(cg.p2));
             f.addACg(fd_point(cg.p3), fd_point(cg.p4));
             addFlash(f);
-        } else if (cc instanceof midpt) {
-            midpt md = (midpt) cc;
+        } else if (cc instanceof MidPt) {
+            MidPt md = (MidPt) cc;
             JCgFlash f = new JCgFlash(panel);
             f.addACg(fd_point(md.a), fd_point(md.m));
             f.addACg(fd_point(md.b), fd_point(md.m));
             addFlash(f);
-        } else if (cc instanceof ratio_seg) {
-            ratio_seg ra = (ratio_seg) cc;
+        } else if (cc instanceof RatioSeg) {
+            RatioSeg ra = (RatioSeg) cc;
             JLineFlash f = new JLineFlash(panel);
             for (int i = 0; i < 4; i++) {
                 int id = f.addALine();
@@ -2361,15 +2361,15 @@ public class DrawTextProcess extends DrawProcess {
             }
             f.setAlternate(true);
             addFlash(f);
-        } else if (cc instanceof angst) {
-            angst ag = (angst) cc;
+        } else if (cc instanceof AngSt) {
+            AngSt ag = (AngSt) cc;
             for (int i = 0; i < ag.no; i++) {
                 JFlash f = getAngleFlash(panel, ag.ln1[i].pt[0], ag.ln1[i].pt[1],
                         ag.ln2[i].pt[0], ag.ln2[i].pt[1]);
                 this.addFlash1(f);
             }
-        } else if (cc instanceof anglet) {
-            anglet at = (anglet) cc;
+        } else if (cc instanceof AngleT) {
+            AngleT at = (AngleT) cc;
             int a, b, p;
             p = at.p;
             if (p == at.l1.pt[0])
@@ -2382,16 +2382,16 @@ public class DrawTextProcess extends DrawProcess {
                 b = at.l2.pt[0];
             JFlash f = getAngleFlash(panel, a, p, b, p);
             this.addFlash1(f);
-        } else if (cc instanceof angtn) {
-            angtn atn = (angtn) cc;
+        } else if (cc instanceof AngTn) {
+            AngTn atn = (AngTn) cc;
             this.clearFlash();
             JFlash f1 = getAngleFlashLL(panel, atn.t1, atn.ln1, atn.ln2);
             JFlash f2 = getAngleFlashLL(panel, atn.t2, atn.ln3, atn.ln4);
             addFlash1(f1);
             addFlash1(f2);
 
-        } else if (cc instanceof s_tris) {
-            s_tris sm = (s_tris) cc;
+        } else if (cc instanceof STris) {
+            STris sm = (STris) cc;
             int n = sm.no;
             this.clearFlash();
 
@@ -2402,51 +2402,51 @@ public class DrawTextProcess extends DrawProcess {
                         sm.dr[i] == sm.dr[i + 1], cn + i);
                 addFlash1(f);
             }
-        } else if (cc instanceof c_segs) {
-            c_segs cg = (c_segs) cc;
+        } else if (cc instanceof CSegs) {
+            CSegs cg = (CSegs) cc;
             JCgFlash f = new JCgFlash(panel);
             for (int i = 0; i <= cg.no; i++) {
                 f.addACg(fd_point(cg.p1[i]), fd_point(cg.p2[i]));
             }
             addFlash(f);
-        } else if (cc instanceof angtr) {
+        } else if (cc instanceof AngTr) {
 
-        } else if (cc instanceof l_list) {
+        } else if (cc instanceof LList) {
             clearFlash();
-            l_list ls = (l_list) cc;
+            LList ls = (LList) cc;
             for (int i = 0; i < ls.nd; i++) {
-                angtr t = ls.md[i].tr;
+                AngTr t = ls.md[i].tr;
                 if (t != null) {
                     JFlash f = getAngleFlash(panel, t.get_lpt1(), t.v, t.v, t.get_lpt2());
                     addFlash1(f);
                 }
             }
-            mnde m = ls.mf[0];
+            Mnde m = ls.mf[0];
             if (m != null) {
-                angtr t = m.tr;
+                AngTr t = m.tr;
                 if (t != null) {
                     JFlash f = getAngleFlash(panel, t.get_lpt1(), t.v, t.v, t.get_lpt2());
                     f.setColor(Color.pink);
                     addFlash1(f);
                 }
             }
-        } else if (cc instanceof rule) {
+        } else if (cc instanceof Rule) {
             clearFlash();
-            rule r = (rule) cc;
+            Rule r = (Rule) cc;
             for (int i = 0; i < r.mr1.length; i++) {
-                mnde m = r.mr1[i];
+                Mnde m = r.mr1[i];
                 if (m == null)
                     continue;
 
-                angtr t = r.mr1[i].tr;
+                AngTr t = r.mr1[i].tr;
                 if (t != null) {
                     JFlash f = getAngleFlash(panel, t.get_lpt1(), t.v, t.v, t.get_lpt2());
                     addFlash1(f);
                 }
             }
-            mnde m = r.mr;
+            Mnde m = r.mr;
             if (m != null) {
-                angtr t = m.tr;
+                AngTr t = m.tr;
                 if (t != null) {
                     JFlash f = getAngleFlash(panel, t.get_lpt1(), t.v, t.v, t.get_lpt2());
                     f.setColor(Color.pink);
@@ -2457,9 +2457,9 @@ public class DrawTextProcess extends DrawProcess {
 
     }
 
-    public void falshPropoint(Pro_point pt) {
+    public void falshPropoint(ProPoint pt) {
         switch (pt.type) {
-            case gib.C_CIRCUM:
+            case Gib.C_CIRCUM:
         }
     }
 
@@ -2476,7 +2476,7 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
-    public JFlash addFlashXtermAngle(xterm x) {
+    public JFlash addFlashXtermAngle(XTerm x) {
         if (x == null) {
             return null;
         }
@@ -2551,12 +2551,12 @@ public class DrawTextProcess extends DrawProcess {
     }
 
     public void addaux(CProveText cpt) {
-        cond co = cpt.getcond();
+        Cond co = cpt.getcond();
         if (co == null) {
             return;
         }
         switch (co.pred) {
-            case gddbase.CO_COLL: {
+            case GDDBase.CO_COLL: {
                 int[] p = new int[3];
                 for (int i = 0; i < 3; i++) {
                     p[i] = co.p[i];
@@ -2564,9 +2564,9 @@ public class DrawTextProcess extends DrawProcess {
                 //  proveFlash(1, p, null);
                 break;
             }
-            case gddbase.CO_PARA:
-            case gddbase.CO_PERP:
-            case gddbase.CO_CONG: {
+            case GDDBase.CO_PARA:
+            case GDDBase.CO_PERP:
+            case GDDBase.CO_CONG: {
                 int[] p1 = new int[2];
                 for (int i = 0; i < 2; i++) {
                     p1[i] = co.p[i];
@@ -2575,9 +2575,9 @@ public class DrawTextProcess extends DrawProcess {
                 for (int i = 2; i < 4; i++) {
                     p2[i - 2] = co.p[i];
                 }
-                if (co.pred == gddbase.CO_PARA) {
-                } else if (co.pred == gddbase.CO_PERP) { // proveFlash(2, p1, p2);
-                } else if (co.pred == gddbase.CO_CONG) { //proveFlash(3, p1, p2);
+                if (co.pred == GDDBase.CO_PARA) {
+                } else if (co.pred == GDDBase.CO_PERP) { // proveFlash(2, p1, p2);
+                } else if (co.pred == GDDBase.CO_CONG) { //proveFlash(3, p1, p2);
                     if (p1[0] == p2[0] && p1[1] == p2[1] ||
                             p1[0] == p2[1] && p1[1] == p2[0]) {
                     } else {
@@ -2598,7 +2598,7 @@ public class DrawTextProcess extends DrawProcess {
                 this.addLn(p2[0], p2[1]);
             }
             break;
-            case gddbase.CO_ACONG: {
+            case GDDBase.CO_ACONG: {
                 int[] vp = co.p;
                 if (vp[0] != 0 && false) {
                     CLine ln1 = this.addLn(co.p[0], co.p[1]);
@@ -2651,12 +2651,12 @@ public class DrawTextProcess extends DrawProcess {
                     cpt.setMessage(ss1 + " = " + ss2);
                     this.flashStep(v);
                 } else {
-                    cond c = co.getPCO();
+                    Cond c = co.getPCO();
                 }
 
             }
             break;
-            case gddbase.CO_CTRI: {
+            case GDDBase.CO_CTRI: {
                 CPolygon poly1 = new CPolygon();
                 aux_polygon++;
                 poly1.setColor(aux_polygon + 2);
@@ -2680,7 +2680,7 @@ public class DrawTextProcess extends DrawProcess {
                 this.flashStep(v);
             }
             break;
-            case gddbase.CO_CYCLIC: {
+            case GDDBase.CO_CYCLIC: {
                 int[] p = new int[4];
                 int k = 0;
                 for (int i = 0; i < 10; i++) {

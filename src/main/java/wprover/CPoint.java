@@ -1,6 +1,6 @@
 package wprover;
 
-import maths.param;
+import maths.Param;
 
 import java.util.Vector;
 import java.io.DataOutputStream;
@@ -18,7 +18,7 @@ import java.awt.*;
  */
 public class CPoint extends CClass {
     private int type = 0;
-    public param x1, y1;
+    public Param x1, y1;
     private Vector cons = new Vector();
     boolean hasSetColor = false;
     int m_radius = -1; //default.
@@ -36,13 +36,13 @@ public class CPoint extends CClass {
         return (Constraint) cons.get(0);
     }
 
-    public CPoint(int type, param X, param Y) {
+    public CPoint(int type, Param X, Param Y) {
         super(type);
         x1 = X;
         y1 = Y;
     }
 
-    public CPoint(String Name, param X, param Y) {
+    public CPoint(String Name, Param X, Param Y) {
         super(CClass.POINT);
         m_name = Name;
         x1 = X;
@@ -51,7 +51,7 @@ public class CPoint extends CClass {
     }
 
 
-    public CPoint(param X, param Y) {
+    public CPoint(Param X, Param Y) {
         super(CClass.POINT);
         x1 = X;
         y1 = Y;

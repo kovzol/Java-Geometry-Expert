@@ -1,6 +1,6 @@
 package wprover;
 
-import gprover.cond;
+import gprover.Cond;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +50,7 @@ public class CProveText {
     private CProveField cpfield;
 
     private UndoStruct m_undo;
-    private cond m_co = null;
+    private Cond m_co = null;
 
     private String bidx = "";
 
@@ -71,7 +71,7 @@ public class CProveText {
         return isexpand;
     }
 
-    public cond getcond() {
+    public Cond getcond() {
         return m_co;
     }
 
@@ -120,7 +120,7 @@ public class CProveText {
     }
 
 
-    public CProveText(cond co, String s) {
+    public CProveText(Cond co, String s) {
         // objlist = new Vector();
         rule = "";
         rpath = "";
@@ -144,7 +144,7 @@ public class CProveText {
         m_undo = un;
     }
 
-    public CProveText(Vector vl, cond co, int index, boolean gc) {
+    public CProveText(Vector vl, Cond co, int index, boolean gc) {
         m_co = co;
 
         rule = "";
@@ -162,7 +162,7 @@ public class CProveText {
                 head += " ";
         }
         int n = co.getNo();
-        cond c = co.getPCO();
+        Cond c = co.getPCO();
         boolean cons = true;
         Vector vv = new Vector();
         while (c != null) {
@@ -183,14 +183,14 @@ public class CProveText {
             msg = "Hence " + co.getText();
             cmsg = cchid;
 
-            cond tc = co.getPCO();
+            Cond tc = co.getPCO();
             String dix = "  by ";
             int nco = 0;
             while (tc != null) {
                 int j = 0;
                 if (tc.getNo() != 0)
                     for (j = 0; j < vl.size(); j++) {
-                        cond c1 = (cond) vl.get(j);
+                        Cond c1 = (Cond) vl.get(j);
                         if (tc.getNo() == c1.getNo())
                             break;
                     }

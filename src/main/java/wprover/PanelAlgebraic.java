@@ -1,8 +1,8 @@
 package wprover;
 
-import gprover.cons;
-import gprover.gib;
-import gprover.gterm;
+import gprover.Cons;
+import gprover.Gib;
+import gprover.GTerm;
 import maths.TMono;
 import maths.TPoly;
 
@@ -17,7 +17,7 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
     protected DrawProcess dp;
     protected GeoPoly poly = GeoPoly.getPoly();
     protected boolean running = false;
-    protected gterm gt = null;
+    protected GTerm gt = null;
     protected WuTextPane tpane;
     protected Thread main;
     protected GExpert gxInstance;
@@ -169,7 +169,7 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         repaint();
     }
 
-    protected TMono getTMono(cons c) {
+    protected TMono getTMono(Cons c) {
         return dp.getTMono(c);
     }
 
@@ -179,8 +179,8 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
     public TPoly get_ndgs(Vector vlist, int z) {
         TPoly pp = null;
         for (int i = 0; i < vlist.size(); i++) {
-            cons c = (cons) vlist.get(i);
-            if (c.type != gib.C_POINT) {
+            Cons c = (Cons) vlist.get(i);
+            if (c.type != Gib.C_POINT) {
                 TMono mx = dp.getTMono(c);
                 if (mx != null) {
                     mx = poly.n_ndg(mx, z++);
@@ -195,8 +195,8 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
 
         Vector pp = new Vector();
         for (int i = 0; i < vlist.size(); i++) {
-            cons c = (cons) vlist.get(i);
-            if (c.type != gib.C_POINT) {
+            Cons c = (Cons) vlist.get(i);
+            if (c.type != Gib.C_POINT) {
                 TMono mx = get_ndg(param--, c.type, dp.getPoints(c));
                 if (mx != null)
                     pp.add(0, mx);
@@ -218,23 +218,23 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
 
     public TMono get_ndg(int z, int t, CPoint[] pp) {
         switch (t) {
-            case gib.C_I_LL:  // AB // CD.
+            case Gib.C_I_LL:  // AB // CD.
                 return poly.n_ndg(poly.parallel(pp[1], pp[2], pp[3], pp[4]), z);
-            case gib.C_I_LP:
+            case Gib.C_I_LP:
                 return poly.n_ndg(poly.parallel(pp[1], pp[2], pp[4], pp[5]), z);
-            case gib.C_I_LT:
+            case Gib.C_I_LT:
                 return poly.n_ndg(poly.perpendicular(pp[1], pp[2], pp[4], pp[5]), z);
-            case gib.C_I_PP:
+            case Gib.C_I_PP:
                 return poly.n_ndg(poly.parallel(pp[2], pp[3], pp[5], pp[6]), z);
-            case gib.C_FOOT:
+            case Gib.C_FOOT:
                 return poly.n_ndg(poly.isotropic(pp[2], pp[3]), z);
-            case gib.C_I_LB:
+            case Gib.C_I_LB:
                 return poly.n_ndg(poly.perpendicular(pp[0], pp[1], pp[2], pp[3]), z);
-            case gib.C_SQUARE:
+            case Gib.C_SQUARE:
                 return poly.n_ndg(poly.isotropic(pp[0], pp[1]), z);
-            case gib.C_O_C:
+            case Gib.C_O_C:
                 return poly.n_ndg(poly.isotropic(pp[1], pp[2]), z);
-            case gib.C_CIRCUM:
+            case Gib.C_CIRCUM:
                 return poly.n_ndg(poly.collinear(pp[1], pp[2], pp[3]), z);
 
         }

@@ -1,7 +1,7 @@
 package wprover;
 
-import gprover.gterm;
-import gprover.cons;
+import gprover.GTerm;
+import gprover.Cons;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -15,14 +15,14 @@ public class PPDialog extends JBaseDialog implements ActionListener, MouseMotion
     private DrawProcess dp;
     private static int WD = 600;
     private static int HD = 400;
-    private gterm gt;
+    private GTerm gt;
     private JList list1, list2, list22;
     private JTabbedPane tt;
     private DefaultListModel model1, model2, model22;
     private static Color bcolor = new Color(249,249,255);
 
 
-    public PPDialog(GExpert gx, gterm gt, DrawProcess dp) {
+    public PPDialog(GExpert gx, GTerm gt, DrawProcess dp) {
         super(gx.getFrame(), "Nondegenerate Conditions");
 
         this.gt = gt;
@@ -124,18 +124,18 @@ public class PPDialog extends JBaseDialog implements ActionListener, MouseMotion
         GeoPoly poly = GeoPoly.getPoly();
 
         for (int i = 0; i < v1.size(); i++) {
-            cons c = (cons) v1.get(i);
+            Cons c = (Cons) v1.get(i);
             model1.addElement(c.toDDString());
         }
 
         for (int i = 0; i < v.size(); i++) {
-            cons c = (cons) v.get(i);
+            Cons c = (Cons) v.get(i);
             model2.addElement((i + 1) + ": " + c.toDString());
 
 
         }
         for (int i = 0; i < v.size(); i++) {
-            cons c = (cons) v.get(i);
+            Cons c = (Cons) v.get(i);
 //            TMono m = poly.mm_poly(c, dp);
 //            String s = (i + 1) + ": ";
 //            if (m != null)

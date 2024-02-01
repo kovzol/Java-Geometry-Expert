@@ -1,6 +1,6 @@
 package wprover;
 
-import gprover.cond;
+import gprover.Cond;
 
 import java.util.Vector;
 import java.awt.*;
@@ -146,16 +146,16 @@ public class CProveField {
         int size = v.size();
         if (size == 0) return;
         if (head) {
-            ct = new CProveText((cond) v.get(size - 1), GExpert.getLanguage("To Prove:") + " ");
+            ct = new CProveText((Cond) v.get(size - 1), GExpert.getLanguage("To Prove:") + " ");
             vlist.add(ct);
             for (int i = 0; i < size; i++) {
-                cond co = (cond) v.get(i);
+                Cond co = (Cond) v.get(i);
                 ct = new CProveText(v, co, i, false);
                 vlist.add(ct);
             }
         } else {
             for (int i = 0; i < size; i++) {
-                cond co = (cond) v.get(i);
+                Cond co = (Cond) v.get(i);
                 ct = new CProveText(v, co, -1, false);
                 vlist.add(ct);
             }
@@ -168,7 +168,7 @@ public class CProveField {
 
     }
 
-    public CProveField(cond co, boolean head) {
+    public CProveField(Cond co, boolean head) {
         pt = new Point(20, 20);
         clist = new Vector();
         vlist = new Vector();
@@ -195,7 +195,7 @@ public class CProveField {
 
     }
 
-    public void genProve(cond co) {
+    public void genProve(Cond co) {
         int i = 0;
         CProveText ct = null;
         while (co != null) {

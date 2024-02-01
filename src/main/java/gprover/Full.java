@@ -3,15 +3,15 @@ package gprover;
 import java.util.Vector;
 
 
-public class Full extends elim {
+public class Full extends Elim {
 
     int max_term;
-    gr_term proof, last_pr;
+    GrTerm proof, last_pr;
     boolean qerror;
     int ertype = 0;
 
     boolean max_termp = false;
-    xterm conc_p1, conc_p2;
+    XTerm conc_p1, conc_p2;
     boolean print_conc = false;
 
 
@@ -20,15 +20,15 @@ public class Full extends elim {
     }
 
     void prove_full() {
-        gr_term gr1;
-        dterm ps1;
-        xterm p1;
-        el_term e1;
+        GrTerm gr1;
+        DTerm ps1;
+        XTerm p1;
+        ElTerm e1;
 
         ertype = 0;
         pro_type = PRO_FULL;
         max_term = 0;
-        last_pr = proof = new gr_term();
+        last_pr = proof = new GrTerm();
         proof.nx = null;
         d_base = 1;
         qerror = false;
@@ -63,7 +63,7 @@ public class Full extends elim {
                 }
                 if (e1 != null) {
 
-                    el_term e = null;
+                    ElTerm e = null;
                     if (first || show_detail && e1.et != null)
                         e = e1.et;
                     else
@@ -100,11 +100,11 @@ public class Full extends elim {
     }
 
     void dbase() {
-        midpt md;
-        p_line pn;
-        t_line tn;
-        a_cir cr;
-        angles as;
+        MidPt md;
+        PLine pn;
+        TLine tn;
+        ACir cr;
+        Angles as;
         for (md = all_md.nx; md != null; md = md.nx) {
             search_md(md);
         }
@@ -127,7 +127,7 @@ public class Full extends elim {
         }
     }
 
-    boolean npoly(xterm p) {
+    boolean npoly(XTerm p) {
         return (p.var == null);
     }
 
@@ -137,8 +137,8 @@ public class Full extends elim {
     }
 
     void print_fend() {
-        dterm ps1;
-        xterm p1;
+        DTerm ps1;
+        XTerm p1;
         ps1 = last_pr.ps1;
         p1 = ps1.p;
         if (pzerop(p1))
@@ -148,11 +148,11 @@ public class Full extends elim {
         }
     }
 
-    void conc_gr(long c1, xterm p1, long c2, xterm p2) {
+    void conc_gr(long c1, XTerm p1, long c2, XTerm p2) {
         if (p1 != null && p1.getPV() < 0)
             p1 = this.neg_poly(p1);
 
-        gr_term gr = mk_gr1((int) mk_num(c1), p1, (int) mk_num(c2), p2);
+        GrTerm gr = mk_gr1((int) mk_num(c1), p1, (int) mk_num(c2), p2);
         gr.c = 0;
         last_pr.nx = gr;
         last_pr = gr;
@@ -162,7 +162,7 @@ public class Full extends elim {
         fconc(conc);
     }
 
-    void fconc(cond conc) {
+    void fconc(Cond conc) {
         switch (conc.pred) {
             case CO_COLL:
                 /* collinear */
@@ -265,8 +265,8 @@ public class Full extends elim {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    el_term mk_felim(Var v, xterm p1, xterm p2) {
-        el_term e1 = new el_term();
+    ElTerm mk_felim(Var v, XTerm p1, XTerm p2) {
+        ElTerm e1 = new ElTerm();
         if (this.var_reOrder(v)) {
             p1 = neg_poly(p1);
         }
@@ -279,22 +279,22 @@ public class Full extends elim {
         return (e1);
     }
 
-    el_term mk_felim(Var v, xterm p1, xterm p2, int n, int t) {
-        el_term e = mk_felim(v, p1, p2, t);
+    ElTerm mk_felim(Var v, XTerm p1, XTerm p2, int n, int t) {
+        ElTerm e = mk_felim(v, p1, p2, t);
         if (n != 1)
             e.p = ptimes(get_n(n), e.p);
         return e;
     }
 
 
-    el_term mk_felim(Var v, xterm p1, xterm p2, int t) {
-        el_term el = mk_felim(v, p1, p2);
+    ElTerm mk_felim(Var v, XTerm p1, XTerm p2, int t) {
+        ElTerm el = mk_felim(v, p1, p2);
         el.etype = t;
         return el;
     }
 
-    el_term mk_feliminator(Var v, xterm p1, xterm p2, int t) {
-        el_term e1 = new el_term();
+    ElTerm mk_feliminator(Var v, XTerm p1, XTerm p2, int t) {
+        ElTerm e1 = new ElTerm();
         e1.etype = t;
         e1.v = v;
         e1.p1 = p1;
@@ -304,10 +304,10 @@ public class Full extends elim {
         return (e1);
     }
 
-    el_term elim_qcs(xterm p) {                           // NO USAGE.
+    ElTerm elim_qcs(XTerm p) {                           // NO USAGE.
         Var v1 = p.var;
-        l_line ln1 = fadd_ln(v1.pt[0], v1.pt[1]);
-        l_line ln2 = fadd_ln(v1.pt[2], v1.pt[3]);
+        LLine ln1 = fadd_ln(v1.pt[0], v1.pt[1]);
+        LLine ln2 = fadd_ln(v1.pt[2], v1.pt[3]);
 
         co_db.nx = null;
         int p1, p2, p3, p4;
@@ -334,24 +334,24 @@ public class Full extends elim {
         return null;
     }
 
-    el_term elim_q7(xterm p) {
-        l_line ln1, ln2, ln3, ln4;
-        xterm p1 = p;
+    ElTerm elim_q7(XTerm p) {
+        LLine ln1, ln2, ln3, ln4;
+        XTerm p1 = p;
 
         while (true) {
             if (p1 == null || npoly(p1)) return (null);
 
-            dterm ps1 = p1.ps;
+            DTerm ps1 = p1.ps;
             ps1 = ps1.nx;
             if (ps1 == null) return (null);
 
             Var v1 = p1.var;
             ln1 = fadd_ln(v1.pt[0], v1.pt[1]);
             ln2 = fadd_ln(v1.pt[2], v1.pt[3]);
-            dterm ps2 = ps1;
+            DTerm ps2 = ps1;
 
             while (ps2 != null) {
-                xterm p2 = ps2.p;
+                XTerm p2 = ps2.p;
                 if (npoly(p2)) break;//goto l2;
                 Var v2 = p2.var;
                 ln3 = fadd_ln(v2.pt[0], v2.pt[1]);
@@ -360,7 +360,7 @@ public class Full extends elim {
                     if (ln2 == ln3 && ln_less(ln4, ln2)) {
                         co_db.nx = null;
                         add_codb(CO_COLL, v1.pt[2], v1.pt[3], v2.pt[0], v2.pt[1], 0, 0, 0, 0);
-                        xterm xt = trim_f(v1.pt[0], v1.pt[1], v2.pt[2], v2.pt[3]);
+                        XTerm xt = trim_f(v1.pt[0], v1.pt[1], v2.pt[2], v2.pt[3]);
                         int r = RF_ADDITION;
                         if (pzerop(xt))
                             r = 2;
@@ -369,7 +369,7 @@ public class Full extends elim {
                     if (ln1 == ln4) {
                         co_db.nx = null;
                         add_codb(CO_COLL, v1.pt[0], v1.pt[1], v2.pt[2], v2.pt[3], 0, 0, 0, 0);
-                        xterm xt = trim_f(v2.pt[0], v2.pt[1], v1.pt[2], v1.pt[3]);
+                        XTerm xt = trim_f(v2.pt[0], v2.pt[1], v1.pt[2], v1.pt[3]);
                         int r = RF_ADDITION;
                         if (pzerop(xt))
                             r = 2;
@@ -386,7 +386,7 @@ public class Full extends elim {
                     if (ln2 == ln4 && ln_less(ln3, ln2)) {
                         co_db.nx = null;
                         add_codb(CO_COLL, v1.pt[2], v1.pt[3], v2.pt[2], v2.pt[3], 0, 0, 0, 0);
-                        xterm xt = trim_f(v1.pt[0], v1.pt[1], v2.pt[0], v2.pt[1]);
+                        XTerm xt = trim_f(v1.pt[0], v1.pt[1], v2.pt[0], v2.pt[1]);
                         int r = RF_ADDITION;
                         if (pzerop(xt))
                             r = 1;
@@ -396,7 +396,7 @@ public class Full extends elim {
                     if (ln1 == ln3) {
                         co_db.nx = null;
                         add_codb(CO_COLL, v1.pt[0], v1.pt[1], v2.pt[0], v2.pt[1], 0, 0, 0, 0);
-                        xterm xt = trim_f(v2.pt[2], v2.pt[3], v1.pt[2], v1.pt[3]);
+                        XTerm xt = trim_f(v2.pt[2], v2.pt[3], v1.pt[2], v1.pt[3]);
                         int r = RF_ADDITION;
                         if (pzerop(xt))
                             r = 1;
@@ -414,11 +414,11 @@ public class Full extends elim {
         }
     }
 
-    el_term elim_q8(xterm p1) {
-        dterm ps1;
-        xterm p2;
+    ElTerm elim_q8(XTerm p1) {
+        DTerm ps1;
+        XTerm p2;
         Var v1, v2;
-        l_line ln1, ln2;
+        LLine ln1, ln2;
 
         if (p1 == null || npoly(p1)) return (null);
         v1 = p1.var;
@@ -438,9 +438,9 @@ public class Full extends elim {
         }
     }
 
-    xterm fpoly(xterm p) {
-        dterm ps1, ps2;
-        xterm p1, p2;
+    XTerm fpoly(XTerm p) {
+        DTerm ps1, ps2;
+        XTerm p1, p2;
         if (npoly(p)) {
             p.c = num_modt(p.c);
             return (p);
@@ -467,7 +467,7 @@ public class Full extends elim {
         return (p);
     }
 
-    el_term mk_felim11(Var v, int a, int b, int c, int d, int o, int p1, int p2, int o1) { // <[ab, cd] = <[o1p1,o1,p2]
+    ElTerm mk_felim11(Var v, int a, int b, int c, int d, int o, int p1, int p2, int o1) { // <[ab, cd] = <[o1p1,o1,p2]
 //        co_db.nx = null;
 //
 //        cond c1 = add_codb(CO_COLL, o, p1, a, b, 0, 0, 0, 0);
@@ -489,8 +489,8 @@ public class Full extends elim {
         co_db.nx = null;
 
         add_codb(CO_CYCLIC, 0, o, o1, p1, p2, 0, 0, 0);
-        cond c1 = add_codb(CO_COLL, o, p1, a, b, 0, 0, 0, 0);
-        cond c2 = add_codb(CO_COLL, o, p2, c, d, 0, 0, 0, 0);
+        Cond c1 = add_codb(CO_COLL, o, p1, a, b, 0, 0, 0, 0);
+        Cond c2 = add_codb(CO_COLL, o, p2, c, d, 0, 0, 0, 0);
 
 //        el_term e1 = null;
 //        if (c1.pred != 0 || c2.pred != 0) {
@@ -502,27 +502,27 @@ public class Full extends elim {
 //        } else {
 //            add_codb(CO_CYCLIC, 0, o, o1, p1, p2, 0, 0, 0);
 //        }
-        el_term el = (mk_felim(v, trim_f(o1, p1, o1, p2), get_n(1L), RF_INSCRIBE));
+        ElTerm el = (mk_felim(v, trim_f(o1, p1, o1, p2), get_n(1L), RF_INSCRIBE));
         co_db.nx = null;
 
         return el;
     }
 
-    el_term mk_felim6(Var v, int a, int b, int c, int d) { // para
+    ElTerm mk_felim6(Var v, int a, int b, int c, int d) { // para
         co_db.nx = null;
         add_codb(CO_PARA, a, b, c, d, 0, 0, 0, 0);
-        el_term e1 = mk_felim(v, get_n(0L), get_n(1L), 3);
+        ElTerm e1 = mk_felim(v, get_n(0L), get_n(1L), 3);
         return e1;
     }
 
-    el_term mk_felim7(Var v, int a, int b, int c, int d) {
+    ElTerm mk_felim7(Var v, int a, int b, int c, int d) {
         co_db.nx = null;
         add_codb(CO_PERP, a, b, c, d, 0, 0, 0, 0);
         return mk_felim(v, get_n(1L), get_n(1L), 4);
     }
 
-    el_term elim_f(Var v) {
-        el_term e1 = null;
+    ElTerm elim_f(Var v) {
+        ElTerm e1 = null;
         int a, b, c, d;
 
         a = v.pt[0];
@@ -536,7 +536,7 @@ public class Full extends elim {
         } else if ((e1 = elim_f_pn(v, a, b, c, d)) != null) {
         } else if ((e1 = elim_f_tn(v, a, b, c, d)) != null) {
         } else {
-            el_term e2 = null;
+            ElTerm e2 = null;
             e2 = elim_f_cir1(v, a, b, c, d);
             if (e2 != null && e2.etype != 14)
                 e1 = e2;
@@ -561,9 +561,9 @@ public class Full extends elim {
         return (e1);
     }
 
-    el_term elim_f_ln(Var v, int a, int b, int c, int d) {
+    ElTerm elim_f_ln(Var v, int a, int b, int c, int d) {
 
-        l_line ln1 = fd_ln(a, b);
+        LLine ln1 = fd_ln(a, b);
         if (ln1 != null && a > ln1.pt[1]) {
             co_db.nx = null;
             add_codb(CO_COLL, ln1.pt[0], ln1.pt[1], a, b, 0, 0, 0, 0);
@@ -572,20 +572,20 @@ public class Full extends elim {
         return (null);
     }
 
-    el_term elim_f_pn(Var v, int a, int b, int c, int d) {
+    ElTerm elim_f_pn(Var v, int a, int b, int c, int d) {
 
-        l_line ln1 = fd_ln(a, b);
-        p_line pn1 = fd_pn(a, b);
+        LLine ln1 = fd_ln(a, b);
+        PLine pn1 = fd_pn(a, b);
         if (pn1 == null) return (null);
         for (int i = 0; i <= pn1.no; i++) {
-            l_line ln2 = pn1.ln[i];
+            LLine ln2 = pn1.ln[i];
             if (ln_less(ln2, ln1)) {
                 co_db.nx = null;
                 add_codb(CO_PARA, a, b, ln2.pt[0], ln2.pt[1], 0, 0, 0, 0);
                 Var v1 = new Var(10, a, b, ln2.pt[0], ln2.pt[1]);
-                el_term e1 = this.mk_felim6(v1, a, b, ln2.pt[0], ln2.pt[1]);
+                ElTerm e1 = this.mk_felim6(v1, a, b, ln2.pt[0], ln2.pt[1]);
                 co_db.nx = null;
-                el_term e = (mk_felim(v, trim_f(ln2.pt[0], ln2.pt[1], c, d), get_n(1L), 1));
+                ElTerm e = (mk_felim(v, trim_f(ln2.pt[0], ln2.pt[1], c, d), get_n(1L), 1));
                 e.et = e1;
                 return e;
             }
@@ -594,11 +594,11 @@ public class Full extends elim {
     }
 
 
-    el_term elim_f_tn(Var v, int a, int b, int c, int d)    // could be more tn lines.
+    ElTerm elim_f_tn(Var v, int a, int b, int c, int d)    // could be more tn lines.
     {
-        l_line ln2;
-        l_line ln1 = fd_ln(a, b);
-        t_line tn1 = fd_tn(ln1);
+        LLine ln2;
+        LLine ln1 = fd_ln(a, b);
+        TLine tn1 = fd_tn(ln1);
 //        if (tn1 == null) return (null);
         if (tn1 != null) {
             if (tn1.l1 == ln1)
@@ -607,13 +607,13 @@ public class Full extends elim {
                 ln2 = tn1.l1;
             if (ln_less(ln2, ln1)) {
                 co_db.nx = null;
-                el_term e1 = mk_felim(v, pplus(trim_f(a, b, ln2.pt[0], ln2.pt[1]), trim_f(ln2.pt[0], ln2.pt[1], c, d)), get_n(1L), RF_ADDITION);
+                ElTerm e1 = mk_felim(v, pplus(trim_f(a, b, ln2.pt[0], ln2.pt[1]), trim_f(ln2.pt[0], ln2.pt[1], c, d)), get_n(1L), RF_ADDITION);
                 add_codb(CO_PERP, a, b, ln2.pt[0], ln2.pt[1], 0, 0, 0, 0);
                 Var v1 = new Var(10, a, b, ln2.pt[0], ln2.pt[1]);
-                el_term e2 = this.mk_felim7(v1, a, b, ln2.pt[0], ln2.pt[1]);
+                ElTerm e2 = this.mk_felim7(v1, a, b, ln2.pt[0], ln2.pt[1]);
                 e1.nx = e2;
                 co_db.nx = null;
-                el_term e = (mk_felim(v, pplus(trim_f(ln2.pt[0], ln2.pt[1], c, d), get_n(1L)), get_n(1L), RF_PERP_SPLIT));
+                ElTerm e = (mk_felim(v, pplus(trim_f(ln2.pt[0], ln2.pt[1], c, d), get_n(1L)), get_n(1L), RF_PERP_SPLIT));
                 e.et = e1;
                 return e;
             }
@@ -628,13 +628,13 @@ public class Full extends elim {
 
                 if (ln_less(ln2, ln1)) {
                     co_db.nx = null;
-                    el_term e1 = mk_felim(v, pplus(trim_f(a, b, ln2.pt[0], ln2.pt[1]), trim_f(ln2.pt[0], ln2.pt[1], c, d)), get_n(1L), RF_ADDITION);
+                    ElTerm e1 = mk_felim(v, pplus(trim_f(a, b, ln2.pt[0], ln2.pt[1]), trim_f(ln2.pt[0], ln2.pt[1], c, d)), get_n(1L), RF_ADDITION);
                     add_codb(CO_PERP, c, d, ln2.pt[0], ln2.pt[1], 0, 0, 0, 0);
                     Var v1 = new Var(10, c, d, ln2.pt[0], ln2.pt[1]);
-                    el_term e2 = this.mk_felim7(v1, c, d, ln2.pt[0], ln2.pt[1]);
+                    ElTerm e2 = this.mk_felim7(v1, c, d, ln2.pt[0], ln2.pt[1]);
                     e1.nx = e2;
                     co_db.nx = null;
-                    el_term e = (mk_felim(v, pplus(trim_f(a, b, ln2.pt[0], ln2.pt[1]), get_n(1L)), get_n(1L), RF_PERP_SPLIT));
+                    ElTerm e = (mk_felim(v, pplus(trim_f(a, b, ln2.pt[0], ln2.pt[1]), get_n(1L)), get_n(1L), RF_PERP_SPLIT));
                     e.et = e1;
                     return e;
                 }
@@ -644,13 +644,13 @@ public class Full extends elim {
     }
 
 
-    el_term elim_f_cir1(Var v, int a, int b, int c, int d) {
+    ElTerm elim_f_cir1(Var v, int a, int b, int c, int d) {
         int o, p1, p2, p3, p4;
-        l_line ln3, ln4, ln5, ln6;
+        LLine ln3, ln4, ln5, ln6;
 
-        l_line ln1 = fadd_ln(a, b);
-        l_line ln2 = fadd_ln(c, d);
-        a_cir cr = all_cir.nx;
+        LLine ln1 = fadd_ln(a, b);
+        LLine ln2 = fadd_ln(c, d);
+        ACir cr = all_cir.nx;
         while (cr != null)           //R11
         {
             if (cr.type == 0) {
@@ -679,7 +679,7 @@ public class Full extends elim {
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
-            el_term rel = null;
+            ElTerm rel = null;
 
             for (int i = 0; i < cr.no; i++)
                 for (int j = 0; j <= cr.no; j++) {
@@ -696,12 +696,12 @@ public class Full extends elim {
 
                         if (ln_less(ln3, ln1) && ln_less(ln4, ln1) && ln_less(ln5, ln1))// R12.
                         {
-                            el_term e1 = mk_felim(v, pplus(trim_f(a, b, p2, p4), trim_f(p2, p4, c, d)), get_n(1L), RF_ADDITION);
+                            ElTerm e1 = mk_felim(v, pplus(trim_f(a, b, p2, p4), trim_f(p2, p4, c, d)), get_n(1L), RF_ADDITION);
                             Var v1 = new Var(10, a, b, p2, p4);
-                            el_term e2 = this.mk_felim11(v1, a, b, p2, p4, p2, p1, p4, p3);
+                            ElTerm e2 = this.mk_felim11(v1, a, b, p2, p4, p2, p1, p4, p3);
                             e1.nx = e2;
                             co_db.nx = null;
-                            el_term el = (mk_felim(v, pplus(trim_f(p3, p1, p3, p4), trim_f(p4, p2, c, d)), get_n(1L), RF_9));
+                            ElTerm el = (mk_felim(v, pplus(trim_f(p3, p1, p3, p4), trim_f(p4, p2, c, d)), get_n(1L), RF_9));
                             el.et = e1;
                             if (tp1 != 0 && tp2 != 0)
                                 return el;
@@ -712,16 +712,16 @@ public class Full extends elim {
                             ln6 = all_ln.nx;
                             while (ln6 != null) {
                                 if (ln_para(ln6, ln5) && ln_less(ln6, ln1)) {
-                                    el_term e1 = mk_felim(v, pplus(trim_f(a, b, p2, p4), trim_f(p2, p4, c, d)), get_n(1L), RF_ADDITION);
+                                    ElTerm e1 = mk_felim(v, pplus(trim_f(a, b, p2, p4), trim_f(p2, p4, c, d)), get_n(1L), RF_ADDITION);
                                     Var v2 = new Var(10, a, b, p2, p4);
-                                    el_term e2 = this.mk_felim11(v2, a, b, p2, p4, p2, p1, p4, p3);
+                                    ElTerm e2 = this.mk_felim11(v2, a, b, p2, p4, p2, p1, p4, p3);
                                     co_db.nx = null;
                                     Var v3 = new Var(10, p4, p2, ln6.pt[0], ln6.pt[1]);
-                                    el_term e3 = this.mk_felim6(v3, p4, p2, ln6.pt[0], ln6.pt[1]);
+                                    ElTerm e3 = this.mk_felim6(v3, p4, p2, ln6.pt[0], ln6.pt[1]);
                                     e1.nx = e2;
                                     e2.nx = e3;
                                     co_db.nx = null;
-                                    el_term el = (mk_felim(v, pplus(trim_f(p3, p1, p3, p4), trim_f(ln6.pt[0], ln6.pt[1], c, d)), get_n(1L), RF_10));
+                                    ElTerm el = (mk_felim(v, pplus(trim_f(p3, p1, p3, p4), trim_f(ln6.pt[0], ln6.pt[1], c, d)), get_n(1L), RF_10));
                                     el.et = e1;
                                     return el;
                                 }
@@ -730,16 +730,16 @@ public class Full extends elim {
                             ln6 = all_ln.nx;
                             while (ln6 != null) {
                                 if (ln_perp(ln6, ln5) && ln_less(ln6, ln1)) {
-                                    el_term e1 = mk_felim(v, pplus(trim_f(a, b, p2, p4), trim_f(p2, p4, c, d)), get_n(1L), RF_ADDITION);
+                                    ElTerm e1 = mk_felim(v, pplus(trim_f(a, b, p2, p4), trim_f(p2, p4, c, d)), get_n(1L), RF_ADDITION);
                                     Var v2 = new Var(10, a, b, p2, p4);
-                                    el_term e2 = this.mk_felim11(v2, a, b, p2, p4, p2, p1, p4, p3);
+                                    ElTerm e2 = this.mk_felim11(v2, a, b, p2, p4, p2, p1, p4, p3);
                                     co_db.nx = null;
                                     Var v3 = new Var(10, p4, p2, ln6.pt[0], ln6.pt[1]);
-                                    el_term e3 = this.mk_felim7(v3, p4, p2, ln6.pt[0], ln6.pt[1]);
+                                    ElTerm e3 = this.mk_felim7(v3, p4, p2, ln6.pt[0], ln6.pt[1]);
                                     e1.nx = e2;
                                     e2.nx = e3;
                                     co_db.nx = null;
-                                    el_term el = mk_felim(v, pplus3(trim_f(p3, p1, p3, p4), trim_f(ln6.pt[0], ln6.pt[1], c, d), get_n(1L)), get_n(1L), RF_DM_PERP);
+                                    ElTerm el = mk_felim(v, pplus3(trim_f(p3, p1, p3, p4), trim_f(ln6.pt[0], ln6.pt[1], c, d), get_n(1L)), get_n(1L), RF_DM_PERP);
                                     el.et = e1;
                                     return el;
                                 }
@@ -755,13 +755,13 @@ public class Full extends elim {
         return (null);
     }
 
-    el_term elim_f_cir2(Var v, int a, int b, int c, int d) {
-        a_cir cr1, cr2;
+    ElTerm elim_f_cir2(Var v, int a, int b, int c, int d) {
+        ACir cr1, cr2;
         int p1, p2, p3, p4;
-        l_line ln3, ln4, ln5, ln6;
+        LLine ln3, ln4, ln5, ln6;
 
-        l_line ln1 = fadd_ln(a, b);
-        l_line ln2 = fadd_ln(c, d);
+        LLine ln1 = fadd_ln(a, b);
+        LLine ln2 = fadd_ln(c, d);
         int o = inter_ll(ln1, ln2);
         if (o == 0) return (null);
         cr1 = all_cir.nx;
@@ -820,10 +820,10 @@ public class Full extends elim {
         return (null);
     }
 
-    el_term elim_f_cir3(Var v, int a, int b, int c, int d) {
-        a_cir cr1;
+    ElTerm elim_f_cir3(Var v, int a, int b, int c, int d) {
+        ACir cr1;
         int o, p1, p2, p3, p4;
-        l_line ln1, ln2, ln3, ln4;
+        LLine ln1, ln2, ln3, ln4;
         int i, j;
 
         ln1 = fadd_ln(a, b);
@@ -889,10 +889,10 @@ public class Full extends elim {
         return (null);
     }
 
-    el_term elim_f_cir4(Var v, int a, int b, int c, int d) {
-        a_cir cr1;
+    ElTerm elim_f_cir4(Var v, int a, int b, int c, int d) {
+        ACir cr1;
         int o, p1, p2, p3, p4;
-        l_line ln1;
+        LLine ln1;
         ln1 = fadd_ln(a, b);
         cr1 = all_cir.nx;
         while (cr1 != null) {
@@ -958,8 +958,8 @@ public class Full extends elim {
         return (null);
     }
 
-    el_term elim_f_center(Var v, int a, int b, int c, int d) {
-        l_line ln1, ln2;
+    ElTerm elim_f_center(Var v, int a, int b, int c, int d) {
+        LLine ln1, ln2;
         int p1, p2;
         char i, j, k, l;
 
@@ -1007,9 +1007,9 @@ public class Full extends elim {
         return (null);
     }
 
-    el_term elim_f_ans(Var v, int a, int b, int c, int d) {
-        l_line l1, l2, ln0, ln1, ln2;
-        angles as;
+    ElTerm elim_f_ans(Var v, int a, int b, int c, int d) {
+        LLine l1, l2, ln0, ln1, ln2;
+        Angles as;
 
         l1 = fadd_ln(a, b);
         l2 = fadd_ln(c, d);
@@ -1077,9 +1077,9 @@ public class Full extends elim {
         return (null);
     }
 
-    el_term elim_d(Var v) {
-        l_line ln1, ln2;
-        a_cir cr, cr1;
+    ElTerm elim_d(Var v) {
+        LLine ln1, ln2;
+        ACir cr, cr1;
         int o, p1, p2, p3, p4, p5, a, b, c, d;
 
         a = v.pt[0];
@@ -1235,10 +1235,10 @@ public class Full extends elim {
             cr = cr.nx;
         }
 
-        angles as = all_as.nx;
+        Angles as = all_as.nx;
         ln2 = fd_ln(c, d);
 
-        l_line l1, l2, l3, l4;
+        LLine l1, l2, l3, l4;
 
 
         while (as != null) {
@@ -1249,7 +1249,7 @@ public class Full extends elim {
                 l4 = as.l4;
 
                 if (ln1 == l2 && ln2 == l1 || ln1 == l4 && ln2 == l3) {
-                    l_line lx = l1;
+                    LLine lx = l1;
                     l1 = l2;
                     l2 = lx;
                     lx = l3;
@@ -1273,11 +1273,11 @@ public class Full extends elim {
         return (null);
     }
 
-    el_term elim_t(Var v) {
-        l_line ln1, ln2;
-        a_cir cr;
+    ElTerm elim_t(Var v) {
+        LLine ln1, ln2;
+        ACir cr;
         int p1, p2, p3;
-        angles as;
+        Angles as;
 
         ln1 = fadd_ln(v.pt[0], v.pt[1]);
         ln2 = fadd_ln(v.pt[2], v.pt[3]);
@@ -1308,13 +1308,13 @@ public class Full extends elim {
         return (null);
     }
 
-    el_term elim_tri(Var v) {
+    ElTerm elim_tri(Var v) {
         int a = v.pt[0];
         int b = v.pt[1];
         int c = v.pt[2];
         int d = v.pt[3];
-        l_line ln1 = fadd_ln(v.pt[0], v.pt[1]);
-        l_line ln2 = fadd_ln(v.pt[2], v.pt[3]);
+        LLine ln1 = fadd_ln(v.pt[0], v.pt[1]);
+        LLine ln2 = fadd_ln(v.pt[2], v.pt[3]);
 
         int o = inter_lls(ln1, ln2);
         if (o != 0) {
@@ -1338,8 +1338,8 @@ public class Full extends elim {
     }
 
     /////froem area
-    xterm eprem(xterm p, el_term e) {
-        xterm p1, p2, p3;
+    XTerm eprem(XTerm p, ElTerm e) {
+        XTerm p1, p2, p3;
         if (e == null) return p;
         p2 = get_n(1L);
         if (e.p1 == null) {
@@ -1375,19 +1375,19 @@ public class Full extends elim {
         return false;
     }
 
-    public gr_term getFullAngleProofHead() {
+    public GrTerm getFullAngleProofHead() {
 
-        gr_term gt = proof.nx;
+        GrTerm gt = proof.nx;
         if (gt == null) return null;
         while (gt != null) {
             if (gt.ps1 != null)
                 myprint_p1(gt.ps1.p, true);
-            el_term el = gt.el;
+            ElTerm el = gt.el;
             if (el != null) {
                 myprint_p1(el.p1, true);
                 myprint_p1(el.p2, true);
                 myprint_p1(el.p, true);
-                cond co = el.co;
+                Cond co = el.co;
                 while (co != null) {
                     this.show_pred(co);
                     do_pred(co);
@@ -1401,7 +1401,7 @@ public class Full extends elim {
                     myprint_p1(el.p1, true);
                     myprint_p1(el.p2, true);
                     myprint_p1(el.p, true);
-                    cond co = el.co;
+                    Cond co = el.co;
                     while (co != null) {
                         this.show_pred(co);
                         do_pred(co);
@@ -1422,19 +1422,19 @@ public class Full extends elim {
     {
         char mk = 0;
 
-        gr_term gr1 = proof.nx;
+        GrTerm gr1 = proof.nx;
         if (gr1 == null) return false;
 
         while (gr1 != null) {
             if (gr1.c == -1) {
                 this.setPrintToString();
-                dterm dt = gr1.ps;
+                DTerm dt = gr1.ps;
                 print_ps(dt, mk);
                 dt.text = this.getPrintedString();
             } else if (gr1.c == -2) {
             } else if (gr1.c == 0) {
             } else {
-                el_term el = gr1.el;
+                ElTerm el = gr1.el;
                 print_elims(el, mk);
             }
 
@@ -1451,7 +1451,7 @@ public class Full extends elim {
     }
 
     void print_proof(char mk) {
-        gr_term gr1 = proof.nx;
+        GrTerm gr1 = proof.nx;
 
         if (gr1 == null) {
             gprint(Cm.s2220);
@@ -1518,7 +1518,7 @@ public class Full extends elim {
     }
 
 
-    void print_elims(el_term el, char mk) {
+    void print_elims(ElTerm el, char mk) {
 //        gprint(Cm.s2224);
         if (el == null)
             return;
@@ -1539,12 +1539,12 @@ public class Full extends elim {
     }
 
 
-    static gr_term el_gr = new gr_term();
-    static dterm el_d1 = new dterm();
-    static dterm el_d2 = new dterm();
+    static GrTerm el_gr = new GrTerm();
+    static DTerm el_d1 = new DTerm();
+    static DTerm el_d2 = new DTerm();
 
-    void print_elim(el_term e, char mk) {
-        xterm p1, p2;
+    void print_elim(ElTerm e, char mk) {
+        XTerm p1, p2;
         Var v;
         if (e == null) {
             return;
@@ -1620,13 +1620,13 @@ public class Full extends elim {
         }
     }
 
-    boolean rgr(gr_term gr) {
+    boolean rgr(GrTerm gr) {
         return (rps(gr.ps1) && rps(gr.ps2));
     }
 
-    boolean rps(dterm ps1) {
-        dterm ps2;
-        xterm p1;
+    boolean rps(DTerm ps1) {
+        DTerm ps2;
+        XTerm p1;
         Var v1;
         while (ps1 != null) {
             p1 = ps1.p;
@@ -1643,7 +1643,7 @@ public class Full extends elim {
     }
 
 
-    void print_gr(gr_term gr, char mk) {
+    void print_gr(GrTerm gr, char mk) {
         boolean rg;
         long n;
 
@@ -1716,12 +1716,12 @@ public class Full extends elim {
         num_show(c2);
     }
 
-    void print_ps(dterm dp1, char mk) {
+    void print_ps(DTerm dp1, char mk) {
         if (dp1 == null)
             gprint("");
         else {
             int k = 0;
-            dterm ps1 = dp1;
+            DTerm ps1 = dp1;
             while (ps1 != null) {
                 k++;
                 ps1 = ps1.nx;
@@ -1745,7 +1745,7 @@ public class Full extends elim {
         }
     }
 
-    boolean chord_p(xterm p) {
+    boolean chord_p(XTerm p) {
         Var v;
         if (npoly(p)) return (true);
         v = p.var;
@@ -1754,7 +1754,7 @@ public class Full extends elim {
 
 
     ///////////////////////////////////
-    Vector getAllterms(xterm p1) {
+    Vector getAllterms(XTerm p1) {
 
         Vector list = new Vector();
         if (p1 == null)
@@ -1765,11 +1765,11 @@ public class Full extends elim {
     }
 
 
-    public void myprint_p1(xterm p1, boolean first) {
+    public void myprint_p1(XTerm p1, boolean first) {
 
         this.setPrintToString();
-        dterm dp1, dp2;
-        xterm xp1;
+        DTerm dp1, dp2;
+        XTerm xp1;
 
         if (p1 == null)
             return;
@@ -1809,7 +1809,7 @@ public class Full extends elim {
             myprint_p1(dp2.p, false);
     }
 
-    gr_term mk_el_gr(el_term el) {
+    GrTerm mk_el_gr(ElTerm el) {
 //        gr_term gr1 = mk_gr(mk_num(1L), get_dt(1, p1, null), mk_num(0L), null, 99, null);
 //
 //        el_term e1 = el.et;
@@ -1833,7 +1833,7 @@ public class Full extends elim {
     }
 
     int getlnNum() {
-        l_line ln = all_ln.nx;
+        LLine ln = all_ln.nx;
         int t = 0;
         while (ln != null) {
             t++;
@@ -1883,11 +1883,11 @@ public class Full extends elim {
         return sr;
     }
 
-    xterm trim_full(int p1, int p2, int p3, int p4) {
+    XTerm trim_full(int p1, int p2, int p3, int p4) {
         int t = 0;
 
-        l_line ln1 = fd_ln(p1, p2);
-        l_line ln2 = fd_ln(p3, p4);
+        LLine ln1 = fd_ln(p1, p2);
+        LLine ln2 = fd_ln(p3, p4);
         if (ln1 != null && ln2 != null && (t = inter_ll(ln1, ln2)) != 0) {
             if (p1 != t && p2 != t)
                 p2 = t;
@@ -1921,7 +1921,7 @@ public class Full extends elim {
 
         int n = cns_no;
         for (int i = 1; i <= n; i++) {
-            cons c = allcns[i];
+            Cons c = allcns[i];
             if (c != null && isConstructionType(c.type))
                 v1.add(c);
         }
@@ -1939,7 +1939,7 @@ public class Full extends elim {
     }
 
 
-    protected cndg add_n_isotropic(int a, int b, Vector v1) {
+    protected CNdg add_n_isotropic(int a, int b, Vector v1) {
         if (a == b)
             return null;
 
@@ -1951,7 +1951,7 @@ public class Full extends elim {
 
         if (APT(a) == null && APT(b) == null) return null;
 
-        cndg n = new cndg();
+        CNdg n = new CNdg();
         n.type = NDG_NON_ISOTROPIC;
         n.p[0] = a;
         n.p[1] = b;
@@ -1960,7 +1960,7 @@ public class Full extends elim {
         return n;
     }
 
-    protected cndg add_n_pt(int type, int a, int b, int c, int d, Vector v1) {
+    protected CNdg add_n_pt(int type, int a, int b, int c, int d, Vector v1) {
         if (a > b) {
             int t = a;
             a = b;
@@ -1981,14 +1981,14 @@ public class Full extends elim {
             d = t;
         }
 
-        cndg n = null;
+        CNdg n = null;
 
         if (type == NDG_PARA) {
             n = add_ndg_para(a, b, c, d);
         } else if (type == NDG_PERP) {
             n = add_ndg_perp(a, b, c, d);
         } else {
-            n = new cndg();
+            n = new CNdg();
             n.type = type;
             n.p[0] = a;
             n.p[1] = b;
@@ -2001,7 +2001,7 @@ public class Full extends elim {
         return n;
     }
 
-    protected cndg add_n_coll(int a, int b, int c, Vector v1) {
+    protected CNdg add_n_coll(int a, int b, int c, Vector v1) {
         if (a > b) {
             int t = a;
             a = b;
@@ -2020,7 +2020,7 @@ public class Full extends elim {
             c = t;
         }
 
-        cndg n = new cndg();
+        CNdg n = new CNdg();
         n.type = NDG_COLL;
         n.p[0] = a;
         n.p[1] = b;
@@ -2031,13 +2031,13 @@ public class Full extends elim {
     }
 
     public void init_ndgs(Vector v1) {
-        cndg nd;
+        CNdg nd;
 
         int sz = v1.size();
 
         int n = cns_no;
         for (int i = 1; i <= n; i++) {
-            cons c = allcns[i];
+            Cons c = allcns[i];
             switch (c.type) {
                 case C_FOOT:
                     add_n_isotropic(c.ps[2], c.ps[3], v1);
@@ -2087,7 +2087,7 @@ public class Full extends elim {
                     /////Special for aline.
 
                 case C_I_PA: {
-                    cndg dx = add_n_pt(NDG_PARA, c.ps[2], c.ps[3], c.ps[4], c.ps[5], v1);
+                    CNdg dx = add_n_pt(NDG_PARA, c.ps[2], c.ps[3], c.ps[4], c.ps[5], v1);
                     if (dx != null)
                         dx.exists = true;
 
@@ -2095,26 +2095,26 @@ public class Full extends elim {
                     add_n_neq(c.ps[4], c.ps[5], vndgs);
                     add_n_neq(c.ps[6], c.ps[7], vndgs);
                     add_n_neq(c.ps[8], c.ps[9], vndgs);
-                    xterm xt = pplus(trim_f(c.ps[2], c.ps[3], c.ps[4], c.ps[5]), trim_f(c.ps[6], c.ps[7], c.ps[7], c.ps[8]));
+                    XTerm xt = pplus(trim_f(c.ps[2], c.ps[3], c.ps[4], c.ps[5]), trim_f(c.ps[6], c.ps[7], c.ps[7], c.ps[8]));
                     xt = add_deduction(xt);
                     addxtermndg(xt, vndgs);
                 }
                 break;
                 case C_I_LA: {
-                    cndg dx = add_n_coll(c.ps[0], c.ps[1], c.ps[3], v1);
+                    CNdg dx = add_n_coll(c.ps[0], c.ps[1], c.ps[3], v1);
                     if (dx != null)
                         dx.exists = true;
 
                     add_n_neq(c.ps[3], c.ps[4], vndgs);
                     add_n_neq(c.ps[5], c.ps[6], vndgs);
                     add_n_neq(c.ps[6], c.ps[7], vndgs);
-                    xterm xt = pplus(trim_f(c.ps[1], c.ps[2], c.ps[3], c.ps[4]), trim_f(c.ps[7], c.ps[6], c.ps[6], c.ps[5]));
+                    XTerm xt = pplus(trim_f(c.ps[1], c.ps[2], c.ps[3], c.ps[4]), trim_f(c.ps[7], c.ps[6], c.ps[6], c.ps[5]));
                     xt = add_deduction(xt);
                     addxtermndg(xt, vndgs);
                 }
                 break;
                 case C_I_AA: {
-                    cndg dx = add_n_pt(NDG_PARA, c.ps[0], c.ps[1], c.ps[0], c.ps[6], v1);
+                    CNdg dx = add_n_pt(NDG_PARA, c.ps[0], c.ps[1], c.ps[0], c.ps[6], v1);
                     if (dx != null)
                         dx.exists = true;
 
@@ -2124,7 +2124,7 @@ public class Full extends elim {
                     add_n_neq(c.ps[6], c.ps[7], vndgs);
                     add_n_neq(c.ps[8], c.ps[9], vndgs);
                     add_n_neq(c.ps[9], c.ps[10], vndgs);
-                    xterm xt = pplus(trim_f(c.ps[3], c.ps[4], c.ps[4], c.ps[5]), trim_f(c.ps[1], c.ps[2], c.ps[6], c.ps[7]));
+                    XTerm xt = pplus(trim_f(c.ps[3], c.ps[4], c.ps[4], c.ps[5]), trim_f(c.ps[1], c.ps[2], c.ps[6], c.ps[7]));
                     xt = pplus(xt, trim_f(c.ps[10], c.ps[9], c.ps[9], c.ps[8]));
                     xt = add_deduction(xt);
                     addxtermndg(xt, vndgs);
@@ -2134,7 +2134,7 @@ public class Full extends elim {
 
             if (sz < v1.size()) {
                 sz = v1.size();
-                cndg dd = (cndg) v1.get(v1.size() - 1);
+                CNdg dd = (CNdg) v1.get(v1.size() - 1);
                 dd.dep = c;
             }
         }
@@ -2142,11 +2142,11 @@ public class Full extends elim {
 
 
     public void add_n_neq(int a, int b, Vector v1) {
-        cndg nd = add_ndg_neq(a, b);
+        CNdg nd = add_ndg_neq(a, b);
         this.add_ndgs(nd, v1);
     }
 
-    public void add_coll_para(cons cs, Vector v1) {
+    public void add_coll_para(Cons cs, Vector v1) {
         int a, b;
 
         a = cs.ps[0];
@@ -2173,17 +2173,17 @@ public class Full extends elim {
         add_n_coll(c1, c2, c3, v1);
     }
 
-    public void angle_deduction(cndg c, Vector v4) {
+    public void angle_deduction(CNdg c, Vector v4) {
         if (c == null)
             return;
 
         if (ck_allFree(c)) {  // all free Points.
-            cndg d = new cndg(c);
+            CNdg d = new CNdg(c);
             v4.add(d);
             return;
         }
 
-        xterm xt = null;
+        XTerm xt = null;
 
         switch (c.type) {
             case NDG_COLL:
@@ -2211,7 +2211,7 @@ public class Full extends elim {
                 break;
             case NDG_NEQ:
             case NDG_NON_ISOTROPIC:
-                cndg d1 = new cndg(c);
+                CNdg d1 = new CNdg(c);
                 this.add_ndgs(d1, v4);
                 break;
         }
@@ -2219,8 +2219,8 @@ public class Full extends elim {
 
 
     protected void add_deduction(int a, int b, int c, int d, Vector v4) {
-        xterm x = trim_f(a, b, c, d);
-        xterm x1 = add_deduction(x);
+        XTerm x = trim_f(a, b, c, d);
+        XTerm x1 = add_deduction(x);
         if (pzerop(pminus(cp_poly(x), cp_poly(x1)))) {
 
         } else {
@@ -2231,7 +2231,7 @@ public class Full extends elim {
 
     protected void add_neqTo(int a, int b, Vector v4) {
         for (int i = 0; i < v4.size(); i++) {
-            cndg d = (cndg) v4.get(i);
+            CNdg d = (CNdg) v4.get(i);
             if (d.type == NDG_NEQ || d.type == NDG_NON_ISOTROPIC) {
                 if (d.contain(a) && d.contain(b))
                     return;
@@ -2244,7 +2244,7 @@ public class Full extends elim {
                     return;
             }
         }
-        cndg d = new cndg();
+        CNdg d = new CNdg();
         d.type = NDG_NEQ;
         d.no = 1;
         d.p[0] = a;
@@ -2252,7 +2252,7 @@ public class Full extends elim {
         add_ndgs(d, v4);
     }
 
-    protected boolean ck_allFree(cndg d) {
+    protected boolean ck_allFree(CNdg d) {
         if (d == null)
             return true;
         for (int i = 0; i <= d.no; i++) {
@@ -2262,17 +2262,17 @@ public class Full extends elim {
         return true;
     }
 
-    protected xterm add_deduction(xterm x) {
+    protected XTerm add_deduction(XTerm x) {
 
         if (x.var == null)
             return x;
 
-        xterm xt = angle_deduction(x);
+        XTerm xt = angle_deduction(x);
         xt = final_deduction(xt);
         return xt;
     }
 
-    protected xterm final_deduction(xterm p1) {
+    protected XTerm final_deduction(XTerm p1) {
         if (p1 == null)
             return p1;
 
@@ -2285,9 +2285,9 @@ public class Full extends elim {
     protected void filter_ndg(Vector v4) {
 
         for (int i = 0; i < v4.size(); i++) {
-            cndg d = (cndg) v4.get(i);
+            CNdg d = (CNdg) v4.get(i);
             for (int j = i + 1; j < v4.size(); j++) {
-                cndg nx = (cndg) v4.get(j);
+                CNdg nx = (CNdg) v4.get(j);
                 if (ndg_eq(d, nx) || ndg_less(nx, d)) {
                     v4.remove(j);
                     i = -1;
@@ -2307,17 +2307,17 @@ public class Full extends elim {
     protected void filter_ndg(Vector v2, Vector v3) {
 
         for (int i = 0; i < v2.size(); i++) {
-            cndg d = (cndg) v2.get(i);
+            CNdg d = (CNdg) v2.get(i);
             boolean added = false;
             for (int j = 0; j < v3.size(); j++) {
-                cndg nx = (cndg) v3.get(j);
+                CNdg nx = (CNdg) v3.get(j);
 
                 if (ndg_eq(d, nx) || ndg_less(d, nx)) {
                     d.equ = nx;
                     added = true;
                     break;
                 } else if (ndg_less(nx, d)) {
-                    cndg d1 = new cndg(d);
+                    CNdg d1 = new CNdg(d);
                     d.equ = d1;
                     v3.remove(j);
                     v3.add(j, d1);
@@ -2326,14 +2326,14 @@ public class Full extends elim {
                 }
             }
             if (!added) {
-                cndg d1 = new cndg(d);
+                CNdg d1 = new CNdg(d);
                 d.equ = d1;
                 v3.add(d1);
             }
         }
     }
 
-    protected void add_ndgs(cndg d, Vector vlist) {
+    protected void add_ndgs(CNdg d, Vector vlist) {
         if (d == null)
             return;
 
@@ -2343,7 +2343,7 @@ public class Full extends elim {
         vlist.add(d);
     }
 
-    protected boolean ndg_less(cndg n1, cndg n2) {
+    protected boolean ndg_less(CNdg n1, CNdg n2) {
         if (n1.type == NDG_NEQ || n1.type == NDG_NON_ISOTROPIC) {
             if (n2.type == NDG_COLL) {
                 if (n2.contain(n1.p[0]) && n2.contain(n1.p[1]))
@@ -2353,7 +2353,7 @@ public class Full extends elim {
         return false;
     }
 
-    protected boolean ndg_eq(cndg n1, cndg n2) {
+    protected boolean ndg_eq(CNdg n1, CNdg n2) {
         if (n1.type != n2.type) {
             if ((n1.type == NDG_NEQ || n1.type == NDG_NON_ISOTROPIC)
                     && (n2.type == NDG_NEQ || n2.type == NDG_NON_ISOTROPIC)) {
@@ -2371,7 +2371,7 @@ public class Full extends elim {
         return true;
     }
 
-    protected void addxtermndg(xterm x, Vector v4) {
+    protected void addxtermndg(XTerm x, Vector v4) {
         if (x == null)
             return;
         xterm2ndg(x, v4);
@@ -2382,7 +2382,7 @@ public class Full extends elim {
     }
 
 
-    protected void xterm2ndg(xterm x, Vector vlist) {
+    protected void xterm2ndg(XTerm x, Vector vlist) {
         if (x == null || x.var == null)
             return;
 
@@ -2395,18 +2395,18 @@ public class Full extends elim {
 
     }
 
-    protected void xterm_1term(xterm x, Vector vlist) {
+    protected void xterm_1term(XTerm x, Vector vlist) {
         long n = fcc(x);
 
         if (x.var == null) {
             ///////xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         } else if (n == 1) {
-            cndg d = add_ndg_para(x.var);
+            CNdg d = add_ndg_para(x.var);
             if (d != null)
                 d.dep = x;
             add_ndgs(d, vlist);
         } else if (n == 2) {
-            cndg d = add_ndg_para(x.var);
+            CNdg d = add_ndg_para(x.var);
             if (d != null)
                 d.dep = x;
             add_ndgs(d, vlist);
@@ -2415,15 +2415,15 @@ public class Full extends elim {
                 d.dep = x;
             add_ndgs(d, vlist);
         } else if (n == 3) {
-            cndg d = add_ndg_triplePI(x.var);
+            CNdg d = add_ndg_triplePI(x.var);
             if (d != null)
                 d.dep = x;
             add_ndgs(d, vlist);
         }
     }
 
-    protected cndg add_ndg_triplePI(Var v) {
-        cndg n = new cndg();
+    protected CNdg add_ndg_triplePI(Var v) {
+        CNdg n = new CNdg();
         n.type = NDG_TRIPLEPI;
 
         n.p[0] = v.pt[0];
@@ -2437,12 +2437,12 @@ public class Full extends elim {
     }
 
 
-    protected void xterm_2term(xterm x, Vector vlist) {
+    protected void xterm_2term(XTerm x, Vector vlist) {
         long n = fcc(x);
         if (x.ps != null) {
-            dterm dx1 = x.ps.nx;
+            DTerm dx1 = x.ps.nx;
             if (dx1 != null) {
-                xterm x1 = dx1.p;
+                XTerm x1 = dx1.p;
                 long n1 = fcc(x1);
 
                 Var v1 = x.var;
@@ -2451,7 +2451,7 @@ public class Full extends elim {
                 if (v2 != null) {  // v2 != null   <A + <B = 0.
                     if (n1 < 0) {
                         if (v1.pt[2] == v2.pt[0] && v1.pt[3] == v2.pt[1]) {
-                            cndg d = add_ndg_cong(v1.pt[0], v1.pt[1], v2.pt[2], v2.pt[3]);
+                            CNdg d = add_ndg_cong(v1.pt[0], v1.pt[1], v2.pt[2], v2.pt[3]);
                             if (d != null) {
                                 d.dep = x;
                                 add_ndgs(d, vlist);
@@ -2466,7 +2466,7 @@ public class Full extends elim {
                         }
                     } else if (n1 > 0) {
                         if (v1.pt[2] == v2.pt[2] && v1.pt[3] == v2.pt[3]) {
-                            cndg d = add_ndg_cong(v1.pt[0], v1.pt[1], v2.pt[0], v2.pt[1]);
+                            CNdg d = add_ndg_cong(v1.pt[0], v1.pt[1], v2.pt[0], v2.pt[1]);
                             if (d != null) {
                                 d.dep = x;
                                 add_ndgs(d, vlist);
@@ -2481,7 +2481,7 @@ public class Full extends elim {
                 } else  // <A + <1 = 0.
                 {
                     if (x1.var == null & x1.c == 1) {
-                        cndg d = add_ndg_perp(v1);
+                        CNdg d = add_ndg_perp(v1);
                         if (d != null)
                             d.dep = x;
                         add_ndgs(d, vlist);
@@ -2496,7 +2496,7 @@ public class Full extends elim {
     }
 
 
-    protected void reorder2(cndg n) {
+    protected void reorder2(CNdg n) {
         if (n.p[0] > n.p[1]) {
             int d = n.p[0];
             n.p[0] = n.p[1];
@@ -2504,7 +2504,7 @@ public class Full extends elim {
         }
     }
 
-    protected void reorder3(cndg n) {
+    protected void reorder3(CNdg n) {
         for (int i = 0; i < 2; i++) {
 
             int d = n.p[i];
@@ -2516,7 +2516,7 @@ public class Full extends elim {
         }
     }
 
-    protected void reorder22(cndg n) {
+    protected void reorder22(CNdg n) {
         if (n.p[0] > n.p[1]) {
             int d = n.p[0];
             n.p[0] = n.p[1];
@@ -2539,10 +2539,10 @@ public class Full extends elim {
         }
     }
 
-    protected cndg add_ndg_neq(int a, int b) {
+    protected CNdg add_ndg_neq(int a, int b) {
         if (a == b)
             return null;
-        cndg n = new cndg();
+        CNdg n = new CNdg();
         n.type = NDG_NEQ;
         if (a > b) {
             int c = a;
@@ -2570,32 +2570,32 @@ public class Full extends elim {
         if (APT(a) == null && APT(b) == null) return;
 
         if (freeCSP(a) && freeCSP(b)) {
-            cndg n = new cndg();
+            CNdg n = new CNdg();
             n.type = NDG_NON_ISOTROPIC;
             n.p[0] = a;
             n.p[1] = b;
             n.no = 1;
             add_ndgs(n, v4);
         } else {
-            xterm x = parseNEQ(a, b, v4);
+            XTerm x = parseNEQ(a, b, v4);
             if (x != null)
                 addxtermndg(x, v4);
         }
     }
 
-    private xterm parseNEQ(int a, int b, Vector v2) {
+    private XTerm parseNEQ(int a, int b, Vector v2) {
 
         for (int i = 0; i < v2.size(); i++) {
-            cndg n = (cndg) v2.get(i);
+            CNdg n = (CNdg) v2.get(i);
             if (n.type == NDG_NEQ || n.type == NDG_NON_ISOTROPIC) {
                 {
-                    xterm x1 = parseNEQ(a, b, n.p[0], n.p[1], v2);
+                    XTerm x1 = parseNEQ(a, b, n.p[0], n.p[1], v2);
                     if (x1 != null)
                         return x1;
                 }
             } else if (n.type == NDG_COLL) {
                 {
-                    xterm x1 = parseNEQ(a, b, n.p[0], n.p[1], v2);
+                    XTerm x1 = parseNEQ(a, b, n.p[0], n.p[1], v2);
                     if (x1 != null)
                         return x1;
                     x1 = parseNEQ(a, b, n.p[0], n.p[2], v2);
@@ -2611,7 +2611,7 @@ public class Full extends elim {
     }
 
 
-    private xterm parseNEQ(int a, int b, int a1, int b1, Vector v2) {
+    private XTerm parseNEQ(int a, int b, int a1, int b1, Vector v2) {
         if (a == a1 || a == b1) return null;
         if (b == a1 || b == b1) return null;
         if (!freeCSP(a1) || !freeCSP(b1))
@@ -2619,8 +2619,8 @@ public class Full extends elim {
         if (check_coll(a1, b1, a) || check_coll(a1, b1, b))
             return null;
 
-        xterm x1 = pminus(trim_f(a, a1, a1, b1), trim_f(b, a1, a1, b1));
-        xterm x2 = pminus(trim_f(a, b1, a1, b1), trim_f(b, b1, a1, b1));
+        XTerm x1 = pminus(trim_f(a, a1, a1, b1), trim_f(b, a1, a1, b1));
+        XTerm x2 = pminus(trim_f(a, b1, a1, b1), trim_f(b, b1, a1, b1));
         this.setPrintToScreen();
 
         this.pprint(x1);
@@ -2649,13 +2649,13 @@ public class Full extends elim {
     }
 
     public int getFreeSemiFix(int index) {
-        Pro_point pt = APT(index);
+        ProPoint pt = APT(index);
         if (pt == null)
             return 0;
 
         int n = 0;
         for (int i = 1; i <= cns_no; i++) {
-            cons c = allcns[i];
+            Cons c = allcns[i];
             if (c.ps[0] == index && !freeCS(c.type)) {
                 n++;
             }
@@ -2665,13 +2665,13 @@ public class Full extends elim {
     }
 
     public boolean freeCSP(int index) {
-        Pro_point pt = APT(index);
+        ProPoint pt = APT(index);
         if (pt == null)
             return false;
 
         int type = 0;
         for (int i = 1; i <= cns_no; i++) {
-            cons c = allcns[i];
+            Cons c = allcns[i];
             if (c.type != C_POINT && c.ps[0] == index) {
                 type = c.type;
                 break;
@@ -2686,8 +2686,8 @@ public class Full extends elim {
                 t == C_QUADRANGLE || t == C_PENTAGON || t == C_POLYGON || t == C_CIRCLE;
     }
 
-    protected cndg add_ndg_coll(int a, int b, int c) {
-        cndg n = new cndg();
+    protected CNdg add_ndg_coll(int a, int b, int c) {
+        CNdg n = new CNdg();
         n.type = NDG_COLL;
 
         n.p[0] = a;
@@ -2700,8 +2700,8 @@ public class Full extends elim {
         else return n;
     }
 
-    protected cndg add_ndg_cong(int a, int b, int c, int d) {
-        cndg n = new cndg();
+    protected CNdg add_ndg_cong(int a, int b, int c, int d) {
+        CNdg n = new CNdg();
         n.type = NDG_CONG;
 
         n.p[0] = a;
@@ -2716,12 +2716,12 @@ public class Full extends elim {
     }
 
 
-    protected cndg add_ndg_para(Var v) {
+    protected CNdg add_ndg_para(Var v) {
         return add_ndg_para(v.pt[0], v.pt[1], v.pt[2], v.pt[3]);
     }
 
-    protected cndg add_ndg_para(int a, int b, int c, int d) {
-        cndg n = new cndg();
+    protected CNdg add_ndg_para(int a, int b, int c, int d) {
+        CNdg n = new CNdg();
         n.type = NDG_PARA;
 
         n.p[0] = a;
@@ -2733,7 +2733,7 @@ public class Full extends elim {
         reorder22(n);
         if (n.redundentPt()) {
 
-            cndg n1 = new cndg();
+            CNdg n1 = new CNdg();
             n1.type = NDG_COLL;
             for (int i = 0; i < 4; i++)
                 if (!n1.contain(n.p[i]))
@@ -2748,12 +2748,12 @@ public class Full extends elim {
         return n;
     }
 
-    protected cndg add_ndg_perp(Var v) {
+    protected CNdg add_ndg_perp(Var v) {
         return add_ndg_perp(v.pt[0], v.pt[1], v.pt[2], v.pt[3]);
     }
 
-    protected cndg add_ndg_perp(int a, int b, int c, int d) {
-        cndg n = new cndg();
+    protected CNdg add_ndg_perp(int a, int b, int c, int d) {
+        CNdg n = new CNdg();
         n.type = NDG_PERP;
 
         n.p[0] = a;
@@ -2771,7 +2771,7 @@ public class Full extends elim {
     }
 
 
-    protected void get_ndgstr(cndg d) {
+    protected void get_ndgstr(CNdg d) {
         String sd = "";
         switch (d.type) {
             case NDG_COLL:
@@ -2818,17 +2818,17 @@ public class Full extends elim {
         d.sd = sd;
     }
 
-    protected xterm angle_deduction(xterm p1) {
+    protected XTerm angle_deduction(XTerm p1) {
 
         ertype = 0;
         pro_type = PRO_FULL;
         max_term = 0;
         d_base = 1;
         qerror = false;
-        last_pr = proof = new gr_term();
+        last_pr = proof = new GrTerm();
         dbase();
         if (qerror) return null;
-        el_term e1 = null;
+        ElTerm e1 = null;
 
         do {
 
@@ -2863,18 +2863,18 @@ public class Full extends elim {
     }
 
 
-    public xterm opt_tri(xterm x) {
+    public XTerm opt_tri(XTerm x) {
         long n = fcc(x);
         if (x.ps != null) {
-            dterm dx1 = x.ps.nx;
+            DTerm dx1 = x.ps.nx;
             if (dx1 != null) {
-                xterm x1 = dx1.p;
+                XTerm x1 = dx1.p;
                 long n1 = fcc(x1);
                 Var v1 = x.var;
                 Var v2 = x1.var;
                 if (n == n1) {
                     if (v1.pt[2] == v2.pt[0] && v1.pt[3] == v2.pt[1]) {
-                        xterm p1 = pplus(get_m(v1), get_m(v2));
+                        XTerm p1 = pplus(get_m(v1), get_m(v2));
                         p1 = pminus(p1, trim_f(v1.pt[0], v1.pt[1], v2.pt[2], v2.pt[3]));
                         if (n != 1) {
                             p1 = ptimes(this.get_n(n), p1);
@@ -2882,7 +2882,7 @@ public class Full extends elim {
                         }
 
                     } else if (v1.pt[0] == v2.pt[2] && v1.pt[1] == v2.pt[3]) {
-                        xterm p1 = pplus(get_m(v1), get_m(v2));
+                        XTerm p1 = pplus(get_m(v1), get_m(v2));
                         p1 = pminus(p1, trim_f(v2.pt[0], v2.pt[1], v1.pt[2], v1.pt[3]));
                         if (n != 1) {
                             p1 = ptimes(this.get_n(n), p1);
@@ -2891,14 +2891,14 @@ public class Full extends elim {
                     }
                 } else if (n + n1 == 0) {
                     if (v1.pt[0] == v2.pt[0] && v1.pt[1] == v2.pt[1]) {
-                        xterm p1 = pminus(get_m(v1), get_m(v2));
+                        XTerm p1 = pminus(get_m(v1), get_m(v2));
                         p1 = pminus(p1, trim_f(v2.pt[2], v2.pt[3], v1.pt[2], v1.pt[3]));
                         if (n != 1) {
                             p1 = ptimes(this.get_n(n), p1);
                             return pminus(x, p1);
                         }
                     } else if (v1.pt[2] == v2.pt[2] && v1.pt[3] == v2.pt[3]) {
-                        xterm p1 = pminus(get_m(v1), get_m(v2));
+                        XTerm p1 = pminus(get_m(v1), get_m(v2));
                         p1 = pminus(p1, trim_f(v1.pt[0], v1.pt[1], v2.pt[0], v2.pt[1]));
                         if (n != 1) {
                             p1 = ptimes(this.get_n(n), p1);
@@ -2916,10 +2916,10 @@ public class Full extends elim {
     public void ndg_deduction(Vector v3, Vector v4) {
 
         for (int i = 0; i < v3.size(); i++) {
-            cndg d = (cndg) v3.get(i);
+            CNdg d = (CNdg) v3.get(i);
             if (d.exists) {
             } else if (ck_allFree(d)) {
-                cndg d1 = new cndg(d);
+                CNdg d1 = new CNdg(d);
                 v4.add(d1);
             } else
                 angle_deduction(d, v4);
@@ -2927,7 +2927,7 @@ public class Full extends elim {
     }
 
 
-    public int compare(cndg d1, cndg d2) {
+    public int compare(CNdg d1, CNdg d2) {
         if (d1 == d2) return 0;
 
         int n1 = d1.getMaxInt();
@@ -2941,9 +2941,9 @@ public class Full extends elim {
 
     public void sortVector(Vector v4) {
         for (int i = 1; i < v4.size(); i++) {
-            cndg d = (cndg) v4.get(i);
+            CNdg d = (CNdg) v4.get(i);
             for (int j = 0; j < i; j++) {
-                cndg d1 = (cndg) v4.get(j);
+                CNdg d1 = (CNdg) v4.get(j);
                 if (compare(d, d1) < 0) {
                     v4.remove(i);
                     v4.add(j, d);
@@ -2960,7 +2960,7 @@ public class Full extends elim {
         Vector v5 = new Vector();
 
         for (int i = 0; i < v4.size(); i++) {
-            cndg d1 = (cndg) v4.get(i);
+            CNdg d1 = (CNdg) v4.get(i);
             if (d1.type != NDG_NEQ && d1.type != NDG_NON_ISOTROPIC)
                 continue;
             if (this.freeCSP(d1.p[0]) && this.freeCSP(d1.p[1]))
@@ -2975,8 +2975,8 @@ public class Full extends elim {
         vndgs.addAll(v4);
 
         for (int i = 0; i < v5.size(); i++) {
-            cndg d = (cndg) v5.get(i);
-            ndgcs c = parse_neq(d);
+            CNdg d = (CNdg) v5.get(i);
+            NdgCs c = parse_neq(d);
             updateSD(c);
 
             if (c.ntype == 0 && !addNdg(c, c.no))
@@ -2987,12 +2987,12 @@ public class Full extends elim {
         return;
     }
 
-    private void updateSD(ndgcs dd) {
+    private void updateSD(NdgCs dd) {
         if (dd == null)
             return;
 
         for (int i = 0; i <= dd.no; i++) {
-            cons c1 = dd.allcns[i];
+            Cons c1 = dd.allcns[i];
             if (c1 != null) {
                 updatePSS(c1);
                 c1.setText(null);
@@ -3003,12 +3003,12 @@ public class Full extends elim {
                 updateSD(dd.child[i]);
     }
 
-    public ndgcs getCS(cndg d) {// d : type of neq.
+    public NdgCs getCS(CNdg d) {// d : type of neq.
         int n = d.getMaxInt();
 
-        ndgcs c = new ndgcs();
+        NdgCs c = new NdgCs();
         for (int i = 1; i <= cns_no; i++) {
-            cons c1 = allcns[i];
+            Cons c1 = allcns[i];
             if (c1 == null)
                 continue;
 
@@ -3024,21 +3024,21 @@ public class Full extends elim {
             }
         }
 
-        ndgcs dd = new ndgcs();
+        NdgCs dd = new NdgCs();
         for (int i = 0; i <= cns_no; i++) {
-            cons c2 = c.allcns[i];
+            Cons c2 = c.allcns[i];
             if (c2 != null)
                 addConsToNdgcs(c2, dd);
         }
 
         for (int i = 0; i <= dd.no; i++) {
-            cons c1 = dd.allcns[i];
+            Cons c1 = dd.allcns[i];
             updatePSS(c1);
         }
         return dd;
     }
 
-    private void updatePSS(cons c) {
+    private void updatePSS(Cons c) {
         if (c == null)
             return;
 
@@ -3047,15 +3047,15 @@ public class Full extends elim {
         }
     }
 
-    private void add_RelatedCnsToDg(int nx, ndgcs d) {
+    private void add_RelatedCnsToDg(int nx, NdgCs d) {
 
-        cons c = allcns[nx];
+        Cons c = allcns[nx];
         if (c == null)
             return;
 
         for (int i = 0; i <= c.no; i++) {
             for (int j = 0; j < nx; j++) {
-                cons c1 = allcns[j];
+                Cons c1 = allcns[j];
                 if (c1 == null)
                     continue;
                 if (!construct_related(c1.type))
@@ -3070,7 +3070,7 @@ public class Full extends elim {
         d.add(nx, c);
     }
 
-    public void addConsToNdgcs(cons c, ndgcs d) {
+    public void addConsToNdgcs(Cons c, NdgCs d) {
         if (c == null)
             return;
 
@@ -3079,7 +3079,7 @@ public class Full extends elim {
             case C_O_P:
             case C_O_T:
             case C_O_C:
-                c = new cons(c);
+                c = new Cons(c);
                 d.add(c);
                 break;
             case C_FOOT:
@@ -3124,8 +3124,8 @@ public class Full extends elim {
         }
     }
 
-    public void add_cons(int type, int a, int b, int c, int d, int e, int f, int g, ndgcs d1) {
-        cons c1 = new cons(type);
+    public void add_cons(int type, int a, int b, int c, int d, int e, int f, int g, NdgCs d1) {
+        Cons c1 = new Cons(type);
         c1.add_pt(a);
         c1.add_pt(b);
         c1.add_pt(c);
@@ -3137,8 +3137,8 @@ public class Full extends elim {
         d1.add(c1);
     }
 
-    public void add_cons(int type, int a, int b, int c, int d, ndgcs d1) {
-        cons c1 = new cons(type);
+    public void add_cons(int type, int a, int b, int c, int d, NdgCs d1) {
+        Cons c1 = new Cons(type);
         c1.add_pt(a);
         c1.add_pt(b);
         c1.add_pt(c);
@@ -3147,7 +3147,7 @@ public class Full extends elim {
         d1.add(c1);
     }
 
-    public boolean ck_right(cons c, ndgcs cs, int type) {
+    public boolean ck_right(Cons c, NdgCs cs, int type) {
         if (c == null || cs == null)
             return true;
 
@@ -3164,14 +3164,14 @@ public class Full extends elim {
         return true;
     }
 
-    private void rm_null_ndgcs(ndgcs c) {
+    private void rm_null_ndgcs(NdgCs c) {
         if (c == null)
             return;
 
 
         int n = c.getCSindex();
         for (int i = 0; i <= n; i++) {
-            ndgcs cc = c.child[i];
+            NdgCs cc = c.child[i];
             if (cc == null)
                 continue;
             rm_null_ndgcs(cc);
@@ -3181,7 +3181,7 @@ public class Full extends elim {
 
         n = c.getCSindex();
         if (n < 0) {
-            ndgcs cs = c.parent;
+            NdgCs cs = c.parent;
             if (cs != null)
                 for (int i = 0; i <= cs.getCSindex(); i++) {
                     if (cs.child[i] == c)
@@ -3190,11 +3190,11 @@ public class Full extends elim {
         }
     }
 
-    private void rm_excons(ndgcs c) {
+    private void rm_excons(NdgCs c) {
         if (c == null)
             return;
 
-        ndgcs[] css = c.child;
+        NdgCs[] css = c.child;
         int a = c.getCSindex();
         if (a < 0) {            // leaf node.
             for (int i = 0; i <= c.no; i++) {
@@ -3211,25 +3211,25 @@ public class Full extends elim {
         }
     }
 
-    private boolean cons_ex(ndgcs cs, int index) {
-        cons c = cs.allcns[index];
+    private boolean cons_ex(NdgCs cs, int index) {
+        Cons c = cs.allcns[index];
 
         if (c == null)
             return true;
 
         while (cs.parent != null)
             cs = cs.parent;
-        cons c1 = cs.allcns[index];
+        Cons c1 = cs.allcns[index];
         if (c1 == null)
             return false;
         return c1.isEqual(c);
     }
 
-    public boolean ck_right(ndgcs c, int type) {
+    public boolean ck_right(NdgCs c, int type) {
         if (c == null)
             return true;
 
-        ndgcs[] css = c.child;
+        NdgCs[] css = c.child;
         int a = c.getCSindex();
         if (a < 0) {            // leaf node.
 
@@ -3255,9 +3255,9 @@ public class Full extends elim {
         return true;
     }
 
-    public ndgcs parse_neq(cndg nd) {
-        ndgcs c = getCS(nd);
-        ndgcs cx = new ndgcs(c);
+    public NdgCs parse_neq(CNdg nd) {
+        NdgCs c = getCS(nd);
+        NdgCs cx = new NdgCs(c);
         cx.parent = c;
         c.addChild(cx);
 
@@ -3267,7 +3267,7 @@ public class Full extends elim {
                 int a = nd.p[0];
                 int b = nd.p[1];
                 for (int i = 0; i <= c.no; i++) {
-                    cons c1 = cx.allcns[i];
+                    Cons c1 = cx.allcns[i];
                     if (c1 == null)
                         break;
                     c1.replace(b, a);   // replace b with a.
@@ -3292,7 +3292,7 @@ public class Full extends elim {
     ////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
 
-    private int compare(cons c1, cons c2) {
+    private int compare(Cons c1, Cons c2) {
         if (c1 == null) {
             if (c2 == null)
                 return 0;
@@ -3314,7 +3314,7 @@ public class Full extends elim {
         return 0;
     }
 
-    private void cons_reorder(ndgcs c) {
+    private void cons_reorder(NdgCs c) {
         if (c == null)
             return;
         if (c.leaf) {
@@ -3329,7 +3329,7 @@ public class Full extends elim {
                     } else {
                         if (c.allcns[j] != null) {
                             if (compare(c.allcns[i], c.allcns[j]) > 0) {
-                                cons cx = c.allcns[i];
+                                Cons cx = c.allcns[i];
                                 c.allcns[i] = c.allcns[j];
                                 c.allcns[j] = cx;
                             }
@@ -3345,7 +3345,7 @@ public class Full extends elim {
         }
     }
 
-    private void ck_leaf(ndgcs c) {
+    private void ck_leaf(NdgCs c) {
         if (c == null)
             return;
         if (c.getCSindex() < 0) {
@@ -3357,14 +3357,14 @@ public class Full extends elim {
         }
     }
 
-    private void rm_nleaf(ndgcs c) {
+    private void rm_nleaf(NdgCs c) {
 
         if (c == null || c.leaf)
             return;
 
         int n = c.getCSindex();
         if (n < 0) {
-            ndgcs cs = c.parent;
+            NdgCs cs = c.parent;
             if (cs != null) {
                 for (int i = 0; i <= cs.getCSindex(); i++) {
                     if (cs.child[i] == c)
@@ -3379,7 +3379,7 @@ public class Full extends elim {
         }
     }
 
-    private boolean parseStep(ndgcs c) {     //  Main Process of Parsing.
+    private boolean parseStep(NdgCs c) {     //  Main Process of Parsing.
         if (c == null)
             return true;
 
@@ -3394,14 +3394,14 @@ public class Full extends elim {
 
         int n = c.no;
         for (int i = 0; i <= n; i++) {
-            cons c1 = c.allcns[i];
+            Cons c1 = c.allcns[i];
             if (c1 == null)
                 continue;
             if (c1.getLastPt() != max)
                 continue;
 
             for (int j = i + 1; j <= n; j++) {
-                cons c2 = c.allcns[j];
+                Cons c2 = c.allcns[j];
 
                 if (c2 == null)
                     continue;
@@ -3446,7 +3446,7 @@ public class Full extends elim {
         return true;
     }
 
-    private boolean parse_ndg_circums(ndgcs c, cons c1, cons c2) {
+    private boolean parse_ndg_circums(NdgCs c, Cons c1, Cons c2) {
         int o = c1.ps[0];
 
         int[] pp = new int[6];
@@ -3469,7 +3469,7 @@ public class Full extends elim {
                         break;
                     {
                         for (int m = 0; m <= c.no; m++) {
-                            cons cx = c.allcns[m];
+                            Cons cx = c.allcns[m];
                             if (cx == null)
                                 break;
                             switch (cx.type) {
@@ -3477,10 +3477,10 @@ public class Full extends elim {
                                     if (xcoll(pp[i], pp[j], pp[k])) {
 
                                         if (!ck_recursive_ndg(1, c, NDG_NEQ, pp[i], pp[j], 0, 0)) {
-                                            ndgcs nc1 = new ndgcs(c);                 // ! Collinear A, B, C
+                                            NdgCs nc1 = new NdgCs(c);                 // ! Collinear A, B, C
                                             nc1.parent = c;
                                             c.addChild(nc1);
-                                            cons cc = new cons(C_I_EQ);
+                                            Cons cc = new Cons(C_I_EQ);
                                             cc.add_pt(pp[i]);
                                             cc.add_pt(pp[j]);
                                             cc.reorder();
@@ -3489,10 +3489,10 @@ public class Full extends elim {
                                         }
 
                                         if (!ck_recursive_ndg(1, c, NDG_NEQ, pp[i], pp[k], 0, 0)) {
-                                            ndgcs nc1 = new ndgcs(c);                 // ! Collinear A, B, C
+                                            NdgCs nc1 = new NdgCs(c);                 // ! Collinear A, B, C
                                             nc1.parent = c;
                                             c.addChild(nc1);
-                                            cons cc = new cons(C_I_EQ);
+                                            Cons cc = new Cons(C_I_EQ);
                                             cc.add_pt(pp[i]);
                                             cc.add_pt(pp[k]);
                                             cc.reorder();
@@ -3501,10 +3501,10 @@ public class Full extends elim {
                                         }
 
                                         if (!ck_recursive_ndg(1, c, NDG_NEQ, pp[i], pp[j], 0, 0)) {
-                                            ndgcs nc1 = new ndgcs(c);                 // ! Collinear A, B, C
+                                            NdgCs nc1 = new NdgCs(c);                 // ! Collinear A, B, C
                                             nc1.parent = c;
                                             c.addChild(nc1);
-                                            cons cc = new cons(C_I_EQ);
+                                            Cons cc = new Cons(C_I_EQ);
                                             cc.add_pt(pp[j]);
                                             cc.add_pt(pp[k]);
                                             cc.reorder();
@@ -3523,7 +3523,7 @@ public class Full extends elim {
         return false;
     }
 
-    private boolean onOneCons(int a, int b, cons c1) {
+    private boolean onOneCons(int a, int b, Cons c1) {
         return c1.contains(a) && c1.contains(b);
     }
 
@@ -3538,7 +3538,7 @@ public class Full extends elim {
         }
     }
 
-    private boolean parse_ndg_ll(ndgcs c, cons c1, cons c2) {
+    private boolean parse_ndg_ll(NdgCs c, Cons c1, Cons c2) {
 
         int n1 = c1.getLastPt();
         int n2 = c2.getLastPt();
@@ -3568,10 +3568,10 @@ public class Full extends elim {
 
         //if (ck_recursive_ndg(c, NDG_COLL, m, a, b, 0))
         {
-            ndgcs nc1 = new ndgcs(c);                 // ! Collinear A, B, C
+            NdgCs nc1 = new NdgCs(c);                 // ! Collinear A, B, C
             nc1.parent = c;
             c.addChild(nc1);
-            cons cc = new cons(C_I_EQ);
+            Cons cc = new Cons(C_I_EQ);
             cc.add_pt(n1);
             cc.add_pt(m);
             cc.reorder();
@@ -3581,10 +3581,10 @@ public class Full extends elim {
         }
 
         if (!ck_recursive_ndg(1, c, NDG_COLL, m, a, b, 0)) {
-            ndgcs nc2 = new ndgcs(c);               // Collinear M A B; A != B
+            NdgCs nc2 = new NdgCs(c);               // Collinear M A B; A != B
             nc2.parent = c;
             c.addChild(nc2);
-            cons cc = new cons(C_O_L);
+            Cons cc = new Cons(C_O_L);
             cc.add_pt(m);
             cc.add_pt(a);
             cc.add_pt(b);
@@ -3595,10 +3595,10 @@ public class Full extends elim {
 
 
         if (!ck_recursive_ndg(1, c, NDG_NEQ, a, b, 0, 0)) {
-            ndgcs nc3 = new ndgcs(c);                 // A = B.
+            NdgCs nc3 = new NdgCs(c);                 // A = B.
             nc3.parent = c;
             c.addChild(nc3);
-            cons cc = new cons(C_I_EQ);
+            Cons cc = new Cons(C_I_EQ);
             cc.add_pt(a);
             cc.add_pt(b);
             cc.reorder();
@@ -3611,11 +3611,11 @@ public class Full extends elim {
     }
 
 
-    private boolean ck_recursive_ndg(int type, ndgcs cs, int t, int a, int b, int c, int d) {
+    private boolean ck_recursive_ndg(int type, NdgCs cs, int t, int a, int b, int c, int d) {
 
         if (type == 0) {
             for (int i = 0; i < vndgs.size(); i++) {
-                cndg dx = (cndg) vndgs.get(i);
+                CNdg dx = (CNdg) vndgs.get(i);
                 if (ck_ndg(t, a, b, c, d, dx))
                     return true;
             }
@@ -3626,7 +3626,7 @@ public class Full extends elim {
             if (cs == null)
                 return false;
 
-            cndg dd = cs.nd;
+            CNdg dd = cs.nd;
             if (dd == null)
                 return false;
 
@@ -3640,7 +3640,7 @@ public class Full extends elim {
         return false;
     }
 
-    private boolean ck_ndg(int t, int a, int b, int c, int d, cndg dd) {
+    private boolean ck_ndg(int t, int a, int b, int c, int d, CNdg dd) {
         boolean r = false;
 
         switch (t) {
@@ -3670,13 +3670,13 @@ public class Full extends elim {
         return r;
     }
 
-    private boolean parse_ndg_lt(ndgcs c, cons c1, cons c2) {
+    private boolean parse_ndg_lt(NdgCs c, Cons c1, Cons c2) {
 
         int n1 = c1.getLastPt();
         int n2 = c2.getLastPt();
 
         if (c1.type == C_O_T && c2.type == C_O_L) {
-            cons x = c1;
+            Cons x = c1;
             c1 = c2;
             c2 = x;
         }
@@ -3715,10 +3715,10 @@ public class Full extends elim {
 
 
         {
-            ndgcs nc2 = new ndgcs(c);                // OtherWise.
+            NdgCs nc2 = new NdgCs(c);                // OtherWise.
             nc2.parent = c;
             c.addChild(nc2);
-            cons cc2 = new cons(C_I_EQ);
+            Cons cc2 = new Cons(C_I_EQ);
             cc2.add_pt(n1);
             cc2.add_pt(m);
             nc2.add(cc2);
@@ -3728,10 +3728,10 @@ public class Full extends elim {
         }
 
         if (!ck_recursive_ndg(1, c, NDG_NEQ, m, b, 0, 0)) {
-            ndgcs nc2 = new ndgcs(c);                // OtherWise.
+            NdgCs nc2 = new NdgCs(c);                // OtherWise.
             nc2.parent = c;
             c.addChild(nc2);
-            cons cc2 = new cons(C_I_EQ);
+            Cons cc2 = new Cons(C_I_EQ);
             cc2.add_pt(m);
             cc2.add_pt(b);
             nc2.add(cc2);
@@ -3743,11 +3743,11 @@ public class Full extends elim {
         return true;
     }
 
-    private void ndg_pteq_added(cons c, ndgcs d) {
+    private void ndg_pteq_added(Cons c, NdgCs d) {
         int m = c.ps[0];
         int a = c.ps[1];
         for (int i = 0; i <= d.no; i++) {
-            cons c2 = d.allcns[i];
+            Cons c2 = d.allcns[i];
             if (c2 == null || c2 == c)
                 continue;
             c2.replace(m, a);
@@ -3755,13 +3755,13 @@ public class Full extends elim {
         d.add(c);
     }
 
-    private void ndg_coll_added(cons c, ndgcs d) {
+    private void ndg_coll_added(Cons c, NdgCs d) {
         int m = c.ps[0];
         int a = c.ps[1];
         int b = c.ps[2];
 
         for (int i = 0; i <= d.no; i++) {
-            cons c2 = d.allcns[i];
+            Cons c2 = d.allcns[i];
             if (c2 == null || c2 == c)
                 continue;
 
@@ -3898,7 +3898,7 @@ public class Full extends elim {
 //        return false;
 //    }
 
-    public void parse_rpt_ndgs(int m, int a, ndgcs c) {
+    public void parse_rpt_ndgs(int m, int a, NdgCs c) {
         if (m == a)
             return;
         if (m < a) {
@@ -3907,7 +3907,7 @@ public class Full extends elim {
             a = t;
         }
 
-        ndgcs nc1 = new ndgcs(c);
+        NdgCs nc1 = new NdgCs(c);
         nc1.parent = c;
         c.addChild(nc1);
         nc1.replace(m, a);
@@ -3920,7 +3920,7 @@ public class Full extends elim {
 
     private boolean ck_diff(int a, int b) {
         for (int i = 0; i < vndgs.size(); i++) {
-            cndg d = (cndg) vndgs.get(i);
+            CNdg d = (CNdg) vndgs.get(i);
             switch (d.type) {
                 case NDG_COLL:
                     if (d.contain(a) && d.contain(b))
@@ -3940,13 +3940,13 @@ public class Full extends elim {
         return false;
     }
 
-    private void opt_cons(ndgcs c) {
+    private void opt_cons(NdgCs c) {
 
         while (true) {
             boolean r = true;
 
             for (int i = 0; i <= c.no; i++) {
-                cons c1 = c.allcns[i];
+                Cons c1 = c.allcns[i];
                 if (c1 != null) {
                     c1.reorder();
                     if (opt_cons(c, c1))
@@ -3956,12 +3956,12 @@ public class Full extends elim {
 
             if (!r) {
                 for (int i = 0; i <= c.no; i++) {
-                    cons c1 = c.allcns[i];
+                    Cons c1 = c.allcns[i];
                     if (c1 != null) {
                         switch (c1.type) {
                             case C_I_EQ:
                                 for (int j = 0; j <= c.no; j++) {
-                                    cons c2 = c.allcns[j];
+                                    Cons c2 = c.allcns[j];
                                     if (c2 != null && c2 != c1)
                                         c2.replace(c1.ps[0], c1.ps[1]);
                                 }
@@ -3975,7 +3975,7 @@ public class Full extends elim {
     }
 
 
-    private boolean opt_cons(ndgcs cs, cons c) {
+    private boolean opt_cons(NdgCs cs, Cons c) {
         if (c == null)
             return false;
 
@@ -4043,7 +4043,7 @@ public class Full extends elim {
         return false;
     }
 
-    private boolean add_eq(int a, int b, ndgcs c) {
+    private boolean add_eq(int a, int b, NdgCs c) {
         if (a == b)
             return false;
         if (a == 0 || b == 0)
@@ -4056,7 +4056,7 @@ public class Full extends elim {
         }
 
         for (int i = 0; i <= c.no; i++) {
-            cons c1 = c.allcns[i];
+            Cons c1 = c.allcns[i];
             if (c1 == null)
                 continue;
             if (c1.type != C_I_EQ)
@@ -4065,26 +4065,26 @@ public class Full extends elim {
                 return false;
         }
 
-        cons c2 = new cons(C_I_EQ);
+        Cons c2 = new Cons(C_I_EQ);
         c2.add_pt(a);
         c2.add_pt(b);
         c.add(c2);
         return true;
     }
 
-    private void rm_redundent(ndgcs c) {
+    private void rm_redundent(NdgCs c) {
         for (int i = 0; i <= c.no; i++) {
-            cons c1 = c.allcns[i];
+            Cons c1 = c.allcns[i];
             if (c1 != null && cons_redundent(c1))
                 c.allcns[i] = null;
         }
 
         for (int i = 0; i <= c.no; i++) {
-            cons c1 = c.allcns[i];
+            Cons c1 = c.allcns[i];
             if (c1 == null)
                 continue;
             for (int j = 0; j < i; j++) {
-                cons c2 = c.allcns[j];
+                Cons c2 = c.allcns[j];
                 if (c2 != null && c2.isEqual(c1)) {
                     c.allcns[i] = null;
                     break;
@@ -4093,7 +4093,7 @@ public class Full extends elim {
         }
     }
 
-    private boolean cons_redundent(cons c) {
+    private boolean cons_redundent(Cons c) {
         switch (c.type) {
             case C_O_L:
                 return c.ps[0] == c.ps[1] || c.ps[0] == c.ps[2] || c.ps[1] == c.ps[2];
@@ -4118,7 +4118,7 @@ public class Full extends elim {
     }
 
 
-    private boolean addNdg(ndgcs d, int no) {
+    private boolean addNdg(NdgCs d, int no) {
 
         boolean r = false;
         int n = d.getCSindex();
@@ -4136,7 +4136,7 @@ public class Full extends elim {
         boolean added = false;
 
         for (int i = 0; i <= d.no; i++) {
-            cons c1 = d.allcns[i];
+            Cons c1 = d.allcns[i];
             if (c1 != null) {
                 if (addNdg(c1)) {
                     added = true;
@@ -4147,23 +4147,23 @@ public class Full extends elim {
         return added;
     }
 
-    private boolean addNdg(cons c) {
+    private boolean addNdg(Cons c) {
         switch (c.type) {
             case C_O_L:
                 this.add_n_coll(c.ps[0], c.ps[1], c.ps[2], vndgs);
                 break;
             case C_O_P: {
-                cndg d = add_ndg_para(c.ps[0], c.ps[1], c.ps[2], c.ps[3]);
+                CNdg d = add_ndg_para(c.ps[0], c.ps[1], c.ps[2], c.ps[3]);
                 add_ndgs(d, vndgs);
             }
             break;
             case C_O_T: {
-                cndg d = add_ndg_perp(c.ps[0], c.ps[1], c.ps[2], c.ps[3]);
+                CNdg d = add_ndg_perp(c.ps[0], c.ps[1], c.ps[2], c.ps[3]);
                 add_ndgs(d, vndgs);
             }
             break;
             case C_I_EQ: {
-                cndg d = add_ndg_neq(c.ps[0], c.ps[1]);
+                CNdg d = add_ndg_neq(c.ps[0], c.ps[1]);
                 add_ndgs(d, vndgs);
             }
             break;

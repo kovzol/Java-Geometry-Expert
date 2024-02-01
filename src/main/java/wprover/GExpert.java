@@ -3,8 +3,8 @@ package wprover;
 import UI.EntityButtonUI;
 import UI.GBevelBorder;
 import UI.GifEncoder;
-import gprover.gib;
-import gprover.gterm;
+import gprover.Gib;
+import gprover.GTerm;
 import org.xnap.commons.i18n.I18n;
 import org.xnap.commons.i18n.I18nFactory;
 import pdf.PDFJob;
@@ -147,7 +147,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     public void loadRules() {
         RuleList.loadRules();
-        gib.initRules();
+        Gib.initRules();
     }
 
     public JComponent getContent() {
@@ -1242,7 +1242,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             if (!need_save())
                 return;
 
-            gterm gt = pprove.getConstructionTerm();
+            GTerm gt = pprove.getConstructionTerm();
             if (gt != null) {
                 JFileChooser filechooser1 = new JFileChooser();
                 String dr = getUserDir();

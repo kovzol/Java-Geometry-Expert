@@ -1,6 +1,6 @@
 package wprover;
 
-import gprover.gib;
+import gprover.Gib;
 import gprover.Rules;
 
 import java.util.Vector;
@@ -98,11 +98,11 @@ public class RuleList {
     }
 
     final public static boolean getValue(int n) {
-        return gib.RValue[n - 1];
+        return Gib.RValue[n - 1];
     }
 
     final public static void setValue(int n, boolean v) {
-        gib.RValue[n - 1] = v;
+        Gib.RValue[n - 1] = v;
     }
 
 }

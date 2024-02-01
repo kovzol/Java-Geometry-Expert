@@ -1,7 +1,7 @@
 package wprover;
 
-import gprover.gib;
-import gprover.cons;
+import gprover.Gib;
+import gprover.Cons;
 
 import java.util.Vector;
 import java.io.DataOutputStream;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.DataInputStream;
 
 import maths.TPoly;
-import maths.param;
+import maths.Param;
 import maths.TMono;
 
 
@@ -111,8 +111,8 @@ public class Constraint {
     int proportion = 1;
     boolean is_poly_genereate = true;
 
-    cons csd = null;
-    cons csd1 = null;
+    Cons csd = null;
+    Cons csd1 = null;
 
     public static TPoly getPolyListAndSetNull() {
         TPoly pl = polylist;
@@ -159,7 +159,7 @@ public class Constraint {
         this.id = id;
     }
 
-    public void calculate(param[] para) {
+    public void calculate(Param[] para) {
         if (polylist == null) return;
         poly.calculv(polylist.getPoly(), para);
         is_poly_genereate = false;
@@ -302,7 +302,7 @@ public class Constraint {
             return csd.toDString();
 
         if (this.ConstraintType == Constraint.SPECIFIC_ANGEL) {
-            param p = (param) elementlist.get(0);
+            Param p = (Param) elementlist.get(0);
             return "x" + p.xindex + "| angle = " + p.type;
         }
 
@@ -388,19 +388,19 @@ public class Constraint {
 //                this.add_des(gib.C_LINE, elementlist);
                 break;
             case CIRCLE:
-                this.add_des(gib.C_CIRCLE, elementlist);
+                this.add_des(Gib.C_CIRCLE, elementlist);
                 break;
             case TRIANGLE:
-                add_des(gib.C_TRIANGLE, elementlist);
+                add_des(Gib.C_TRIANGLE, elementlist);
                 break;
             case QUADRANGLE:
-                add_des(gib.C_QUADRANGLE, elementlist);
+                add_des(Gib.C_QUADRANGLE, elementlist);
                 break;
             case PENTAGON:
-                add_des(gib.C_PENTAGON, elementlist);
+                add_des(Gib.C_PENTAGON, elementlist);
                 break;
             case POLYGON:
-                add_des(gib.C_POLYGON, elementlist);
+                add_des(Gib.C_POLYGON, elementlist);
                 break;
             case RIGHT_ANGLED_TRIANGLE:
                 tm = PolyRightTriangle();
@@ -418,7 +418,7 @@ public class Constraint {
                 tp = PolyRectangle();
                 break;
             case SQUARE:
-                add_des(gib.C_SQUARE, elementlist);
+                add_des(Gib.C_SQUARE, elementlist);
                 break;
             case PONLINE:  // p_o_L
                 tm = this.PolyOnLine();
@@ -619,7 +619,7 @@ public class Constraint {
     TMono PolyConstant() {
         String t1 = elementlist.get(0).toString();
         String t2 = elementlist.get(1).toString();
-        param p1 = (param) elementlist.get(2);
+        Param p1 = (Param) elementlist.get(2);
 
         return parseTMonoString(t1, t2, p1.xindex);
     }
@@ -634,13 +634,13 @@ public class Constraint {
         if (elementlist.size() > 6) {
             CPoint p7 = (CPoint) elementlist.get(6);
             CPoint p8 = (CPoint) elementlist.get(7);
-            add_des(gib.C_O_A, p1, p2, p3, p4, p5, p6, p7, p8);
+            add_des(Gib.C_O_A, p1, p2, p3, p4, p5, p6, p7, p8);
             return poly.eqangle(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                     p4.x1.xindex, p4.y1.xindex, p5.x1.xindex, p5.y1.xindex, p6.x1.xindex, p6.y1.xindex,
                     p7.x1.xindex, p7.y1.xindex, p8.x1.xindex, p8.y1.xindex);
 
         } else {
-            add_des(gib.C_O_A, p1, p2, p3, p4, p5, p6);
+            add_des(Gib.C_O_A, p1, p2, p3, p4, p5, p6);
             return poly.eqangle(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                     p4.x1.xindex, p4.y1.xindex, p5.x1.xindex, p5.y1.xindex, p6.x1.xindex, p6.y1.xindex);
         }
@@ -651,7 +651,7 @@ public class Constraint {
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(gib.C_O_R, p1, p2, p3, p4);
+        add_des(Gib.C_O_R, p1, p2, p3, p4);
         return poly.eqdistance(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p4.x1.xindex, p4.y1.xindex, p3.x1.xindex, p3.y1.xindex);
     }
@@ -660,7 +660,7 @@ public class Constraint {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
-        add_des(gib.C_O_D, p1, p2, p3);
+        add_des(Gib.C_O_D, p1, p2, p3);
         return poly.perpendicular(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p1.x1.xindex, p1.y1.xindex, p3.x1.xindex, p3.y1.xindex);
     }
@@ -670,7 +670,7 @@ public class Constraint {
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(gib.C_O_AB, p1, p2, p3, p4);
+        add_des(Gib.C_O_AB, p1, p2, p3, p4);
         return poly.eqangle(p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                 p1.x1.xindex, p1.y1.xindex, p1.x1.xindex, p1.y1.xindex,
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
@@ -681,7 +681,7 @@ public class Constraint {
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(gib.C_O_S, p1, p2, p3, p4);
+        add_des(Gib.C_O_S, p1, p2, p3, p4);
         return poly.cyclic(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
     }
@@ -716,7 +716,7 @@ public class Constraint {
         CPoint p6 = (CPoint) elementlist.get(5);
         CPoint p7 = (CPoint) elementlist.get(6);
         CPoint p8 = (CPoint) elementlist.get(7);
-        add_des(gib.C_RATIO, p1, p2, p3, p4, p5, p6, p7, p8);
+        add_des(Gib.C_RATIO, p1, p2, p3, p4, p5, p6, p7, p8);
         return poly.ratio(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex,
                 p5.x1.xindex, p5.y1.xindex, p6.x1.xindex, p6.y1.xindex,
@@ -731,7 +731,7 @@ public class Constraint {
         if (n == 0 || n > 2) return null;
         {
             CPoint p = (CPoint) ln.getPoint(n - 1);
-            add_des(gib.C_O_B, p, p1, p2);
+            add_des(Gib.C_O_B, p, p1, p2);
             return poly.bisect1(p.x1.xindex, p.y1.xindex, p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
         }
 
@@ -751,7 +751,7 @@ public class Constraint {
 
             CPoint p = (CPoint) ln.get_Lpt1(p1);
             CPoint p2 = c.o;
-            add_des(gib.C_LC_TANGENT, p, p1, p2);
+            add_des(Gib.C_LC_TANGENT, p, p1, p2);
             return poly.perpendicular(p.x1.xindex, p.y1.xindex, p1.x1.xindex, p1.y1.xindex,
                     p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
         }
@@ -763,7 +763,7 @@ public class Constraint {
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(gib.C_CIRCUM, p1, p2, p3, p4);
+        add_des(Gib.C_CIRCUM, p1, p2, p3, p4);
 
         return poly.circumcenter(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                 p4.x1.xindex, p4.y1.xindex);
@@ -776,7 +776,7 @@ public class Constraint {
         CLine ln = (CLine) elementlist.get(3);
         CPoint p = ln.getSecondPoint(p2);
         if (p != null) {
-            add_des(gib.C_ANGLE_BISECTOR, p, p1, p2, p3);
+            add_des(Gib.C_ANGLE_BISECTOR, p, p1, p2, p3);
 
             return poly.eqangle(p2.x1.xindex, p2.y1.xindex, p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p.x1.xindex, p.y1.xindex,
                     p2.x1.xindex, p2.y1.xindex, p.x1.xindex, p.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex);
@@ -789,7 +789,7 @@ public class Constraint {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
-        add_des(gib.C_REF, p1, p2, p3);
+        add_des(Gib.C_REF, p1, p2, p3);
         TMono m1 = poly.midpoint(p2.x1.xindex, p3.x1.xindex, p1.x1.xindex); // p3 in mid of p1, p2
         TMono m2 = poly.midpoint(p2.y1.xindex, p3.y1.xindex, p1.y1.xindex);
         return this.NewTPoly(m1, m2);
@@ -800,7 +800,7 @@ public class Constraint {
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(gib.C_SQUARE, p1, p2, p3, p4);
+        add_des(Gib.C_SQUARE, p1, p2, p3, p4);
         TPoly t1 = poly.squarept1(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, this.proportion);
         TPoly t2 = poly.squarept2(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
@@ -816,7 +816,7 @@ public class Constraint {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
-        add_des(gib.C_EQ_TRI, p1, p2, p3);
+        add_des(Gib.C_EQ_TRI, p1, p2, p3);
         return poly.pn_eq_triangle(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, true);
     }
 
@@ -827,7 +827,7 @@ public class Constraint {
         CPoint p4 = (CPoint) elementlist.get(3);
         CPoint p5 = (CPoint) elementlist.get(4);
         CPoint p6 = (CPoint) elementlist.get(5);
-        add_des(gib.C_O_A, p1, p2, p3, p4, p5);
+        add_des(Gib.C_O_A, p1, p2, p3, p4, p5);
         return poly.eqangle(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                 p4.x1.xindex, p4.y1.xindex, p5.x1.xindex, p5.y1.xindex, p6.x1.xindex, p6.y1.xindex);
     }
@@ -837,7 +837,7 @@ public class Constraint {
         CPoint p1 = (CPoint) elementlist.get(1);
         CPoint p2 = (CPoint) elementlist.get(2);
         CPoint p3 = (CPoint) elementlist.get(3);
-        add_des(gib.C_ICENT, p, p1, p2, p3);
+        add_des(Gib.C_ICENT, p, p1, p2, p3);
         TMono m1 = poly.eqangle(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p.x1.xindex, p.y1.xindex, p.x1.xindex, p.y1.xindex,
                 p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex);
@@ -859,7 +859,7 @@ public class Constraint {
         TMono m2 = poly.perpendicular(p.x1.xindex, p.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p1.x1.xindex, p1.y1.xindex, p3.x1.xindex, p3.y1.xindex);
 
-        add_des(gib.C_ORTH, p, p1, p2, p3);
+        add_des(Gib.C_ORTH, p, p1, p2, p3);
 
         return this.NewTPoly(m1, m2);
 
@@ -883,7 +883,7 @@ public class Constraint {
         CPoint p4 = (CPoint) elementlist.get(3);
         Integer i1 = (Integer) elementlist.get(4);
         Integer i2 = (Integer) elementlist.get(5);
-        add_des(gib.C_NRATIO, p1, p2, p3, p4, i1, i2);
+        add_des(Gib.C_NRATIO, p1, p2, p3, p4, i1, i2);
         return poly.p_p_mulside(p1, p2, p3, p4, i1.intValue(), i2.intValue());
 
 
@@ -932,7 +932,7 @@ public class Constraint {
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
 
-        add_des(gib.C_CIRCUM, p1, p2, p3, p4);
+        add_des(Gib.C_CIRCUM, p1, p2, p3, p4);
 
         return poly.circumcenter(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                 p4.x1.xindex, p4.y1.xindex);
@@ -943,7 +943,7 @@ public class Constraint {
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(gib.C_CENT, p1, p2, p3, p4);
+        add_des(Gib.C_CENT, p1, p2, p3, p4);
         return poly.barycenter(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                 p4.x1.xindex, p4.y1.xindex);
     }
@@ -956,7 +956,7 @@ public class Constraint {
         Integer i1 = (Integer) elementlist.get(3);
         Integer i2 = (Integer) elementlist.get(4);
 
-        add_des(gib.C_LRATIO, p1, p2, p1, p3, i1, i2);
+        add_des(Gib.C_LRATIO, p1, p2, p1, p3, i1, i2);
 
         return poly.prop_point(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, i1.intValue(), i2.intValue());
     }
@@ -973,9 +973,9 @@ public class Constraint {
             Integer i2 = (Integer) elementlist.get(5);
             r1 = i1.intValue();
             r2 = i2.intValue();
-            add_des(gib.C_PRATIO, p1, p2, p3, p4, i1, i2);
+            add_des(Gib.C_PRATIO, p1, p2, p3, p4, i1, i2);
         } else
-            add_des(gib.C_PRATIO, p1, p2, p3, p4);
+            add_des(Gib.C_PRATIO, p1, p2, p3, p4);
 
         return poly.Pratio(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                 p4.x1.xindex, p4.y1.xindex, r1, r2);
@@ -990,7 +990,7 @@ public class Constraint {
         CPoint p4 = c2.o;
 //        add_des(gib.C_O_C, p1, p3, p2);
 //        add_des(gib.C_O_C, p1, p4, p2);
-        add_des(gib.C_I_CC, p1, p3, p2, p4, p2);
+        add_des(Gib.C_I_CC, p1, p3, p2, p4, p2);
 
         return poly.mirrorPL(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                 p4.x1.xindex, p4.y1.xindex);
@@ -1008,14 +1008,14 @@ public class Constraint {
             CPoint p3 = pl[0];
             CPoint p4 = pl[1];
 
-            add_des(gib.C_SYM, p1, p2, p3, p4);
+            add_des(Gib.C_SYM, p1, p2, p3, p4);
             return poly.mirrorPL(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                     p4.x1.xindex, p4.y1.xindex);
         } else {
             CPoint p3 = (CPoint) elementlist.get(2);
             CPoint p4 = (CPoint) elementlist.get(3);
 
-            add_des(gib.C_SYM, p1, p2, p3, p4);
+            add_des(Gib.C_SYM, p1, p2, p3, p4);
 
             return poly.mirrorPL(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                     p4.x1.xindex, p4.y1.xindex);
@@ -1028,7 +1028,7 @@ public class Constraint {
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
 
-        add_des(gib.C_ISO_TRI, p1, p2, p3);
+        add_des(Gib.C_ISO_TRI, p1, p2, p3);
 
         return poly.bisect(p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, p1.x1.xindex, p1.y1.xindex);
     }
@@ -1037,7 +1037,7 @@ public class Constraint {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
-        add_des(gib.C_O_B, p1, p2, p3);
+        add_des(Gib.C_O_B, p1, p2, p3);
 
 
         return poly.bisect(p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, p1.x1.xindex, p1.y1.xindex);
@@ -1057,7 +1057,7 @@ public class Constraint {
             I = 1;
             I1 = 1;
         }
-        add_des(gib.C_TRATIO, p1, p2, p3, p4, I, I1);
+        add_des(Gib.C_TRATIO, p1, p2, p3, p4, I, I1);
         int t1 = I.intValue();
         int t2 = I1.intValue();
 
@@ -1135,7 +1135,7 @@ public class Constraint {
         CPoint lp = ln1.get_Lpt1(p);
         CPoint lp1 = ln2.get_Lpt1(p);
         if (p != null && lp != null && lp1 != null) {
-            add_des(gib.C_SANGLE, lp, p, lp1, Math.abs(I.intValue()));
+            add_des(Gib.C_SANGLE, lp, p, lp1, Math.abs(I.intValue()));
             return poly.sangle(lp.x1.xindex, lp.y1.xindex, p.x1.xindex, p.y1.xindex, lp1.x1.xindex, lp1.y1.xindex, this.proportion);
         } else
             return null;
@@ -1174,7 +1174,7 @@ public class Constraint {
                 p4 = lp[1];
             else
                 p4 = lp[0];
-            add_des(gib.C_O_A, p4, c2, p3, p2, c1, p1);
+            add_des(Gib.C_O_A, p4, c2, p3, p2, c1, p1);
             return poly.eqangle(p4.x1.xindex, p4.y1.xindex, c2.x1.xindex, c2.y1.xindex,
                     p3.x1.xindex, p3.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                     c1.x1.xindex, c1.y1.xindex, p1.x1.xindex, p1.y1.xindex);
@@ -1203,7 +1203,7 @@ public class Constraint {
             CPoint[] lp4 = ln4.getTowSideOfLine();
             if (lp1 == null || lp2 == null || lp3 == null || lp4 == null) return null;
 
-            add_des(gib.C_EQANGLE, pa1, pa, pa2, pb1, pb, pb2);
+            add_des(Gib.C_EQANGLE, pa1, pa, pa2, pb1, pb, pb2);
             return poly.eqangle(lp1[0].x1.xindex, lp1[0].y1.xindex, lp1[1].x1.xindex, lp1[1].y1.xindex,
                     lp2[0].x1.xindex, lp2[0].y1.xindex, lp2[1].x1.xindex, lp2[1].y1.xindex,
                     lp3[0].x1.xindex, lp3[0].y1.xindex, lp3[1].x1.xindex, lp3[1].y1.xindex,
@@ -1230,7 +1230,7 @@ public class Constraint {
             CPoint[] lp4 = ln4.getTowSideOfLine();
             if (lp1 == null || lp2 == null || lp3 == null || lp4 == null) return null;
 
-            add_des(gib.C_EQANGLE, pa1, pa, pa2, pb1, pb, pb2);
+            add_des(Gib.C_EQANGLE, pa1, pa, pa2, pb1, pb, pb2);
             return poly.eqangle(lp1[0].x1.xindex, lp1[0].y1.xindex, lp1[1].x1.xindex, lp1[1].y1.xindex,
                     lp2[0].x1.xindex, lp2[0].y1.xindex, lp2[1].x1.xindex, lp2[1].y1.xindex,
                     lp3[0].x1.xindex, lp3[0].y1.xindex, lp3[1].x1.xindex, lp3[1].y1.xindex,
@@ -1243,7 +1243,7 @@ public class Constraint {
         CAngle ag1 = (CAngle) elementlist.get(0);
         CAngle ag2 = (CAngle) elementlist.get(1);
         CAngle ag3 = (CAngle) elementlist.get(2);
-        param pm = (param) elementlist.get(3);
+        Param pm = (Param) elementlist.get(3);
 
         CPoint p1 = ag1.pstart;
         CPoint p2 = ag1.getVertex();
@@ -1255,7 +1255,7 @@ public class Constraint {
         CPoint p8 = ag3.getVertex();
         CPoint p9 = ag3.pend;
 
-        this.add_des(gib.C_EQANGLE3P, p1, p2, p3, p4, p5, p6, p7, p8, p9, pm.type);
+        this.add_des(Gib.C_EQANGLE3P, p1, p2, p3, p4, p5, p6, p7, p8, p9, pm.type);
 
         return poly.eqangle3p(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                 p4.x1.xindex, p4.y1.xindex, p5.x1.xindex, p5.y1.xindex, p6.x1.xindex, p6.y1.xindex,
@@ -1265,7 +1265,7 @@ public class Constraint {
     }
 
     TMono PolySpecifiAngle() {
-        param pm = (param) elementlist.get(0);
+        Param pm = (Param) elementlist.get(0);
         return poly.specificangle(pm.xindex, this.proportion);
     }
 
@@ -1275,7 +1275,7 @@ public class Constraint {
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
 
-        add_des(gib.C_EQDISTANCE, p1, p2, p3, p4);
+        add_des(Gib.C_EQDISTANCE, p1, p2, p3, p4);
         return poly.eqdistance(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
 
@@ -1289,7 +1289,7 @@ public class Constraint {
         TMono m1 = poly.midpoint(p1.x1.xindex, po.x1.xindex, p2.x1.xindex);
         TMono m2 = poly.midpoint(p1.y1.xindex, po.y1.xindex, p2.y1.xindex);
 
-        add_des(gib.C_MIDPOINT, po, p1, p2);
+        add_des(Gib.C_MIDPOINT, po, p1, p2);
 
         TPoly poly = new TPoly();
         poly.setPoly(m1);
@@ -1306,7 +1306,7 @@ public class Constraint {
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(gib.C_RECTANGLE, p1, p2, p3, p4);
+        add_des(Gib.C_RECTANGLE, p1, p2, p3, p4);
 
         TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
@@ -1326,7 +1326,7 @@ public class Constraint {
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(gib.C_TRAPEZOID, p1, p2, p3, p4);
+        add_des(Gib.C_TRAPEZOID, p1, p2, p3, p4);
         TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
         return m1;
@@ -1347,7 +1347,7 @@ public class Constraint {
             p3 = p2;
             p2 = pt;
         }
-        add_des(gib.C_PARALLELOGRAM, p1, p2, p3, p4);
+        add_des(Gib.C_PARALLELOGRAM, p1, p2, p3, p4);
         TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
         TMono m2 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p4.x1.xindex, p4.y1.xindex,
@@ -1361,7 +1361,7 @@ public class Constraint {
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
         CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(gib.C_R_TRAPEZOID, p1, p2, p3, p4);
+        add_des(Gib.C_R_TRAPEZOID, p1, p2, p3, p4);
         TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
         TMono m2 = poly.perpendicular(p1.x1.xindex, p1.y1.xindex, p4.x1.xindex, p4.y1.xindex,
@@ -1374,7 +1374,7 @@ public class Constraint {
         CPoint po = (CPoint) elementlist.get(0);
         CPoint p1 = (CPoint) elementlist.get(1);
         CPoint p2 = (CPoint) elementlist.get(2);
-        add_des(gib.C_R_TRI, po, p1, p2);
+        add_des(Gib.C_R_TRI, po, p1, p2);
         return poly.perpendicular(po.x1.xindex, po.y1.xindex, p1.x1.xindex, p1.y1.xindex,
                 po.x1.xindex, po.y1.xindex, p2.x1.xindex, p2.y1.xindex);
     }
@@ -1406,7 +1406,7 @@ public class Constraint {
             CPoint p1, p2;
             p1 = plist[0];
             p2 = plist[1];
-            add_des(gib.C_O_L, p, p1, p2);
+            add_des(Gib.C_O_L, p, p1, p2);
             return poly.collinear(x, y, p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
         }
     }
@@ -1434,7 +1434,7 @@ public class Constraint {
         if (p2 != null && p2.x1.xindex < p1.x1.xindex) {
             CPoint p3 = c1.o;
             CPoint p4 = c2.o;
-            this.add_des(gib.C_I_CC, p1, p3, p2, p4, p2);
+            this.add_des(Gib.C_I_CC, p1, p3, p2, p4, p2);
             return poly.mirrorPL(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                     p4.x1.xindex, p4.y1.xindex);
         }
@@ -1442,7 +1442,7 @@ public class Constraint {
         p2 = c1.getSidePoint();
         CPoint p3 = c2.getSidePoint();
         if (p2 != null && p3 != null) {
-            this.add_des(gib.C_I_CC, p1, c1.o, p2, c2.o, p3);
+            this.add_des(Gib.C_I_CC, p1, c1.o, p2, c2.o, p3);
             TMono m1 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c1.o.x1.xindex, c1.o.y1.xindex,
                     p2.x1.xindex, p2.y1.xindex, c1.o.x1.xindex, c1.o.y1.xindex);
             TMono m2 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c2.o.x1.xindex, c2.o.y1.xindex,
@@ -1451,7 +1451,7 @@ public class Constraint {
         } else {
             CPoint[] l1 = c1.getRadiusPoint();
             CPoint[] l2 = c2.getRadiusPoint();
-            this.add_des(gib.C_I_RR, p1, c1.o, l1[0], l1[1], c2.o, l2[0], l2[1]);
+            this.add_des(Gib.C_I_RR, p1, c1.o, l1[0], l1[1], c2.o, l2[0], l2[1]);
 
             TMono m1 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c1.o.x1.xindex, c1.o.y1.xindex,
                     l1[0].x1.xindex, l1[0].y1.xindex, l1[1].x1.xindex, l1[1].y1.xindex);
@@ -1475,7 +1475,7 @@ public class Constraint {
         if (ps1 == null) return null;
         CPoint[] ps2 = ln2.getTowSideOfLine();
         if (ps2 == null) return null;
-        add_des(gib.C_I_LL, p1, ps1[0], ps1[1], ps2[0], ps2[1]);
+        add_des(Gib.C_I_LL, p1, ps1[0], ps1[1], ps2[0], ps2[1]);
         TMono m1 = poly.collinear(p1.x1.xindex, p1.y1.xindex, ps1[0].x1.xindex, ps1[0].y1.xindex, ps1[1].x1.xindex, ps1[1].y1.xindex);
         addZeron(m1);
         TMono m2 = poly.collinear(p1.x1.xindex, p1.y1.xindex, ps2[0].x1.xindex, ps2[0].y1.xindex, ps2[1].x1.xindex, ps2[1].y1.xindex);
@@ -1503,7 +1503,7 @@ public class Constraint {
             p2 = null;
 
         if (p2 != null && p1.x1.xindex > p2.x1.xindex) {
-            add_des(gib.C_I_LC, p1, np[0], np[1], c.o, c.getSidePoint());
+            add_des(Gib.C_I_LC, p1, np[0], np[1], c.o, c.getSidePoint());
             CPoint pl = ln.getSecondPoint(p2);
             return poly.LCMeet(o.x1.xindex, o.y1.xindex, p2.x1.xindex,
                     p2.y1.xindex, pl.x1.xindex, pl.y1.xindex, p1.x1.xindex, p1.y1.xindex);
@@ -1511,14 +1511,14 @@ public class Constraint {
 
         CPoint pl = c.getSidePoint();
         if (pl != null) {
-            add_des(gib.C_I_LC, p1, np[0], np[1], c.o, c.getSidePoint());
+            add_des(Gib.C_I_LC, p1, np[0], np[1], c.o, c.getSidePoint());
             TMono m1 = poly.collinear(p1.x1.xindex, p1.y1.xindex, np[0].x1.xindex, np[0].y1.xindex, np[1].x1.xindex, np[1].y1.xindex);
             addZeron(m1);
             TMono m2 = poly.eqdistance(o.x1.xindex, o.y1.xindex, p1.x1.xindex, p1.y1.xindex, o.x1.xindex, o.y1.xindex, pl.x1.xindex, pl.y1.xindex);
             return this.NewTPoly(m1, m2);
         } else {
             CPoint[] ll = c.getRadiusPoint();
-            add_des(gib.C_I_LR, p1, np[0], np[1], c.o, ll[0], ll[1]);
+            add_des(Gib.C_I_LR, p1, np[0], np[1], c.o, ll[0], ll[1]);
             TMono m1 = poly.collinear(p1.x1.xindex, p1.y1.xindex, np[0].x1.xindex, np[0].y1.xindex, np[1].x1.xindex, np[1].y1.xindex);
             addZeron(m1);
             TMono m2 = poly.eqdistance(o.x1.xindex, o.y1.xindex, p1.x1.xindex, p1.y1.xindex, ll[0].x1.xindex, ll[0].y1.xindex, ll[1].x1.xindex, ll[1].x1.xindex);
@@ -1550,7 +1550,7 @@ public class Constraint {
                 p3 = p;
         }
 
-        add_des(gib.C_O_L, p1, p2, p3);
+        add_des(Gib.C_O_L, p1, p2, p3);
         return poly.collinear(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex);
     }
 
@@ -1569,7 +1569,7 @@ public class Constraint {
                 break;
             }
         if (pl == null) return null;
-        add_des(gib.C_I_LC, p, pc, pl, o, pc);
+        add_des(Gib.C_I_LC, p, pc, pl, o, pc);
         return poly.LCMeet(o.x1.xindex, o.y1.xindex, pc.x1.xindex, pc.y1.xindex, pl.x1.xindex, pl.y1.xindex, p.x1.xindex, p.y1.xindex);
     }
 
@@ -1591,7 +1591,7 @@ public class Constraint {
             CPoint p1 = (CPoint) cs.getelement(0);
             CPoint p2 = (CPoint) cs.getelement(1);
 
-            add_des(gib.C_O_R, p, o, p1, p2);
+            add_des(Gib.C_O_R, p, o, p1, p2);
 
             return poly.eqdistance(o.x1.xindex, o.y1.xindex, p.x1.xindex, p.y1.xindex, p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
         } else if (c.points.size() != 0)//|| c.type == Circle.PCircle || c.type == Circle.SCircle)
@@ -1600,7 +1600,7 @@ public class Constraint {
             if (pt == null)
                 return null;
 
-            add_des(gib.C_O_C, p, o, pt);
+            add_des(Gib.C_O_C, p, o, pt);
 
             return poly.eqdistance(o.x1.xindex, o.y1.xindex, p.x1.xindex, p.y1.xindex, o.x1.xindex, o.y1.xindex, pt.x1.xindex, pt.y1.xindex);
 
@@ -1623,7 +1623,7 @@ public class Constraint {
             if (pl1 == null || pl2 == null)
                 return null;
 
-            add_desx1(gib.C_O_T, pl1[0], pl1[1], pl2[0], pl2[1]);
+            add_desx1(Gib.C_O_T, pl1[0], pl1[1], pl2[0], pl2[1]);
 
             return poly.perpendicular(pl1[0].x1.xindex, pl1[0].y1.xindex, pl1[1].x1.xindex, pl1[1].y1.xindex,
                     pl2[0].x1.xindex, pl2[0].y1.xindex, pl2[1].x1.xindex, pl2[1].y1.xindex);
@@ -1641,7 +1641,7 @@ public class Constraint {
             y3 = p3.y1.xindex;
             x4 = p4.x1.xindex;
             y4 = p4.y1.xindex;
-            add_des(gib.C_O_T, p1, p2, p3, p4);
+            add_des(Gib.C_O_T, p1, p2, p3, p4);
             return poly.perpendicular(x1, y1, x2, y2, x3, y3, x4, y4);
         }
         return null;
@@ -1653,7 +1653,7 @@ public class Constraint {
         CPoint p2 = (CPoint) this.getelement(1);
         CPoint p3 = (CPoint) this.getelement(2);
         CPoint p4 = (CPoint) this.getelement(3);
-        add_des(gib.C_FOOT, p1, p2, p3, p4);
+        add_des(Gib.C_FOOT, p1, p2, p3, p4);
         TMono m1 = poly.collinear(p1.x1.xindex, p1.y1.xindex, p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
         this.addZeron(m1);
         TMono m2 = poly.perpendicular(p1.x1.xindex, p1.y1.xindex,
@@ -1675,7 +1675,7 @@ public class Constraint {
         if (pl1 == null || pl2 == null)
             return null;
 
-        add_desx1(gib.C_O_P, pl1[0], pl1[1], pl2[0], pl2[1]);
+        add_desx1(Gib.C_O_P, pl1[0], pl1[1], pl2[0], pl2[1]);
 
         return poly.parallel(pl1[0].x1.xindex, pl1[0].y1.xindex, pl1[1].x1.xindex, pl1[1].y1.xindex,
                 pl2[0].x1.xindex, pl2[0].y1.xindex, pl2[1].x1.xindex, pl2[1].y1.xindex);
@@ -1687,7 +1687,7 @@ public class Constraint {
 
         CPoint[] pl1 = c1.getRadiusPoint();
         CPoint[] pl2 = c2.getRadiusPoint();
-        add_des(gib.C_CCTANGENT, c1.o, pl1[0], pl1[1], c2.o, pl2[0], pl2[1]);
+        add_des(Gib.C_CCTANGENT, c1.o, pl1[0], pl1[1], c2.o, pl2[0], pl2[1]);
 
         return poly.c_c_tangent(pl1[0], pl1[1], c1.o, pl2[0], pl2[1], c2.o);
     }
@@ -1785,8 +1785,8 @@ public class Constraint {
                 CAngle ag = (CAngle) obj;
                 out.writeInt(5);
                 out.writeInt(ag.m_id);
-            } else if (obj instanceof param) {
-                param pm = (param) obj;
+            } else if (obj instanceof Param) {
+                Param pm = (Param) obj;
                 out.writeInt(6);
                 out.writeInt(pm.xindex);
             } else if (obj instanceof Integer) {
@@ -1810,7 +1810,7 @@ public class Constraint {
 
     }
 
-    private void add_des(cons s) {
+    private void add_des(Cons s) {
         if (this.csd == null)
             this.csd = s;
         else
@@ -1820,7 +1820,7 @@ public class Constraint {
 
     public void add_des(int t, CPoint p1, CPoint p2, CPoint p3, Object obj) {
 
-        cons csd = new cons(t);
+        Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
         csd.add_pt(p2);
@@ -1831,7 +1831,7 @@ public class Constraint {
 
     public void add_des(int t, CPoint p1, CPoint p2, CPoint p3) {
 
-        cons csd = new cons(t);
+        Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
         csd.add_pt(p2);
@@ -1840,7 +1840,7 @@ public class Constraint {
     }
 
     public void add_des(int t, Vector v) {
-        cons csd = new cons(t);
+        Cons csd = new Cons(t);
         csd.setId(id);
         for (int i = 0; i < v.size(); i++)
             csd.add_pt(v.get(i));
@@ -1875,7 +1875,7 @@ public class Constraint {
 
     public void add_des(int t, CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
 
-        cons csd = new cons(t);
+        Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
         csd.add_pt(p2);
@@ -1885,7 +1885,7 @@ public class Constraint {
     }
 
     public void add_des(int t, Object p1, Object p2, Object p3, Object p4, Object p5) {
-        cons csd = new cons(t);
+        Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
         csd.add_pt(p2);
@@ -1896,7 +1896,7 @@ public class Constraint {
     }
 
     public void add_des(int t, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6) {
-        cons csd = new cons(t);
+        Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
         csd.add_pt(p2);
@@ -1909,7 +1909,7 @@ public class Constraint {
 
     public void add_des(int t, Object p1, Object p2, Object p3,
                         Object p4, Object p5, Object p6, Object p7, Object p8) {
-        cons csd = new cons(t);
+        Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
         csd.add_pt(p2);
@@ -1924,7 +1924,7 @@ public class Constraint {
 
     public void add_des(int t, Object p1, Object p2, Object p3,
                         Object p4, Object p5, Object p6, Object p7, Object p8, Object p9, Object p10) {
-        cons csd = new cons(t);
+        Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
         csd.add_pt(p2);
@@ -1941,7 +1941,7 @@ public class Constraint {
 
     public void add_des(int t, Object p1, Object p2, Object p3,
                         Object p4, Object p5, Object p6, Object p7) {
-        cons csd = new cons(t);
+        Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
         csd.add_pt(p2);

@@ -1,7 +1,7 @@
 package wprover;
 
 import UI.EntityButtonUI;
-import gprover.cons;
+import gprover.Cons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
 
 
     ConcDialog dlg;
-    cons cns;
+    Cons cns;
 
     Vector vblist, vlist;
     public int index;

@@ -113,8 +113,8 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
             Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
             VcellRender cell = this;
 
-            if (userObject instanceof gr_term) {
-                gr_term gr = (gr_term) userObject;
+            if (userObject instanceof GrTerm) {
+                GrTerm gr = (GrTerm) userObject;
                 Vector v = gr.getAllxterm();
                 int index = v.size();
                 int k = 0;
@@ -126,7 +126,7 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
                     }
                     k++;
                     for (int i = 0; i < v.size(); i++) {
-                        xterm x = (xterm) v.get(i);
+                        XTerm x = (XTerm) v.get(i);
                         setLabelObject(k++, 1, x);
                     }
                 }
@@ -134,12 +134,12 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
                     setLabelObject(k++, 2, gr.el);
                 }
                 if (v.size() == 1) {
-                    xterm x = (xterm) v.get(0);
+                    XTerm x = (XTerm) v.get(0);
                     if (x.getPV() == 0)
                         setLabelObject(k++, 0, "   " + getLanguage("Q.E.D."));
                 }
-            } else if (userObject instanceof el_term) {
-                el_term el = (el_term) userObject;
+            } else if (userObject instanceof ElTerm) {
+                ElTerm el = (ElTerm) userObject;
                 Vector v = el.getAllxterm();
                 int k = 0;
                 if (node.getParent() != null) {
@@ -155,9 +155,9 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
                 if (selected) {
                     setLabelObject1(k++, 5, el);
                 }
-            } else if (userObject instanceof dterm) {
-            } else if (userObject instanceof cond) {
-                cond c = (cond) userObject;
+            } else if (userObject instanceof DTerm) {
+            } else if (userObject instanceof Cond) {
+                Cond c = (Cond) userObject;
                 int k = 0;
                 int nt = c.getNo();
                 if (nt != 0 && nt == BookCellEditor.cond_no)
@@ -178,11 +178,11 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
                     }
 
                 }
-            } else if (userObject instanceof l_list) {
-                l_list ls = (l_list) userObject;
+            } else if (userObject instanceof LList) {
+                LList ls = (LList) userObject;
                 setLabelObject(0, 7, ls);
-            } else if (userObject instanceof rule) {
-                rule ls = (rule) userObject;
+            } else if (userObject instanceof Rule) {
+                Rule ls = (Rule) userObject;
                 setLabelObject(0, 7, ls);
             } else {
                 //cell = null;
@@ -325,8 +325,8 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
             Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
             VcellRender cell = this.cell;
 
-            if (userObject instanceof gr_term) {
-                gr_term gr = (gr_term) userObject;
+            if (userObject instanceof GrTerm) {
+                GrTerm gr = (GrTerm) userObject;
                 Vector v = gr.getAllxterm();
                 int index = v.size();
                 int k = 0;
@@ -338,24 +338,24 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
                     }
                     k++;
                     for (int i = 0; i < v.size(); i++) {
-                        xterm x = (xterm) v.get(i);
+                        XTerm x = (XTerm) v.get(i);
                         setLabelObject(k++, 1, x);
                     }
                 }
                 if (gr.getPTN() == 0) {
-                    el_term e = gr.el;
+                    ElTerm e = gr.el;
                     if (e.getEType() > 0) {
                         setLabelObject(k++, 2, gr.el);
                         setLabelObject1(k++, 5, gr.el);
                     }
                 }
                 if (v.size() == 1) {
-                    xterm x = (xterm) v.get(0);
+                    XTerm x = (XTerm) v.get(0);
                     if (x.getPV() == 0)
                         setLabelObject(k++, 0, "   " + getLanguage("Q.E.D."));
                 }
-            } else if (userObject instanceof el_term) {
-                el_term el = (el_term) userObject;
+            } else if (userObject instanceof ElTerm) {
+                ElTerm el = (ElTerm) userObject;
                 Vector v = el.getAllxterm();
                 int k = 0;
                 if (node.getParent() != null) {
@@ -371,9 +371,9 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
                 setLabelObject1(k++, 5, el);
 //                if (node.getParent() != null)
 //                    setLabelObject1(k++, 0, " )");
-            } else if (userObject instanceof dterm) {
-            } else if (userObject instanceof cond) {
-                cond c = (cond) userObject;
+            } else if (userObject instanceof DTerm) {
+            } else if (userObject instanceof Cond) {
+                Cond c = (Cond) userObject;
                 int k = 0;
                 cond_no = c.getNo();
                 if (c.getNo() != 0) {
@@ -524,8 +524,8 @@ class itemLabel extends JLabel {
         this.type = type;
         userValue = obj;
         if (type == 2) {
-            if (obj instanceof el_term) {
-                el_term e = (el_term) obj;
+            if (obj instanceof ElTerm) {
+                ElTerm e = (ElTerm) obj;
                 if (!iselm) {
                     this.setForeground(Color.black);
                 }
@@ -534,8 +534,8 @@ class itemLabel extends JLabel {
                 } else {
                     this.setText(" (" + GExpert.getLanguage("addition") + ")");
                 }
-            } else if (obj instanceof cond) {
-                cond c = (cond) obj;
+            } else if (obj instanceof Cond) {
+                Cond c = (Cond) obj;
                 if (!iselm) {
                     this.setForeground(Color.black);
                 }
@@ -548,7 +548,7 @@ class itemLabel extends JLabel {
             this.setIcon(icon);
             this.setText(null);
         } else if (type == 6) {
-            cond c = (cond) obj;
+            Cond c = (Cond) obj;
             this.setHorizontalTextPosition(JLabel.LEFT);
             this.setIcon(icon);
             this.setText("   DR" + c.getRule());

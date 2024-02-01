@@ -24,7 +24,7 @@ public class Main {
             Vector vm = new Vector();
             readThems(file, vm);
             for (int id = 0; id < vm.size(); id++) {
-                gterm gt = (gterm) vm.get(id);
+                GTerm gt = (GTerm) vm.get(id);
                 System.out.print(id + " : " + gt.getName() + "\t\t");
                 if (id % 4 == 0)
                     Cm.print("\n");
@@ -39,10 +39,10 @@ public class Main {
             long t1 = System.currentTimeMillis();
 
             for (int id = 0; id < vm.size(); id++) {
-                gdd_bc db = new gdd_bc();
+                GDDBc db = new GDDBc();
                 db.init_dbase();
 
-                gterm gt = (gterm) vm.get(id);
+                GTerm gt = (GTerm) vm.get(id);
                 db.setExample(gt);
 
                 db.sbase();
@@ -88,7 +88,7 @@ public class Main {
         }
     }
 
-    static void proveGDD(gterm gt) {
+    static void proveGDD(GTerm gt) {
 
     }
 
@@ -107,7 +107,7 @@ public class Main {
             Vector vm = new Vector();
             readThems(file, vm);
             for (int id = 0; id < vm.size(); id++) {
-                gterm gt = (gterm) vm.get(id);
+                GTerm gt = (GTerm) vm.get(id);
                 System.out.print(id + " : " + gt.getName() + "\t\t");
                 if (id % 4 == 0)
                     Cm.print("\n");
@@ -130,7 +130,7 @@ public class Main {
 
                 full.init_dbase();
 
-                gterm gt = (gterm) vm.get(id);
+                GTerm gt = (GTerm) vm.get(id);
                 full.setExample(gt);
                 full.sbase();
                 full.setNoPrint();
@@ -156,21 +156,21 @@ public class Main {
                     DataOutputStream out = new DataOutputStream(fp);
 
                     boolean s = false;
-                    gr_term gr = full.getFullAngleProofHead();
+                    GrTerm gr = full.getFullAngleProofHead();
                     while (gr != null) {
-                        el_term e = gr.el;
+                        ElTerm e = gr.el;
                         if (e == null) {
                             gr = gr.nx;
                             continue;
                         }
                         while (e != null) {
-                            cond c = e.co;
+                            Cond c = e.co;
                             full.setPrintToString();
                             while (c != null) {
                                 full.setConc(c);
                                 if (full.docc()) {
                                     full.show_fproof();
-                                    cond conc = full.all_nd.nx;
+                                    Cond conc = full.all_nd.nx;
                                     int nx = 0;
                                     while (conc != null) {
                                         nx++;
@@ -223,7 +223,7 @@ public class Main {
                 BufferedReader in = new BufferedReader(new FileReader(sf[i]));
 
                 while (true) {
-                    gterm tm = new gterm();
+                    GTerm tm = new GTerm();
                     if (!tm.readAterm(in)) break;
                     tm.setName(sf[i].getName());
                     v.add(tm);

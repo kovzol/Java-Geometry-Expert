@@ -29,7 +29,7 @@ public class PanelWu extends PanelAlgebraic implements Runnable, MouseListener {
             return;
     }
 
-    public void prove(gterm tm) {
+    public void prove(GTerm tm) {
         if (running)
             return;
 
@@ -96,7 +96,7 @@ public class PanelWu extends PanelAlgebraic implements Runnable, MouseListener {
         return 1;
     }
 
-    public TMono getTMono(cons c) {
+    public TMono getTMono(Cons c) {
         TMono m = dp.getTMono(c);
 
         return m;
@@ -110,7 +110,7 @@ public class PanelWu extends PanelAlgebraic implements Runnable, MouseListener {
         }
 
         String sc = gt.getConcText();
-        cons cc = gt.getConclusion();
+        Cons cc = gt.getConclusion();
         TMono mc = getTMono(cc);
         if (mc == null) {
             running = false;

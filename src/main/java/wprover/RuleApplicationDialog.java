@@ -174,7 +174,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         return b;
     }
 
-    public void LoadRule(el_term el) {
+    public void LoadRule(ElTerm el) {
         this.setTitle(GExpert.getTranslationViaGettext("RULE {0}", el.etype + ""));
         hash.clear();
         rpanel.LoadRule(el);
@@ -184,7 +184,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         rpanel.scrollToCenter();
     }
 
-    public void LoadRule(cond c) {
+    public void LoadRule(Cond c) {
         this.setTitle(GExpert.getTranslationViaGettext("RULE {0}", c.getRule() + ""));
         hash.clear();
         rpanel.LoadRule(c);
@@ -233,7 +233,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             return label;
         }
 
-        public void loadRule(cond c) {
+        public void loadRule(Cond c) {
             this.removeAll();
             setLabelObject(0, 4, c);
             this.add(Box.createHorizontalStrut(5));
@@ -246,7 +246,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             this.add(Box.createHorizontalGlue());
         }
 
-        public void loadRule(el_term el) {
+        public void loadRule(ElTerm el) {
             this.removeAll();
 
             Vector v = el.getAllxterm();
@@ -289,7 +289,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             return label;
         }
 
-        public void loadRule(cond c) {
+        public void loadRule(Cond c) {
             this.removeAll();
 
             Vector v = c.vlist;
@@ -300,7 +300,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
                 label.setForeground(cr);
                 this.add(label);
                 for (int i = 0; i < v.size(); i++) {
-                    setLabelObject(0, 4, (cond) v.get(i)).setForeground(Color.darkGray);
+                    setLabelObject(0, 4, (Cond) v.get(i)).setForeground(Color.darkGray);
                     if (i < n - 1) {
                         label = new JLabel(", ");
                         this.add(label);
@@ -311,7 +311,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             this.add(buttona);
         }
 
-        public void loadRule(el_term el) {
+        public void loadRule(ElTerm el) {
             this.removeAll();
             Vector v = el.getAllCond();
             int n = v.size();
@@ -322,7 +322,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
                 label.setForeground(cr);
                 this.add(label);
                 for (int i = 0; i < n; i++) {
-                    setLabelObject(0, 4, (cond) v.get(i)).setForeground(Color.darkGray);
+                    setLabelObject(0, 4, (Cond) v.get(i)).setForeground(Color.darkGray);
                     if (i < n - 1) {
                         label = new JLabel(", ");
                         this.add(label);
@@ -342,7 +342,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             this.add(pane);
         }
 
-        public void loadRule(el_term el) {
+        public void loadRule(ElTerm el) {
             URL url = GExpert.getResourceURL("rule/rule" + el.getEType() + ".html");
             try {
                 pane.setPage(url);
@@ -475,9 +475,9 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
 
 
-        public Object addCyclicCircle(cond c, DrawProcess dp) {
+        public Object addCyclicCircle(Cond c, DrawProcess dp) {
             Object o = null;
-            if (c.pred == gib.CO_CYCLIC) {
+            if (c.pred == Gib.CO_CYCLIC) {
                 if (c.p[0] == 0) {
                     Circle c1 = dp.fd_circle(c.p[1], c.p[2], c.p[3]);
                     if (c1 != null) {
@@ -493,7 +493,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
                             dx.addFlash1(f);
                             o = f;
                         } else {
-                            a_cir ac = (a_cir) c.get_attr();
+                            ACir ac = (ACir) c.get_attr();
                             JCirFlash f = new JCirFlash(rpanel);
                             f.setCenter(dp.fd_point(ac.o));
                             for (int i = 0; i <= ac.no; i++) {
@@ -565,51 +565,51 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             return ln1;
         }
 
-        private void addOtherObjects(cond c) {
+        private void addOtherObjects(Cond c) {
             DrawTextProcess dp = dpp;
             JFlash flash = null;
 
             switch (c.pred) {
-                case gib.CO_ACONG:
+                case Gib.CO_ACONG:
                     addLine(c.p[0], c.p[1]);
                     addLine(c.p[2], c.p[3]);
                     addLine(c.p[4], c.p[5]);
                     addLine(c.p[6], c.p[7]);
 //                    obj = dp.getFlashCond(rpanel, c);
                     break;
-                case gib.CO_COLL:
+                case Gib.CO_COLL:
                     addLine(c.p[0], c.p[1]);
                     addLine(c.p[1], c.p[2]);
                     flash = dp.getFlashCond(rpanel, c);
                     break;
-                case gib.CO_CONG:
+                case Gib.CO_CONG:
                     addLine(c.p[0], c.p[1]);
                     addLine(c.p[2], c.p[3]);
                     flash = dp.getFlashCond(rpanel, c);
                     break;
-                case gib.CO_PARA:
+                case Gib.CO_PARA:
                     addLine(c.p[0], c.p[1]);
                     addLine(c.p[2], c.p[3]);
                     flash = dp.getFlashCond(rpanel, c);
                     break;
-                case gib.CO_PERP:
+                case Gib.CO_PERP:
                     CLine ln1 = addLine(c.p[0], c.p[1]);
                     CLine ln2 = addLine(c.p[2], c.p[3]);
                     Constraint cs = new Constraint(Constraint.PERPENDICULAR, ln1, ln2);
                     dx.addConstraintToList(cs);
                     flash = dp.getFlashCond(rpanel, c);
                     break;
-                case gib.CO_CYCLIC:
+                case Gib.CO_CYCLIC:
                     Object obj = addCyclicCircle(c, dp);
                     hash.put(c.toString(), obj);
                     break;
-                case gib.CO_MIDP:
+                case Gib.CO_MIDP:
                     addLine(c.p[0], c.p[1]);
                     addLine(c.p[1], c.p[2]);
                     flash = dp.getFlashCond(rpanel, c);
                     break;
-                case gib.CO_STRI:
-                case gib.CO_CTRI:
+                case Gib.CO_STRI:
+                case Gib.CO_CTRI:
                     addLine(c.p[0], c.p[1]);
                     addLine(c.p[1], c.p[2]);
                     addLine(c.p[0], c.p[2]);
@@ -619,7 +619,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
                     flash = dp.getFlashCond(rpanel, c);
                     break;
             }
-            if (gib.CO_ACONG == c.pred) {
+            if (Gib.CO_ACONG == c.pred) {
                 CPoint p0 = dp.fd_point(c.p[0]);
                 CPoint p1 = dp.fd_point(c.p[1]);
                 CPoint p2 = dp.fd_point(c.p[2]);
@@ -655,11 +655,11 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             }
         }
 
-        private void addCondPts(Vector v1, cond c) {
+        private void addCondPts(Vector v1, Cond c) {
             DrawProcess dp = dpp;
             if (c != null) {
                 int n = c.p.length;
-                if (c.pred == gib.CO_CONG)
+                if (c.pred == Gib.CO_CONG)
                     n = 4;
                 for (int i = 0; i < n; i++) {
                     if (c.p[i] != 0) {
@@ -671,15 +671,15 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             }
         }
 
-        public void LoadRule(cond conc) {
-            cond c = conc;
+        public void LoadRule(Cond conc) {
+            Cond c = conc;
             Vector v1 = new Vector();
             addCondPts(v1, c);
             Vector v2 = c.vlist;
 
             if (v2 != null) {
                 for (int i = 0; i < v2.size(); i++) {
-                    cond c1 = (cond) v2.get(i);
+                    Cond c1 = (Cond) v2.get(i);
                     addCondPts(v1, c1);
                 }
             }
@@ -692,7 +692,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             v2 = c.vlist;
             if (v2 != null) {
                 for (int i = 0; i < v2.size(); i++) {
-                    cond c1 = (cond) v2.get(i);
+                    Cond c1 = (Cond) v2.get(i);
                     this.addOtherObjects(c1);
                 }
             }
@@ -708,9 +708,9 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             centerAllObject();
         }
 
-        public void LoadRule(el_term el) {
+        public void LoadRule(ElTerm el) {
             DrawProcess dp = dpp;
-            cond c = el.co;
+            Cond c = el.co;
             Vector v1 = new Vector();
             while (c != null) {
                 for (int i = 0; i < c.p.length; i++) {
@@ -723,9 +723,9 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
                 c = c.nx;
             }
 
-            el_term e1 = el.et;
+            ElTerm e1 = el.et;
             while (e1 != null) {
-                cond c1 = e1.co;
+                Cond c1 = e1.co;
                 while (c1 != null) {
                     addOtherObjects(c1);
                     c1 = c1.nx;
@@ -735,7 +735,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             Vector aglist = el.getAllxterm();
 
             for (int i = 0; i < aglist.size(); i++) {
-                xterm x = (xterm) aglist.get(i);
+                XTerm x = (XTerm) aglist.get(i);
                 Var v = x.var;
                 if (v == null) continue;
                 CPoint p1 = dp.fd_point(v.pt[0]);
@@ -788,7 +788,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             }
 
             for (int i = 0; i < aglist.size(); i++) {
-                xterm x = (xterm) aglist.get(i);
+                XTerm x = (XTerm) aglist.get(i);
                 Var v = x.var;
                 if (v == null) {
                     continue;

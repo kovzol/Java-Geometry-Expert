@@ -7,7 +7,7 @@ import java.util.Vector;
 //import java.math.MathContext;
 import java.math.BigInteger;
 //import java.math.RoundingMode;
-import java.nio.charset.Charset;
+
 
 public class PolyBasic {
     private static int MAXSTR = 100;
@@ -221,7 +221,7 @@ public class PolyBasic {
         return 0;
     }
 
-    public TMono reduce(TMono m, param[] p) {
+    public TMono reduce(TMono m, Param[] p) {
         if (m == null)
             return null;
 
@@ -231,7 +231,7 @@ public class PolyBasic {
 
         int n = 0;
         for (; n < p.length; n++) {
-            param pm = p[n];
+            Param pm = p[n];
             if (pm == null)
                 break;
             else if (pm.xindex == x) {
@@ -242,7 +242,7 @@ public class PolyBasic {
         }
 
         for (int i = n; i >= 0; i--) {
-            param pm = p[i];
+            Param pm = p[i];
             if (pm != null && pm.m != null)
                 m = prem(m, p_copy(pm.m));
         }
@@ -250,7 +250,7 @@ public class PolyBasic {
     }
 
     // simplify  an tmono to low degree. Note here we don't remove coef.
-    public TMono simplify(TMono m, param[] p) {
+    public TMono simplify(TMono m, Param[] p) {
         if (m == null)
             return null;
 
@@ -260,7 +260,7 @@ public class PolyBasic {
 
         int n = 0;
         for (; n < p.length; n++) {
-            param pm = p[n];
+            Param pm = p[n];
             if (pm == null)
                 break;
             else if (pm.xindex == x) {
@@ -270,7 +270,7 @@ public class PolyBasic {
         }
 
         for (int i = n; i >= 0; i--) {
-            param pm = p[i];
+            Param pm = p[i];
             if (pm != null && pm.m != null)
                 m = prem(m, p_copy(pm.m));
         }
@@ -1104,7 +1104,7 @@ public class PolyBasic {
         return pp;
     }
 
-    double calpoly(TMono m, param[] p) {
+    double calpoly(TMono m, Param[] p) {
         if (m == null || p == null)
             return 0.0;
 
@@ -1123,7 +1123,7 @@ public class PolyBasic {
     }
 
 
-    public double[] calculv(TMono mm, param[] p) {
+    public double[] calculv(TMono mm, Param[] p) {
         int x, d;
         double[] result = null;
         if (mm == null)
@@ -1210,7 +1210,7 @@ public class PolyBasic {
         return null;
     }
 
-    public double[] calculv_2v(TMono mm, param[] p) {
+    public double[] calculv_2v(TMono mm, Param[] p) {
         if (mm.next != null)
             return this.calculv(mm.next.coef, p);
         else
@@ -1222,7 +1222,7 @@ public class PolyBasic {
 
 //    }
 
-    public double[] calculate_online(TMono mm, param[] p, int dx, int dy) {
+    public double[] calculate_online(TMono mm, Param[] p, int dx, int dy) {
         if (mm.deg != 1 && mm.x != dy) return null;
 
         double a = calpoly(mm.coef, p);
@@ -1258,7 +1258,7 @@ public class PolyBasic {
         return result;
     }
 
-    public double[] calculate_oncr(TMono mm, param[] p, int dx, int dy) {
+    public double[] calculate_oncr(TMono mm, Param[] p, int dx, int dy) {
 
         if (mm.deg != 2 && mm.x != dy) return null;
         double b2 = calpoly(mm.coef, p);
@@ -1304,7 +1304,7 @@ public class PolyBasic {
         return result;
     }
 
-    public double[] calculv2poly(TMono mm1, TMono mm2, param[] p)     //from two poly
+    public double[] calculv2poly(TMono mm1, TMono mm2, Param[] p)     //from two poly
     {
         int x, d;
         double[] result;
@@ -2216,7 +2216,7 @@ public class PolyBasic {
         return r;
     }
 
-    public int check_ndg(TMono m, param[] pm) // 0. TRUE 1. FALSE 2.CAN NOT Verify, should be checked by floating point calculation.
+    public int check_ndg(TMono m, Param[] pm) // 0. TRUE 1. FALSE 2.CAN NOT Verify, should be checked by floating point calculation.
     {
         if (m == null)
             return 1;
@@ -2224,7 +2224,7 @@ public class PolyBasic {
         int x = m.x;
         int n = 0;
         for (n = 0; n < pm.length; n++) {
-            param p = pm[n];
+            Param p = pm[n];
             if (p == null || p.xindex >= x)
                 break;
         }
@@ -2250,9 +2250,9 @@ public class PolyBasic {
         return -1;
     }
 
-    public int ndg_valid(TMono m, param[] pm, BigFraction[] bp, int n) {
+    public int ndg_valid(TMono m, Param[] pm, BigFraction[] bp, int n) {
         for (int i = n; i < bp.length && pm[i] != null; i++) {
-            param p = pm[i];
+            Param p = pm[i];
             if (p.m == null) {
                 if (bp[i] == null)
                     bp[i] = new BigFraction((long) p.value);
@@ -2280,7 +2280,7 @@ public class PolyBasic {
         else return 1;
     }
 
-    public BigFraction[] calcu_pm(TMono m, BigFraction[] bp, param pm) {    //    return null if m.coef == 0
+    public BigFraction[] calcu_pm(TMono m, BigFraction[] bp, Param pm) {    //    return null if m.coef == 0
         if (m.deg == 1) {
             BigFraction a = calpoly(m.coef, bp);
             if (a.isZero()) return null;

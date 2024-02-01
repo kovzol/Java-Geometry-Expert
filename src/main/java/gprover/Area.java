@@ -18,7 +18,7 @@ public class Area extends Full
 
             max_term = 1;
             elim_cir = false;
-            last_pr = proof = new gr_term();
+            last_pr = proof = new GrTerm();
             proof.nx = null;
             pts_pno = cons_no;
             pconc();
@@ -60,7 +60,7 @@ public class Area extends Full
             if (elim_cir == true)
             {
                   int k1, k2;
-                  gr_term gr1 = last_pr;
+                  GrTerm gr1 = last_pr;
                   pe_gr(-13);
                   if (end_pr())
                   {
@@ -156,7 +156,7 @@ public class Area extends Full
 
       void print_end()
       {
-            xterm p1, p2;
+            XTerm p1, p2;
             if (last_pr.ps1 == null)
             {
                   if ((last_pr.ps2 == null) && (last_pr.c1 == last_pr.c2)) print_t(); else print_f();
@@ -218,9 +218,9 @@ public class Area extends Full
             //pro_result = -1;
       }
 
-      boolean area_gr(gr_term gr)
+      boolean area_gr(GrTerm gr)
       {
-            dterm ps;
+            DTerm ps;
             ps = gr.ps1;
             while (ps != null) if (area_p(ps.p)) ps = ps.nx; else return (false);
             ps = gr.ps2;
@@ -228,9 +228,9 @@ public class Area extends Full
             return (true);
       }
 
-      boolean area_p(xterm p)
+      boolean area_p(XTerm p)
       {
-            dterm ps;
+            DTerm ps;
             Var v;
             if (p.var == null) return (true);
             v = p.var;
@@ -243,9 +243,9 @@ public class Area extends Full
                   return (false);
       }
 
-      boolean vec_gr(gr_term gr)
+      boolean vec_gr(GrTerm gr)
       {
-            dterm ps;
+            DTerm ps;
             ps = gr.ps1;
             while (ps != null) if (vec_p(ps.p)) return (true); else ps = ps.nx;
             ps = gr.ps2;
@@ -253,10 +253,10 @@ public class Area extends Full
             return (false);
       }
 
-      boolean vec_p(xterm p)
+      boolean vec_p(XTerm p)
 //xterm  p;
       {
-            dterm ps;
+            DTerm ps;
             Var v;
             if (p.var == null) return (false);
             v = p.var;
@@ -269,9 +269,9 @@ public class Area extends Full
                   return (true);
       }
 
-      boolean str_p(xterm p)
+      boolean str_p(XTerm p)
       {
-            dterm ps;
+            DTerm ps;
             Var v;
             if (p.var == null) return (false);
             v = p.var;
@@ -286,9 +286,9 @@ public class Area extends Full
 
 
 /* conclusions */
-      void conc_gr(long c1, xterm p1, long c2, xterm p2)
+      void conc_gr(long c1, XTerm p1, long c2, XTerm p2)
       {
-            gr_term gr = mk_gr1(mk_num(c1), p1, mk_num(c2), p2);
+            GrTerm gr = mk_gr1(mk_num(c1), p1, mk_num(c2), p2);
             gr.c = 0;
             last_pr.nx = gr;
             last_pr = gr;
@@ -409,10 +409,10 @@ public class Area extends Full
       void fd_mpts(int pt)
       {
             int i, m;
-            l_line ln1 = null;
+            LLine ln1 = null;
 
             m = 100;
-            l_line ln = all_ln.nx;
+            LLine ln = all_ln.nx;
             while (ln != null)
             {
                   if (on_ln(pt, ln) && ln.no > 1)
@@ -436,7 +436,7 @@ public class Area extends Full
       void conc_coll()
       {
             int p, p1, p2, p3;
-            l_line ln;
+            LLine ln;
             p1 = conc.p[0];
             p2 = conc.p[1];
             p3 = conc.p[2];
@@ -490,7 +490,7 @@ public class Area extends Full
             gprint("conc_coll:  " + p1 + " " + p2 + " " + p3 + " " + f_pt1 + " " + f_pt2);
             pts_pno++;
             String s1 = ("I_{" + ANAME(p3) + "}");
-            allpts[pts_pno] = new Pro_point(C_I_LL,s1,f_pt1,f_pt2,p1,p2,0,0,0,0);
+            allpts[pts_pno] = new ProPoint(C_I_LL,s1,f_pt1,f_pt2,p1,p2,0,0,0,0);
 //            allpts[pts_pno].name = s1;
 //            allpts[pts_pno].type = C_I_LL;
 //            allpts[pts_pno].ps[0] = f_pt1;
@@ -561,9 +561,9 @@ int p0,p1,p2,p3;
 
       void pconc_11(int p0, int p1, int p2, int p3)
       {
-            gr_term gr;
-            xterm po1, po2, po3;
-            dterm ps1, ps2;
+            GrTerm gr;
+            XTerm po1, po2, po3;
+            DTerm ps1, ps2;
             po1 = pminus(pplus(trim_g(p0, p1, p1, p0), trim_g(p2, p3, p3, p2)),
                     trim_g(p0, p2, p2, p0));
             po2 = trim_g(p0, p1, p1, p0);
@@ -582,13 +582,13 @@ int p0,p1,p2,p3;
 
 /* eliminations */
 
-      el_term all_elim = new el_term();
-      dterm ds_set = new dterm();
-      dterm last_ds;
+      ElTerm all_elim = new ElTerm();
+      DTerm ds_set = new DTerm();
+      DTerm last_ds;
 
-      el_term mk_elim(Var v, xterm p1, xterm p2)
+      ElTerm mk_elim(Var v, XTerm p1, XTerm p2)
       {
-            el_term v1 = new el_term();//(el_term  )calloc(1,sizeof(el_term));
+            ElTerm v1 = new ElTerm();//(el_term  )calloc(1,sizeof(el_term));
             v1.v = v;
             v1.p1 = p1;
             v1.p2 = p2;
@@ -600,8 +600,8 @@ int p0,p1,p2,p3;
 
       void pe_gr(int ptn)
       {
-            gr_term gr, gr0;
-            dterm ps, ps1, ps2, qs1, qs2;
+            GrTerm gr, gr0;
+            DTerm ps, ps1, ps2, qs1, qs2;
             gr = last_pr;
 
             if (print_geo && ptn > 0)
@@ -677,11 +677,11 @@ int p0,p1,p2,p3;
             return (ptn == -10 || ptn == -23);
       }
 
-      xterm pe_p(xterm p, int c, int d)
+      XTerm pe_p(XTerm p, int c, int d)
       {
             Var v1;
-            el_term el1;
-            xterm p1;
+            ElTerm el1;
+            XTerm p1;
 
 //  if (print_geo) { wsprintf(txt,"\r\n\r\npe_p: (%d)",c);  gprint(txt); }
 
@@ -765,9 +765,9 @@ int p0,p1,p2,p3;
       }
 
 
-      xterm eprem(xterm p, el_term e)
+      XTerm eprem(XTerm p, ElTerm e)
       {
-            xterm p1, p2, p3;
+            XTerm p1, p2, p3;
             if (e == null) return p;
             p2 = get_n(1L);
             if (e.p1 == null)
@@ -794,12 +794,12 @@ int p0,p1,p2,p3;
             return (p1);
       }
 
-      el_term pe_v_c(Var v, int ptn)
+      ElTerm pe_v_c(Var v, int ptn)
       {
             int etype = 0;
 
             int[] p = new int[9];
-            el_term e1 = null;
+            ElTerm e1 = null;
             int j;
             for (j = 0; j <= 5; j++) p[j + 1] = APTS(ptn, j);
 
@@ -1067,11 +1067,11 @@ int p0,p1,p2,p3;
       }
 
 
-      xterm pe_pv(xterm p, int c, int d)
+      XTerm pe_pv(XTerm p, int c, int d)
       {
             Var v1;
-            el_term e1;
-            xterm p1, p2, p3;
+            ElTerm e1;
+            XTerm p1, p2, p3;
 
             if (c > 0)
                   p1 = get_xt(P1(c).var, null);
@@ -1147,9 +1147,9 @@ int p0,p1,p2,p3;
             return (true);
       }
 
-      el_term pe_v_nc(Var v, int ptn)
+      ElTerm pe_v_nc(Var v, int ptn)
       {
-            el_term e1 = null;
+            ElTerm e1 = null;
 
 /*  if (print_geo) { printf("\r\npe_v_nc in \r\n");print_var(v); printf("\r\n"); } */
             if (ptn > 0) return (mk_elim(v, null, P1(ptn)));
@@ -1228,7 +1228,7 @@ int p0,p1,p2,p3;
             return (e1);
       }
 
-      xterm geval(Var var, int y, int p)
+      XTerm geval(Var var, int y, int p)
       {
             int[] pt = new int[9];
 
@@ -1258,7 +1258,7 @@ int p0,p1,p2,p3;
       }
 
 
-      xterm trim_r(int p1, int p2, int p3, int p4)
+      XTerm trim_r(int p1, int p2, int p3, int p4)
       {
             int p;
             char sn = 1;
@@ -1288,7 +1288,7 @@ int p0,p1,p2,p3;
 
       }
 
-      xterm trim_a(int p1, int p2, int p3, int p4)
+      XTerm trim_a(int p1, int p2, int p3, int p4)
 //int p1,p2,p3,p4;
       {
             int p;
@@ -1355,7 +1355,7 @@ int p0,p1,p2,p3;
                   return (neg_poly(get_m(mk_var(2, p1, p2, p3, p4))));
       }
 
-      xterm trim_g(int p1, int p2, int p3, int p4)
+      XTerm trim_g(int p1, int p2, int p3, int p4)
       {
             int p;
             char sn = 1;
@@ -1408,7 +1408,7 @@ int p0,p1,p2,p3;
                   return (neg_poly(get_m(mk_var(3, p1, p2, p3, p4))));
       }
 
-      xterm trim_f(int p1, int p2, int p3, int p4)
+      XTerm trim_f(int p1, int p2, int p3, int p4)
       {
             int p;
             char sn = 1;
@@ -1451,13 +1451,13 @@ int p0,p1,p2,p3;
                   return (neg_poly(get_m(mk_var(10, p1, p2, p3, p4))));
       }
 
-      xterm trim_fl(l_line l1, l_line l2)
+      XTerm trim_fl(LLine l1, LLine l2)
       {
             if (l1 == l2) return (pzero());
             return (trim_f(l1.pt[0], l1.pt[1], l2.pt[0], l2.pt[1]));
       }
 
-      xterm trim_vec(int p1, int p2)
+      XTerm trim_vec(int p1, int p2)
       {
             if (p2 == 0)
             {
@@ -1468,21 +1468,21 @@ int p0,p1,p2,p3;
             return (get_m(mk_var(4, p1, p2, 0, 0)));
       }
 
-      xterm trim_l(int p1, int p2)
+      XTerm trim_l(int p1, int p2)
       {
             if (p1 == p2) return (pzero());
             if (p1 < p2) return (neg_poly(get_m(mk_var(5, p2, p1, 0, 0))));
             return (get_m(mk_var(5, p1, p2, 0, 0)));
       }
 
-      xterm trim_s(int p1, int p2)
+      XTerm trim_s(int p1, int p2)
       {
             if (p1 == p2) return (pzero());
             if (p1 < p2) return (neg_poly(get_m(mk_var(6, p2, p1, 0, 0))));
             return (get_m(mk_var(6, p1, p2, 0, 0)));
       }
 
-      xterm trim_c(int p1, int p2)
+      XTerm trim_c(int p1, int p2)
       {
             if (p1 == p2) return (get_n(1L));
             if (p1 < p2) return (neg_poly(get_m(mk_var(7, p2, p1, 0, 0))));

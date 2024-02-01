@@ -135,8 +135,8 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
 
         for (int i = 0; i < v.size(); i++) {
             CPoint p = (CPoint) v.get(i);
-            param p1 = p.x1;
-            param p2 = p.y1;
+            Param p1 = p.x1;
+            Param p2 = p.y1;
             if (p1 != null || p2 != null) {
                 Vector o1 = new Vector();
                 Vector o2 = new Vector();
@@ -156,7 +156,7 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
                         o2.add(poly.printSPoly(p2.m));
                     else o2.add("");
                 } else {
-                    param[] pm = gxInstance.dp.parameter;
+                    Param[] pm = gxInstance.dp.parameter;
                     if (p1.m != null)
                         o1.add(poly.printSPoly(poly.reduce(poly.pcopy(p1.m), pm)));
                     else o1.add("");

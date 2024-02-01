@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Vector;
 import java.io.*;
 
+import gprover.CClass;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.apache.batik.swing.JSVGCanvas;
@@ -167,9 +168,9 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     public boolean SaveProve(DataOutputStream out) throws IOException {
         out.writeBoolean(true);
-        gterm t = condPane.getTerm();
+        GTerm t = condPane.getTerm();
         if (t == null)
-            t = new gterm();
+            t = new GTerm();
         t.writeAterm2(out);
         mnode n = getmproveNode();
         if (n != null) {
@@ -187,7 +188,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     public boolean LoadProve(DataInputStream in) throws IOException {
         in.readBoolean();
-        gterm t = new gterm();
+        GTerm t = new GTerm();
         if (CMisc.version_load_now < 0.037) {
             t.readAterm(in);
         } else {
@@ -256,8 +257,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     if (t == 5) {
                         Object o = selectLabel.getUserObject();
                         if (dp.getPointList().size() != 0) {
-                            if (o instanceof cond) {
-                                cond c = (cond) o;
+                            if (o instanceof Cond) {
+                                Cond c = (Cond) o;
                                 Object objx = tree.getLastSelectedPathComponent();
 
                                 RuleApplicationDialog dialog = null;
@@ -278,7 +279,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                         }
                     } else if (t == 2 && e.getClickCount() > 1) {
                         Object o = selectLabel.getUserObject();
-                        cond c = (cond) o;
+                        Cond c = (Cond) o;
 //                        RuleListDialog dlg = new RuleListDialog(gxInstance);
                         RuleListDialog dlg = null;
 
@@ -293,7 +294,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                         if (dlg.loadRule(0, c.getRule()))
                             dlg.setVisible(true);
                     } else if (t == 1) {
-                        Var v = ((xterm) selectLabel.getUserObject()).var;
+                        Var v = ((XTerm) selectLabel.getUserObject()).var;
                         if (null != v) {
                             {
                                 dp.addFlashAngle(v.pt[0], v.pt[1], v.pt[2], v.pt[3]);
@@ -349,19 +350,19 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     return;
                 }
                 Object obj = node.getUserObject();
-                if (obj instanceof cond) {
-                    cond co = (cond) obj;
+                if (obj instanceof Cond) {
+                    Cond co = (Cond) obj;
                     if (co == null) {
                         return;
                     }
                     setHighLightNode((PTNode) node);
                     flash_cond(co);
-                } else if (obj instanceof l_list) {
-                    l_list ls = (l_list) obj;
+                } else if (obj instanceof LList) {
+                    LList ls = (LList) obj;
                     dp.flashattr(ls, dpane);
 
-                } else if (obj instanceof rule) {
-                    rule r = (rule) obj;
+                } else if (obj instanceof Rule) {
+                    Rule r = (Rule) obj;
                     dp.flashattr(r, dpane);
                 }
                 tree.repaint();
@@ -397,7 +398,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                         dpane.repaint();
                         return;
                     }
-                    cclass cc = (cclass) node.getUserObject();
+                    CClass cc = (CClass) node.getUserObject();
                     if (cc == null) {
                         return;
                     }
@@ -449,8 +450,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     if (t == 5) {
                         Object o = selectLabel.getUserObject();
                         if (dp.getPointList().size() != 0) {
-                            if (o instanceof el_term) {
-                                el_term el = (el_term) o;
+                            if (o instanceof ElTerm) {
+                                ElTerm el = (ElTerm) o;
                                 Object objx = tree_full.getLastSelectedPathComponent();
 //                                RuleApplicationDialog dialog = new RuleApplicationDialog(gxInstance, dpane, dp);
                                 RuleApplicationDialog dialog = null;
@@ -463,8 +464,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                                 if (objx != null)
                                     dialog.setTitle(objx.toString());
                                 dialog.setVisible(true);
-                            } else if (o instanceof cond) {
-                                cond c = (cond) o;
+                            } else if (o instanceof Cond) {
+                                Cond c = (Cond) o;
                                 Object objx = tree_full.getLastSelectedPathComponent();
 //                                RuleApplicationDialog dialog = new RuleApplicationDialog(gxInstance, dpane, dp);
                                 RuleApplicationDialog dialog = null;
@@ -481,7 +482,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                         }
                     } else if (t == 2 && e.getClickCount() > 1) {
                         Object o = selectLabel.getUserObject();
-                        el_term el = (el_term) o;
+                        ElTerm el = (ElTerm) o;
 //                        RuleListDialog dlg = new RuleListDialog(gxInstance);
                         RuleListDialog dlg = null;
 
@@ -493,13 +494,13 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                             dlg.setVisible(true);
                     } else if (t == 1) {
                         // drawTextProcess dp = ((drawTextProcess) dp);
-                        xterm x = ((xterm) selectLabel.getUserObject());
+                        XTerm x = ((XTerm) selectLabel.getUserObject());
                         dp.addFlashXtermAngle(x);
                     }
                     if (e.getButton() == MouseEvent.BUTTON3) {
                         Object o = selectLabel.getUserObject();
                         if (o != null &&
-                                (o instanceof cclass || o instanceof cond)) {
+                                (o instanceof CClass || o instanceof Cond)) {
                             popcond.showMenu(selectLabel, selectLabel, e.getX(), e.getY());
                         }
 
@@ -531,8 +532,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     return;
                 } else if (top_full == node) {
                     Object obj = node.getUserObject();
-                    if (obj instanceof cond) {
-                        cond co = (cond) obj;
+                    if (obj instanceof Cond) {
+                        Cond co = (Cond) obj;
                         dp.flashCond(co, true);
                     }
                     return;
@@ -545,22 +546,22 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 if (vp.size() == 0)
                     return;
 
-                if (cc instanceof gr_term) {
+                if (cc instanceof GrTerm) {
                     dp.clearFlash();
-                    gr_term gr = (gr_term) cc;
+                    GrTerm gr = (GrTerm) cc;
                     Vector list = gr.getAllxterm();
 
                     for (int i = 0; i < list.size(); i++) {
-                        xterm x = (xterm) list.get(i);
+                        XTerm x = (XTerm) list.get(i);
                         dp.addFlashXtermAngle(x);
                     }
-                } else if (cc instanceof el_term) {
+                } else if (cc instanceof ElTerm) {
                     dp.clearFlash();
-                    el_term e1 = (el_term) cc;
+                    ElTerm e1 = (ElTerm) cc;
                     Vector vl = e1.getAllCond();
                     for (int i = 0; i < vl.size(); i++) {
-                        cond c = (cond) vl.get(i);
-                        if (c.pred == gib.CO_CYCLIC &&
+                        Cond c = (Cond) vl.get(i);
+                        if (c.pred == Gib.CO_CYCLIC &&
                                 dp.fd_circle(c.p[0], c.p[1]) == null &&
                                 dp.fd_circle(c.p[1], c.p[2], c.p[3]) == null) {
                             dp.addCongFlash(c, false);
@@ -568,14 +569,14 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     }
                     Vector list = e1.getAllxterm();
                     for (int i = 0; i < list.size(); i++) {
-                        xterm x = (xterm) list.get(i);
+                        XTerm x = (XTerm) list.get(i);
                         dp.addFlashXtermAngle(x);
                     }
                     dpane.repaint();
-                } else if (cc instanceof dterm) {
+                } else if (cc instanceof DTerm) {
                     dp.clearFlash();
-                } else if (cc instanceof cond) {
-                    (dp).flashCond((cond) cc, true);
+                } else if (cc instanceof Cond) {
+                    (dp).flashCond((Cond) cc, true);
                 }
 
             }
@@ -598,7 +599,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     if (path != null) {
                         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
                         Object obj = node.getUserObject();
-                        if (obj instanceof cond) {
+                        if (obj instanceof Cond) {
                             popcond.show(tree_full, e.getX(), e.getY());
                         }
                     } else {
@@ -944,7 +945,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             top_db.removeAllChildren();
         }
         ((DefaultTreeModel) tree_db.getModel()).reload();
-        gterm gt = condPane.getTerm();
+        GTerm gt = condPane.getTerm();
         if (gt == null) return;
         Prover.set_gterm(gt);
         gprover.setFix();
@@ -982,7 +983,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             top_db.removeAllChildren();
         }
 
-        gdd_bc db = Prover.get_gddbase();
+        GDDBc db = Prover.get_gddbase();
         if (db == null)
             return;
 
@@ -1104,8 +1105,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 v.add(ch);
             }
             Object obj = n.getUserObject();
-            if (obj instanceof gr_term) {
-                gr_term g = (gr_term) obj;
+            if (obj instanceof GrTerm) {
+                GrTerm g = (GrTerm) obj;
                 Vector v1 = g.getAllvars();
                 for (int i = 0; i < v1.size(); i++) {
                     Var vr = (Var) v1.get(i);
@@ -1121,11 +1122,11 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                         dp.addAngleToList2(ag);
                     }
                 }
-            } else if (obj instanceof el_term) {
-                el_term el = (el_term) obj;
+            } else if (obj instanceof ElTerm) {
+                ElTerm el = (ElTerm) obj;
                 Vector v1 = el.getAllxterm();
                 for (int i = 0; i < v1.size(); i++) {
-                    xterm x = (xterm) v1.get(i);
+                    XTerm x = (XTerm) v1.get(i);
                     Var vr = x.var;
                     if (vr == null) {
                         continue;
@@ -1144,7 +1145,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     }
                 }
 
-            } else if (obj instanceof cond) {
+            } else if (obj instanceof Cond) {
                 //gxInstance.dp.addCondAux((cond) obj, true);
             }
         }
@@ -1200,8 +1201,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         dpane.repaint();
     }
 
-    public gterm getConstructionTerm() {
-        gterm gt = condPane.getConstruction();
+    public GTerm getConstructionTerm() {
+        GTerm gt = condPane.getConstruction();
         if (gt == null || gt.getCons_no() == 0) {
             this.generate();
         }
@@ -1248,7 +1249,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
 
         this.setSelectedIndex(0);
-        gterm gt = condPane.getTerm();
+        GTerm gt = condPane.getTerm();
         if (gt == null) {
             return;
         }
@@ -1263,7 +1264,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             this.createGDDTreePanel();
         }
 
-        gterm gt = condPane.getTerm();
+        GTerm gt = condPane.getTerm();
         if (gt == null || !gt.hasConclusion()) {
             JOptionPane.showMessageDialog(gxInstance, getLanguage(1006, "No conclusion has been set!"),
                     getLanguage(1005, "No conclusion"),
@@ -1285,12 +1286,12 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     public void displayGDDProve(boolean t) {
 
 
-        l_list ls = null;
+        LList ls = null;
 
         if (t) {
             addGddProveTree(Prover.getProveHead());
             this.setSelectedComponent(gddPanel);
-            auxpt p = Prover.getConstructedAuxPoint();
+            AuxPt p = Prover.getConstructedAuxPoint();
             if (p != null) {
                 dp.addAuxPoint(p);
                 int xt = p.getAux();
@@ -1314,7 +1315,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     }
 
     private boolean check_construction_finished() {
-        gterm gt = condPane.getTerm();
+        GTerm gt = condPane.getTerm();
         if (gt == null) return false;
 
         int n1 = condPane.getTerm().getPointsNum();
@@ -1343,7 +1344,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             proveGB();
     }
 
-    public void proveCond(cond co, boolean n) {
+    public void proveCond(Cond co, boolean n) {
 
         if (gddPanel == null)
             this.createGDDTreePanel();
@@ -1358,7 +1359,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             Prover.fixpoint(condPane.getTerm());
         }
         if (Prover.prove(co)) {
-            cond c = Prover.getProveHead();
+            Cond c = Prover.getProveHead();
             int t = c.get_conc_type();
             if (t != 1 && t != 2) {
                 if (n) {
@@ -1405,7 +1406,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         if (fullPanel == null) {
             this.createFullTreePanel();
         }
-        gterm t = condPane.getTerm();
+        GTerm t = condPane.getTerm();
         if (t == null || !t.hasConclusion()) {
             JOptionPane.showMessageDialog(gxInstance, getLanguage(1006, "No conclusion has been set!"),
                     getLanguage(1005, "No conclusion"),
@@ -1413,7 +1414,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             return false;
         }
 
-        gr_term gt = Prover.proveFull(t);
+        GrTerm gt = Prover.proveFull(t);
         int nx = Prover.getPFullResult();
 
         if (nx == 1) {
@@ -1432,7 +1433,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
 
         this.setSelectedComponent(fullPanel);
-        cond c = Prover.getFullconc();
+        Cond c = Prover.getFullconc();
         top_full.removeAllChildren();
         tree_full.cancelEditing();
         ((DefaultTreeModel) (tree_full.getModel())).reload();
@@ -1442,16 +1443,16 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
         while (gt != null) {
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(gt);
-            if (gt.el != null && (gt.getPTN() != 0 || gt.el.etype != gib.RF_ADDITION)) {
+            if (gt.el != null && (gt.getPTN() != 0 || gt.el.etype != Gib.RF_ADDITION)) {
                 DefaultMutableTreeNode n1 = new DefaultMutableTreeNode(gt.el);
-                cond co = gt.el.co;
+                Cond co = gt.el.co;
                 while (co != null) {
                     Prover.showCondTextF(co);
                     DefaultMutableTreeNode n2 = new DefaultMutableTreeNode(co);
                     n1.add(n2);
                     co = co.nx;
                 }
-                el_term e1 = gt.el.et;
+                ElTerm e1 = gt.el.et;
                 addElmToNode(n1, e1);
                 top_full.add(n1);
             } else if (gt.ps != null) {
@@ -1467,17 +1468,17 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         return true;
     }
 
-    public void addElmToNode(DefaultMutableTreeNode node, el_term e1) {
+    public void addElmToNode(DefaultMutableTreeNode node, ElTerm e1) {
         while (e1 != null) {
             DefaultMutableTreeNode n2 = new DefaultMutableTreeNode(e1);
             node.add(n2);
-            cond co = e1.co;
+            Cond co = e1.co;
             while (co != null) {
                 DefaultMutableTreeNode n3 = new DefaultMutableTreeNode(co);
                 n2.add(n3);
                 co = co.nx;
             }
-            el_term e2 = e1.et;
+            ElTerm e2 = e1.et;
             addElmToNode(n2, e2);
             e1 = e1.nx;
         }
@@ -1574,7 +1575,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     HashSet<Pair> edges;
     JDialog frame;
 
-    private void createNodes(cond co, DefaultMutableTreeNode to) {
+    private void createNodes(Cond co, DefaultMutableTreeNode to) {
 
         PTNode node = null;
         node = new PTNode(co.getNo() + ". " + co.getText(), co);
@@ -1588,7 +1589,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     }
 
-    String setNode(cond co) {
+    String setNode(Cond co) {
         // We show not just the number of the node but also its description:
         int rule = co.getRule();
         System.out.println("Rule " + rule + " is used for node " + co.getNo());
@@ -1611,7 +1612,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
      * @param co
      * @return
      */
-    Node graphvizNode(cond co) {
+    Node graphvizNode(Cond co) {
         // We show not just the number of the node but also its description:
         int rule = co.getRule();
         org.graphper.api.attributes.Color c = org.graphper.api.attributes.Color.YELLOW;
@@ -1642,7 +1643,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     }
 
     /* Search for a numbered condition in the main tree. */
-    private cond searchSubCond(cond co, int no) {
+    private Cond searchSubCond(Cond co, int no) {
         while (co.nx != null && co.nx.getNo() != no) {
             co = co.nx;
         }
@@ -1660,7 +1661,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     /**
      * Create a Graphviz node from cond if it does not exist. If it does, return the node.
      */
-    private Node getGraphvizNode(cond co) {
+    private Node getGraphvizNode(Cond co) {
         if (nodes.containsKey(co.toString()))
             return nodes.get(co.toString());
         Node n = graphvizNode(co);
@@ -1679,14 +1680,14 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         return n;
     }
 
-    private void createSubNode(DefaultMutableTreeNode node, cond co, cond root) {
+    private void createSubNode(DefaultMutableTreeNode node, Cond co, Cond root) {
 
         if (co.vlist == null) {
             return;
         }
 
         for (int i = 0; i < co.vlist.size(); i++) {
-            cond c = (cond) co.vlist.get(i);
+            Cond c = (Cond) co.vlist.get(i);
             int num = c.getNo();
             String st;
             if (num != 0) {
@@ -1719,7 +1720,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     hypotheses += "\"" + st + "\" [ fillcolor = pink, shape = oval, style = filled ];\n";
                 }
             }
-            cond leaf = searchSubCond(root, num);
+            Cond leaf = searchSubCond(root, num);
             DefaultMutableTreeNode nd;
             if (!drawStructure || leaf == null) {
                 nd = new PTNode(st, c);
@@ -1736,7 +1737,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
     }
 
-    public void addGddProveTree_ls(l_list ls) {
+    public void addGddProveTree_ls(LList ls) {
         top.removeAllChildren();
         tree.cancelEditing();
         top.setUserObject(GExpert.getLanguage("To Prove:") + " " + ls);
@@ -1745,7 +1746,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         while (ls != null) {
             DefaultMutableTreeNode n = new DefaultMutableTreeNode(ls);
             top.insert(n, 0);
-            rule r = ls.rl[0];
+            Rule r = ls.rl[0];
             if (r != null) {
                 DefaultMutableTreeNode n1 = new DefaultMutableTreeNode(r);
                 top.insert(n1, 0);
@@ -1761,7 +1762,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         tree.setVisible(true);
     }
 
-    public void addGddProveTree(cond co) {
+    public void addGddProveTree(Cond co) {
         top.removeAllChildren();
         tree.cancelEditing();
 
@@ -1852,10 +1853,10 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     private void createNodes(Vector vl) {
 
         for (int i = 0; i < vl.size(); i++) {
-            cond co = (cond) vl.get(i);
+            Cond co = (Cond) vl.get(i);
             int n = co.getNo();
             PTNode node;
-            cond c = co.getPCO();
+            Cond c = co.getPCO();
 
             boolean cons = true;
             while (c != null) {
@@ -1869,21 +1870,21 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 node = new PTNode(i + "    " + co.getText(), co);
             } else if (cons) {
                 node = new PTNode(i + "    " + co.getText(), co);
-                cond tc = co.getPCO();
+                Cond tc = co.getPCO();
                 while (tc != null) {
                     PTNode n1 = new PTNode("    " + tc.getText(), tc);
                     node.add(n1);
                     tc = tc.nx;
                 }
             } else if (n > 0) {
-                cond tc = co.getPCO();
+                Cond tc = co.getPCO();
                 String dix = "  by(";
                 int nco = 0;
                 while (tc != null) {
                     int j = 0;
                     if (tc.getNo() != 0) {
                         for (j = 0; j < vl.size(); j++) {
-                            cond c1 = (cond) vl.get(j);
+                            Cond c1 = (Cond) vl.get(j);
                             if (tc.getNo() == c1.getNo()) {
                                 break;
                             }
@@ -1925,7 +1926,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         top_db.add(no);
 
         for (int i = 0; i < v.size(); i++) {
-            cclass c = (cclass) v.get(i);
+            CClass c = (CClass) v.get(i);
             DefaultMutableTreeNode d = new DefaultMutableTreeNode(c);
             no.add(d);
         }
@@ -1936,7 +1937,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         if (vl.size() == 0) {
             return;
         }
-        cond co = (cond) vl.get(vl.size() - 1);
+        Cond co = (Cond) vl.get(vl.size() - 1);
         top.setUserObject(GExpert.getLanguage("To Prove:") + " " + co.getText());
         createNodes(vl);
 
@@ -1987,7 +1988,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     }
 
 
-    public void setListSelection(cons c) {
+    public void setListSelection(Cons c) {
         condPane.setListSelection(c);
     }
 
@@ -1996,7 +1997,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     }
 
     private void setHighLightNode(PTNode node) {
-        cond co = node.co;
+        Cond co = node.co;
         if (co == null) {
             return;
         }
@@ -2017,11 +2018,11 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     class PTNode extends DefaultMutableTreeNode {
 
-        public cond co = null;
+        public Cond co = null;
         boolean tlevel = false;
         private boolean highlight = false;
 
-        public PTNode(Object userObject, cond o) {
+        public PTNode(Object userObject, Cond o) {
             super(userObject);
             co = o;
         }
@@ -2094,12 +2095,12 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
 
         public void showMenu(Object select, Component invoker, int x, int y) {
-            cclass c = null;
+            CClass c = null;
             if (select != null && select instanceof DefaultMutableTreeNode) {
                 DefaultMutableTreeNode nd = (DefaultMutableTreeNode) select;
                 Object obj = nd.getUserObject();
-                if (obj != null && obj instanceof cclass)
-                    c = (cclass) obj;
+                if (obj != null && obj instanceof CClass)
+                    c = (CClass) obj;
 
             }
             if (select != null && select instanceof itemLabel) {
@@ -2148,9 +2149,9 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             if (obj instanceof itemLabel) {
                 itemLabel lb = (itemLabel) obj;
                 Object value = lb.getUserObject();
-                if (value instanceof cond) {
+                if (value instanceof Cond) {
                     if (command.equals("Prove")) {
-                        PanelProve.this.proveCond((cond) value, false);
+                        PanelProve.this.proveCond((Cond) value, false);
                     } else if (command.equals("Prove in a new tab")) {
                     }
                 }
@@ -2160,8 +2161,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     Object obj2 = path.getLastPathComponent();
                     if (obj2 instanceof DefaultMutableTreeNode) {
                         Object obj3 = ((DefaultMutableTreeNode) obj2).getUserObject();
-                        if (obj3 instanceof cclass) {
-                            cond c = getSelectedCondFromAttr((cclass) obj3);
+                        if (obj3 instanceof CClass) {
+                            Cond c = getSelectedCondFromAttr((CClass) obj3);
                             if (c != null)
                                 PanelProve.this.proveCond(c, true);
                         }
@@ -2186,12 +2187,12 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     }
 
     public boolean load(File file) {
-        gterm gt = null;
+        GTerm gt = null;
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             Vector v = new Vector();
             while (true) {
-                gt = new gterm();
+                gt = new GTerm();
                 if (gt.readAterm(reader)) {
                     v.add(gt);
                 } else {
@@ -2211,14 +2212,14 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             }
 
             if (v.size() == 1) {
-                gt = (gterm) v.get(0);
+                gt = (GTerm) v.get(0);
             } else {
                 Object rv = JOptionPane.showInputDialog(gxInstance,
                         GExpert.getLanguage("Please select theorem"), GExpert.getLanguage("input"),
                         JOptionPane.PLAIN_MESSAGE, null, v.toArray(), GExpert.getLanguage("Select"));
                 if (rv == null)
                     return true;
-                gt = (gterm) rv;
+                gt = (GTerm) rv;
             }
             gt.pc();
             clearAll();
@@ -2577,12 +2578,12 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                         gxInstance.openAFile(f);
                     }
 
-                    gterm gt = condPane.getTerm();
+                    GTerm gt = condPane.getTerm();
                     if (gt != null) {
                         buffer.append("\n" + f.getName() + ": ");
                         Prover.set_gterm(gt);
                         if (Prover.prove()) {
-                            cond co = Prover.getProveHead();
+                            Cond co = Prover.getProveHead();
                             addGddProveTree(co);
                             int d = 1;
                             while (co != null) {
@@ -2631,19 +2632,19 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
     }
 
-    public void flash_cond(cond co) {
+    public void flash_cond(Cond co) {
         (dp).flashCond(co, true);
 
     }
 
-    public void flashattr(cclass cc) {
+    public void flashattr(CClass cc) {
         (dp).flashattr(cc, dpane);
     }
 
 
     public void showNDGs() {
 
-        gterm g = condPane.getTerm();
+        GTerm g = condPane.getTerm();
         if (g == null)
             return;
         g.pc();
@@ -2662,16 +2663,16 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         d.setVisible(true);
     }
 
-    public void setSelectedConstruction(cons c) {
+    public void setSelectedConstruction(Cons c) {
         condPane.setSelectedCons(c);
     }
 
     class Conspanel extends JSplitPane implements MouseMotionListener, ListSelectionListener, MouseListener, ActionListener {
         private JList list, listx;
-        private gterm gt;
+        private GTerm gt;
         private String lstpt;
         private DefaultListModel listModel, listModelx;
-        private cons sconc = null;
+        private Cons sconc = null;
         private boolean showD = false;
         private JPopupMenu showMenu;
 
@@ -2842,11 +2843,11 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     return;
                 int n1 = gt.getconsNum();
                 if (n == n1 + 1 && gt.hasConclusion()) {
-                    cond c = gt.getConc();
+                    Cond c = gt.getConc();
                     if (dp != null)
                         dp.flashCond(c, true);
                 } else {
-                    cons c = gt.getCons(n);
+                    Cons c = gt.getCons(n);
                     dp.flashcons(c);
                 }
             }
@@ -2868,7 +2869,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
             Object obj = list.getSelectedValue();
 
-            cons cs = (cons) obj;
+            Cons cs = (Cons) obj;
             if (cs != null) {
                 tiptext.setText(cs.toDDString());
                 dp.flash_node_by_id(cs.getId());
@@ -2877,7 +2878,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
         }
 
-        public void setListSelection(cons c) {
+        public void setListSelection(Cons c) {
             list.setSelectedValue(c, true);
             lstpt = null;
             if (!c.is_conc()) {
@@ -2896,7 +2897,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             }
         }
 
-        public void setSelectedCons(cons c) {
+        public void setSelectedCons(Cons c) {
             if (c == null)
                 return;
             for (int i = 0; i < listModel.getSize(); i++) {
@@ -2915,7 +2916,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             return gt.getAllptsText();
         }
 
-        public gterm getTerm() {
+        public GTerm getTerm() {
             if (gt == null) return null;
 
             Vector v = dp.getPointList();
@@ -2928,7 +2929,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             return gt;
         }
 
-        public void setConclusion(cons s, boolean r) {
+        public void setConclusion(Cons s, boolean r) {
 
             if (gt.setConclusion(s)) {
                 setConstruction(gt);
@@ -2938,28 +2939,28 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             }
         }
 
-        public void add_ndgs(cons c) {
+        public void add_ndgs(Cons c) {
             if (c == null)
                 return;
             switch (c.type) {
-                case gib.CO_COLL: {
-                    cons c1 = new cons(c);
-                    c1.type = gib.NDG_COLL;
+                case Gib.CO_COLL: {
+                    Cons c1 = new Cons(c);
+                    c1.type = Gib.NDG_COLL;
                     gt.addNdg(c1);
                 }
                 break;
-                case gib.CO_PARA: {
-                    cons c1 = new cons(c);
-                    c1.type = gib.NDG_PARA;
+                case Gib.CO_PARA: {
+                    Cons c1 = new Cons(c);
+                    c1.type = Gib.NDG_PARA;
                     gt.addNdg(c1);
                 }
                 break;
 
-                case gib.CO_PERP: {
-                    cons c1 = new cons(c);
-                    c1.type = gib.NDG_PERP;
+                case Gib.CO_PERP: {
+                    Cons c1 = new Cons(c);
+                    c1.type = Gib.NDG_PERP;
                     if (c1.ps[2] == c1.ps[0] && c1.ps[3] == c1.ps[1]) {
-                        c1.type = gib.NDG_NON_ISOTROPIC;
+                        c1.type = Gib.NDG_NON_ISOTROPIC;
                     }
                     gt.addNdg(c1);
                 }
@@ -2967,7 +2968,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             }
         }
 
-        public gterm getConstruction() {
+        public GTerm getConstruction() {
             return gt;
         }
 
@@ -2984,9 +2985,9 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
         public void setVector(Vector v) {
             if (gt == null)
-                gt = new gterm();
+                gt = new GTerm();
 
-            cons c = gt.getConclusion();
+            Cons c = gt.getConclusion();
             if (c != null)
                 sconc = c;
             gt.clear();
@@ -2995,7 +2996,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
 
         public void addConclusion() {
-            cons c = sconc;
+            Cons c = sconc;
             if (c != null) {
                 gt.setConclusion(c);
                 listModel.addElement(c);
@@ -3005,7 +3006,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             }
         }
 
-        public void setConstruction(gterm gt) {
+        public void setConstruction(GTerm gt) {
             if (gt == null) {
                 return;
             }
@@ -3025,7 +3026,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
             Vector v = gt.getCons();
             for (int i = 0; i < v.size(); i++) {
-                cons c = (cons) v.get(i);
+                Cons c = (Cons) v.get(i);
                 listModel.addElement(c);
                 listModelx.addElement(c.toDString());
             }
@@ -3056,7 +3057,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                                                           int index,
                                                           boolean isSelected,
                                                           boolean cellHasFocus) {
-                cons c = (cons) value;
+                Cons c = (Cons) value;
                 String s = null;
                 if (!showD)
                     s = c.getPrintText(isSelected);//value.toString();
@@ -3115,55 +3116,55 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     }
 
 
-    public void set_conclusion(cons s, boolean r) {
+    public void set_conclusion(Cons s, boolean r) {
         condPane.setConclusion(s, r);
     }
 
-    public void add_ndgs(cons s) {
+    public void add_ndgs(Cons s) {
         condPane.add_ndgs(s);
     }
 
-    public cond getSelectedCondFromAttr(cclass c) {
+    public Cond getSelectedCondFromAttr(CClass c) {
 
-        gdd_bc db = Prover.get_gddbase();
-        cond co = null;
+        GDDBc db = Prover.get_gddbase();
+        Cond co = null;
         AttrToCondDialog dlg = null;
 
 
-        if (c instanceof l_line) {
-            l_line ln = (l_line) c;
+        if (c instanceof LLine) {
+            LLine ln = (LLine) c;
             if (ln.no >= 3) {
                 dlg = new AttrToCondDialog(gxInstance, ln);
                 dlg.setVisible(true);
             }
-        } else if (c instanceof p_line) {
-            p_line pn = (p_line) c;
+        } else if (c instanceof PLine) {
+            PLine pn = (PLine) c;
             if (pn.no >= 2) {
                 dlg = new AttrToCondDialog(gxInstance, pn);
                 dlg.setVisible(true);
             }
-        } else if (c instanceof a_cir) {
-            a_cir cr = (a_cir) c;
+        } else if (c instanceof ACir) {
+            ACir cr = (ACir) c;
             if (cr.no >= 4) {
                 dlg = new AttrToCondDialog(gxInstance, cr);
                 dlg.setVisible(true);
             }
-        } else if (c instanceof angst) {
-            angst st = (angst) c;
+        } else if (c instanceof AngSt) {
+            AngSt st = (AngSt) c;
             if (st.no > 2) {
                 dlg = new AttrToCondDialog(gxInstance, st);
                 dlg.setVisible(true);
             }
-        } else if (c instanceof s_tris) {
-            s_tris st = (s_tris) c;
+        } else if (c instanceof STris) {
+            STris st = (STris) c;
             if (st.no >= 2) {
-                dlg = new AttrToCondDialog(gxInstance, (s_tris) c);
+                dlg = new AttrToCondDialog(gxInstance, (STris) c);
                 dlg.setVisible(true);
             }
-        } else if (c instanceof c_segs) {
-            c_segs cg = (c_segs) c;
+        } else if (c instanceof CSegs) {
+            CSegs cg = (CSegs) c;
             if (cg.no >= 2) {
-                dlg = new AttrToCondDialog(gxInstance, (c_segs) c);
+                dlg = new AttrToCondDialog(gxInstance, (CSegs) c);
                 dlg.setVisible(true);
             }
         }
@@ -3177,7 +3178,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         return co;
     }
 
-    public void high_light_a_fact(cclass c) {
+    public void high_light_a_fact(CClass c) {
         if (c == null) return;
         int n = top_db.getChildCount();
         for (int i = 1; i < n; i++)

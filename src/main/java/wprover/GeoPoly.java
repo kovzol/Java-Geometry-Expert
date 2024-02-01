@@ -3,8 +3,8 @@ package wprover;
 import maths.PolyBasic;
 import maths.TMono;
 import maths.TPoly;
-import gprover.gib;
-import gprover.cndg;
+import gprover.Gib;
+import gprover.CNdg;
 
 import java.util.Vector;
 
@@ -532,24 +532,24 @@ public class GeoPoly extends PolyBasic {
     }
 
     ////////////////////////////////////////////////////
-    public TMono mm_poly(cndg c, DrawProcess dp) {
+    public TMono mm_poly(CNdg c, DrawProcess dp) {
         if (c == null) return null;
         switch (c.type) {
-            case gib.NDG_NEQ:
+            case Gib.NDG_NEQ:
                 return isotropic(dp.fd_point(c.p[0]), dp.fd_point(c.p[1]));
-            case gib.NDG_COLL:
+            case Gib.NDG_COLL:
                 return this.collinear(dp.fd_point(c.p[0]), dp.fd_point(c.p[1]), dp.fd_point(c.p[2]));
-            case gib.NDG_CONG:
+            case Gib.NDG_CONG:
                 return this.eqdistance(dp.fd_point(c.p[0]), dp.fd_point(c.p[1]), dp.fd_point(c.p[2]), dp.fd_point(c.p[3]));
-            case gib.NDG_CYCLIC:
+            case Gib.NDG_CYCLIC:
                 return this.cyclic(dp.fd_point(c.p[0]), dp.fd_point(c.p[1]), dp.fd_point(c.p[2]), dp.fd_point(c.p[3]));
-            case gib.NDG_NON_ISOTROPIC:
+            case Gib.NDG_NON_ISOTROPIC:
                 return this.isotropic(dp.fd_point(c.p[0]), dp.fd_point(c.p[1]));
-            case gib.NDG_PARA:
+            case Gib.NDG_PARA:
                 return this.parallel(dp.fd_point(c.p[0]), dp.fd_point(c.p[1]), dp.fd_point(c.p[2]), dp.fd_point(c.p[3]));
-            case gib.NDG_PERP:
+            case Gib.NDG_PERP:
                 return this.perpendicular(dp.fd_point(c.p[0]), dp.fd_point(c.p[1]), dp.fd_point(c.p[2]), dp.fd_point(c.p[3]));
-            case gib.NDG_TRIPLEPI:
+            case Gib.NDG_TRIPLEPI:
                 return this.triplePI(dp.fd_point(c.p[0]), dp.fd_point(c.p[1]), dp.fd_point(c.p[2]), dp.fd_point(c.p[3]));
 
 
