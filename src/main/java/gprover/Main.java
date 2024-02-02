@@ -17,7 +17,7 @@ public class Main {
 
             String user_directory = System.getProperty("user.dir");
             String sp = File.separator;
-            String dr = user_directory + sp + "ex";
+            String dr = user_directory + sp + "examples";
             File file = new File(dr);
 
 
@@ -58,6 +58,10 @@ public class Main {
 
                     FileOutputStream fp;
                     String drec = (dr + sp + "proved");
+
+                    // Create folder if it does not exist:
+                    new File(drec).mkdirs();
+
                     File ff = new File(drec + sp + gt.getName() + ".rtf");
 
                     if (ff.exists()) {
@@ -85,6 +89,7 @@ public class Main {
             long t2 = System.currentTimeMillis();
             Cm.print("Time = " + (t2 - t1) / 1000.0);
         } catch (IOException ee) {
+            System.err.println("IOException: " + ee);
         }
     }
 

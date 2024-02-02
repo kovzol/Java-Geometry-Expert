@@ -35,10 +35,22 @@ public class ProPoint {
     }
 
     void setPS(int value, int index) {
-        if (type1 == 0)
+        if (type1 == 0) {
+            if (ps.length <= index) {
+                // TODO. Handle this.
+                System.err.println("Index out of bounds: " + this.toString());
+                return;
+            }
             ps[index] = value;
-        else
+        }
+        else {
+            if (ps1.length <= index) {
+                // TODO. Handle this.
+                System.err.println("Index out of bounds: " + this.toString());
+                return;
+            }
             ps1[index] = value;
+        }
     }
 
     void setType(int t) {

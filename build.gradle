@@ -196,3 +196,31 @@ javapackager {
 
     linuxConfig.categories = ["Education", "Graphics", "Science"]
 }
+
+/*
+ * The following tasks are tests for the GProver. Seemingly, there are
+ * a couple of unhandled exceptions in the original codebase that are silently
+ * catched with error messages for now, but all of this should be checked and fixed.
+ *
+ * The first task is a command line based test, and the second one allows
+ * to select a file in a file chooser window, however, there is no report on success.
+ * TODO.
+ */
+
+task runGproverMain(type: JavaExec) {
+    description "A command line based test for the GProver, checking all input examples."
+    mustRunAfter "msgFmtAll"
+    classpath = sourceSets.main.runtimeClasspath
+    File runningDir = new File('src/docs')
+    workingDir = runningDir
+    mainClass = 'gprover.Main'
+}
+
+task runGproverMain2(type: JavaExec) {
+    description "A test for the GProver that allows to select a .gex file for checking."
+    mustRunAfter "msgFmtAll"
+    classpath = sourceSets.main.runtimeClasspath
+    File runningDir = new File('src/docs')
+    workingDir = runningDir
+    mainClass = 'gprover.Main2'
+}

@@ -449,7 +449,12 @@ public class GTerm {
                     c = s.charAt(index);
 
                 } else {
-                    int x = Integer.parseInt(s1.trim());
+                    int x = 0;
+                    try {
+                        x = Integer.parseInt(s1.trim());
+                    } catch (NumberFormatException e) {
+                        System.err.println("Number format exception: " + s1.trim());
+                    }
                     k[dd] = x;
                     dd++;
                     s1 = "";
@@ -560,13 +565,18 @@ public class GTerm {
                     conc.p[i] = findPt(list[i]);
 
         } else {
-
+            if (conc.p.length < list.length) {
+                // TODO. Handle this.
+                System.err.println("Index out of bounds: " + this.toString() + " " + ln);
+                return false;
+            }
             for (int i = 1; i < list.length; i++) {
                 String s = list[i];
                 if (isStringTypeInt(s)) {
                     conc.p[i - 1] = Integer.parseInt(s);
-                } else
+                } else {
                     conc.p[i - 1] = this.findPt(s);
+                }
             }
         }
         conc.pred = t;
@@ -614,6 +624,11 @@ public class GTerm {
                         return false;
 
                     if (t == Gib.C_CONSTANT) {
+                        if (list.length < 3) {
+                            // TODO. Handle this.
+                            System.err.println("Index out of bounds: " + this.toString() + " " + ln);
+                            return false;
+                        }
                         this.addConstant(list[1], list[2]);
                     } else if (t == Gib.C_I_SS) {
                         addInterSS(list);

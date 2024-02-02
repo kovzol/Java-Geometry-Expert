@@ -161,6 +161,12 @@ public class GDDBase extends Gib {
             if (ln != l2 && !ln_perp(l1, ln)) ;
             {
                 add_codb(CO_PERP, l1.pt[0], l1.pt[1], l2.pt[0], l2.pt[1], 0, 0, 0, 0);
+                if (ln == null) {
+                    // TODO. Handle this.
+                    System.err.println("ln is null");
+                    return;
+                }
+
                 add_codb(CO_PARA, ln.pt[0], ln.pt[1], l2.pt[0], l2.pt[1], 0, 0, 0, 0);
                 add_tline(R_PT_T, ln.pt[0], ln.pt[1], l1.pt[0], l1.pt[1]);
                 pop_codb();
@@ -482,6 +488,17 @@ public class GDDBase extends Gib {
     final boolean ln_para(LLine l1, LLine l2) {
         PLine pn;
         if (l1 == l2) return (true);
+        if (l1 == null) {
+            // TODO. Handle this.
+            System.err.println("l1 is null");
+            return false;
+        }
+        if (l2 == null) {
+            // TODO. Handle this.
+            System.err.println("l2 is null");
+            return false;
+        }
+
         if ((l1.type == 0 || l2.type == 0) && xcoll_ln(l1, l2)) return true;
         if (l1.type == 0)
             l1 = fd_lnl(l1);
@@ -526,8 +543,19 @@ public class GDDBase extends Gib {
 
     final boolean ln_perp(LLine l1, LLine l2) {
         if (l1 == l2) return false;
+        if (l1 == null) {
+            // TODO. Handle this.
+            System.err.println("l1 is null");
+            return false;
+        }
         if (l1.type == 0)
             l1 = fd_lnl(l1);
+        if (l2 == null) {
+            // TODO. Handle this.
+            System.err.println("l2 is null");
+            return false;
+        }
+
         if (l2.type == 0)
             l2 = fd_lnl(l2);
 
@@ -669,6 +697,16 @@ public class GDDBase extends Gib {
 
 
     final int line_compare(LLine l1, LLine l2) {
+        if (l1 == null) {
+            // TODO. Handle this.
+            System.err.println("l1 is null");
+            return 0;
+        }
+        if (l2 == null) {
+            // TODO. Handle this.
+            System.err.println("l2 is null");
+            return 0;
+        }
         if (l1.id > l2.id) return 1;
         if (l1.id == l2.id) return 0;
         if (l1.id < l2.id) return -1;
@@ -1200,6 +1238,11 @@ public class GDDBase extends Gib {
 
     boolean sub_ln(LLine l1, LLine l2) {
         int i;
+        if (l1 == null) {
+            // TODO. Handle this.
+            System.err.println("l1 is null");
+            return false;
+        }
         for (i = 0; i <= l1.no; i++) if (!on_ln(l1.pt[i], l2)) return (false);
         return (true);
     }
@@ -1662,6 +1705,11 @@ public class GDDBase extends Gib {
             if (!on_pn(pn2.ln[i], pn1)) {
                 pn1.no += 1;
                 pn1.ln[pn1.no] = pn2.ln[i];
+                if (pn1.ln[0] == null) {
+                    // TODO. Handle this.
+                    System.err.println("pn1.ln[0] is null");
+                    return;
+                }
                 if (!check_para(pn1.ln[0].pt[0], pn1.ln[0].pt[1], pn2.ln[i].pt[0], pn2.ln[i].pt[1])) {
                     int k = 0;
                 }
@@ -2849,6 +2897,13 @@ public class GDDBase extends Gib {
         }
 
         int g = (int) gcd(t1, t2);
+
+        if (g == 0) {
+            // TODO. Handle this.
+            System.err.println("Division by zero: " + this.toString());
+            return;
+        }
+
         cg.t1 = t1 / g;
         cg.t2 = t2 / g;
         if (t1 == 0 || t2 == 0) {
@@ -4573,6 +4628,16 @@ public class GDDBase extends Gib {
             LLine l2 = pn.ln[1];
             pn1 = fd_pnp(pn, l1);
             pn2 = fd_pnp(pn, l2);
+            if (l1 == null) {
+                // TODO. Handle this.
+                System.err.println("l1 is null");
+                return;
+            }
+            if (l2 == null) {
+                // TODO. Handle this.
+                System.err.println("l2 is null");
+                return;
+            }
 
             if (l1.type == 0 || l2.type == 0) {
                 LLine ln1 = l1;

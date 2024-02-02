@@ -220,6 +220,17 @@ public class GDD extends GDDBase {
     }
 
     final void search_pn_1(LLine ln1, LLine ln2) {
+        if (ln1 == null) {
+            // TODO. Handle this.
+            System.err.println("ln1 is null");
+            return;
+        }
+        if (ln2 == null) {
+            // TODO. Handle this.
+            System.err.println("ln2 is null");
+            return;
+        }
+
         if (check_coll(ln1.pt[0], ln1.pt[1], ln2.pt[0], ln2.pt[1])) return;
 
         for (int k1 = 0; k1 <= ln1.no; k1++)
@@ -3456,6 +3467,11 @@ public class GDD extends GDDBase {
                     LLine[] ls1 = split_ln(p1, l1);
                     LLine[] ls2 = split_ln(p2, l2);
 
+                    if (ls == null ) {
+                        // TODO. Handle this.
+                        System.err.println("ls is null");
+                        return;
+                    }
                     for (int i = 0; i < ls.length; i++)
                         for (int l = 0; l < xs.length; l++)
                             for (int j = 0; j < ls1.length; j++)

@@ -97,10 +97,20 @@ public class Cons {
     }
 
     public void add_pt(int n, int id) {
+        if (ps.length <= id) {
+            // TODO. Handle this.
+            System.err.println("Index out of bounds: " + this.toString());
+            return;
+        }
         ps[no = id] = n;
     }
 
     public void add_pt(Object s, int id) {
+        if (pss.length <= id) {
+            // TODO. Handle this.
+            System.err.println("Index out of bounds: " + this.toString());
+            return;
+        }
         pss[no = id] = s;
     }
 

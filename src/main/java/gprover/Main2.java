@@ -23,7 +23,7 @@ public class Main2 {
 
         String user_directory = System.getProperty("user.dir");
         String sp = File.separator;
-        String dr = user_directory + sp + "ex";
+        String dr = user_directory + sp + "examples";
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File(dr));
         int result = chooser.showOpenDialog(null);
@@ -92,6 +92,7 @@ public class Main2 {
 
             //db.show_dbase((char) 0);
         } catch (IOException ee) {
+            System.err.println("IOException " + ee.toString());
         }
 
         //CMisc.print(Cm.s2077);
