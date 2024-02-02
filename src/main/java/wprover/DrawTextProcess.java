@@ -1751,7 +1751,7 @@ public class DrawTextProcess extends DrawProcess {
             }
             case Gib.CO_PERP: {
                 int[] p = co.p;
-                JTlineFlash f = new JTlineFlash(panel, fd_point(p[0]), fd_point(p[1]),
+                JTLineFlash f = new JTLineFlash(panel, fd_point(p[0]), fd_point(p[1]),
                         fd_point(p[2]), fd_point(p[3]));
                 this.addFlash1(f);
                 return (f);
@@ -1843,10 +1843,10 @@ public class DrawTextProcess extends DrawProcess {
         return f;
     }
 
-    public void flashMpnode(mobject obj) {
-        if (obj instanceof massertion) {
+    public void flashMpnode(MObject obj) {
+        if (obj instanceof MAssertion) {
 
-        } else if (obj instanceof mdrobj) {
+        } else if (obj instanceof MDrObj) {
 
         }
     }
@@ -1862,7 +1862,7 @@ public class DrawTextProcess extends DrawProcess {
         return n;
     }
 
-    public JFlash getAreaFlash(mdrobj d) {
+    public JFlash getAreaFlash(MDrObj d) {
         int n = this.getAreaFlashNumber();
         Vector v = new Vector();
         for (int i = 0; i < d.getObjectNum(); i++)
@@ -1880,9 +1880,9 @@ public class DrawTextProcess extends DrawProcess {
         return f;
     }
 
-    public JFlash getDrobjFlash(mdrobj d) {
+    public JFlash getDrobjFlash(MDrObj d) {
         int t1 = d.getType1();
-        if (t1 == mdrobj.LINE) {
+        if (t1 == MDrObj.LINE) {
             CPoint p1 = d.getObject(0);
             CPoint p2 = d.getObject(1);
             if (p1 != null && p2 != null) {
@@ -1892,12 +1892,12 @@ public class DrawTextProcess extends DrawProcess {
                 f.addAPoint(id, p2);
                 return f;
             }
-        } else if (t1 == mdrobj.CIRCLE) {
-        } else if (t1 == mdrobj.AREA || t1 == mdrobj.TRIANGLE ||
-                t1 == mdrobj.SQUARE || t1 == mdrobj.PARALLELOGRAM || t1 == mdrobj.RECTANGLE
-                || t1 == mdrobj.QUADRANGLE || t1 == mdrobj.TRAPEZOID) {
+        } else if (t1 == MDrObj.CIRCLE) {
+        } else if (t1 == MDrObj.AREA || t1 == MDrObj.TRIANGLE ||
+                t1 == MDrObj.SQUARE || t1 == MDrObj.PARALLELOGRAM || t1 == MDrObj.RECTANGLE
+                || t1 == MDrObj.QUADRANGLE || t1 == MDrObj.TRAPEZOID) {
             return (getAreaFlash(d));
-        } else if (t1 == mdrobj.ANGLE) {
+        } else if (t1 == MDrObj.ANGLE) {
             if (d.getObjectNum() == 3) {
                 JFlash f = this.getMAngleFlash(panel, (CPoint) d.getObject(0), (CPoint) d.getObject(1),
                         (CPoint) d.getObject(1), (CPoint) d.getObject(2), 3);
@@ -1907,19 +1907,19 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
-    public void flashmnode(mnode n) {
+    public void flashmnode(MNode n) {
 
         for (int i = 0; i < n.objSize(); i++) {
-            mobject obj = n.getObject(i);
+            MObject obj = n.getObject(i);
             flashmobj(obj, false);
         }
     }
 
-    public void flashmobj(mobject obj) {
+    public void flashmobj(MObject obj) {
         flashmobj(obj, true);
     }
 
-    public void flashmobj(mobject obj, boolean clear) {
+    public void flashmobj(MObject obj, boolean clear) {
         if (obj == null) {
             return;
         }
@@ -1928,29 +1928,29 @@ public class DrawTextProcess extends DrawProcess {
         }
         int t = obj.getType();
         switch (t) {
-            case mobject.DOBJECT: {
-                mdrobj d = (mdrobj) obj;
+            case MObject.DOBJECT: {
+                MDrObj d = (MDrObj) obj;
                 JFlash f = getDrobjFlash(d);
                 if (f != null) {
                     this.addFlash1(f);
                 }
             }
             break;
-            case mobject.DRAW: {
-                mdraw d = (mdraw) obj;
+            case MObject.DRAW: {
+                MDraw d = (MDraw) obj;
                 Vector v = d.getAllUndoStruct();
                 this.setUndoListForFlash1(v);
             }
             break;
-            case mobject.ASSERT:
-                this.flashassert((massertion) obj);
+            case MObject.ASSERT:
+                this.flashassert((MAssertion) obj);
                 break;
-            case mobject.EQUATION: {
-                mequation eq = (mequation) obj;
+            case MObject.EQUATION: {
+                MEquation eq = (MEquation) obj;
                 int cd = 0;
                 for (int i = 0; i < eq.getTermCount(); i++) {
-                    meqterm tm = (meqterm) eq.getTerm(i);
-                    mdrobj dj = tm.getObject();
+                    MEqTerm tm = (MEqTerm) eq.getTerm(i);
+                    MDrObj dj = tm.getObject();
                     if (dj != null) {
                         JFlash fs = this.getDrobjFlash(dj);
                         if (tm.isEqFamily() && !dj.isPolygon())
@@ -1984,13 +1984,13 @@ public class DrawTextProcess extends DrawProcess {
         addFlash1(f);
     }
 
-    public void flashassert(massertion ass) {
+    public void flashassert(MAssertion ass) {
         if (ass == null)
             return;
 
         JPanel panel = this.panel;
         switch (ass.getAssertionType()) {
-            case massertion.COLL: {
+            case MAssertion.COLL: {
                 JLineFlash f = new JLineFlash(panel);
                 int id = f.addALine();
                 for (int i = 0; i < ass.getobjNum(); i++) {
@@ -1999,7 +1999,7 @@ public class DrawTextProcess extends DrawProcess {
                 addFlash1(f);
             }
             break;
-            case massertion.PARA: {
+            case MAssertion.PARA: {
                 JLineFlash f = new JLineFlash(panel);
                 int id = 0;
                 for (int i = 0; i < ass.getobjNum(); i++) {
@@ -2012,7 +2012,7 @@ public class DrawTextProcess extends DrawProcess {
                 addFlash1(f);
             }
             break;
-            case massertion.EQDIS: {
+            case MAssertion.EQDIS: {
                 CPoint p1 = (CPoint) ass.getObject(0);
                 CPoint p2 = (CPoint) ass.getObject(1);
                 CPoint p3 = (CPoint) ass.getObject(2);
@@ -2022,19 +2022,19 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case massertion.PERP: {
+            case MAssertion.PERP: {
                 CPoint p1 = (CPoint) ass.getObject(0);
                 CPoint p2 = (CPoint) ass.getObject(1);
                 CPoint p3 = (CPoint) ass.getObject(2);
                 CPoint p4 = (CPoint) ass.getObject(3);
-                JTlineFlash f = new JTlineFlash(panel, p1, p2, p3, p4);
+                JTLineFlash f = new JTLineFlash(panel, p1, p2, p3, p4);
                 this.addFlash1(f);
             }
             break;
 
-            case massertion.DISLESS:
-            case massertion.PERPBISECT:
-            case massertion.CONCURRENT: {
+            case MAssertion.DISLESS:
+            case MAssertion.PERPBISECT:
+            case MAssertion.CONCURRENT: {
                 JLineFlash f = new JLineFlash(panel);
                 int id = 0;
                 for (int i = 0; i < ass.getobjNum(); i++) {
@@ -2047,7 +2047,7 @@ public class DrawTextProcess extends DrawProcess {
             }
 
             break;
-            case massertion.CYCLIC: {
+            case MAssertion.CYCLIC: {
                 JCirFlash f = new JCirFlash(panel);
                 for (int i = 0; i < ass.getobjNum(); i++) {
                     f.addAPoint((CPoint) ass.getObject(i));
@@ -2055,8 +2055,8 @@ public class DrawTextProcess extends DrawProcess {
                 addFlash1(f);
             }
             break;
-            case massertion.EQANGLE:
-            case massertion.ANGLESS: {
+            case MAssertion.EQANGLE:
+            case MAssertion.ANGLESS: {
                 if (ass.getobjNum() == 6) {
                     JFlash f = this.getMAngleFlash(panel, (CPoint) ass.getObject(0), (CPoint) ass.getObject(1),
                             (CPoint) ass.getObject(1), (CPoint) ass.getObject(2), 3);
@@ -2067,7 +2067,7 @@ public class DrawTextProcess extends DrawProcess {
                 }
             }
             break;
-            case massertion.MID:
+            case MAssertion.MID:
                 if (ass.getobjNum() == 3) {
                     JCgFlash f = new JCgFlash(panel);
                     CPoint p1 = (CPoint) ass.getObject(0);
@@ -2081,8 +2081,8 @@ public class DrawTextProcess extends DrawProcess {
                     this.addFlash1(f);
                 }
                 break;
-            case massertion.CONG:
-            case massertion.SIM: {
+            case MAssertion.CONG:
+            case MAssertion.SIM: {
                 if (6 == ass.getobjNum()) {
                     JTriFlash f = new JTriFlash(panel,
                             (CPoint) ass.getObject(0),
@@ -2097,17 +2097,17 @@ public class DrawTextProcess extends DrawProcess {
             }
             break;
 
-            case massertion.R_TRIANGLE: {
+            case MAssertion.R_TRIANGLE: {
                 this.addAreaFlash(ass);
                 CPoint p1 = (CPoint) ass.getObject(0);
                 CPoint p2 = (CPoint) ass.getObject(1);
                 CPoint p3 = (CPoint) ass.getObject(2);
 //                CPoint p4 = (CPoint) ass.getObject(3);
-                JTlineFlash f = new JTlineFlash(panel, p1, p2, p1, p3);
+                JTLineFlash f = new JTLineFlash(panel, p1, p2, p1, p3);
                 this.addFlash1(f);
                 break;
             }
-            case massertion.R_ISO_TRIANGLE: {
+            case MAssertion.R_ISO_TRIANGLE: {
                 this.addAreaFlash(ass);
 
                 CPoint p1 = (CPoint) ass.getObject(0);
@@ -2115,19 +2115,19 @@ public class DrawTextProcess extends DrawProcess {
                 CPoint p3 = (CPoint) ass.getObject(2);
                 addCGFlash(p1, p2, p1, p3);
 
-                JTlineFlash f = new JTlineFlash(panel, p1, p2, p1, p3);
+                JTLineFlash f = new JTLineFlash(panel, p1, p2, p1, p3);
                 this.addFlash1(f);
                 break;
             }
 
-            case massertion.CONVEX:
-            case massertion.TRAPEZOID:
-            case massertion.SQUARE:
-            case massertion.RECTANGLE: {
+            case MAssertion.CONVEX:
+            case MAssertion.TRAPEZOID:
+            case MAssertion.SQUARE:
+            case MAssertion.RECTANGLE: {
                 this.addAreaFlash(ass);
                 break;
             }
-            case massertion.EQ_TRIANGLE: {
+            case MAssertion.EQ_TRIANGLE: {
                 this.addAreaFlash(ass);
                 CPoint p1 = (CPoint) ass.getObject(0);
                 CPoint p2 = (CPoint) ass.getObject(1);
@@ -2151,7 +2151,7 @@ public class DrawTextProcess extends DrawProcess {
                 this.addFlash1(f3);
                 break;
             }
-            case massertion.ISO_TRIANGLE: {
+            case MAssertion.ISO_TRIANGLE: {
                 this.addAreaFlash(ass);
                 CPoint p1 = (CPoint) ass.getObject(0);
                 CPoint p2 = (CPoint) ass.getObject(1);
@@ -2160,12 +2160,12 @@ public class DrawTextProcess extends DrawProcess {
                 break;
 
             }
-            case massertion.PARALLELOGRAM: {
+            case MAssertion.PARALLELOGRAM: {
                 this.addAreaFlash(ass);
                 break;
             }
 
-            case massertion.BETWEEN: {
+            case MAssertion.BETWEEN: {
                 CPoint p1 = (CPoint) ass.getObject(0);
                 CPoint p2 = (CPoint) ass.getObject(1);
                 CPoint p3 = (CPoint) ass.getObject(2);
@@ -2174,8 +2174,8 @@ public class DrawTextProcess extends DrawProcess {
                 break;
             }
 
-            case massertion.ANGLE_INSIDE:
-            case massertion.ANGLE_OUTSIDE: {
+            case MAssertion.ANGLE_INSIDE:
+            case MAssertion.ANGLE_OUTSIDE: {
                 CPoint p1 = (CPoint) ass.getObject(0);
                 CPoint p2 = (CPoint) ass.getObject(1);
                 CPoint p3 = (CPoint) ass.getObject(2);
@@ -2185,13 +2185,13 @@ public class DrawTextProcess extends DrawProcess {
                 this.addFlash1(f);
                 break;
             }
-            case massertion.TRIANGLE_INSIDE: {
+            case MAssertion.TRIANGLE_INSIDE: {
                 this.addAreaFlash1(ass);
                 CPoint p1 = (CPoint) ass.getObject(0);
                 this.addPtEnlargeFlash(p1);
                 break;
             }
-            case massertion.OPPOSITE_SIDE: {
+            case MAssertion.OPPOSITE_SIDE: {
 
                 CPoint p1 = (CPoint) ass.getObject(0);
                 CPoint p2 = (CPoint) ass.getObject(1);
@@ -2202,7 +2202,7 @@ public class DrawTextProcess extends DrawProcess {
                 this.addFlash1(f);
                 break;
             }
-            case massertion.SAME_SIDE: {
+            case MAssertion.SAME_SIDE: {
                 CPoint p1 = (CPoint) ass.getObject(0);
                 CPoint p2 = (CPoint) ass.getObject(1);
                 CPoint p3 = (CPoint) ass.getObject(2);
@@ -2212,7 +2212,7 @@ public class DrawTextProcess extends DrawProcess {
                 this.addFlash1(f);
                 break;
             }
-            case massertion.PARA_INSIDE: {
+            case MAssertion.PARA_INSIDE: {
                 this.addAreaFlash1(ass);
                 this.addPtEnlargeFlash((CPoint) ass.getObject(0));
                 break;
@@ -2235,12 +2235,12 @@ public class DrawTextProcess extends DrawProcess {
         f2.addACg(p3, p4);
         if (null != fd_edmark(p3, p4))
             f2.setDrawdTT(false);
-        JSegmentMoveingFlash fn = new JSegmentMoveingFlash(panel, p1, p2, p3, p4, 3, 3);
+        JSegmentMovingFlash fn = new JSegmentMovingFlash(panel, p1, p2, p3, p4, 3, 3);
         this.addCgFlash(f1, f2, fn);
         this.startFlash();
     }
 
-    public void addAreaFlash1(massertion ass) {
+    public void addAreaFlash1(MAssertion ass) {
         int n = this.getAreaFlashNumber();
         JAreaFlash f = new JAreaFlash(panel, n);
         for (int i = 1; i < ass.getobjNum(); i++) {
@@ -2249,7 +2249,7 @@ public class DrawTextProcess extends DrawProcess {
         this.addFlash1(f);
     }
 
-    public void addAreaFlash(massertion ass) {
+    public void addAreaFlash(MAssertion ass) {
         int n = this.getAreaFlashNumber();
         JAreaFlash f = new JAreaFlash(panel, n);
         for (int i = 0; i < ass.getobjNum(); i++) {
@@ -2315,7 +2315,7 @@ public class DrawTextProcess extends DrawProcess {
             TLine tn = (TLine) cc;
             LLine ln = tn.l1;
             LLine ln1 = tn.l2;
-            JTlineFlash f = new JTlineFlash(panel);
+            JTLineFlash f = new JTLineFlash(panel);
             for (int i = 0; i <= ln.no; i++)
                 f.ln1.addAPoint(fd_point(ln.pt[i]));
             for (int i = 0; i <= ln1.no; i++)

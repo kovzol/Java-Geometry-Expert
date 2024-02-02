@@ -6090,7 +6090,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
     private void translate(double dx, double dy) {
 
-        if (isFreezed())
+        if (isFrozen())
             return;
 
         for (int i = 0; i < pointlist.size(); i++) {
@@ -6176,7 +6176,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             return;
         }
 
-        if (isFreezed())
+        if (isFrozen())
             return;
 
 

@@ -207,7 +207,7 @@ msgid "Y Coordinate"
 msgstr ""
 
 #: ../wprover/CProperty.java:1221
-msgid "Freezed"
+msgid "Frozen"
 msgstr ""
 
 #: ../wprover/CProperty.java:1262
@@ -3306,3 +3306,29 @@ msgstr ""
 msgid "All Files"
 msgstr ""
 
+msgid "The diagram is frozen, use right click menu to unfreeze!"
+msgstr ""
+
+msgid "Open selected file"
+msgstr ""
+
+msgid "Abort file chooser dialog"
+msgstr ""
+
+msgid "Up One Level"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Create New Folder"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Date Modified"
+msgstr ""

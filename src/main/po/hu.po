@@ -205,7 +205,7 @@ msgid "Y Coordinate"
 msgstr "Y-koordináta"
 
 #: ../wprover/CProperty.java:1221
-msgid "Freezed"
+msgid "Frozen"
 msgstr "Fagyasztva"
 
 #: ../wprover/CProperty.java:1262
@@ -3514,3 +3514,30 @@ msgstr "Mentés mint"
 
 msgid "All Files"
 msgstr "Minden fájl"
+
+msgid "The diagram is frozen, use right click menu to unfreeze!"
+msgstr "A rajz be van fagyasztva, a jobb gombos menüvel kioldható."
+
+msgid "Open selected file"
+msgstr "A kiválasztott fájl megnyitása"
+
+msgid "Abort file chooser dialog"
+msgstr ""
+
+msgid "Up One Level"
+msgstr "Egy könyvtárral feljebb"
+
+msgid "Home"
+msgstr "A felhasználó saját gyökérkönyvtára"
+
+msgid "Create New Folder"
+msgstr "Új könyvtár létrehozása"
+
+msgid "List"
+msgstr "Lista"
+
+msgid "Size"
+msgstr "Méret"
+
+msgid "Date Modified"
+msgstr "Módosítás dátuma"

@@ -172,7 +172,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         if (t == null)
             t = new GTerm();
         t.writeAterm2(out);
-        mnode n = getmproveNode();
+        MNode n = getmproveNode();
         if (n != null) {
             out.writeBoolean(true);
         } else {
@@ -203,7 +203,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         boolean r = in.readBoolean();
         int k = 0;
         if (r) {
-            mnode n = new mnode();
+            MNode n = new MNode();
             n.Load(in, /*gxInstance.*/ dp);
             this.loadMTree(n);
             k = in.readInt();
@@ -219,12 +219,12 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         return true;
     }
 
-    public mnode getmproveNode() {
+    public MNode getmproveNode() {
 
         if (tree_mp == null) {
             return null;
         }
-        return (mnode) tree_mp.getRoot().getUserObject();
+        return (MNode) tree_mp.getRoot().getUserObject();
     }
 
 
@@ -251,8 +251,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
             public void mousePressed(MouseEvent e) {
                 Object obj = e.getSource();
-                if (obj instanceof itemLabel) {
-                    itemLabel selectLabel = (itemLabel) obj;
+                if (obj instanceof ItemLabel) {
+                    ItemLabel selectLabel = (ItemLabel) obj;
                     int t = selectLabel.getType();
                     if (t == 5) {
                         Object o = selectLabel.getUserObject();
@@ -444,8 +444,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
             public void mousePressed(MouseEvent e) {
                 Object obj = e.getSource();
-                if (obj instanceof itemLabel) {
-                    itemLabel selectLabel = (itemLabel) obj;
+                if (obj instanceof ItemLabel) {
+                    ItemLabel selectLabel = (ItemLabel) obj;
                     int t = selectLabel.getType();
                     if (t == 5) {
                         Object o = selectLabel.getUserObject();
@@ -653,7 +653,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
         mpPanel.add(pane);
 
-        mdrobj.createAllIcons();
+        MDrObj.createAllIcons();
 
         if (mbar)
             mpPanel.add((inputm = new MProveInputPanel(gxInstance, dpane, dp, tree_mp)));
@@ -662,7 +662,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         mpPanel.setForeground(Color.white);
     }
 
-    public void loadMTree(mnode n) {
+    public void loadMTree(MNode n) {
         tree_mp.loadmtree(n);
         if (tree_mp != null && !tree_mp.isTreeEmpty() && this.indexOfComponent(mpPanel) != -1)
             this.setSelectedComponent(mpPanel);
@@ -2103,7 +2103,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     c = (CClass) obj;
 
             }
-            if (select != null && select instanceof itemLabel) {
+            if (select != null && select instanceof ItemLabel) {
                 //c = ((itemLabel)select).getUserObject();
             }
             //if (c != null) {
@@ -2146,8 +2146,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 PanelProve.this.showDatabase();
             }
 
-            if (obj instanceof itemLabel) {
-                itemLabel lb = (itemLabel) obj;
+            if (obj instanceof ItemLabel) {
+                ItemLabel lb = (ItemLabel) obj;
                 Object value = lb.getUserObject();
                 if (value instanceof Cond) {
                     if (command.equals("Prove")) {
@@ -2175,7 +2175,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     public void setTreeFullFont(Font f) {
         if (f != null) {
-            itemLabel.font = f;
+            ItemLabel.font = f;
             BookCellRenderer render = (BookCellRenderer)
                     tree_full.getCellRenderer();
             render.setCellFont(f);

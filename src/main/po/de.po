@@ -203,8 +203,8 @@ msgid "Y Coordinate"
 msgstr "Y-Koordinate"
 
 #: ../wprover/CProperty.java:1221
-msgid "Freezed"
-msgstr "Eingefriert"
+msgid "Frozen"
+msgstr ""
 
 #: ../wprover/CProperty.java:1262
 msgid "Point on Line"
@@ -3408,49 +3408,76 @@ msgstr "Mittelpunkt"
 msgid "View Remainder"
 msgstr "Rest überprüfen"
 
-#, fuzzy
 msgid "Current Solution:"
-msgstr "Alle Lösungen:"
+msgstr "Aktuelle Lösung:"
 
 msgid "Filter"
-msgstr ""
+msgstr "Filter"
 
-#, fuzzy
 msgid "Choose a rectangle"
-msgstr "Zeichne ein Rechteck"
+msgstr "Wähle ein Rechteck"
 
-#, fuzzy
 msgid "Saving Proof as GIF File"
-msgstr "Speichern den GDD-Beweis als GraphViz-Datei"
+msgstr "Speichern den Beweis als GIF-Datei"
 
-#, fuzzy
 msgid "Default Delay"
-msgstr "Standard"
+msgstr "Standard-Verzögerung"
 
 msgid "Delay at Begin"
-msgstr ""
+msgstr "Verzögerung am Start"
 
 msgid "Delay at End"
-msgstr ""
+msgstr "Verzögerung am Ende"
 
 msgid "Look in:"
-msgstr ""
+msgstr "Suche in:"
 
-#, fuzzy
 msgid "File name:"
-msgstr "Name Schriftart"
+msgstr "Dateiname:"
 
 msgid "Files of type:"
+msgstr "Dateien des Typs:"
+
+msgid "Save in:"
+msgstr "Speichern in:"
+
+msgid "Save As"
+msgstr "Speichern unter"
+
+msgid "All Files"
+msgstr "Alle Dateien"
+
+msgid "The diagram is frozen, use right click menu to unfreeze!"
+msgstr ""
+"Das Diagramm ist eingefroren, verwende das Rechtsklickmenü, um das "
+"Einfrieren aufzuheben."
+
+#, fuzzy
+msgid "Open selected file"
+msgstr "Eine Datei öffnen"
+
+msgid "Abort file chooser dialog"
+msgstr ""
+
+msgid "Up One Level"
+msgstr ""
+
+msgid "Home"
 msgstr ""
 
 #, fuzzy
-msgid "Save in:"
-msgstr "Speichern"
+msgid "Create New Folder"
+msgstr "Eine neue Ansicht erstellen"
+
+msgid "List"
+msgstr ""
+
+msgid "Size"
+msgstr ""
 
 #, fuzzy
-msgid "Save As"
-msgstr "Speichern"
+msgid "Date Modified"
+msgstr "Zuletzt geändert am"
 
-#, fuzzy
-msgid "All Files"
-msgstr "Datei"
+#~ msgid "Freezed"
+#~ msgstr "Eingefriert"

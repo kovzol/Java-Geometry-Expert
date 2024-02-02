@@ -8,10 +8,10 @@ package gprover;
  * To change this template use File | Settings | File Templates.
  */
 public class XTerm {
-    public Var var;                //   variable.
-    long c;                 //   value is an Integer.
-    DTerm ps;              //  prefix
-    XTerm p;                //
+    public Var var;        // variable
+    long c;                // value is an integer
+    DTerm ps;              // prefix
+    XTerm p;
     String sd;
 
     public XTerm() {

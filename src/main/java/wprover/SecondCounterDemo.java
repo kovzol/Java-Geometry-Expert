@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
  * Time: 2:14:26 PM
  * To change this template use File | Settings | File Templates.
  */
+// FIXME. This is unused at the moment.
 public class SecondCounterDemo extends JBaseDialog {
     CounterPanel pane;
     boolean visible = false;

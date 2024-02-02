@@ -29,7 +29,7 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
     private TreeCellAssertPanel asspane, asspane_temp;
 
     private GExpert gxInstance;
-    private massertion ass, ass_show, ass_temp;
+    private MAssertion ass, ass_show, ass_temp;
     private JPanel contentPane;
 
     private MProveInputPanel ipanel = null;
@@ -52,10 +52,10 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
         contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
-        String[] cStringsT = new String[massertion.cStrings.length];
+        String[] cStringsT = new String[MAssertion.cStrings.length];
         // Create the translations first:
-        for (int i = 0; i < massertion.cStrings.length; i++) {
-            cStringsT[i] = GExpert.getLanguage(massertion.cStrings[i]);
+        for (int i = 0; i < MAssertion.cStrings.length; i++) {
+            cStringsT[i] = GExpert.getLanguage(MAssertion.cStrings[i]);
         }
         // Use the translations:
         bt = new JComboBox(cStringsT) {
@@ -124,7 +124,7 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
 
         this.add(contentPane);
         this.resetAllItem();
-        ass_show = new massertion(0);
+        ass_show = new MAssertion(0);
     }
 
     public void setTypeSelection(int k) {
@@ -132,7 +132,7 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
         this.revalidateValidState();
     }
 
-    public void setUserObject(massertion as) {
+    public void setUserObject(MAssertion as) {
         this.resetAllItem();
         ass = as;
 
@@ -147,9 +147,9 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
 
     }
 
-    public mobject getUserObject() {
+    public MObject getUserObject() {
         if (ass == null)
-            ass = new massertion(bt.getSelectedIndex());
+            ass = new MAssertion(bt.getSelectedIndex());
         else
             ass.setAssertionType(bt.getSelectedIndex());
         ass.clearObjects();
@@ -270,7 +270,7 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
 
     public void updateBState() {
         if (ipanel != null) {
-            if (inputFinished() || bt.getSelectedIndex() == massertion.CONVEX)
+            if (inputFinished() || bt.getSelectedIndex() == MAssertion.CONVEX)
                 ipanel.setBState(true);
             else
                 ipanel.setBState(false);
@@ -279,7 +279,7 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
 
     private boolean createAssertion() {
         if (ass_show == null)
-            ass_show = new massertion(bt.getSelectedIndex());
+            ass_show = new MAssertion(bt.getSelectedIndex());
         else
             ass_show.setAssertionType(bt.getSelectedIndex());
 
@@ -360,27 +360,27 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
 
     private int getStatePointsCount() {
         switch (bt.getSelectedIndex()) {
-            case massertion.COLL:
-            case massertion.MID:
-            case massertion.R_TRIANGLE:
-            case massertion.ISO_TRIANGLE:
-            case massertion.R_ISO_TRIANGLE:
-            case massertion.BETWEEN:
-            case massertion.EQ_TRIANGLE:
+            case MAssertion.COLL:
+            case MAssertion.MID:
+            case MAssertion.R_TRIANGLE:
+            case MAssertion.ISO_TRIANGLE:
+            case MAssertion.R_ISO_TRIANGLE:
+            case MAssertion.BETWEEN:
+            case MAssertion.EQ_TRIANGLE:
                 return 3;
-            case massertion.PARA:
-            case massertion.PERP:
-            case massertion.EQDIS:
-            case massertion.CYCLIC:
-            case massertion.DISLESS:
-            case massertion.PERPBISECT:
-            case massertion.PARALLELOGRAM:
+            case MAssertion.PARA:
+            case MAssertion.PERP:
+            case MAssertion.EQDIS:
+            case MAssertion.CYCLIC:
+            case MAssertion.DISLESS:
+            case MAssertion.PERPBISECT:
+            case MAssertion.PARALLELOGRAM:
                 return 4;
-            case massertion.EQANGLE:
-            case massertion.SIM:
-            case massertion.CONG:
-            case massertion.ANGLESS:
-            case massertion.CONCURRENT:
+            case MAssertion.EQANGLE:
+            case MAssertion.SIM:
+            case MAssertion.CONG:
+            case MAssertion.ANGLESS:
+            case MAssertion.CONCURRENT:
                 return 6;
         }
         return -1;
@@ -388,51 +388,51 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
 
     private void setItemChanged(int id) {
         switch (id) {
-            case massertion.COLL:
-            case massertion.MID:
-            case massertion.R_TRIANGLE:
-            case massertion.ISO_TRIANGLE:
-            case massertion.R_ISO_TRIANGLE:
-            case massertion.EQ_TRIANGLE:
+            case MAssertion.COLL:
+            case MAssertion.MID:
+            case MAssertion.R_TRIANGLE:
+            case MAssertion.ISO_TRIANGLE:
+            case MAssertion.R_ISO_TRIANGLE:
+            case MAssertion.EQ_TRIANGLE:
                 this.setVisibleBox(3);
                 break;
 
-            case massertion.PARA:
-            case massertion.PERP:
-            case massertion.EQDIS:
-            case massertion.DISLESS:
-            case massertion.PERPBISECT:
-            case massertion.OPPOSITE_SIDE:
-            case massertion.SAME_SIDE:
+            case MAssertion.PARA:
+            case MAssertion.PERP:
+            case MAssertion.EQDIS:
+            case MAssertion.DISLESS:
+            case MAssertion.PERPBISECT:
+            case MAssertion.OPPOSITE_SIDE:
+            case MAssertion.SAME_SIDE:
                 this.setVisibleBox1(4);
                 break;
-            case massertion.CYCLIC:
-            case massertion.PARALLELOGRAM:
-            case massertion.TRAPEZOID:
-            case massertion.RECTANGLE:
-            case massertion.SQUARE:
+            case MAssertion.CYCLIC:
+            case MAssertion.PARALLELOGRAM:
+            case MAssertion.TRAPEZOID:
+            case MAssertion.RECTANGLE:
+            case MAssertion.SQUARE:
                 this.setVisibleBox(4);
                 break;
-            case massertion.EQANGLE:
-            case massertion.SIM:
-            case massertion.CONG:
-            case massertion.ANGLESS:
-            case massertion.CONCURRENT:
+            case MAssertion.EQANGLE:
+            case MAssertion.SIM:
+            case MAssertion.CONG:
+            case MAssertion.ANGLESS:
+            case MAssertion.CONCURRENT:
                 this.setVisibleBox1(6);
                 break;
-            case massertion.ANGLE_INSIDE:
-            case massertion.ANGLE_OUTSIDE:
-            case massertion.TRIANGLE_INSIDE:
+            case MAssertion.ANGLE_INSIDE:
+            case MAssertion.ANGLE_OUTSIDE:
+            case MAssertion.TRIANGLE_INSIDE:
 
                 this.setVisibleBox2(3);
                 break;
-            case massertion.BETWEEN:
+            case MAssertion.BETWEEN:
                 this.setVisibleBox2(2);
                 break;
-            case massertion.PARA_INSIDE:
+            case MAssertion.PARA_INSIDE:
                 this.setVisibleBox2(4);
                 break;
-            case massertion.CONVEX:
+            case MAssertion.CONVEX:
                 this.setVisibleBox1(8);
                 break;
             default:
@@ -620,45 +620,45 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
             case 13:
                 return DrawBase.check_para(vspt(0, 0), vspt(0, 1), vspt(0, 2), vspt(0, 3))
                         && DrawBase.check_para(vspt(0, 0), vspt(0, 3), vspt(0, 1), vspt(0, 2));
-            case massertion.R_TRIANGLE:
+            case MAssertion.R_TRIANGLE:
                 return DrawBase.check_perp(vspt(0, 0), vspt(0, 1), vspt(0, 0), vspt(0, 2));
-            case massertion.ISO_TRIANGLE:
+            case MAssertion.ISO_TRIANGLE:
                 return DrawBase.check_eqdistance(vspt(0, 0), vspt(0, 1), vspt(0, 0), vspt(0, 2));
-            case massertion.R_ISO_TRIANGLE:
+            case MAssertion.R_ISO_TRIANGLE:
                 return DrawBase.check_perp(vspt(0, 0), vspt(0, 1), vspt(0, 0), vspt(0, 2))
                         && DrawBase.check_eqdistance(vspt(0, 0), vspt(0, 1), vspt(0, 0), vspt(0, 2));
-            case massertion.EQ_TRIANGLE:
+            case MAssertion.EQ_TRIANGLE:
                 return DrawBase.check_eqdistance(vspt(0, 0), vspt(0, 1), vspt(0, 0), vspt(0, 2))
                         && DrawBase.check_eqdistance(vspt(0, 0), vspt(0, 1), vspt(0, 1), vspt(0, 2));
-            case massertion.TRAPEZOID:
+            case MAssertion.TRAPEZOID:
                 return DrawBase.check_para(vspt(0, 0), vspt(0, 1), vspt(0, 2), vspt(0, 3));
-            case massertion.RECTANGLE:
+            case MAssertion.RECTANGLE:
                 return DrawBase.check_para(vspt(0, 0), vspt(0, 1), vspt(0, 2), vspt(0, 3))
                         && DrawBase.check_perp(vspt(0, 0), vspt(0, 1), vspt(0, 1), vspt(0, 2));
-            case massertion.SQUARE:
+            case MAssertion.SQUARE:
                 return DrawBase.check_para(vspt(0, 0), vspt(0, 1), vspt(0, 2), vspt(0, 3))
                         && DrawBase.check_perp(vspt(0, 0), vspt(0, 1), vspt(0, 1), vspt(0, 2))
                         && DrawBase.check_eqdistance(vspt(0, 0), vspt(0, 1), vspt(0, 0), vspt(0, 2));
-            case massertion.BETWEEN:
+            case MAssertion.BETWEEN:
                 return DrawBase.check_between(vspt(0, 0), vspt(1, 0), vspt(1, 1));
-            case massertion.ANGLE_INSIDE:
+            case MAssertion.ANGLE_INSIDE:
                 return DrawBase.check_angle_less(vspt(0, 0), vspt(1, 1), vspt(1, 2), vspt(1, 0), vspt(1, 1), vspt(1, 2))
                         && DrawBase.check_angle_less(vspt(0, 0), vspt(1, 1), vspt(1, 0), vspt(1, 0), vspt(1, 1), vspt(1, 2));
 
-            case massertion.ANGLE_OUTSIDE:
+            case MAssertion.ANGLE_OUTSIDE:
                 return !(DrawBase.check_angle_less(vspt(0, 0), vspt(1, 1), vspt(1, 2), vspt(1, 0), vspt(1, 1), vspt(1, 2))
                         && DrawBase.check_angle_less(vspt(0, 0), vspt(1, 1), vspt(1, 0), vspt(1, 0), vspt(1, 1), vspt(1, 2)));
-            case massertion.TRIANGLE_INSIDE:
+            case MAssertion.TRIANGLE_INSIDE:
                 return DrawBase.check_triangle_inside(vspt(0, 0), vspt(1, 0), vspt(1, 1), vspt(1, 2));
-            case massertion.PARA_INSIDE:
+            case MAssertion.PARA_INSIDE:
                 return DrawBase.check_triangle_inside(vspt(0, 0), vspt(1, 0), vspt(1, 1), vspt(1, 2))
                         || DrawBase.check_triangle_inside(vspt(0, 0), vspt(1, 0), vspt(1, 2), vspt(1, 3));
 
-            case massertion.OPPOSITE_SIDE:
+            case MAssertion.OPPOSITE_SIDE:
                 return !DrawBase.check_same_side(vspt(0, 0), vspt(0, 1), vspt(1, 0), vspt(1, 1));
-            case massertion.SAME_SIDE:
+            case MAssertion.SAME_SIDE:
                 return DrawBase.check_same_side(vspt(0, 0), vspt(0, 1), vspt(1, 0), vspt(1, 1));
-            case massertion.CONVEX:
+            case MAssertion.CONVEX:
                 return true;
 
         }
@@ -666,10 +666,10 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
     }
 
 
-    public massertion getProveM() {
+    public MAssertion getProveM() {
         int id = bt.getSelectedIndex();
         if (id < 0) return null;
-        massertion ass = new massertion(id);
+        MAssertion ass = new MAssertion(id);
         for (int i = 0; i < vlist.size(); i++) {
             JComboBox b = (JComboBox) vlist.get(i);
             if (b.isEnabled() && b.getSelectedIndex() < 0) {
@@ -693,23 +693,23 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
         int id = bt.getSelectedIndex();
 
         switch (id) {
-            case massertion.COLL:
+            case MAssertion.COLL:
                 return Cm.PC_COLL + " " + vs(0, 0) + " " + vs(0, 1) + " " + vs(0, 2) + ";";
-            case massertion.PARA:
+            case MAssertion.PARA:
                 return Cm.PC_PARA + " " + vs(0, 0) + " " + vs(0, 1) + " " + vs(1, 0) + " " + vs(1, 1) + ";";
-            case massertion.PERP:
+            case MAssertion.PERP:
                 return Cm.PC_PERP + " " + vs(0, 0) + " " + vs(0, 1) + " " + vs(1, 0) + " " + vs(1, 1) + ";";
-            case massertion.MID:
+            case MAssertion.MID:
                 return Cm.PC_MIDP + " " + vs(0, 0) + " " + vs(0, 1) + " " + vs(0, 2) + ";";
-            case massertion.CYCLIC:
+            case MAssertion.CYCLIC:
                 return Cm.PC_CYCLIC + " " + vs(0, 0) + " " + vs(0, 1) + " " + vs(0, 2) + " " + vs(0, 3) + ";";
-            case massertion.EQDIS:
+            case MAssertion.EQDIS:
                 return Cm.PC_CONG + " " + vs(0, 0) + " " + vs(0, 1) + " " + vs(1, 0) + " " + vs(1, 1) + ";";
-            case massertion.EQANGLE:
+            case MAssertion.EQANGLE:
                 return Cm.PC_ACONG + " " + vs(0, 0) + " " + vs(0, 1) + " " + vs(0, 2) + " " + vs(0, 3) + " " + vs(1, 0) + " " + vs(1, 1) + " " + vs(1, 2) + " " + vs(1, 3) + ";";
-            case massertion.SIM:
+            case MAssertion.SIM:
                 return Cm.PC_STRI + " " + vs(0, 0) + " " + vs(0, 1) + " " + vs(0, 2) + " " + vs(1, 0) + " " + vs(1, 1) + " " + vs(1, 2) + ";";
-            case massertion.CONG:
+            case MAssertion.CONG:
                 return Cm.PC_CTRI + " " + vs(0, 0) + " " + vs(0, 1) + " " + vs(0, 2) + " " + vs(1, 0) + " " + vs(1, 1) + " " + vs(1, 2) + ";";
         }
         return "Not Yet Supported Conclusion";
@@ -723,24 +723,24 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
         int id = bt.getSelectedIndex();
 
         switch (id) {
-            case massertion.COLL:
+            case MAssertion.COLL:
                 return vs(0, 0) + " " + vs(0, 1) + " " + vs(0, 2) + " are collinear;";
-            case massertion.PARA:
+            case MAssertion.PARA:
                 return vs(0, 0) + " " + vs(0, 1) + " is Parallel to " + vs(1, 0) + " " + vs(1, 1) + ";";
-            case massertion.PERP:
+            case MAssertion.PERP:
                 return vs(0, 0) + " " + vs(0, 1) + " is Perpendicular to " + vs(1, 0) + " " + vs(1, 1) + ";";
-            case massertion.MID:
+            case MAssertion.MID:
                 return vs(0, 0) + " is the midpoint of " + vs(0, 1) + " " + vs(0, 2) + ";";
-            case massertion.CYCLIC:
+            case MAssertion.CYCLIC:
                 return vs(0, 0) + " " + vs(0, 1) + " " + vs(0, 2) + " " + vs(0, 3) + " are cyclic;";
-            case massertion.EQDIS:
+            case MAssertion.EQDIS:
                 return vs(0, 0) + " " + vs(0, 1) + " equals to " + vs(1, 0) + " " + vs(1, 1) + ";";
-            case massertion.EQANGLE:
+            case MAssertion.EQANGLE:
                 return Cm.ANGLE_SIGN + vs(0, 0) + vs(0, 1) + vs(0, 2) + " = " + Cm.ANGLE_SIGN + vs(1, 0) + vs(1, 1) + vs(1, 2);
 
-            case massertion.SIM:
+            case MAssertion.SIM:
                 return "tri " + vs(0, 0) + vs(0, 1) + vs(0, 2) + " is similiar to " + "tri " + vs(1, 0) + vs(1, 1) + vs(1, 2);
-            case massertion.CONG:
+            case MAssertion.CONG:
                 return "tri " + vs(0, 0) + vs(0, 1) + vs(0, 2) + " is equal to " + "tri " + vs(1, 0) + vs(1, 1) + vs(1, 2);
         }
         return "Not Yet Supported Conclusion";
@@ -755,7 +755,7 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
 
         boolean t = false;
 
-        if (id == massertion.SIM || id == massertion.CONG) {
+        if (id == MAssertion.SIM || id == MAssertion.CONG) {
             int i, j, k;
             i = j = k = 0;
             for (i = 0; i < 3; i++) {
@@ -763,9 +763,9 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
                     if (i != j)
                         for (k = 0; k < 3; k++) {
                             if (i != k && j != k) {
-                                if (id == massertion.SIM)
+                                if (id == MAssertion.SIM)
                                     t = DrawBase.check_simtri(vspt(0, 0), vspt(0, 1), vspt(0, 2), vspt(1, i), vspt(1, j), vspt(1, k));
-                                else if (id == massertion.CONG)
+                                else if (id == MAssertion.CONG)
                                     t = DrawBase.check_congtri(vspt(0, 0), vspt(0, 1), vspt(0, 2), vspt(1, i), vspt(1, j), vspt(1, k));
                                 if (t)
                                     break;
@@ -777,7 +777,7 @@ public class ConcPanel extends JPanel implements ActionListener, ItemListener {
             }
             if (t) {
                 if (ass_temp == null)
-                    ass_temp = new massertion(bt.getSelectedIndex());
+                    ass_temp = new MAssertion(bt.getSelectedIndex());
                 ass_temp.clearObjects();
                 ass_temp.addObject(vspt(0, 0));
                 ass_temp.addObject(vspt(0, 1));

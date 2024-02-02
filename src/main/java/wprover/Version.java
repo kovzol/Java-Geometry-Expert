@@ -3,10 +3,10 @@ package wprover;
 
 public class Version {
 
-    private static float version = 0.82f;
     private static String sversion = "0.82";
     private static String data = "2024-02-01";
     private static String project = "Geometry Expert";
+    private static float version = Float.parseFloat(sversion);
 
 
     public static final float getVersionf() {

@@ -23,7 +23,7 @@ public class PPDialog extends JBaseDialog implements ActionListener, MouseMotion
 
 
     public PPDialog(GExpert gx, GTerm gt, DrawProcess dp) {
-        super(gx.getFrame(), "Nondegenerate Conditions");
+        super(gx.getFrame(), "Nondegenerate Conditions"); // TODO. Internationalize.
 
         this.gt = gt;
         this.dp = dp;

@@ -230,7 +230,33 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         UIManager.put("FileChooser.saveDialogTitleText", getLanguage("Save as"));
         UIManager.put("FileChooser.saveInLabelText", getLanguage("Save in:"));
         UIManager.put("FileChooser.saveButtonText", getLanguage("Save"));
+
+        UIManager.put("FileChooser.openButtonToolTipText", getLanguage("Open selected file"));
+        UIManager.put("FileChooser.cancelButtonToolTipText", getLanguage("Abort file chooser dialog"));
+        UIManager.put("FileChooser.upFolderToolTipText", getLanguage("Up One Level"));
+        UIManager.put("FileChooser.homeFolderToolTipText", getLanguage("Home"));
+        UIManager.put("FileChooser.newFolderToolTipText", getLanguage("Create New Folder"));
+        UIManager.put("FileChooser.listViewButtonToolTipText", getLanguage("List"));
+        UIManager.put("FileChooser.newFolderButtonText", getLanguage("Create New Folder"));
+        UIManager.put("FileChooser.detailsViewButtonToolTipText", getLanguage("Details"));
+        UIManager.put("FileChooser.fileSizeHeaderText", getLanguage("Size"));
+        UIManager.put("FileChooser.fileDateHeaderText", getLanguage("Date Modified"));
+
+        /* There are still some keys that require translation. TODO.
+         * This piece of code may help finding the missing keys.
+         */
+
+        /*
+        UIDefaults defaults = UIManager.getDefaults();
+        java.util.Enumeration<Object> keysEnumeration = defaults.keys();
+        java.util.ArrayList<Object> keysList = java.util.Collections.list(keysEnumeration);
+        for (Object key : keysList) {
+            if (key.toString().contains("FileChooser"))
+                System.out.println(key);
+            }
+         */
     }
+
 
     public void initAttribute() {
 
@@ -2204,7 +2230,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     if (CMisc.version_load_now < 0.035) {
                         this.showppanel(true);
                     } else if (CMisc.version_load_now == 0.035) {
-                        mnode n = new mnode();
+                        MNode n = new MNode();
                         n.Load(in, dp);
                         pprove.loadMTree(n);
                         this.showppanel(false);

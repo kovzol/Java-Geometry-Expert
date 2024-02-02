@@ -9,8 +9,6 @@ import javax.swing.tree.TreeCellEditor;
 import java.awt.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 /**
@@ -192,10 +190,10 @@ public class TreeCellOpaqueRender extends JPanel implements TreeCellRenderer, Mo
         labelSelected = eb;
         labelSelected.setSelected(true);
         Object obj = labelSelected.getUserObject();
-        if (obj instanceof mobject) {
+        if (obj instanceof MObject) {
             if (gxInstance != null) {
-                gxInstance.getMannalInputToolBar().setNodeValue(node, (mobject) obj);
-                gxInstance.dp.flashmobj((mobject) obj);
+                gxInstance.getMannalInputToolBar().setNodeValue(node, (MObject) obj);
+                gxInstance.dp.flashmobj((MObject) obj);
             }
         } else {
             if (gxInstance != null && gxInstance.hasMannualInputBar())
@@ -219,9 +217,9 @@ public class TreeCellOpaqueRender extends JPanel implements TreeCellRenderer, Mo
             TreeCellOpaqueLabel label = (TreeCellOpaqueLabel) e.getSource();
             setSelectedLabel(label);
             Object obj = label.getUserObject();
-            if (obj instanceof mrule) {
+            if (obj instanceof MRule) {
                 JPopExView ex = new JPopExView(gxInstance);
-                mrule r = (mrule) obj;
+                MRule r = (MRule) obj;
                 ex.loadRule(r.getRuleName() + ".gex");
 
                 Point p = label.getLocationOnScreen();
@@ -252,9 +250,9 @@ public class TreeCellOpaqueRender extends JPanel implements TreeCellRenderer, Mo
     }
 
     public void setAllByValue(Object obj) {
-        if (obj instanceof mnode) {
+        if (obj instanceof MNode) {
             this.removeAll();
-            mnode node = (mnode) obj;
+            MNode node = (MNode) obj;
             int k = 0;
             int t = node.getIndex();
             if (t >= 0) {
@@ -265,24 +263,24 @@ public class TreeCellOpaqueRender extends JPanel implements TreeCellRenderer, Mo
 
             for (int i = 0; i < node.objSize(); i++) {
                 Object value = node.getObject(i);
-                if (value instanceof massertion) {
+                if (value instanceof MAssertion) {
                     TreeCellAssertPanel p = new TreeCellAssertPanel();
-                    p.setAssertion((massertion) value);
+                    p.setAssertion((MAssertion) value);
                     p.addMouseListener(this);
                     this.add(p);
-                } else if (value instanceof mequation) {
+                } else if (value instanceof MEquation) {
                     TreeCellAssertPanel p = new TreeCellAssertPanel();
-                    p.setEquation((mequation) value);
+                    p.setEquation((MEquation) value);
                     p.addMouseListener(this);
                     this.add(p);
-                } else if (value instanceof mdraw) {
+                } else if (value instanceof MDraw) {
                     String s[] = value.toString().split(" ");
                     if (s != null && s.length > 1) {
                         String str = "";
                         for (int j = 0; j < s.length; j++) {
                             String st = s[j].trim();
                             if (st.length() == 0) continue;
-                            ImageIcon icon = mdrobj.getImageIconFromName(st);
+                            ImageIcon icon = MDrObj.getImageIconFromName(st);
                             if (icon == null)
                                 str += st + " ";
                             else {
@@ -368,7 +366,7 @@ public class TreeCellOpaqueRender extends JPanel implements TreeCellRenderer, Mo
         this.node = node;
         userObject = obj;
 
-        if (obj instanceof mnode) {
+        if (obj instanceof MNode) {
 
             this.setAllByValue(obj);
             this.revalidate();
@@ -396,7 +394,7 @@ public class TreeCellOpaqueRender extends JPanel implements TreeCellRenderer, Mo
         Object obj = node.getUserObject();
         this.node = node;
         userObject = obj;
-        if (obj instanceof mnode) {
+        if (obj instanceof MNode) {
 
             this.setAllByValue(obj);
             this.revalidate();
@@ -433,10 +431,10 @@ class TreeCellOPaqueEditor extends AbstractCellEditor implements TreeCellEditor 
         return render;
     }
 
-    public mnode getEditorValue() {
+    public MNode getEditorValue() {
         if (obj != null && obj instanceof DefaultMutableTreeNode) {
             Object obj2 = ((DefaultMutableTreeNode) obj).getUserObject();
-            if (obj2 instanceof mnode) return (mnode) obj2;
+            if (obj2 instanceof MNode) return (MNode) obj2;
         }
         return null;
     }
@@ -496,8 +494,8 @@ class TreeCellAssertPanel extends JPanel implements MouseListener {
 
     private static Color bcolor = new Color(204, 255, 204);
     private Vector vlist = new Vector();
-    private massertion ass;
-    private mequation eq;
+    private MAssertion ass;
+    private MEquation eq;
     private boolean selected = false;
 
 
@@ -562,18 +560,18 @@ class TreeCellAssertPanel extends JPanel implements MouseListener {
         return dm;
     }
 
-    public void setAssertion(massertion as) {
+    public void setAssertion(MAssertion as) {
         this.removeAll();
         ass = as;
 
         int t = as.getAssertionType();
         switch (t) {
-            case massertion.COLL:
-            case massertion.MID:
-            case massertion.CYCLIC:
-            case massertion.CONCURRENT:
-            case massertion.PARALLELOGRAM:
-            case massertion.PERPBISECT: {
+            case MAssertion.COLL:
+            case MAssertion.MID:
+            case MAssertion.CYCLIC:
+            case MAssertion.CONCURRENT:
+            case MAssertion.PARALLELOGRAM:
+            case MAssertion.PERPBISECT: {
                 TreeCellOpaqueLabel c1 = this.getLabelByIndex(0);
                 c1.setText(as.toString());
                 c1.setIcon(null);
@@ -582,18 +580,18 @@ class TreeCellAssertPanel extends JPanel implements MouseListener {
             }
             break;
 
-            case massertion.OPPOSITE_SIDE:
-            case massertion.SAME_SIDE:
+            case MAssertion.OPPOSITE_SIDE:
+            case MAssertion.SAME_SIDE:
 
 
-            case massertion.CONVEX:
-            case massertion.BETWEEN:
-            case massertion.R_TRIANGLE:
-            case massertion.R_ISO_TRIANGLE:
-            case massertion.RECTANGLE:
-            case massertion.TRAPEZOID:
-            case massertion.EQ_TRIANGLE:
-            case massertion.ISO_TRIANGLE: {
+            case MAssertion.CONVEX:
+            case MAssertion.BETWEEN:
+            case MAssertion.R_TRIANGLE:
+            case MAssertion.R_ISO_TRIANGLE:
+            case MAssertion.RECTANGLE:
+            case MAssertion.TRAPEZOID:
+            case MAssertion.EQ_TRIANGLE:
+            case MAssertion.ISO_TRIANGLE: {
                 TreeCellOpaqueLabel c1 = this.getLabelByIndex(0);
                 c1.setText(as.getShowString1());
                 c1.setIcon(null);
@@ -603,39 +601,39 @@ class TreeCellAssertPanel extends JPanel implements MouseListener {
 //                c2.setIcon(null);
 //                c2.setText(as.getShowString2());
 //                add(c2);
-                if (t == massertion.R_ISO_TRIANGLE ||
-                        t == massertion.R_TRIANGLE || t == massertion.EQ_TRIANGLE) {
-                    c1.setIcon(msymbol.TRI);
+                if (t == MAssertion.R_ISO_TRIANGLE ||
+                        t == MAssertion.R_TRIANGLE || t == MAssertion.EQ_TRIANGLE) {
+                    c1.setIcon(MSymbol.TRI);
                 }
                 break;
             }
-            case massertion.ANGLE_INSIDE:
-            case massertion.ANGLE_OUTSIDE: {
+            case MAssertion.ANGLE_INSIDE:
+            case MAssertion.ANGLE_OUTSIDE: {
                 TreeCellOpaqueLabel c1 = this.getLabelByIndex(0);
                 c1.setText(as.getShowString1());
                 c1.setIcon(null);
                 c1.setUserObject(as);
                 this.add(c1);
                 TreeCellOpaqueLabel c2 = this.getLabelByIndex(1);
-                c2.setIcon(msymbol.ANGLE);
+                c2.setIcon(MSymbol.ANGLE);
                 c2.setText(as.getShowString2());
                 add(c2);
                 break;
             }
-            case massertion.TRIANGLE_INSIDE: {
+            case MAssertion.TRIANGLE_INSIDE: {
                 TreeCellOpaqueLabel c1 = this.getLabelByIndex(0);
                 c1.setText(as.getShowString1());
                 c1.setIcon(null);
                 c1.setUserObject(as);
                 this.add(c1);
                 TreeCellOpaqueLabel c2 = this.getLabelByIndex(1);
-                c2.setIcon(msymbol.TRI);
+                c2.setIcon(MSymbol.TRI);
                 c2.setText(as.getShowString2());
                 add(c2);
                 break;
             }
 
-            case massertion.PARA_INSIDE: {
+            case MAssertion.PARA_INSIDE: {
                 TreeCellOpaqueLabel c1 = this.getLabelByIndex(0);
                 c1.setText(as.getShowString1());
                 c1.setIcon(null);
@@ -664,17 +662,17 @@ class TreeCellAssertPanel extends JPanel implements MouseListener {
                 c3.setIcon(null);
                 c3.setUserObject(as);
                 this.add(c3);
-                if (t == massertion.EQANGLE || t == massertion.ANGLESS //|| t == massertion.DISLESS
+                if (t == MAssertion.EQANGLE || t == MAssertion.ANGLESS //|| t == massertion.DISLESS
                         ) {
-                    c1.setIcon(msymbol.ANGLE);
-                    c3.setIcon(msymbol.ANGLE);
+                    c1.setIcon(MSymbol.ANGLE);
+                    c3.setIcon(MSymbol.ANGLE);
 
-                } else if (t == massertion.PARA) {
-                } else if (t == massertion.PERP) {
+                } else if (t == MAssertion.PARA) {
+                } else if (t == MAssertion.PERP) {
 
-                } else if (t == massertion.SIM || t == massertion.CONG) {
-                    c1.setIcon(msymbol.TRI);
-                    c3.setIcon(msymbol.TRI);
+                } else if (t == MAssertion.SIM || t == MAssertion.CONG) {
+                    c1.setIcon(MSymbol.TRI);
+                    c3.setIcon(MSymbol.TRI);
                 }
             }
             break;
@@ -682,17 +680,17 @@ class TreeCellAssertPanel extends JPanel implements MouseListener {
 
     }
 
-    public void setEquation(mequation eq) {
+    public void setEquation(MEquation eq) {
         this.removeAll();
         this.eq = eq;
         int k = 0;
 
         for (int i = 0; i < eq.getTermCount(); i++) {
-            meqterm et = eq.getTerm(i);
+            MEqTerm et = eq.getTerm(i);
             int t = et.getEType();
             if (t >= 0) {
                 TreeCellOpaqueLabel lb = this.getLabelByIndex(k++);
-                lb.setText(meqterm.cStrings[t]);
+                lb.setText(MEqTerm.cStrings[t]);
                 this.add(lb);
                 lb.setUserObjectValue(eq);
             }
@@ -758,24 +756,24 @@ class TreeCellOpaqueLabel extends JLabel implements MouseListener {
         this.userObject = obj;
         if (obj == null) return;
 
-        if (obj instanceof msymbol) {
+        if (obj instanceof MSymbol) {
             this.setText(null);
-            this.setIcon(((msymbol) obj).getImage());
-        } else if (obj instanceof mdrobj) {
-            mdrobj dr = (mdrobj) obj;
+            this.setIcon(((MSymbol) obj).getImage());
+        } else if (obj instanceof MDrObj) {
+            MDrObj dr = (MDrObj) obj;
             this.setIcon(dr.getImageWithoutLine());
             this.setText(dr.toString());
-        } else if (obj instanceof massertion) {
+        } else if (obj instanceof MAssertion) {
         } else if (obj instanceof Integer) {
             this.setIcon(null);
             this.setText(obj + ": ");
             this.setBackground(Color.blue);
-        } else if (obj instanceof meqterm) {
+        } else if (obj instanceof MEqTerm) {
         } else {
             this.setIcon(null);
             this.setText(obj.toString());
-            if (obj instanceof mprefix) {
-                mprefix f = (mprefix) obj;
+            if (obj instanceof MPrefix) {
+                MPrefix f = (MPrefix) obj;
                 if (f.getPrefixType() == 0 || f.getPrefixType() == 1)
                     this.setForeground(Color.blue);
                 else

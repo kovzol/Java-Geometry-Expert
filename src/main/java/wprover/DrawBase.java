@@ -206,20 +206,6 @@ public class DrawBase {
         this.lan = lan;
     }
 
-    @Deprecated
-    public String getLanguage(int n, String s) {
-        return GExpert.getLanguage(s);
-        /*
-        if (lan == null)
-            return s;
-
-        String s1 = lan.getString(n);
-        if (s1 != null && s1.length() > 0)
-            return s1;
-        return s;
-         */
-    }
-
     public void DWButtonDown(double x, double y) {
         switch (CurrentAction) {
         }
@@ -527,7 +513,7 @@ public class DrawBase {
         g2.setColor(Color.red);
         this.drawCross(x, y, 5, g2);
         g2.setFont(CMisc.font);
-        g2.drawString(getLanguage(232, "Intersection"), x + 10, y);
+        g2.drawString(GExpert.getLanguage("Intersection"), x + 10, y);
     }
 
     public void drawTipRect(int x, int y, Graphics2D g2) {
@@ -1464,8 +1450,8 @@ public class DrawBase {
     public boolean find_tmark(CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         for (int i = 0; i < flashlist.size(); i++) {
             JFlash f = (JFlash) flashlist.get(i);
-            if (f instanceof JTlineFlash) {
-                JTlineFlash t = (JTlineFlash) f;
+            if (f instanceof JTLineFlash) {
+                JTLineFlash t = (JTLineFlash) f;
                 if (t.containPt(p1) && t.containPt(p2) && t.containPt(p3) && t.containPt(p4))
                     return true;
             }
@@ -1492,30 +1478,20 @@ public class DrawBase {
         }
     }
 
-    public boolean isFreezed() {
+    public boolean isFrozen() {
         for (int i = 0; i < pointlist.size(); i++) {
             CPoint p = (CPoint) pointlist.get(i);
             if (p.isFreezed()) {
-                gxInstance.setTextLabel2("The diagram is freezed, use right click menu to unfreeze!");
+                gxInstance.setTextLabel2(GExpert.getLanguage("The diagram is frozen, use right click menu to unfreeze!"));
                 return true;
             }
         }
         return false;
     }
 
-    public void setAllFreezed() {
-        for (int i = 0; i < pointlist.size(); i++) {
-            {
-                CPoint p = (CPoint) pointlist.get(i);
-                p.setFreezed(true);
-            }
-        }
-    }
-
-
     public void zoom_out(double x, double y, int zz) {
 
-        if (isFreezed())
+        if (isFrozen())
             return;
 
         double r = CMisc.ZOOM_RATIO;
@@ -1528,7 +1504,7 @@ public class DrawBase {
     }
 
     public void zoom_in(double x, double y, int zz) {
-        if (isFreezed())
+        if (isFrozen())
             return;
 
         double r = CMisc.ZOOM_RATIO;

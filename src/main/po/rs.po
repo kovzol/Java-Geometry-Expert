@@ -210,8 +210,8 @@ msgid "Y Coordinate"
 msgstr ""
 
 #: ../wprover/CProperty.java:1221
-msgid "Freezed"
-msgstr "Zamrznuto"
+msgid "Frozen"
+msgstr ""
 
 #: ../wprover/CProperty.java:1262
 msgid "Point on Line"
@@ -3627,6 +3627,37 @@ msgstr "Sačuvaj"
 msgid "All Files"
 msgstr "Datoteka"
 
+msgid "The diagram is frozen, use right click menu to unfreeze!"
+msgstr ""
+
+msgid "Open selected file"
+msgstr ""
+
+msgid "Abort file chooser dialog"
+msgstr ""
+
+msgid "Up One Level"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Create New Folder"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+#, fuzzy
+msgid "Size"
+msgstr "Veličina fonta"
+
+msgid "Date Modified"
+msgstr ""
+
+#~ msgid "Freezed"
+#~ msgstr "Zamrznuto"
+
 #~ msgid "animate_start"
 #~ msgstr "animacija početak"
 
@@ -3650,9 +3681,6 @@ msgstr "Datoteka"
 
 #~ msgid "Undo"
 #~ msgstr "Poništi"
-
-#~ msgid "Font Size"
-#~ msgstr "Veličina fonta"
 
 #~ msgid "Font Color"
 #~ msgstr "Boja fonta"

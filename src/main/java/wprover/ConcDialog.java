@@ -615,10 +615,10 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         }
     }
 
-    public massertion getProveM() {
+    public MAssertion getProveM() {
         int id = bt.getSelectedIndex();
         if (id < 0) return null;
-        massertion ass = new massertion(id);
+        MAssertion ass = new MAssertion(id);
         for (int i = 0; i < vlist.size(); i++) {
             JComboBox b = (JComboBox) vlist.get(i);
             if (b.isEnabled() && b.getSelectedIndex() < 0) {

@@ -208,8 +208,8 @@ msgid "Y Coordinate"
 msgstr ""
 
 #: ../wprover/CProperty.java:1221
-msgid "Freezed"
-msgstr "Fisso"
+msgid "Frozen"
+msgstr ""
 
 #: ../wprover/CProperty.java:1262
 msgid "Point on Line"
@@ -3555,6 +3555,37 @@ msgstr "Salva"
 msgid "All Files"
 msgstr "File"
 
+msgid "The diagram is frozen, use right click menu to unfreeze!"
+msgstr ""
+
+msgid "Open selected file"
+msgstr ""
+
+msgid "Abort file chooser dialog"
+msgstr ""
+
+msgid "Up One Level"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Create New Folder"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+#, fuzzy
+msgid "Size"
+msgstr "Dimensione Font"
+
+msgid "Date Modified"
+msgstr ""
+
+#~ msgid "Freezed"
+#~ msgstr "Fisso"
+
 #~ msgid "animate_start"
 #~ msgstr "avvia animazione"
 
@@ -3569,9 +3600,6 @@ msgstr "File"
 
 #~ msgid "Undo"
 #~ msgstr "Disfa"
-
-#~ msgid "Font Size"
-#~ msgstr "Dimensione Font"
 
 #~ msgid "Font Color"
 #~ msgstr "Colore Font"

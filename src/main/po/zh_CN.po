@@ -208,8 +208,8 @@ msgid "Y Coordinate"
 msgstr "Y轴坐标"
 
 #: ../wprover/CProperty.java:1221
-msgid "Freezed"
-msgstr "固定"
+msgid "Frozen"
+msgstr ""
 
 #: ../wprover/CProperty.java:1262
 msgid "Point on Line"
@@ -3548,6 +3548,37 @@ msgstr "保存"
 msgid "All Files"
 msgstr "文件"
 
+msgid "The diagram is frozen, use right click menu to unfreeze!"
+msgstr ""
+
+msgid "Open selected file"
+msgstr ""
+
+msgid "Abort file chooser dialog"
+msgstr ""
+
+msgid "Up One Level"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Create New Folder"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+#, fuzzy
+msgid "Size"
+msgstr "字体大小"
+
+msgid "Date Modified"
+msgstr ""
+
+#~ msgid "Freezed"
+#~ msgstr "固定"
+
 #~ msgid "animate_start"
 #~ msgstr "播放动画"
 
@@ -3571,9 +3602,6 @@ msgstr "文件"
 
 #~ msgid "Undo"
 #~ msgstr "回退"
-
-#~ msgid "Font Size"
-#~ msgstr "字体大小"
 
 #~ msgid "Font Color"
 #~ msgstr "字体颜色"

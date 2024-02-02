@@ -20,7 +20,7 @@ public class MProveTree extends JTree implements ActionListener {
     private DefaultTreeModel model;
     private TreeCellOPaqueEditor editor;
     private mpopup popup;
-    private mnode topm;
+    private MNode topm;
     private int rstep = -1;
     private int statusID = -1;
 
@@ -28,7 +28,7 @@ public class MProveTree extends JTree implements ActionListener {
     private boolean isButtonDown = false;
 
 
-    public void loadmtree(mnode n) {
+    public void loadmtree(MNode n) {
         topm = n;
         top.removeAllChildren();
         loadmnode(top, n);
@@ -40,7 +40,7 @@ public class MProveTree extends JTree implements ActionListener {
 
     public boolean isTreeEmpty() {
         if (top == null) return true;
-        mnode m = (mnode) top.getUserObject();
+        MNode m = (MNode) top.getUserObject();
         if (m == null || m.size() <= 1) return true;
         return false;
     }
@@ -60,10 +60,10 @@ public class MProveTree extends JTree implements ActionListener {
     }
 
 
-    private void loadmnode(DefaultMutableTreeNode nd, mnode n) {
+    private void loadmnode(DefaultMutableTreeNode nd, MNode n) {
         nd.setUserObject(n);
         for (int i = 0; i < n.size(); i++) {
-            mnode n1 = (mnode) n.get(i);
+            MNode n1 = (MNode) n.get(i);
             DefaultMutableTreeNode nd1 = new DefaultMutableTreeNode(n1);
             loadmnode(nd1, n1);
             nd.add(nd1);
@@ -107,14 +107,14 @@ public class MProveTree extends JTree implements ActionListener {
         return -1;
     }
 
-    public DefaultMutableTreeNode addNewNode(DefaultMutableTreeNode d, mnode n) {
+    public DefaultMutableTreeNode addNewNode(DefaultMutableTreeNode d, MNode n) {
         TreePath path = this.getSelectionPath();
         DefaultMutableTreeNode node = this.getSelectedNodeOrLast();
 
         if (node == null)
             return d;
 
-        mnode n1 = (mnode) node.getUserObject();
+        MNode n1 = (MNode) node.getUserObject();
         if (n1 == null) {
             return d;
         }
@@ -125,12 +125,12 @@ public class MProveTree extends JTree implements ActionListener {
                 n.setIndex(index + 1);
             }
             top.add(d);
-            ((mnode) top.getUserObject()).add(n);
+            ((MNode) top.getUserObject()).add(n);
         } else {
             DefaultMutableTreeNode dn = (DefaultMutableTreeNode) node.getParent();
             if (dn != null) {
                 dn.add(d);
-                ((mnode) dn.getUserObject()).add(n);
+                ((MNode) dn.getUserObject()).add(n);
             }
         }
         this.reload();
@@ -138,7 +138,7 @@ public class MProveTree extends JTree implements ActionListener {
         return d;
     }
 
-    public DefaultMutableTreeNode addNewNode(mnode n) {
+    public DefaultMutableTreeNode addNewNode(MNode n) {
         DefaultMutableTreeNode d = new DefaultMutableTreeNode(n);
         return addNewNode(d, n);
     }
@@ -146,10 +146,10 @@ public class MProveTree extends JTree implements ActionListener {
     public int getToProveIndex() {
         for (int i = 0; i < top.getChildCount(); i++) {
             DefaultMutableTreeNode nd = (DefaultMutableTreeNode) top.getChildAt(i);
-            mnode t = (mnode) nd.getUserObject();
+            MNode t = (MNode) nd.getUserObject();
             if (t != null && t.objSize() != 0 && t.getObject(0) != null &&
-                    t.getObject(0) instanceof mprefix) {
-                mprefix f = (mprefix) t.getObject(0);
+                    t.getObject(0) instanceof MPrefix) {
+                MPrefix f = (MPrefix) t.getObject(0);
                 if (f.getPrefixType() == 1) {
                     statusID = i;
                     return i;
@@ -166,11 +166,11 @@ public class MProveTree extends JTree implements ActionListener {
     }
 
     public void undoStep(UndoStruct un) {
-        mnode n = (mnode) top.getUserObject();
+        MNode n = (MNode) top.getUserObject();
         if (n == null) return;
         int k = n.size();
         if (k > 0) {
-            mnode n2 = n.getChild(k - 1);
+            MNode n2 = n.getChild(k - 1);
             if (n2.containsUndo(un)) {
                 this.cancelEditing();
                 n.remove(k - 1);
@@ -197,41 +197,41 @@ public class MProveTree extends JTree implements ActionListener {
         if (node == null) {
             return;
         }
-        mnode n = (mnode) node.getUserObject();
+        MNode n = (MNode) node.getUserObject();
         if (n == null) {
             return;
         }
-        mobject d = null;
+        MObject d = null;
         if (n.size() == 1) {
-            mobject obj = n.getObject(0);
-            if (obj instanceof mprefix) {
-                mprefix pf = (mprefix) obj;
+            MObject obj = n.getObject(0);
+            if (obj instanceof MPrefix) {
+                MPrefix pf = (MPrefix) obj;
                 int t = pf.getPrefixType();
-                if (t == mprefix.GIVEN) {
-                    d = new mdraw();
-                } else if (t == mprefix.TOPROVE) {
-                    d = new massertion(0);
+                if (t == MPrefix.GIVEN) {
+                    d = new MDraw();
+                } else if (t == MPrefix.TOPROVE) {
+                    d = new MAssertion(0);
                 }
             }
         }
         if (d == null) {
-            d = new mobject(0);
+            d = new MObject(0);
         }
         append(d);
 
     }
 
-    public DefaultMutableTreeNode addChild(mobject obj) {
+    public DefaultMutableTreeNode addChild(MObject obj) {
         TreePath path = this.getSelectionPath();
         DefaultMutableTreeNode node = this.getSelectedNodeOrLast();
         if (node == null) {
             return null;
         }
-        mnode n = (mnode) node.getUserObject();
+        MNode n = (MNode) node.getUserObject();
         if (n == null) {
             return null;
         }
-        mnode nd = new mnode();
+        MNode nd = new MNode();
         nd.add(obj);
         n.addChild(nd);
         DefaultMutableTreeNode dn = new DefaultMutableTreeNode(nd);
@@ -243,13 +243,13 @@ public class MProveTree extends JTree implements ActionListener {
         return dn;
     }
 
-    public DefaultMutableTreeNode append(mobject obj) {
+    public DefaultMutableTreeNode append(MObject obj) {
         TreePath path = this.getSelectionPath();
         DefaultMutableTreeNode node = this.getSelectedNodeOrLast();
         if (node == null) {
             return null;
         }
-        mnode n = (mnode) node.getUserObject();
+        MNode n = (MNode) node.getUserObject();
         if (n == null) {
             return null;
         }
@@ -260,16 +260,16 @@ public class MProveTree extends JTree implements ActionListener {
     }
 
     public DefaultMutableTreeNode addNewNode() {
-        mnode node = new mnode();
+        MNode node = new MNode();
         int k = top.getChildCount();
         int n = this.getToProveIndex();
         if (n < 0) {
 //            node.add(new mdraw("draw..."));
         } else {
-            node.add(new mobject(0));
+            node.add(new MObject(0));
             node.setIndex(k - n - 1);
         }
-        mnode nt = (mnode) top.getUserObject();
+        MNode nt = (MNode) top.getUserObject();
         nt.addChild(node);
         DefaultMutableTreeNode nd = new DefaultMutableTreeNode(node);
         top.add(nd);
@@ -309,11 +309,11 @@ public class MProveTree extends JTree implements ActionListener {
     }
 
     public void init_top() {
-        mnode node = new mnode();
-        node.add(new mtext(getLanguage("Theorem")));
+        MNode node = new MNode();
+        node.add(new MText(getLanguage("Theorem")));
         top.setUserObject(node);
-        mnode node1 = new mnode();
-        node1.add(new mprefix(0));
+        MNode node1 = new MNode();
+        node1.add(new MPrefix(0));
         top.add(new DefaultMutableTreeNode(node1));
         node.add(node1);
         topm = node;
@@ -408,7 +408,7 @@ public class MProveTree extends JTree implements ActionListener {
                     TreePath path = MProveTree.this.getPathForLocation(e.getX(), e.getY());
                     if (path != null) {
                         DefaultMutableTreeNode n1 = (DefaultMutableTreeNode) path.getLastPathComponent();
-                        mnode n2 = (mnode) n1.getUserObject();
+                        MNode n2 = (MNode) n1.getUserObject();
                         MProveTree.this.dp.setUndoStructForDisPlay(n2.getLastUndo(), true);
                         if (e.getClickCount() > 1 && n1 == top) {
                         }
@@ -466,9 +466,9 @@ public class MProveTree extends JTree implements ActionListener {
                             getLastPathComponent();
                     if (node != null) {
                         Object obj = node.getUserObject();
-                        if (obj != null && obj instanceof mnode &&
+                        if (obj != null && obj instanceof MNode &&
                                 !MProveTree.this.isEditing()) {
-                            mnode n = (mnode) obj;
+                            MNode n = (MNode) obj;
                             MProveTree.this.dp.flashmnode(n);
                             dpane.repaint();
                         }
@@ -492,7 +492,7 @@ public class MProveTree extends JTree implements ActionListener {
         popup.show(comp, x, y);
     }
 
-    private mnode getSelectedMnode() {
+    private MNode getSelectedMnode() {
         TreePath path = this.getSelectionPath();
         if (path == null) {
             return null;
@@ -502,7 +502,7 @@ public class MProveTree extends JTree implements ActionListener {
         if (nd == null) {
             return null;
         }
-        return (mnode) nd.getUserObject();
+        return (MNode) nd.getUserObject();
     }
 
     public void expandSelectedNode() {
@@ -514,7 +514,7 @@ public class MProveTree extends JTree implements ActionListener {
         if (nd == null) {
             return;
         }
-        mnode n = (mnode) nd.getUserObject();
+        MNode n = (MNode) nd.getUserObject();
         if (n == null) {
             return;
         }
@@ -534,9 +534,9 @@ public class MProveTree extends JTree implements ActionListener {
             if (v.size() > 1) {
                 for (int i = 0; i < v.size(); i++) {
                     UndoStruct u = (UndoStruct) v.get(i);
-                    mdraw d = new mdraw(u.toString());
+                    MDraw d = new MDraw(u.toString());
                     d.adddrawStruct(u);
-                    mnode n1 = new mnode();
+                    MNode n1 = new MNode();
                     n1.add(d);
                     DefaultMutableTreeNode t = new DefaultMutableTreeNode(n1);
                     nd.add(t);
@@ -562,14 +562,14 @@ public class MProveTree extends JTree implements ActionListener {
         if (nd == null)
             return;
 
-        mnode n = (mnode) nd.getUserObject();
+        MNode n = (MNode) nd.getUserObject();
         if (n == null) {
             return;
         }
         DefaultMutableTreeNode p = (DefaultMutableTreeNode) nd.getParent();
         if (p != null) {
             this.cancelEditing();
-            mnode n2 = (mnode) p.getUserObject();
+            MNode n2 = (MNode) p.getUserObject();
             n2.remove(n);
             this.loadmtree(topm);
             this.setEditorLastRow();
@@ -588,16 +588,16 @@ public class MProveTree extends JTree implements ActionListener {
             parent = (DefaultMutableTreeNode) nd.getParent();
             break;
         }
-        mnode n = (mnode) parent.getUserObject();
+        MNode n = (MNode) parent.getUserObject();
         if (n == null)
             return;
-        mnode nx = new mnode();
+        MNode nx = new MNode();
 
         int id = -1;
         int dk = 1;
         for (int i = 0; i < paths.length; i++) {
             DefaultMutableTreeNode nd = (DefaultMutableTreeNode) paths[i].getLastPathComponent();
-            mnode n1 = (mnode) nd.getUserObject();
+            MNode n1 = (MNode) nd.getUserObject();
             nd.removeFromParent();
             n1.setIndex(dk++);
             int k = n.remove(n1);
@@ -656,10 +656,10 @@ public class MProveTree extends JTree implements ActionListener {
         } else {
             DefaultMutableTreeNode d = (DefaultMutableTreeNode) this.getPathForRow(rstep).
                     getLastPathComponent();
-            mnode n = (mnode) d.getUserObject();
+            MNode n = (MNode) d.getUserObject();
             DefaultMutableTreeNode d1 = (DefaultMutableTreeNode) this.getPathForRow(rstep + 1).
                     getLastPathComponent();
-            mnode n1 = (mnode) d1.getUserObject();
+            MNode n1 = (MNode) d1.getUserObject();
             dp.run_to_prove(n.getFirstUndo(), getLastUndo(d1));
             rstep++;
             this.setSelectionRow(rstep);
@@ -688,7 +688,7 @@ public class MProveTree extends JTree implements ActionListener {
                 if (u != null) return u;
             }
         } else {
-            mnode n1 = (mnode) d.getUserObject();
+            MNode n1 = (MNode) d.getUserObject();
             return n1.getLastUndo();
         }
         return null;
@@ -711,9 +711,9 @@ public class MProveTree extends JTree implements ActionListener {
         if (u.isNodeValued()) {
             if (top.getChildCount() == 1) {
                 DefaultMutableTreeNode nd = (DefaultMutableTreeNode) top.getChildAt(0);
-                mnode m = (mnode) nd.getUserObject();
+                MNode m = (MNode) nd.getUserObject();
                 if (m.objSize() == 1) {
-                    mdraw d = new mdraw(u.toString());
+                    MDraw d = new MDraw(u.toString());
                     d.adddrawStruct(u);
                     m.add(d);
                     m.addUndo(u);
@@ -723,8 +723,8 @@ public class MProveTree extends JTree implements ActionListener {
                 }
             }
 
-            mnode n = new mnode();
-            mdraw d = new mdraw(u.toString());
+            MNode n = new MNode();
+            MDraw d = new MDraw(u.toString());
             d.adddrawStruct(u);
             n.add(d);
             n.addUndo(u);
@@ -737,7 +737,7 @@ public class MProveTree extends JTree implements ActionListener {
             }
             DefaultMutableTreeNode nd = (DefaultMutableTreeNode) path.
                     getLastPathComponent();
-            mnode md = (mnode) nd.getUserObject();
+            MNode md = (MNode) nd.getUserObject();
             md.addUndo(u);
         }
     }
@@ -803,7 +803,7 @@ public class MProveTree extends JTree implements ActionListener {
             if (command.equals("CSR")) {
                 MProveTree.this.combineSelection();
             } else if (command.equals("Delete")) {
-                mnode n = editor.getEditorValue();
+                MNode n = editor.getEditorValue();
                 if (n != null) {
                     if (n.objSize() >= 1) {
                         if (n.removeLast()) {
@@ -817,7 +817,7 @@ public class MProveTree extends JTree implements ActionListener {
             } else if (command.equals("AAT")) {
 
             } else if (command.equals("AANR")) {
-                MProveTree.this.addNewNode(new mnode());
+                MProveTree.this.addNewNode(new MNode());
             }
         }
 
@@ -825,14 +825,14 @@ public class MProveTree extends JTree implements ActionListener {
 }
 
 
-class mnode extends Vector {
+class MNode extends Vector {
     private int index = -1;
 
     Vector vundolist = new Vector();
     Vector vlist = new Vector();
 
 
-    public mnode() {
+    public MNode() {
         super(0);
     }
 
@@ -844,7 +844,7 @@ class mnode extends Vector {
         index = k;
     }
 
-    public int remove(mnode m) {
+    public int remove(MNode m) {
         for (int i = 0; i < size(); i++) {
             if (m == get(i)) {
                 remove(i);
@@ -867,11 +867,11 @@ class mnode extends Vector {
         return index;
     }
 
-    public void addChild(mnode node) {
+    public void addChild(MNode node) {
         super.add(node);
     }
 
-    public void add(mobject node) {
+    public void add(MObject node) {
         vlist.add(node);
     }
 
@@ -903,12 +903,12 @@ class mnode extends Vector {
         return v;
     }
 
-    public mnode getChild(int id) {
-        return (mnode) this.get(id);
+    public MNode getChild(int id) {
+        return (MNode) this.get(id);
     }
 
-    public mobject getObject(int id) {
-        return (mobject) vlist.get(id);
+    public MObject getObject(int id) {
+        return (MObject) vlist.get(id);
     }
 
     public String toString() {
@@ -942,9 +942,9 @@ class mnode extends Vector {
 
     public UndoStruct getUndoFromDraw() {
         for (int i = 0; i < vlist.size(); i++) {
-            mobject o = (mobject) vlist.get(i);
-            if (o instanceof mdraw) {
-                mdraw d = (mdraw) o;
+            MObject o = (MObject) vlist.get(i);
+            if (o instanceof MDraw) {
+                MDraw d = (MDraw) o;
                 return d.getUndoStruct();
             }
         }
@@ -962,12 +962,12 @@ class mnode extends Vector {
             }
         }
         for (int i = 0; i < n2; i++) {
-            Object o = mobject.load(in, dp);
+            Object o = MObject.load(in, dp);
             if (o != null)
                 vlist.add(o);
         }
         for (int i = 0; i < n3; i++) {
-            mnode nd = new mnode();
+            MNode nd = new MNode();
             nd.Load(in, dp);
             this.add(nd);
         }
@@ -982,11 +982,11 @@ class mnode extends Vector {
             out.writeInt(u.m_id);
         }
         for (int i = 0; i < vlist.size(); i++) {
-            mobject obj = (mobject) vlist.get(i);
+            MObject obj = (MObject) vlist.get(i);
             obj.Save(out);
         }
         for (int i = 0; i < size(); i++) {
-            mnode nd = (mnode) get(i);
+            MNode nd = (MNode) get(i);
             nd.Save(out);
         }
     }
@@ -994,7 +994,7 @@ class mnode extends Vector {
 }
 
 
-class msymbol extends mobject {
+class MSymbol extends MObject {
     final static ImageIcon EQQ = GExpert.createImageIcon("images/symbol/eqq.gif");
     final static ImageIcon EQ = GExpert.createImageIcon("images/symbol/eq.gif");
     final static ImageIcon EXISTS = GExpert.createImageIcon("images/symbol/exist.gif");
@@ -1031,7 +1031,7 @@ class msymbol extends mobject {
         return (ImageIcon) vlist.get(k);
     }
 
-    public msymbol(int t) {
+    public MSymbol(int t) {
         super(SYMBOL);
         type1 = t;
     }
@@ -1061,7 +1061,7 @@ class msymbol extends mobject {
 }
 
 
-class mprefix extends mobject {
+class MPrefix extends MObject {
 
     public static int GIVEN = 0;
     public static int TOPROVE = 1;
@@ -1070,7 +1070,7 @@ class mprefix extends mobject {
             "Similarly,", "Q.E.D."};
     private int type1;
 
-    public mprefix(int type) {
+    public MPrefix(int type) {
         super(PREFIX);
         this.type1 = type;
     }
@@ -1115,16 +1115,16 @@ class mprefix extends mobject {
 }
 
 
-class mdraw extends mobject {
+class MDraw extends MObject {
 
     private Vector vunlist = new Vector();
     private String str = "";
 
-    public mdraw() {
+    public MDraw() {
         super(DRAW);
     }
 
-    public mdraw(String s) {
+    public MDraw(String s) {
         super(DRAW);
         str = s;
     }
@@ -1199,14 +1199,14 @@ class mdraw extends mobject {
 }
 
 
-class mtext extends mobject {
+class MText extends MObject {
     private String str = "";
 
-    public mtext() {
+    public MText() {
         super(TEXT);
     }
 
-    public mtext(String s) {
+    public MText(String s) {
         super(TEXT);
         str = s;
     }
@@ -1231,7 +1231,7 @@ class mtext extends mobject {
 }
 
 
-class mdrobj extends mobject {
+class MDrObj extends MObject {
     final public static int LINE = 0;
     final public static int TRIANGLE = 1;
     final public static int CIRCLE = 2;
@@ -1378,13 +1378,13 @@ class mdrobj extends mobject {
         }
 
         if (s.equalsIgnoreCase("para")) {
-            return msymbol.PARA;
+            return MSymbol.PARA;
         }
         if (s.equalsIgnoreCase("perp")) {
-            return msymbol.PERP;
+            return MSymbol.PERP;
         }
         if (s.equalsIgnoreCase("angle")) {
-            return msymbol.ANGLE;
+            return MSymbol.ANGLE;
         }
 
         if (s.equalsIgnoreCase("rectangle")) {
@@ -1466,7 +1466,7 @@ class mdrobj extends mobject {
         return type1;
     }
 
-    public mdrobj(int t) {
+    public MDrObj(int t) {
         super(DOBJECT);
         type1 = t;
     }
@@ -1512,7 +1512,7 @@ class mdrobj extends mobject {
 }
 
 
-class mobject {
+class MObject {
     static String[] pStrings = {"Text", "Keywords", "Symbol", "Assertion",
             "Object", "Draw", "Construction", "Equation",
             "Rule"};
@@ -1530,7 +1530,7 @@ class mobject {
 
     int type;
 
-    public mobject(int t) {
+    public MObject(int t) {
         type = t;
     }
 
@@ -1547,35 +1547,35 @@ class mobject {
         return "     ";
     }
 
-    public static mobject createObject(int t1, int t2) {
+    public static MObject createObject(int t1, int t2) {
         if (t1 == 0) {
-            return new mtext("  ");
+            return new MText("  ");
         }
         if (t1 == 1) {
-            return new mprefix(t2);
+            return new MPrefix(t2);
         }
         if (t1 == 2) {
-            return new msymbol(t2);
+            return new MSymbol(t2);
         }
         if (t1 == 3) {
-            return new massertion(t2);
+            return new MAssertion(t2);
         }
         if (t1 == 4) {
-            return new mdrobj(t2);
+            return new MDrObj(t2);
         }
         if (t1 == 5) {
-            return new mdraw("");
+            return new MDraw("");
         }
         if (t1 == 6) {
             return null;
         }
         if (t1 == 7) {
-            mequation eq = new mequation();
-            eq.addTerm(new meqterm(-1, new mdrobj(0)));
+            MEquation eq = new MEquation();
+            eq.addTerm(new MEqTerm(-1, new MDrObj(0)));
             return eq;
         }
         if (t1 == 8) {
-            return new mrule(t2);
+            return new MRule(t2);
         }
         return null;
     }
@@ -1606,47 +1606,47 @@ class mobject {
         return s;
     }
 
-    public static mobject load(DataInputStream in, DrawProcess dp) throws
+    public static MObject load(DataInputStream in, DrawProcess dp) throws
             IOException {
         int t = in.readInt();
         switch (t) {
-            case mobject.TEXT: {
-                mobject m = new mtext();
+            case MObject.TEXT: {
+                MObject m = new MText();
                 m.Load(in, dp);
                 return m;
             }
-            case mobject.PREFIX: {
-                mprefix m = new mprefix(0);
+            case MObject.PREFIX: {
+                MPrefix m = new MPrefix(0);
                 m.Load(in, dp);
                 return m;
             }
-            case mobject.SYMBOL: {
-                msymbol m = new msymbol(0);
+            case MObject.SYMBOL: {
+                MSymbol m = new MSymbol(0);
                 m.Load(in, dp);
                 return m;
             }
-            case mobject.ASSERT: {
-                massertion m = new massertion(0);
+            case MObject.ASSERT: {
+                MAssertion m = new MAssertion(0);
                 m.Load(in, dp);
                 return m;
             }
-            case mobject.DOBJECT: {
-                mdrobj m = new mdrobj(0);
+            case MObject.DOBJECT: {
+                MDrObj m = new MDrObj(0);
                 m.Load(in, dp);
                 return m;
             }
-            case mobject.DRAW: {
-                mdraw m = new mdraw();
+            case MObject.DRAW: {
+                MDraw m = new MDraw();
                 m.Load(in, dp);
                 return m;
             }
-            case mobject.EQUATION: {
-                mequation eq = new mequation();
+            case MObject.EQUATION: {
+                MEquation eq = new MEquation();
                 eq.Load(in, dp);
                 return eq;
             }
-            case mobject.RULE: {
-                mrule r = new mrule(0);
+            case MObject.RULE: {
+                MRule r = new MRule(0);
                 r.Load(in, dp);
                 return r;
             }
@@ -1665,11 +1665,11 @@ class mobject {
 }
 
 // TODO. This seems to be unfinished.
-class mrule extends mobject {
+class MRule extends MObject {
     int rindex;
     public static String[] cStrings = {"Rule1", "Rule2", "Rule3", "SAS", /* "AAS", */ "SSS", "ASA"}; // FIXME. AAS is missing among the files.
 
-    public mrule(int n) {
+    public MRule(int n) {
         super(RULE);
         rindex = n;
     }
@@ -1709,10 +1709,10 @@ class mrule extends mobject {
 }
 
 
-class mequation extends mobject {
+class MEquation extends MObject {
     private Vector vlist = new Vector();
 
-    public mequation() {
+    public MEquation() {
         super(EQUATION);
     }
 
@@ -1724,19 +1724,19 @@ class mequation extends mobject {
         return vlist.size();
     }
 
-    public void addTerm(meqterm t) {
+    public void addTerm(MEqTerm t) {
         vlist.add(t);
     }
 
-    public meqterm getTerm(int index) {
-        return (meqterm) vlist.get(index);
+    public MEqTerm getTerm(int index) {
+        return (MEqTerm) vlist.get(index);
     }
 
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         int n = in.readInt();
         for (int i = 0; i < n; i++) {
-            vlist.add(meqterm.Load(in, dp));
+            vlist.add(MEqTerm.Load(in, dp));
         }
 
     }
@@ -1745,7 +1745,7 @@ class mequation extends mobject {
         super.Save(out);
         out.writeInt(vlist.size());
         for (int i = 0; i < vlist.size(); i++) {
-            meqterm t = (meqterm) vlist.get(i);
+            MEqTerm t = (MEqTerm) vlist.get(i);
             t.Save(out);
         }
 
@@ -1753,13 +1753,13 @@ class mequation extends mobject {
 }
 
 
-class meqterm {
+class MEqTerm {
     public static String[] cStrings = {" + ", " - ", " * ", " / ", " = ", " > ",
             " >= ", " < ", " <= ", " //= "};
     int etype;
-    mdrobj obj;
+    MDrObj obj;
 
-    public meqterm() {
+    public MEqTerm() {
         etype = -1;
         obj = null;
     }
@@ -1772,7 +1772,7 @@ class meqterm {
         return obj.isPolygon();
     }
 
-    public meqterm(int t, mdrobj o) {
+    public MEqTerm(int t, MDrObj o) {
         etype = t;
         obj = o;
     }
@@ -1781,7 +1781,7 @@ class meqterm {
         etype = t;
     }
 
-    public void setObject(mdrobj d) {
+    public void setObject(MDrObj d) {
         obj = d;
     }
 
@@ -1789,17 +1789,17 @@ class meqterm {
         return etype;
     }
 
-    public mdrobj getObject() {
+    public MDrObj getObject() {
         return obj;
     }
 
-    public static meqterm Load(DataInputStream in, DrawProcess dp) throws
+    public static MEqTerm Load(DataInputStream in, DrawProcess dp) throws
             IOException {
         int t = in.readInt();
-        mdrobj o = new mdrobj(0);
+        MDrObj o = new MDrObj(0);
         in.readInt();
         o.Load(in, dp);
-        return new meqterm(t, o);
+        return new MEqTerm(t, o);
 
     }
 
@@ -1811,7 +1811,7 @@ class meqterm {
 }
 
 
-class massertion extends mobject {
+class MAssertion extends MObject {
     public static String[] cStrings = {"Collinear", "Parallel", "Perpendicular",
             "Midpoint", "Eqdistant", "Cyclic",
             "Eqangle", "Congruent", "Similar", "Distance Less",
@@ -1859,7 +1859,7 @@ class massertion extends mobject {
     private Vector objlist = new Vector();
     private int type1;
 
-    public massertion(int t) {
+    public MAssertion(int t) {
         super(ASSERT);
         type1 = t;
     }
@@ -1965,24 +1965,24 @@ class massertion extends mobject {
             return null;
         }
         if (type1 == PARA) {
-            return msymbol.PARA;
+            return MSymbol.PARA;
         }
         if (type1 == PERP) {
-            return msymbol.PERP;
+            return MSymbol.PERP;
         }
         if (type1 == EQDIS || type1 == EQANGLE) {
-            return msymbol.EQ;
+            return MSymbol.EQ;
         }
         if (type1 == SIM) {
-            return msymbol.SIM;
+            return MSymbol.SIM;
         }
         if (type1 == CONG) {
-            return msymbol.EQSIM;
+            return MSymbol.EQSIM;
         }
         if (type1 == DISLESS || type1 == ANGLESS) {
-            return msymbol.LESS;
+            return MSymbol.LESS;
         }
-        return msymbol.EQQ;
+        return MSymbol.EQQ;
     }
 
     public int getobjNum() {
@@ -1993,7 +1993,7 @@ class massertion extends mobject {
         objlist.clear();
     }
 
-    public void addAll(massertion a) {
+    public void addAll(MAssertion a) {
         objlist.clear();
         int n = a.getobjNum();
         for (int i = 0; i < n; i++) {
@@ -2150,48 +2150,5 @@ class massertion extends mobject {
                 out.writeInt(p.m_id);
         }
     }
-
-}
-
-
-class mTreeModel implements TreeModel {
-    private mnode node;
-
-    public mTreeModel(mnode node) {
-        this.node = node;
-    }
-
-    public Object getRoot() {
-        return node;
-    }
-
-    public Object getChild(Object parent, int index) {
-        mnode d = (mnode) parent;
-        return d.get(index);
-    }
-
-
-    public int getChildCount(Object parent) {
-        return ((mnode) parent).size();
-    }
-
-    public boolean isLeaf(Object node) {
-        return ((mnode) node).size() == 0;
-    }
-
-    public void valueForPathChanged(TreePath path, Object newValue) {
-        int k = 0;
-    }
-
-    public int getIndexOfChild(Object parent, Object child) {
-        return ((mnode) parent).indexOf(child);
-    }
-
-    public void addTreeModelListener(TreeModelListener l) {
-    }
-
-    public void removeTreeModelListener(TreeModelListener l) {
-    }
-
 
 }

@@ -32,7 +32,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
     private JScrollPane spanel;
     private JToggleButton buttona;
     private MouseListener listener;
-    private itemLabel lselected = null;
+    private ItemLabel lselected = null;
     private Hashtable hash;
     private JDialog ruleDialog;
 
@@ -114,8 +114,8 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
 
             public void mousePressed(MouseEvent e) {
                 Object obj = e.getSource();
-                if (obj instanceof itemLabel) {
-                    itemLabel label = (itemLabel) e.getSource();
+                if (obj instanceof ItemLabel) {
+                    ItemLabel label = (ItemLabel) e.getSource();
                     if (label == lselected) {
                     } else {
                         label.setSelected(true);
@@ -218,16 +218,16 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
 
 
         private JLabel setLabelObject(int index, int type, Object obj) {
-            itemLabel label = null;
+            ItemLabel label = null;
             if (index <= vlist.size()) {
-                label = new itemLabel(false, true);
+                label = new ItemLabel(false, true);
                 label.setBorder(new EmptyBorder(1, 2, 1, 2));
                 label.setForeground(Color.black);
                 label.setAlignmentX(Component.LEFT_ALIGNMENT);
                 label.addMouseListener(listener);
                 vlist.add(label);
             } else
-                label = (itemLabel) vlist.get(index);
+                label = (ItemLabel) vlist.get(index);
             label.setUserObject(type, obj);
             this.add(label);
             return label;
@@ -274,16 +274,16 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
 
         private JLabel setLabelObject(int index, int type, Object obj) {
-            itemLabel label = null;
+            ItemLabel label = null;
             if (index <= vlist.size()) {
-                label = new itemLabel(false, true);
+                label = new ItemLabel(false, true);
                 label.setBorder(new EmptyBorder(1, 2, 1, 2));
                 label.setForeground(Color.black);
                 label.setAlignmentX(Component.LEFT_ALIGNMENT);
                 label.addMouseListener(listener);
                 vlist.add(label);
             } else
-                label = (itemLabel) vlist.get(index);
+                label = (ItemLabel) vlist.get(index);
             label.setUserObject(type, obj);
             this.add(label);
             return label;

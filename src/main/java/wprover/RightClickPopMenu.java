@@ -214,7 +214,8 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
 
     private void addFreezeMenu() {
         if (gxInstance.dp.containFreezedPoint()) {
-            JMenuItem item = new JMenuItem("Unfreeze All Points");
+            JMenuItem item = new JMenuItem(GExpert.getLanguage("Unfreeze All Points"));
+            item.setActionCommand("Unfreeze All Points");
             item.setEnabled(true);
             item.addActionListener(this);
             this.add(item);

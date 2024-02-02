@@ -36,7 +36,7 @@ class VcellRender extends JPanel {
         this.setBorder(eborder);
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         selected = false;
-        defaultRenderer.setFont(itemLabel.font1);
+        defaultRenderer.setFont(ItemLabel.font1);
         backgroundSelectionColor = defaultRenderer.getBackgroundSelectionColor();
         backgroundNonSelectionColor = defaultRenderer.
                 getBackgroundNonSelectionColor();
@@ -60,23 +60,23 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
     public BookCellRenderer(int n) {
         super();
         for (int i = 1; i <= n; i++) {
-            itemLabel lb = new itemLabel(true, false);
+            ItemLabel lb = new ItemLabel(true, false);
             renderlist.add(lb);
         }
         for (int i = 1; i <= n; i++) {
-            itemLabel lb = new itemLabel(true, true);
+            ItemLabel lb = new ItemLabel(true, true);
             renderlist1.add(lb);
         }
     }
 
     public void setCellFont(Font f) {
         for (int i = 0; i < renderlist.size(); i++) {
-            itemLabel lb = (itemLabel) renderlist.get(i);
+            ItemLabel lb = (ItemLabel) renderlist.get(i);
             lb.setFont(f);
         }
         Font f1 = new Font(f.getFamily(), f.getStyle(), f.getSize() - 1);
         for (int i = 0; i < renderlist1.size(); i++) {
-            itemLabel lb = (itemLabel) renderlist1.get(i);
+            ItemLabel lb = (ItemLabel) renderlist1.get(i);
             lb.setFont(f1);
         }
     }
@@ -84,15 +84,15 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
     public void setLabelObject(int index, int t, Object obj) {
         if (obj == null) return;
 
-        itemLabel label = null;
-        label = (itemLabel) renderlist.get(index);
+        ItemLabel label = null;
+        label = (ItemLabel) renderlist.get(index);
         label.setUserObject(t, obj);
         this.add(label);
     }
 
     public void setLabelObject1(int index, int t, Object obj) {
-        itemLabel label = null;
-        label = (itemLabel) renderlist1.get(index);
+        ItemLabel label = null;
+        label = (ItemLabel) renderlist1.get(index);
         label.setUserObject(t, obj);
         this.add(label);
     }
@@ -216,11 +216,11 @@ class BookCellEditor extends BasicCellEditor implements MouseListener {
         init(n);
 
         for (int i = 0; i < renderlist.size(); i++) {
-            itemLabel lb = (itemLabel) renderlist.get(i);
+            ItemLabel lb = (ItemLabel) renderlist.get(i);
             lb.addMouseListener(this);
         }
         for (int i = 0; i < renderlist1.size(); i++) {
-            itemLabel lb = (itemLabel) renderlist1.get(i);
+            ItemLabel lb = (ItemLabel) renderlist1.get(i);
             lb.addMouseListener(this);
         }
     }
@@ -232,7 +232,7 @@ class BookCellEditor extends BasicCellEditor implements MouseListener {
         if (selectLabel != null) {
             selectLabel.setSelected(false);
         }
-        selectLabel = (itemLabel) e.getSource();
+        selectLabel = (ItemLabel) e.getSource();
         selectLabel.setSelected(true);
         cell.repaint();
     }
@@ -255,21 +255,21 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
     Vector renderlist = new Vector();
     Vector renderlist1 = new Vector();
     VcellRender cell = new VcellRender();
-    itemLabel selectLabel = null;
+    ItemLabel selectLabel = null;
 
 
     public void init(int n) {
 
         for (int i = 1; i <= n; i++) {
-            itemLabel lb = new itemLabel(false, false);
+            ItemLabel lb = new ItemLabel(false, false);
             lb.setRenderT(false);
 
             renderlist.add(lb);
         }
         for (int i = 1; i <= n; i++) {
-            itemLabel lb = new itemLabel(false, true);
+            ItemLabel lb = new ItemLabel(false, true);
             lb.setRenderT(false);
-            lb.setFont(itemLabel.font1);
+            lb.setFont(ItemLabel.font1);
             renderlist1.add(lb);
         }
         cell.setBorder(new LineBorder(cell.backgroundSelectionColor.darker(), 1));
@@ -277,37 +277,37 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
 
     public void setEditorFont(Font f) {
         for (int i = 0; i < renderlist.size(); i++) {
-            itemLabel lb = (itemLabel) renderlist.get(i);
+            ItemLabel lb = (ItemLabel) renderlist.get(i);
             lb.setFont(f);
         }
         Font f1 = new Font(f.getFamily(), f.getStyle(), f.getSize() - 1);
         for (int i = 0; i < renderlist1.size(); i++) {
-            itemLabel lb = (itemLabel) renderlist1.get(i);
+            ItemLabel lb = (ItemLabel) renderlist1.get(i);
             lb.setFont(f1);
         }
     }
 
     public void setLabelObject(int index, int t, Object obj) {
-        itemLabel label = null;
-        label = (itemLabel) renderlist.get(index);
+        ItemLabel label = null;
+        label = (ItemLabel) renderlist.get(index);
         label.setUserObject(t, obj);
         cell.add(label);
     }
 
     public void setLabelObject1(int index, int t, Object obj) {
-        itemLabel label = null;
-        label = (itemLabel) renderlist1.get(index);
+        ItemLabel label = null;
+        label = (ItemLabel) renderlist1.get(index);
         label.setUserObject(t, obj);
         cell.add(label);
     }
 
     public void addListenerToAllLabel(MouseListener listener) {
         for (int i = 0; i < renderlist.size(); i++) {
-            itemLabel label = (itemLabel) renderlist.get(i);
+            ItemLabel label = (ItemLabel) renderlist.get(i);
             label.addMouseListener(listener);
         }
         for (int i = 0; i < renderlist1.size(); i++) {
-            itemLabel label = (itemLabel) renderlist1.get(i);
+            ItemLabel label = (ItemLabel) renderlist1.get(i);
             label.addMouseListener(listener);
         }
     }
@@ -426,7 +426,7 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
 }
 
 
-class itemLabel extends JLabel {
+class ItemLabel extends JLabel {
     public static ImageIcon icon = GExpert.createImageIcon("images/dtree/detail.gif");
     private static ImageIcon icon_bc = GExpert.createImageIcon("images/dtree/because.gif");
 
@@ -457,7 +457,7 @@ class itemLabel extends JLabel {
         return userValue;
     }
 
-    public itemLabel(boolean r, boolean e) {
+    public ItemLabel(boolean r, boolean e) {
         super();
         isrender = r;
         iselm = e;
@@ -484,7 +484,7 @@ class itemLabel extends JLabel {
                 if (type == 5) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
-                itemLabel.this.repaint();
+                ItemLabel.this.repaint();
             }
 
             public void mouseExited(MouseEvent e) {
@@ -492,7 +492,7 @@ class itemLabel extends JLabel {
                 if (type == 5) {
                     setCursor(Cursor.getDefaultCursor());
                 }
-                itemLabel.this.repaint();
+                ItemLabel.this.repaint();
             }
         });
     }
