@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: jgex\n"
 "Report-Msgid-Bugs-To: jgex@googlegroups.com\n"
 "POT-Creation-Date: 2023-11-15 23:44+0100\n"
-"PO-Revision-Date: 2023-12-18 15:24+0100\n"
+"PO-Revision-Date: 2024-03-15 14:12+0100\n"
 "Last-Translator: Ines Ganglmayr\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -1813,7 +1813,7 @@ msgstr "Konstruktionsprotokoll"
 
 #: ../wprover/GExpert.java:2361
 msgid "translate view"
-msgstr "Ansicht übersetzen"
+msgstr "Ansicht verschieben"
 
 #: ../wprover/GExpert.java:2364
 msgid "zoom in view"
