@@ -469,8 +469,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             filechooser = new JFileChooser();
             String dr = getUserDir();
             filechooser.setCurrentDirectory(new File(dr));
-            filechooser.setFileFilter(new JFileFilter("gex"));
             filechooser.setFileFilter(new JFileFilter("ggb"));
+            filechooser.setFileFilter(new JFileFilter("gex"));
         }
         filechooser.setSelectedFile(null);
         filechooser.setSelectedFiles(null);
