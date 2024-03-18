@@ -9,7 +9,6 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 import java.io.*;
@@ -1555,12 +1554,12 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     public static String graphvizProgram = "";
     public static String hypotheses = "";
     GraphvizBuilder gb; // The global Graphviz object that can be appended.
-    HashMap<String, Node> nodes; // For each string we assign a Graphviz node.
+    HashSet<Node> nodes;
 
     class Pair {
-        public String from;
-        public String to;
-        public Pair(String from, String to)
+        public Node from;
+        public Node to;
+        public Pair(Node from, Node to)
         {
             this.from = from;
             this.to = to;
@@ -1650,10 +1649,10 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         return co.nx;
     }
 
-    private void addLine(String from, String to) {
+    private void addLine(Node from, Node to) {
         Pair p = new Pair(from, to);
         if (!edges.contains(p)) {
-            gb.addLine(nodes.get(to), nodes.get(from)).rankdir(Rankdir.BT).build();
+            gb.addLine(to, from).rankdir(Rankdir.BT).build();
             edges.add(p);
         }
     }
@@ -1662,10 +1661,13 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
      * Create a Graphviz node from cond if it does not exist. If it does, return the node.
      */
     private Node getGraphvizNode(Cond co) {
-        if (nodes.containsKey(co.toString()))
-            return nodes.get(co.toString());
+        for (Node n : nodes) {
+            if (n.nodeAttrs().getLabel().equals(co.no + ") " + co.toString())) {
+                return n;
+            }
+        }
         Node n = graphvizNode(co);
-        nodes.put(co.toString(), n);
+        nodes.add(n);
         return n;
     }
 
@@ -1673,10 +1675,13 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
      * Create a Graphviz node from string if it does not exist. If it does, return the node.
      */
     private Node getGraphvizNode(String s) {
-        if (nodes.containsKey(s))
-            return nodes.get(s);
+        for (Node n : nodes) {
+            if (n.nodeAttrs().getLabel().equals(s)) {
+                return n;
+            }
+        }
         Node n = graphvizNode(s);
-        nodes.put(s, n);
+        nodes.add(n);
         return n;
     }
 
@@ -1700,9 +1705,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
                     Node from = getGraphvizNode(co);
                     Node to = getGraphvizNode(c);
-                    // gb.addLine(from, to).build();
-                    // gb.addLine(to, from).rankdir(Rankdir.BT).build();
-                    addLine(co.toString(), c.toString());
+                    addLine(from, to);
                 }
             } else {
                 st = c.getText();
@@ -1712,9 +1715,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
                     Node from = getGraphvizNode(co);
                     Node to = getGraphvizNode(st);
-                    // gb.addLine(from, to).build();
-                    // gb.addLine(to, from).rankdir(Rankdir.BT).build();
-                    addLine(co.toString(), st);
+                    addLine(from, to);
 
                     // This may duplicate some entries, FIXME:
                     hypotheses += "\"" + st + "\" [ fillcolor = pink, shape = oval, style = filled ];\n";
@@ -1772,7 +1773,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
         // initialize
         gb = Graphviz.digraph();
-        nodes = new HashMap<>();
+        nodes = new HashSet<>();
         edges = new HashSet<>();
 
         if (drawStructure) {
