@@ -1594,7 +1594,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         COLOR_CIRCLES = "#FFFFC0", // light yellow
         COLOR_ANGLES = "#AE7439", // light orange
         COLOR_TRIANGLES = "#C0FFFF", // light cyan
-        COLOR_OTHER = "#C0C0C0"; // grey
+        COLOR_OTHER = "#C0C0C0", // grey
+        COLOR_HYPOTHESIS = "#F7CAC9"; // pink
 
     int getRule(Cond co) {
         int rule = co.getRule();
@@ -1662,7 +1663,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
      * @return
      */
     Node graphvizNode(String st) {
-        org.graphper.api.attributes.Color c = org.graphper.api.attributes.Color.PINK;
+        org.graphper.api.attributes.Color c = org.graphper.api.attributes.Color.ofRGB(COLOR_HYPOTHESIS);
         org.graphper.api.attributes.NodeShape s = NodeShapeEnum.ELLIPSE;
         Node n = Node.builder().label(st).fillColor(c).shape(s).build();
         return n;
@@ -1745,7 +1746,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     addLine(from, to);
 
                     // This may duplicate some entries, FIXME:
-                    hypotheses += "\"" + st + "\" [ fillcolor = pink, shape = oval, style = filled ];\n";
+                    hypotheses += "\"" + st + "\" [ fillcolor = \"" + COLOR_HYPOTHESIS + "\", shape = oval, style = filled ];\n";
                 }
             }
             Cond leaf = searchSubCond(root, num);
