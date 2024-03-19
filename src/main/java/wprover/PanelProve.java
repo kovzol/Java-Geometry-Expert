@@ -1588,22 +1588,33 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     }
 
-    String setNode(Cond co) {
-        // We show not just the number of the node but also its description:
+    String COLOR_TRIVIAL = "#FFA0A0", // light red
+        COLOR_PARALLEL_LINES = "#C0FFC0", // light green
+        COLOR_PERPENDICULAR_LINES = "#C0C0FF", // light blue
+        COLOR_CIRCLES = "#FFFFC0", // light yellow
+        COLOR_ANGLES = "#AE7439", // light orange
+        COLOR_TRIANGLES = "#C0FFFF", // light cyan
+        COLOR_OTHER = "#C0C0C0"; // grey
+
+    int getRule(Cond co) {
         int rule = co.getRule();
-        System.out.println("Rule " + rule + " is used for node " + co.getNo());
-        String color = "yellow";
         if (rule == 0) {
-            color = "cyan";
+            co.getRuleFromeFacts(); // maybe it's not filled yet
+            rule = co.getRule();
+            if (rule > 43) { // this may be some error
+                rule = 0;
+                co.setRule(rule); // try to fix it
+            }
         }
-        if (rule == 28) {
-            color = "green";
-        }
-        if (rule == 36) {
-            color = "white";
-        }
+        return rule;
+    }
+
+    String setNode(Cond co) {
+        int rule = getRule(co);
+        // System.out.println("GV: Rule " + rule + " is used for node " + co.getNo());
+        String c = getRuleColor(rule);
         return co.getNo() + " [ label = \"" + co.getNo() + ") " + co.getText()
-                + "\", fillcolor = \"" + color + "\"];\n";
+                + "\", fillcolor = \"" + c + "\"];\n";
     }
 
     /**
@@ -1612,21 +1623,37 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
      * @return
      */
     Node graphvizNode(Cond co) {
-        // We show not just the number of the node but also its description:
-        int rule = co.getRule();
-        org.graphper.api.attributes.Color c = org.graphper.api.attributes.Color.YELLOW;
+        int rule = getRule(co);
+        // System.out.println("GRAPHPER: Rule " + rule + " is used for node " + co.getNo());
+        org.graphper.api.attributes.Color c;
         org.graphper.api.attributes.NodeShape s = NodeShapeEnum.RECT;
-        if (rule == 0) {
-            c = org.graphper.api.attributes.Color.ofRGB("#00FFFF");
-        }
-        if (rule == 28) {
-            c = org.graphper.api.attributes.Color.GREEN;
-        }
-        if (rule == 36) {
-            c = org.graphper.api.attributes.Color.WHITE;
-        }
+        c = org.graphper.api.attributes.Color.ofRGB(getRuleColor(rule));
         Node n = Node.builder().label(co.getNo() + ") " + co.getText()).fillColor(c).shape(s).build();
         return n;
+    }
+
+    String getRuleColor(int rule) {
+        if (rule == 0)
+            return COLOR_TRIVIAL;
+        if (rule >= 1 && rule <= 4) {
+            return COLOR_PARALLEL_LINES;
+        }
+        if (rule >= 5 && rule <= 8) {
+            return COLOR_PERPENDICULAR_LINES;
+        }
+        if (rule >= 9 && rule <= 15) {
+            return COLOR_CIRCLES;
+        }
+        if (rule >= 16 && rule <= 22) {
+            return COLOR_ANGLES;
+        }
+        if (rule >= 23 && rule <= 37) {
+            return COLOR_TRIANGLES;
+        }
+        if (rule >= 38) {
+            return COLOR_OTHER;
+        }
+        return "#ffffff"; // this should not happen
     }
 
     /**
@@ -1841,7 +1868,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 frame = new JDialog(gxInstance.getFrame(), GExpert.getLanguage(info));
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.getContentPane().add(panel);
-                frame.pack();
+                frame.pack(); // This SVG window hides the main application window, FIXME.
                 frame.setSize(w, h);
                 frame.setVisible(true);
             } catch (Exception e) {

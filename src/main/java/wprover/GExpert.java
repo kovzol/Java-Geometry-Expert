@@ -27,6 +27,10 @@ import java.awt.dnd.*;
 import java.awt.datatransfer.*;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
@@ -1709,9 +1713,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
         try {
             DataOutputStream out = dp.openOutputFile(ff.getPath());
+            Path path = Paths.get(ff.getPath());
             String program = PanelProve.graphvizProgram;
-            out.writeBytes(program);
-            out.close();
+            Files.write(path, java.util.List.of(program.split("\n")), StandardCharsets.UTF_8);
         } catch (Exception ee) {
             ee.printStackTrace();
         }
