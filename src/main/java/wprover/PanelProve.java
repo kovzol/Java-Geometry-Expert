@@ -2253,7 +2253,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             gt.pc();
             clearAll();
             condPane.setConstruction(gt);
-            if (false && gt.isPoistionSet()) {
+            if (false && gt.isPositionSet()) {
                 tbar.startDrawing();
                 dp.autoConstruct(gt);
             } else {

@@ -71,7 +71,7 @@ public class DrawTextProcess extends DrawProcess {
         if (cons_timer != null)
             cons_timer.stop();
         int n = 0;
-        if (gt.isPoistionSet())
+        if (gt.isPositionSet())
             n = 0;
         else {
             Object[] options = {"Text with a diagram",
