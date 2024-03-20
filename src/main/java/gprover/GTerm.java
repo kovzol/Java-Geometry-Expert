@@ -4,15 +4,24 @@ import javax.swing.*;
 import java.io.*;
 import java.util.Vector;
 
+/**
+ * JGEX supports loading and saving scripts in a simple textual format.
+ * Among the examples, these files have no extension (see, e.g. 3_JAR/simson).
+ * This class can load and save them.
+ */
 public class GTerm {
 
+    // position of all points in the current construction, collected in a single String
     private String posString = "";
     private String aniString = "";
 
+    // array of points in the current construction
     private Vector gpoints = new Vector();
+    // array of construction steps of the current construction
     private Vector gcons = new Vector();
     public Cond conc = new Cond();
 
+    // name of construction
     private String name = null;
     private boolean generated = false;
     private boolean is_position_set = false;
@@ -517,10 +526,15 @@ public class GTerm {
         return aniString;
     }
 
-    public boolean isPoistionSet() {
+    public boolean isPositionSet() {
         return is_position_set;
     }
 
+    /**
+     * Add a conclusion to the construction.
+     * @param ln A script command in the form "SHOW: COLLINEAR P Q R"
+     * @return if the conclusion was added successfully
+     */
     boolean addConclusion(String ln) {
         Cons c = new Cons(0);
         String sln = ln.substring(4, ln.length());
@@ -529,11 +543,12 @@ public class GTerm {
         sln = sln.replace(".", "");
         sln = sln.trim();
         String[] list = sln.split(" ");
+        // Now list contains the conclusion word by word, for example: ["COLLINEAR", "P", "Q", "R"]
         if (list[0].equalsIgnoreCase("NO")) {
             return true;
         }
 
-        int t = CST.getClu(list[0]);
+        int t = CST.getClu(list[0]); // convert the conclusion type to integer, e.g. COLLINEAR to Gib.CO_COLL
         if (t == Gib.CO_NANG || t == Gib.CO_NSEG) {
             String s = "";
             for (int i = 1; i < list.length; i++)
@@ -587,6 +602,7 @@ public class GTerm {
         }
         c.no = id;
         c.conc = true;
+        // Now variable c contains the conclusion in the required format and can be added to the construction:
         gcons.add(c);
         return true;
     }
