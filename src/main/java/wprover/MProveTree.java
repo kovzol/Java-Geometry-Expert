@@ -806,7 +806,7 @@ public class MProveTree extends JTree implements ActionListener {
                 MNode n = editor.getEditorValue();
                 if (n != null) {
                     if (n.objSize() >= 1) {
-                        if (n.removeLast()) {
+                        if (n.myremoveLast()) {
                             MProveTree.this.cancelEditing();
                         }
                     } else
@@ -854,7 +854,7 @@ class MNode extends Vector {
         return -1;
     }
 
-    public boolean removeLast() {
+    public boolean myremoveLast() {
         if (vlist.size() == 0) {
             return false;
         }

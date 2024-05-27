@@ -25,6 +25,13 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
     WuTextPane pane;
 
 
+    /**
+     * The `AboutDialog` constructor initializes a dialog with a custom border,
+     * adds several panels and labels displaying information about the application and its authors,
+     * sets up a text pane with descriptive text, and includes mouse event listeners for interactivity.
+     *
+     * @param f
+     */
     public AboutDialog(GExpert f) {
         gx = f;
 
@@ -119,6 +126,10 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
         initLocation();
     }
 
+    /**
+     * The `initLocation` method centers the dialog within its parent frame
+     * by setting its location based on the frame's dimensions and the dialog's preferred size.
+     */
     public void initLocation() {
         Frame f = gx.getFrame();
         Dimension dm = this.getPreferredSize();
