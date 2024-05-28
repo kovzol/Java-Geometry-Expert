@@ -2926,26 +2926,21 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return GExpert.class.getResource(path);
     }
 
-    private static void createAndShowGUI() { // APPLET ONLY.
+    private static void createAndShowGUI() {
 
         Locale.setDefault(Locale.ENGLISH);
 
         GExpert exp = new GExpert();
-        if (true) {
+        JFrame frame = (JFrame) (Object) exp;
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.pack();
 
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setSize(1200, 900);
 
-            JFrame frame = (JFrame) (Object) exp;
-            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-            frame.pack();
-
-
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            frame.setSize(1200, 900);
-
-            frame.setLocation((int) (screenSize.getWidth() - 1200) / 2,
-                    (int) (screenSize.getHeight() - 900) / 2); //center
-            frame.setVisible(true);
-        }
+        frame.setLocation((int) (screenSize.getWidth() - 1200) / 2,
+                (int) (screenSize.getHeight() - 900) / 2); //center
+        frame.setVisible(true);
     }
 
     public static void setLookAndFeel() {
@@ -2983,6 +2978,13 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                 formatter.printHelp("jgex [options], where [options] are:", options);
                 System.exit(0);
             }
+            if (args.length == 0) {
+                return;
+            }
+            // Process first argument as a file:
+            // TODO: Store the required action for later and open a file later
+            // when the application already runs.
+            // File f = new File(args[0]);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             formatter.printHelp("jgex", options);
