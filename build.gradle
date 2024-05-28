@@ -173,6 +173,10 @@ run {
     workingDir = runningDir
 }
 
+javadoc {
+    mustRunAfter "msgFmtAll"
+}
+
 javapackager {
     description = "JGEX combines dynamic geometry software, automated geometry theorem prover with a visually dynamic approach for presenting proofs."
     mainClass = applicationMainClass

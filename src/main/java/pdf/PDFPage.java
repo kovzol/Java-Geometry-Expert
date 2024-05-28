@@ -636,7 +636,7 @@ public class PDFPage extends PDFObject implements Serializable
      * within the page.
      * @param x Coordinate in Java space
      * @param y Coordinate in Java space
-     * @return array containing the x & y Coordinate in User space
+     * @return array containing the x and y Coordinate in User space
      */
     public int[] cxy(int x,int y) {
         int r[] = new int[2];
