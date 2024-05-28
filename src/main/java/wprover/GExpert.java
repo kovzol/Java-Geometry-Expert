@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
 
+import org.apache.commons.cli.*;
 
 public class GExpert extends JFrame implements ActionListener, KeyListener, DropTargetListener, WindowListener {    // APPLET ONLY.
 
@@ -2963,7 +2964,34 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
+    private static void processCommandLineOptions(String[] args) {
+        Options options = new Options();
+
+        Option helpOption = new Option("h", "help", false, "show help");
+        helpOption.setRequired(false);
+        options.addOption(helpOption);
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd;
+
+        try {
+            cmd = parser.parse(options, args);
+            if (cmd.hasOption("h")) {
+                formatter.printHelp("jgex [options], where [options] are:", options);
+                System.exit(0);
+            }
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("jgex", options);
+            System.exit(1);
+        }
+    }
+
     public static void main(String[] args) {
+        System.out.println("Java " +  Version.getNameAndVersion());
+        processCommandLineOptions(args);
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
