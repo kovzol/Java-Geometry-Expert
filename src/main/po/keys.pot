@@ -2563,10 +2563,10 @@ msgstr ""
 msgid "{0} is the midpoint of {1}"
 msgstr ""
 
-msgid "parallel to {0} passing {1}"
+msgid "parallel to {0} passing through {1}"
 msgstr ""
 
-msgid "passing {0}"
+msgid "passing through {0}"
 msgstr ""
 
 msgid "with foot {0}"

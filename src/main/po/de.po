@@ -2601,10 +2601,12 @@ msgstr "Mittelpunkt von {0}"
 msgid "{0} is the midpoint of {1}"
 msgstr "{0} ist der Mittelpunkt von {1}"
 
-msgid "parallel to {0} passing {1}"
+#, fuzzy
+msgid "parallel to {0} passing through {1}"
 msgstr "parallel zu {0} durch {1}"
 
-msgid "passing {0}"
+#, fuzzy
+msgid "passing through {0}"
 msgstr "durch {0}"
 
 msgid "with foot {0}"

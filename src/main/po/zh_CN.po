@@ -2645,11 +2645,11 @@ msgstr "中点"
 msgid "{0} is the midpoint of {1}"
 msgstr "中点"
 
-msgid "parallel to {0} passing {1}"
+msgid "parallel to {0} passing through {1}"
 msgstr ""
 
 #, fuzzy
-msgid "passing {0}"
+msgid "passing through {0}"
 msgstr "直线"
 
 msgid "with foot {0}"

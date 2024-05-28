@@ -2585,10 +2585,12 @@ msgstr "{0} felezőpontja"
 msgid "{0} is the midpoint of {1}"
 msgstr "{0} a(z) {1} felezőpontja"
 
-msgid "parallel to {0} passing {1}"
+#, fuzzy
+msgid "parallel to {0} passing through {1}"
 msgstr "párhuzamos {0}-val {1}-n keresztül"
 
-msgid "passing {0}"
+#, fuzzy
+msgid "passing through {0}"
 msgstr "{0}-n keresztül"
 
 msgid "with foot {0}"

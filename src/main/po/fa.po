@@ -2614,11 +2614,11 @@ msgstr "نقاط میانی"
 msgid "{0} is the midpoint of {1}"
 msgstr "نقاط میانی"
 
-msgid "parallel to {0} passing {1}"
+msgid "parallel to {0} passing through {1}"
 msgstr ""
 
 #, fuzzy
-msgid "passing {0}"
+msgid "passing through {0}"
 msgstr "خط"
 
 msgid "with foot {0}"
