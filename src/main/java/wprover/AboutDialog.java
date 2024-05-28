@@ -26,11 +26,10 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
 
 
     /**
-     * The `AboutDialog` constructor initializes a dialog with a custom border,
-     * adds several panels and labels displaying information about the application and its authors,
-     * sets up a text pane with descriptive text, and includes mouse event listeners for interactivity.
+     * Initializes the AboutDialog with the specified GExpert frame.
+     * Sets up the dialog layout, adds labels and panels with information, and configures mouse listeners.
      *
-     * @param f
+     * @param f the GExpert frame to associate with this dialog
      */
     public AboutDialog(GExpert f) {
         gx = f;
@@ -127,8 +126,7 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
     }
 
     /**
-     * The `initLocation` method centers the dialog within its parent frame
-     * by setting its location based on the frame's dimensions and the dialog's preferred size.
+     * Centers the dialog within the parent frame.
      */
     public void initLocation() {
         Frame f = gx.getFrame();
@@ -136,10 +134,21 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
         this.setLocation(f.getX() + f.getWidth() / 2 - (int) dm.getWidth() / 2, f.getY() + f.getHeight() / 2 - (int) dm.getHeight() / 2);
     }
 
+    /**
+     * Called when the mouse is clicked.
+     *
+     * @param e the event to be processed
+     */
     public void mouseClicked(MouseEvent e) {
 
     }
 
+    /**
+     * Adds a string to the text pane with the specified style.
+     *
+     * @param s the string to add
+     * @param type the style type for the string
+     */
     protected void addString(String s, String type) {
         try {
             StyledDocument doc = pane.getStyledDocument();
@@ -150,15 +159,30 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
 
     }
 
+    /**
+     * Called when the mouse is pressed.
+     *
+     * @param e the event to be processed
+     */
     public void mousePressed(MouseEvent e) {
         if (e.getSource() == b2)
             GExpert.openURL("https://github.com/kovzol/Java-Geometry-Expert"); // FIXME: it opens twice
         this.setVisible(false);
     }
 
+    /**
+     * Called when the mouse is released.
+     *
+     * @param e the event to be processed
+     */
     public void mouseReleased(MouseEvent e) {
     }
 
+    /**
+     * Called when the mouse enters a component.
+     *
+     * @param e the event to be processed
+     */
     public void mouseEntered(MouseEvent e) {
         //Component c = (Component) e.getSource();
         setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
@@ -167,6 +191,11 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
             b2.setBorder(BorderFactory.createLineBorder(Color.blue, 1));
     }
 
+    /**
+     * Called when the mouse exits a component.
+     *
+     * @param e the event to be processed
+     */
     public void mouseExited(MouseEvent e) {
         Component c = (Component) e.getSource();
         setCursor(Cursor.getDefaultCursor());
