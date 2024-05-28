@@ -10,7 +10,12 @@ import java.io.DataInputStream;
  * Date: 2005-1-14
  * Time: 13:37:42
  * To change this template use File | Settings | File Templates.
- */             
+ */
+
+/**
+ * The `AnimateC` class represents the animation control for a geometric object in the GExpert application.
+ * It provides methods to animate a point along a line, circle, or trace path.
+ */
 public class AnimateC {
 
     double bx, by;
@@ -38,6 +43,11 @@ public class AnimateC {
 
     double delta = 0.05;
 
+    /**
+     * Copy constructor for `AnimateC`.
+     *
+     * @param n The `AnimateC` instance to copy.
+     */
     public AnimateC(AnimateC n) {
         bx = n.bx;
         by = n.by;
@@ -59,6 +69,11 @@ public class AnimateC {
     }
 
 
+    /**
+     * Generates a string representation of the animation settings.
+     *
+     * @return A string representation of the animation settings.
+     */
     String getAnimationString() {
         if (pA == null) {
             return null;
@@ -86,6 +101,13 @@ public class AnimateC {
         return null;
     }
 
+    /**
+     * Loads animation settings from a string.
+     *
+     * @param s The string containing animation settings.
+     * @param dp The `DrawTextProcess` instance to use for finding points and objects.
+     * @return true if the animation settings were loaded successfully, false otherwise.
+     */
     public boolean loadAnimationString(String s, DrawTextProcess dp) {
         if (!s.startsWith("ANI")) {
             return false;
@@ -185,6 +207,11 @@ public class AnimateC {
         return true;
     }
 
+    /**
+     * Sets the animation step value.
+     *
+     * @param step The step value to set.
+     */
     void Setstep(double step) {
         gap = step + delta;
 
@@ -195,6 +222,12 @@ public class AnimateC {
         this.reClaclulate();
     }
 
+    /**
+     * Gets the current animation value.
+     *
+     * @param f The frame number.
+     * @return The current animation value.
+     */
     public int getValue(int f) {
         if (onType == 1 || onType == 2) {
             return this.getInitValue();
@@ -213,6 +246,11 @@ public class AnimateC {
     AnimateC() {
     }
 
+    /**
+     * Gets the initial animation value.
+     *
+     * @return The initial animation value.
+     */
     public int getInitValue() {
         return (int) gap;
     }
@@ -242,6 +280,9 @@ public class AnimateC {
 
     }
 
+    /**
+     * Recalculates the animation parameters based on the current settings.
+     */
     public void reClaclulate() {
         if (onType == 2) {
             Circle c = (Circle) onObj;
@@ -280,6 +321,9 @@ public class AnimateC {
         }
     }
 
+    /**
+     * Starts the animation by recalculating initial values and setting initial positions.
+     */
     public void startAnimate() {
         reClaclulate();
 
@@ -291,20 +335,36 @@ public class AnimateC {
 
     }
 
+    /**
+     * Resets the position of the point to its initial coordinates.
+     */
     public void resetXY() {
         pA.setXY(x, y);
     }
 
+    /**
+     * Returns a string representation of the animation state.
+     *
+     * @return a string representing the point and the object it is on
+     */
     public String toString() {
         if (pA == null || onObj == null)
             return super.toString();
         return pA + " on " + onObj;
     }
 
+    /**
+     * Stops the animation by optionally resetting the point's position.
+     */
     public void stopAnimate() {
         // pA.setXY(bx, by);
     }
 
+    /**
+     * Calculates the number of rounds needed based on the type of object being animated.
+     *
+     * @return the number of rounds for the animation
+     */
     public int getRounds() {
         if (onType == 2) {
             Circle c = (Circle) onObj;
@@ -322,6 +382,11 @@ public class AnimateC {
         return 0;
     }
 
+    /**
+     * Handles the animation logic based on a timer event.
+     *
+     * @return true if the animation continues, false otherwise
+     */
     public boolean onTimer() {
         // pA.setXY(x, y);
         boolean r = true;
@@ -373,6 +438,12 @@ public class AnimateC {
         }
     }
 
+    /**
+     * Saves the current state of the animation to an output stream.
+     *
+     * @param out the output stream to write to
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
         out.writeDouble(bx);
         out.writeDouble(by);
@@ -404,6 +475,13 @@ public class AnimateC {
 
     }
 
+    /**
+     * Loads the state of the animation from an input stream.
+     *
+     * @param in the input stream to read from
+     * @param dp the draw process to use for retrieving objects
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         bx = in.readDouble();
         by = in.readDouble();

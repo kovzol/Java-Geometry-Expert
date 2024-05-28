@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Vector;    
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,6 +17,11 @@ import java.util.Vector;
  * Date: 2008-8-3
  * Time: 18:30:46
  * To change this template use File | Settings | File Templates.
+ */
+
+/**
+ * The `AllSolutionDialog` class provides a dialog for displaying and interacting with
+ * all possible solutions of a given problem within the GExpert application.
  */
 public class AllSolutionDialog extends JBaseDialog implements ActionListener, WindowListener {
 
@@ -34,6 +39,12 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
     Vector vblist, vlist;
     public int index;
 
+    /**
+     * Constructor for `AllSolutionDialog`.
+     * Initializes the dialog with the necessary UI components and event listeners.
+     *
+     * @param gx The instance of GExpert.
+     */
     public AllSolutionDialog(GExpert gx) {
         super(gx.getFrame());
         gxInstance = gx;
@@ -112,6 +123,11 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
         this.pack();
     }
 
+    /**
+     * Sets the list of solutions to be displayed.
+     *
+     * @param v A vector containing the solutions.
+     */
     public void setVlist(Vector v) {
         vblist.clear();
         vlist.clear();
@@ -123,6 +139,9 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
         gxInstance.dp.BackupParameter(backup, true);
     }
 
+    /**
+     * Automatically filters solutions based on certain criteria.
+     */
     public void autoFiltered() {
         cns = gxInstance.getpprove().getConstructionTerm().getConclusion();
         if (cns != null) {
@@ -136,6 +155,11 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
         }
     }
 
+    /**
+     * Sets the filter state and updates the list of solutions accordingly.
+     *
+     * @param r A boolean indicating whether to apply the filter.
+     */
     public void setFilted(boolean r) {
         if (r == false) {
             vlist.clear();
@@ -158,6 +182,9 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
         gxInstance.d.repaint();
     }
 
+    /**
+     * Updates the displayed information in the dialog.
+     */
     public void update() {
         field1.setText(Integer.toString(vlist.size()));
         field2.setText(Integer.toString(index));
@@ -179,6 +206,11 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
     }
 
 
+    /**
+     * Handles action events from the buttons.
+     *
+     * @param e The action event.
+     */
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         try {
@@ -237,6 +269,28 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
 
     }
 
+    /**
+     * @param b if {@code true}, makes the {@code Dialog} visible,
+     *          otherwise hides the {@code Dialog}.
+     *          If the dialog and/or its owner
+     *          are not yet displayable, both are made displayable.  The
+     *          dialog will be validated prior to being made visible.
+     *          If {@code false}, hides the {@code Dialog} and then causes {@code setVisible(true)}
+     *          to return if it is currently blocked.
+     *          <p>
+     *          <b>Notes for modal dialogs</b>.
+     *          <ul>
+     *          <li>{@code setVisible(true)}:  If the dialog is not already
+     *          visible, this call will not return until the dialog is
+     *          hidden by calling {@code setVisible(false)} or
+     *          {@code dispose}.
+     *          <li>{@code setVisible(false)}:  Hides the dialog and then
+     *          returns on {@code setVisible(true)} if it is currently blocked.
+     *          <li>It is OK to call this method from the event dispatching
+     *          thread because the toolkit ensures that other events are
+     *          not blocked while this method is blocked.
+     *          </ul>
+     */
     public void setVisible(boolean b) {
         super.setVisible(b);
         gxInstance.dp.BackupParameter(backup, false);

@@ -15,7 +15,7 @@ import java.awt.*;
  * Date: Nov 26, 2006
  * Time: 5:52:40 PM
  * To change this template use File | Settings | File Templates.
- */             
+ */
 public class AttrToCondDialog extends JBaseDialog {
     final private static int ROW = 5;
     JButton bok, bcancel;
@@ -26,6 +26,11 @@ public class AttrToCondDialog extends JBaseDialog {
     JPanel contentPane;
 
 
+    /**
+     * Constructor for creating an AttrToCondDialog.
+     * @param gx GExpert instance
+     * @param s A string parameter for dialog title
+     */
     public AttrToCondDialog(GExpert gx, String s) {
         super(gx.getFrame(), GExpert.getLanguage(s), true);
         if (CMisc.isApplication())
@@ -39,10 +44,19 @@ public class AttrToCondDialog extends JBaseDialog {
     }
 
 
+    /**
+     * Gets the returned Cond object.
+     * @return the Cond object
+     */
     public Cond getReturnedCond() {
         return co;
     }
 
+    /**
+     * Constructor for creating an AttrToCondDialog for a line.
+     * @param gx GExpert instance
+     * @param ln LLine instance
+     */
     public AttrToCondDialog(GExpert gx, LLine ln) {
         this(gx, "Please select three points");
 
@@ -58,6 +72,11 @@ public class AttrToCondDialog extends JBaseDialog {
     }
 
 
+    /**
+     * Constructor for creating an AttrToCondDialog for a circle.
+     * @param gx GExpert instance
+     * @param cr ACir instance
+     */
     public AttrToCondDialog(GExpert gx, ACir cr) {
         this(gx, "Please select four points");
 
@@ -72,6 +91,11 @@ public class AttrToCondDialog extends JBaseDialog {
         addComp();
     }
 
+    /**
+     * Constructor for creating an AttrToCondDialog for an angle.
+     * @param gx GExpert instance
+     * @param st AngSt instance
+     */
     public AttrToCondDialog(GExpert gx, AngSt st) {
         this(gx, "Please select two angles");
 
@@ -87,6 +111,11 @@ public class AttrToCondDialog extends JBaseDialog {
         addComp();
     }
 
+    /**
+     * Constructor for creating an AttrToCondDialog for triangles.
+     * @param gx GExpert instance
+     * @param st STris instance
+     */
     public AttrToCondDialog(GExpert gx, STris st) {
         this(gx, "Please select two triangles");
 
@@ -101,6 +130,11 @@ public class AttrToCondDialog extends JBaseDialog {
         addComp();
     }
 
+    /**
+     * Constructor for creating an AttrToCondDialog for segments.
+     * @param gx GExpert instance
+     * @param cg CSegs instance
+     */
     public AttrToCondDialog(GExpert gx, CSegs cg) {
         this(gx, "Please select two segments");
 
@@ -510,6 +544,11 @@ public class AttrToCondDialog extends JBaseDialog {
             }
         }
 
+        /**
+         * Retrieves the condition associated with the selected congruence.
+         *
+         * @return The condition object representing the selected congruence.
+         */
         public Cond getReturnCond() {
 
             Cond c = new Cond();

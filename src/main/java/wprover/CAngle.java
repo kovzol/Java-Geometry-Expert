@@ -15,6 +15,10 @@ import gprover.Cm;
  * Time: 11:22:15
  * To change this template use File | Settings | File Templates.
  */
+
+/**
+ * Class representing an angle in a geometric construction.
+ */
 public class CAngle extends CClass {
 
     private CPoint p1, p2, p3, p4;
@@ -31,31 +35,57 @@ public class CAngle extends CClass {
 
     private double dx, dy;
 
-
+    /**
+     * Constructor for CAngle.
+     */
     public CAngle() {
         super(CClass.ANGLE);
     }
 
+    /**
+     * Set the value for the angle.
+     * @param c The value to set.
+     */
     public void setValue1(int c) {
         value1 = c;
     }
 
+    /**
+     * Get the type of text to display for the angle.
+     * @return The type of text.
+     */
     public int getTextType() {
         return show_type;
     }
 
+    /**
+     * Set the type of text to display for the angle.
+     * @param n The type of text to set.
+     */
     public void setTextType(int n) {
         show_type = n;
     }
 
+    /**
+     * Get the value of the angle.
+     * @return The value of the angle.
+     */
     public int getValue1() {
         return value1;
     }
 
+    /**
+     * Set the type of the angle.
+     * @param n The type of the angle to set.
+     */
     public void setAngleType(int n) {
         ftype = n;
     }
 
+    /**
+     * Get the type of the angle.
+     * @return The type of the angle.
+     */
     public int getAngleType() {
         return ftype;
     }
@@ -64,6 +94,15 @@ public class CAngle extends CClass {
     boolean sameAngle(CAngle g) {
         return g.pstart == pstart && g.pend == pend && g.lstart == lstart && g.lend == lend;
     }
+
+    /**
+     * Check if two angles are the same.
+     * @param p1 Point 1 of angle 1.
+     * @param p2 Point 2 of angle 1.
+     * @param p3 Point 1 of angle 2.
+     * @param p4 Point 2 of angle 2.
+     * @return True if the angles are the same, false otherwise.
+     */
 
     public boolean isSame(CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         if (this.p1 != null) {
@@ -82,10 +121,30 @@ public class CAngle extends CClass {
         return false;
     }
 
+    /**
+     * Checks if two sets of points are the same.
+     *
+     * @param p1 The first point of the first set.
+     * @param p2 The second point of the first set.
+     * @param p3 The first point of the second set.
+     * @param p4 The second point of the second set.
+     * @return {@code true} if the two sets of points are the same, {@code false} otherwise.
+     */
     public boolean isSame_m(CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         return false;
     }
 
+
+    /**
+     * Constructs a CAngle object with specified lines and points.
+     *
+     * @param l1 The first line.
+     * @param l2 The second line.
+     * @param p1 The first point.
+     * @param p2 The second point.
+     * @param p3 The third point.
+     * @param p4 The fourth point.
+     */
     public CAngle(CLine l1, CLine l2, CPoint p1, CPoint p2, CPoint p3, CPoint p4) { // p1 > p2  p3 > p4.   p1 > p3  || p1 == p3 p2 > p4
         super(CClass.ANGLE);
         this.p1 = p1;
@@ -116,12 +175,21 @@ public class CAngle extends CClass {
         value1 = 1;
     }
 
-
+    /**
+     * Sets the text of the angle.
+     *
+     * @param s The text to set.
+     */
     public void setAngleText(String s) {
         if (ptext != null)
             ptext.setText(s);
     }
 
+    /**
+     * Gets the name of the angle based on its defining points and lines.
+     *
+     * @return The name of the angle.
+     */
     public String getAngleName() {
         CPoint p0;
         if (p1 != null || p2 != null || p3 != null || p4 != null) {
@@ -157,6 +225,15 @@ public class CAngle extends CClass {
         }
     }
 
+
+    /**
+     * Constructs a CAngle object.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param p1 the first point
+     * @param p2 the second point
+     */
     public CAngle(CLine l1, CLine l2, CPoint p1, CPoint p2) {
 
         super(CClass.ANGLE);
@@ -216,40 +293,86 @@ public class CAngle extends CClass {
         value1 = 1;
     }
 
+    /**
+     * Sets the radius of the angle.
+     *
+     * @param v the radius value
+     */
     public void setRadius(int v) {
         radius = v;
     }
 
+    /**
+     * Gets the radius of the angle.
+     *
+     * @return the radius value
+     */
     public int getRadius() {
         return radius;
     }
 
+    /**
+     * Sets the name of the angle.
+     *
+     * @param s the name of the angle
+     */
     public void setAngleName(String s) {
         if (ptext != null)
             ptext.setText(s);
     }
 
+    /**
+     * Gets the text associated with the angle.
+     *
+     * @return the CText object representing the text
+     */
     public CText getText() {
         return ptext;
     }
 
+    /**
+     * Gets the x-coordinate for the angle's string representation.
+     *
+     * @return the x-coordinate
+     */
     public double getxForString() {
         return dx;
     }
 
+    /**
+     * Gets the y-coordinate for the angle's string representation.
+     *
+     * @return the y-coordinate
+     */
     public double getyForString() {
         return dy;
     }
 
+    /**
+     * Gets the type string of the angle.
+     *
+     * @return the type string
+     */
     public String TypeString() {
         if (m_name == null) return "";
         return m_name;
     }
 
+    /**
+     * Gets the common intersection point of the two lines forming the angle.
+     *
+     * @return the intersection point
+     */
     public CPoint CrossPoint() {
         return CLine.commonPoint(this.lstart, this.lend);
     }
 
+
+    /**
+     * Gets the description of the angle.
+     *
+     * @return the description string
+     */
     public String getDescription() {
         CPoint p = CLine.commonPoint(this.lstart, this.lend);
         if (p != null)
@@ -259,16 +382,35 @@ public class CAngle extends CClass {
         }
     }
 
+    /**
+     * Gets the vertex point of the angle.
+     *
+     * @return the vertex point
+     */
     public CPoint getVertex() {
         return CLine.commonPoint(this.lstart, this.lend);
     }
 
+    /**
+     * Gets the common line between two angles if they share a common line.
+     *
+     * @param g1 the first angle
+     * @param g2 the second angle
+     * @return the common line, or null if there is none
+     */
     public static CLine getCrossLine(CAngle g1, CAngle g2) {
         if (g1.lstart == g2.lstart || g1.lstart == g2.lend) return g1.lstart;
         if (g1.lend == g2.lstart || g1.lend == g2.lend) return g1.lend;
         return null;
     }
 
+    /**
+     * Checks if two angles can be considered equal based on their common points and lines.
+     *
+     * @param ag1 the first angle
+     * @param ag2 the second angle
+     * @return the common point, or null if they are not equal
+     */
     public static CPoint canEqual(CAngle ag1, CAngle ag2) {
         CLine ln1 = ag1.lstart;
         CLine ln2 = ag1.lend;
@@ -295,6 +437,13 @@ public class CAngle extends CClass {
         return p;
     }
 
+    /**
+     * Selects the angle if the given coordinates are within the angle's range.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if the angle is selected, false otherwise
+     */
     public boolean select(double x, double y) {
         if (visible == false) return false;
 
@@ -349,6 +498,12 @@ public class CAngle extends CClass {
         return false;
     }
 
+    /**
+     * Moves the angle by adjusting its radius based on the given coordinates.
+     *
+     * @param dx the x-coordinate
+     * @param dy the y-coordinate
+     */
     public void move(double dx, double dy) {
         double[] r = CLine.Intersect(lstart, lend);
         if (r == null) return;
@@ -358,13 +513,26 @@ public class CAngle extends CClass {
             radius = 20;
     }
 
-
+    /**
+     * Draws the angle using the given Graphics2D object.
+     *
+     * @param g2 the Graphics2D object
+     */
     public void draw(Graphics2D g2) {
         if (visible == false) return;
         draw(g2, false);
     }
 
-
+    /**
+     * Draws an auxiliary line from a point to the perimeter of the angle.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param p the first point
+     * @param p1 the second point
+     * @param p2 the third point
+     * @param g2 the Graphics2D object
+     */
     public void drawauxLine1(double x, double y, CPoint p, CPoint p1, CPoint p2, Graphics2D g2) {
         double dx1 = p.getx() - x;
         double dy1 = p.gety() - y;
@@ -397,6 +565,13 @@ public class CAngle extends CClass {
         g2.drawLine((int) dx1, (int) dy1, (int) xf, (int) yf);
     }
 
+    /**
+     * Draws an auxiliary line for the angle.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param g2 the Graphics2D object
+     */
     public void drawauxLine(double x, double y, Graphics2D g2) {
         if (Math.abs(x) > 2000 || Math.abs(y) > 2000) return;
         CPoint pl1[] = lstart.getMaxMinPoint();
@@ -428,10 +603,21 @@ public class CAngle extends CClass {
 
     }
 
+    /**
+     * Sets the show type of the angle.
+     *
+     * @param n the show type
+     */
     public void setShowType(int n) {
         show_type = n;
     }
 
+    /**
+     * Draws the angle with the option to highlight if selected.
+     *
+     * @param g2 the Graphics2D object
+     * @param isSelected true if the angle is selected, false otherwise
+     */
     public void draw(Graphics2D g2, boolean isSelected) {
         if (!this.isdraw()) return;
         double[] r = CLine.Intersect(lstart, lend);
@@ -574,6 +760,12 @@ public class CAngle extends CClass {
         }
     }
 
+    /**
+     * Rounds the given value to one decimal place.
+     *
+     * @param r the value to round
+     * @return the rounded value
+     */
     public float roundValue(double r) {
         float n = (float) r * 10;
         if (n > 0)
@@ -585,6 +777,13 @@ public class CAngle extends CClass {
     }
 
 
+    /**
+     * Saves the angle to a PostScript file.
+     *
+     * @param fp the file output stream
+     * @param stype the show type
+     * @throws IOException if an I/O error occurs
+     */
     public void SavePS(FileOutputStream fp, int stype) throws IOException {
         if (visible == false) return;
 
@@ -726,6 +925,12 @@ public class CAngle extends CClass {
         this.saveSuper(fp);
     }
 
+    /**
+     * Rounds the given angle to be within the range of -180 to 180 degrees.
+     *
+     * @param r the angle to round
+     * @return the rounded angle
+     */
     public float round(float r) {
         while (r >= 180)
             r -= 360;
@@ -734,10 +939,34 @@ public class CAngle extends CClass {
         return r;
     }
 
+    /**
+     * Calculates the angle between three points.
+     *
+     * @param x1 the x-coordinate of the first point
+     * @param y1 the y-coordinate of the first point
+     * @param x2 the x-coordinate of the second point
+     * @param y2 the y-coordinate of the second point
+     * @param x3 the x-coordinate of the third point
+     * @param y3 the y-coordinate of the third point
+     * @return the angle in radians
+     */
     public static double get3pAngle(double x1, double y1, double x2, double y2, double x3, double y3) {
         return get4pAngle(x1, y1, x2, y2, x2, y2, x3, y3);
     }
 
+    /**
+     * Calculates the angle between four points.
+     *
+     * @param x1 the x-coordinate of the first point
+     * @param y1 the y-coordinate of the first point
+     * @param x2 the x-coordinate of the second point
+     * @param y2 the y-coordinate of the second point
+     * @param x3 the x-coordinate of the third point
+     * @param y3 the y-coordinate of the third point
+     * @param x4 the x-coordinate of the fourth point
+     * @param y4 the y-coordinate of the fourth point
+     * @return the angle in radians
+     */
     public static double get4pAngle(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
 
         double dx1 = x1 - x2;
@@ -766,11 +995,28 @@ public class CAngle extends CClass {
         return dr;
     }
 
+    /**
+     * Calculates the angle value between three points.
+     *
+     * @param pa the first point
+     * @param pb the second point
+     * @param pc the third point
+     * @return the angle value in radians
+     */
     public static double getAngleValue(CPoint pa, CPoint pb, CPoint pc) {
         if (pa == null || pb == null || pc == null) return 0.0;
         return get3pAngle(pa.getx(), pa.gety(), pb.getx(), pb.gety(), pc.getx(), pc.gety());
     }
 
+    /**
+     * Calculates the angle value between four points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param p4 the fourth point
+     * @return the angle value in radians
+     */
     public static double getAngleValue(CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         if (p1 == null || p2 == null || p3 == null || p4 == null) {
             return 0.0;
@@ -778,7 +1024,12 @@ public class CAngle extends CClass {
         return get4pAngle(p1.getx(), p1.gety(), p2.getx(), p2.gety(), p3.getx(), p3.gety(), p4.getx(), p4.gety());
     }
 
-
+    /**
+     * Saves the angle data to an output stream.
+     *
+     * @param out the data output stream
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
         super.Save(out);
 
@@ -792,6 +1043,13 @@ public class CAngle extends CClass {
         out.writeInt(value1);
     }
 
+    /**
+     * Loads the angle data from an input stream.
+     *
+     * @param in the data input stream
+     * @param dp the draw process
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
 
         if (CMisc.version_load_now < 0.01) {

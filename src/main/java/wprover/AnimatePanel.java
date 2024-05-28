@@ -10,6 +10,9 @@ import java.awt.*;
 import java.net.URL;
 
 
+/**
+ * A toolbar panel that controls animation playback, speed, and state.
+ */
 public class AnimatePanel extends JToolBar implements ActionListener, ChangeListener {
 
     Timer timer;
@@ -18,13 +21,20 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
     AnimateC ant;
     JToggleButton bx1, bx2, bx3;
 
-                      
-                      
+
+
     boolean first = true;
     JPanel d;
     DrawProcess dp;
     JPopupMenu menu;
 
+    /**
+     * Constructs an AnimatePanel with the specified expert, panel, and draw process.
+     *
+     * @param exp the expert object controlling the animation
+     * @param pn the panel associated with the animation
+     * @param d the draw process handling the drawing logic
+     */
     public AnimatePanel(GExpert exp, JPanel pn, DrawProcess d) {
 
         expert = exp;
@@ -111,22 +121,40 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
 
     }
 
+    /**
+     * Enables all the buttons on the panel.
+     */
     public void setEnableAll() {
         bx1.setEnabled(true);
         bx2.setEnabled(true);
         bx3.setEnabled(true);
     }
 
+    /**
+     * Returns the preferred size of this component.
+     *
+     * @return the preferred size
+     */
     public Dimension getPreferredSize() {
         return super.getMinimumSize();
     }
 
+    /**
+     * Sets the attributes for the animation.
+     *
+     * @param ant the animation controller
+     */
     public void setAttribute(AnimateC ant) {
         this.ant = ant;
         first = true;
         framesPerSecond.setValue(ant.getInitValue());
     }
 
+    /**
+     * Handles action events from the timer and buttons.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         String command = e.getActionCommand();
@@ -158,11 +186,17 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
         d.repaint();
     }
 
+    /**
+     * Starts the animation.
+     */
     public void startA() {
         ant.startAnimate();
         timer.start();
     }
 
+    /**
+     * Stops the animation.
+     */
     public void stopA() {
         if (timer.isRunning()) {
             if (ant != null) {
@@ -174,16 +208,29 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
         }
     }
 
+    /**
+     * Returns the speed of the animation in milliseconds.
+     *
+     * @return the speed in milliseconds
+     */
     public int getSpeed() {
         return 1000 / (int) framesPerSecond.getValue();
     }
 
+    /**
+     * Adjusts the speed of the animation based on the slider value.
+     */
     public void adjustSpeed() {
         int n = getSpeed();
         ant.Setstep(framesPerSecond.getValue());
         timer.setDelay(n);
     }
 
+    /**
+     * Handles state change events from the slider.
+     *
+     * @param e the change event
+     */
     public void stateChanged(ChangeEvent e) {
         JSlider source = (JSlider) e.getSource();
 
@@ -192,6 +239,15 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
         }
     }
 
+    /**
+     * Creates a toggle button with specified properties.
+     *
+     * @param imageName the name of the image file
+     * @param actionCommand the action command
+     * @param toolTipText the tooltip text
+     * @param altText the alternative text
+     * @return the created toggle button
+     */
     protected JToggleButton makeAButton(String imageName,
                                         String actionCommand,
                                         String toolTipText,
@@ -215,6 +271,9 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
         return button;
     }
 
+    /**
+     * Sets the status of the buttons based on the timer state.
+     */
     public void setStatus() {
         bx1.setSelected(false);
         bx2.setSelected(false);
@@ -233,9 +292,20 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
         }
     }
 
+    /**
+     * Handles window opened events (empty implementation).
+     *
+     * @param e the window event
+     */
     public void windowOpened(WindowEvent e) {
     }
 
+    /**
+     * Sets the visibility of this panel.
+     *
+     * @param aFlag true to make the component visible; false to
+     *              make it invisible
+     */
     public void setVisible(boolean aFlag) {
         if (aFlag == false) {
             ant.stopAnimate();
@@ -244,6 +314,11 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
         }
     }
 
+    /**
+     * Checks if the animation is currently running.
+     *
+     * @return true if the timer is running, false otherwise
+     */
     public boolean isRunning() {
         return timer.isRunning();
     }
