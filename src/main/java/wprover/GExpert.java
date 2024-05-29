@@ -1310,14 +1310,19 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             }
         } else if (command.equals("Open")) {
 
-            JFileChooser chooser = getFileChooser();
-            int result = chooser.showOpenDialog(this);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                try {
-                    File file = chooser.getSelectedFile();
-                    openAFile(file);
-                } catch (Exception ee) {
-                    ee.printStackTrace();
+            if (src instanceof File) {
+                openAFile((File) src);
+                } else {
+
+                JFileChooser chooser = getFileChooser();
+                int result = chooser.showOpenDialog(this);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        File file = chooser.getSelectedFile();
+                        openAFile(file);
+                    } catch (Exception ee) {
+                        ee.printStackTrace();
+                    }
                 }
             }
             // Handle import of ggb file
@@ -2926,6 +2931,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return GExpert.class.getResource(path);
     }
 
+    /**
+     * The application window is created and it remains active until
+     * the user quits the program (via an infinite loop).
+     */
     private static void createAndShowGUI() {
 
         Locale.setDefault(Locale.ENGLISH);
@@ -2941,6 +2950,13 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         frame.setLocation((int) (screenSize.getWidth() - 1200) / 2,
                 (int) (screenSize.getHeight() - 900) / 2); //center
         frame.setVisible(true);
+
+        // In case there was a command line request, let us do it:
+        if (!commandlineCommand.isEmpty()) {
+            exp.sendAction(commandlineCommand, commandlineSrc);
+        }
+        // After this point we have no control on any actions automatically,
+        // each action will be done by the user via the sendAction() mechanism.
     }
 
     public static void setLookAndFeel() {
@@ -2961,6 +2977,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
+    private static String commandlineCommand;
+    private static Object commandlineSrc;
     private static void processCommandLineOptions(String[] args) {
         Options options = new Options();
 
@@ -2975,16 +2993,15 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         try {
             cmd = parser.parse(options, args);
             if (cmd.hasOption("h")) {
-                formatter.printHelp("jgex [options], where [options] are:", options);
+                formatter.printHelp("jgex [options] [input file]", options);
                 System.exit(0);
             }
             if (args.length == 0) {
                 return;
             }
             // Process first argument as a file:
-            // TODO: Store the required action for later and open a file later
-            // when the application already runs.
-            // File f = new File(args[0]);
+            commandlineCommand = "Open";
+            commandlineSrc = new File(args[0]);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             formatter.printHelp("jgex", options);
