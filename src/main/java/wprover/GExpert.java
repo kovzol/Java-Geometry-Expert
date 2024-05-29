@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -31,10 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Vector;
+import java.util.*;
 
 import org.apache.commons.cli.*;
 
@@ -1181,7 +1179,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         sendAction(command, src);
     }
 
-    public void sendAction(String command, Object src) {
+    synchronized public void sendAction(String command, Object src) {
 
 
         String tip = null;
@@ -1261,13 +1259,25 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             this.saveAsGIF();
         } else if (command.equalsIgnoreCase("Save Proof as Animated Image")) {
             this.saveProofAsGIF();
+        } else if (command.equalsIgnoreCase("Prove")) {
+            if (((String) src).equalsIgnoreCase("gdd")) {
+                pprove.proveGdd(); // TODO: Add more provers
+            }
+        } else if (command.equalsIgnoreCase("Wait")) {
+            Integer secs = (Integer) src;
+            try {
+                wait(secs * 1000);
+            } catch (Exception e) {
+                // Dummy placeholder
+            }
+
         } else if (command.equals("Save") || command.equals("Save as...")) {
             if (command.equals("Save"))
                 this.saveAFile(false);
             else this.saveAFile(true);
 
         } else if (command.equalsIgnoreCase("Save GDD Proof as GraphViz File")) {
-            this.saveGDDProofAsGraphViz();
+            this.saveGDDProofAsGraphViz(src);
         }
 
         else if (command.equals("Save as Text")) {
@@ -1698,21 +1708,27 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
-    private void saveGDDProofAsGraphViz() {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileFilter(new JFileFilter("gv"));
+    private void saveGDDProofAsGraphViz(Object src) {
+        File ff;
+        if (src instanceof File) {
+            ff = (File) src;
+        } else {
 
-        String dr1 = getUserDir();
-        chooser.setCurrentDirectory(new File(dr1));
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileFilter(new JFileFilter("gv"));
 
-        int result = chooser.showSaveDialog(this);
-        if (result == JFileChooser.CANCEL_OPTION) {
-            return;
+            String dr1 = getUserDir();
+            chooser.setCurrentDirectory(new File(dr1));
+
+            int result = chooser.showSaveDialog(this);
+            if (result == JFileChooser.CANCEL_OPTION) {
+                return;
+            }
+            String dr = getUserDir();
+            chooser.setCurrentDirectory(new File(dr));
+
+            ff = chooser.getSelectedFile();
         }
-        String dr = getUserDir();
-        chooser.setCurrentDirectory(new File(dr));
-
-        File ff = chooser.getSelectedFile();
         String p = ff.getPath();
         if (!p.endsWith("gv") && !p.endsWith("GV")) {
             p = p + ".gv";
@@ -2951,8 +2967,15 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         frame.setVisible(true);
 
         // In case there was a command line request, let us do it:
-        if (commandlineCommand != null && !commandlineCommand.isEmpty()) {
-            exp.sendAction(commandlineCommand, commandlineSrc);
+        int commandLineRequests = commandlineCommand.size();
+        for (commandLineRequestsPerformed = 0;
+             commandLineRequestsPerformed < commandLineRequests;
+             commandLineRequestsPerformed++) {
+            exp.sendAction(commandlineCommand.get(commandLineRequestsPerformed),
+                    commandlineSrc.get(commandLineRequestsPerformed));
+            if (commandlineCommand.get(commandLineRequestsPerformed).equals("Prove")) {
+                break; // Continued later in GProver...
+            }
         }
         // After this point we have no control on any actions automatically,
         // each action will be done by the user via the sendAction() mechanism.
@@ -2976,14 +2999,31 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
-    private static String commandlineCommand;
-    private static Object commandlineSrc;
+    public static ArrayList<String> commandlineCommand = new ArrayList<>();
+    public static ArrayList<Object> commandlineSrc = new ArrayList<>();
+    public static int commandLineRequestsPerformed = 0;
     private static void processCommandLineOptions(String[] args) {
         Options options = new Options();
 
         Option helpOption = new Option("h", "help", false, "show help");
         helpOption.setRequired(false);
         options.addOption(helpOption);
+
+        Option proveOption = new Option("p", "prove", true, "prove default statement via a prover <arg> (gdd)");
+        proveOption.setRequired(false);
+        options.addOption(proveOption);
+
+        Option outputOption = new Option("o", "output", true, "save proof to file <arg>");
+        outputOption.setRequired(false);
+        options.addOption(outputOption);
+
+        Option waitOption = new Option("w", "wait", true, "wait <arg> seconds");
+        waitOption.setRequired(false);
+        options.addOption(waitOption);
+
+        Option exitOption = new Option("x", "exit", false, "exit immediately");
+        exitOption.setRequired(false);
+        options.addOption(exitOption);
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -2993,14 +3033,39 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             cmd = parser.parse(options, args);
             if (cmd.hasOption("h")) {
                 formatter.printHelp("jgex [options] [input file]", options);
+                System.out.println("Example: jgex -p gdd -o test.gv -w 5 -x -h full_path_to_input.gex");
+                System.out.println("Order of the given parameters are important.");
                 System.exit(0);
             }
-            if (args.length == 0) {
+            if (cmd.getArgs().length == 0) {
                 return;
             }
+            if (cmd.getArgs().length > 1) {
+                System.err.println("Only the first argument " + cmd.getArgList().get(0)
+                        + " will be used, the rest ignored.");
+            }
+
             // Process first argument as a file:
-            commandlineCommand = "Open";
-            commandlineSrc = new File(args[0]);
+            commandlineCommand.add("Open");
+            commandlineSrc.add(new File(cmd.getArgList().get(0)));
+
+            if (cmd.hasOption("p")) {
+                commandlineCommand.add("Prove");
+                commandlineSrc.add(cmd.getOptionValue("p"));
+            }
+            if (cmd.hasOption("o")) {
+                commandlineCommand.add("Save GDD Proof as GraphViz File");
+                commandlineSrc.add(new File(cmd.getOptionValue("o")));
+            }
+            if (cmd.hasOption("w")) {
+                commandlineCommand.add("Wait");
+                commandlineSrc.add(new Integer(cmd.getOptionValue("w")));
+            }
+            if (cmd.hasOption("x")) {
+                commandlineCommand.add("Exit");
+                commandlineSrc.add("");
+            }
+
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             formatter.printHelp("jgex", options);

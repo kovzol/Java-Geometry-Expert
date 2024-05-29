@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import static wprover.GExpert.commandlineCommand;
+
 public class GProver implements Runnable {
 
     GExpert gxInstance;
@@ -91,7 +93,15 @@ public class GProver implements Runnable {
             gxInstance.stopTimer();
 
         isRunning = false;
-    }
+        // Do the remaining steps from the command line request...
+        int commandLineRequests = commandlineCommand.size();
+        for (;
+             GExpert.commandLineRequestsPerformed < commandLineRequests;
+             GExpert.commandLineRequestsPerformed++) {
+                gxInstance.sendAction(commandlineCommand.get(GExpert.commandLineRequestsPerformed),
+                    GExpert.commandlineSrc.get(GExpert.commandLineRequestsPerformed));
+            }
+        }
 
     public void start() {
         if (isRunning) return;

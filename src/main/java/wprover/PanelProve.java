@@ -56,7 +56,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     private int findex = -1;
     private int gindex = 0;
 
-    private GProver gprover;
+    public GProver gprover;
     private boolean is_database_updated = true;
 
     private ConcDialog cdialog;
