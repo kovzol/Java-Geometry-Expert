@@ -324,3 +324,6 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
     }
 
 }
+
+
+

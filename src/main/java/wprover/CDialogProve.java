@@ -481,3 +481,5 @@ class ProvePane extends JPanel
     public void popupMenuCanceled(PopupMenuEvent e) {
     }
 }
+
+
