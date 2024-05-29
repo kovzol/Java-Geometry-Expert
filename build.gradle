@@ -12,6 +12,7 @@
  * (It is part of the gettext system.)
  */
 
+import io.github.fvarrui.javapackager.model.FileAssociation
 
 buildscript {
     repositories {
@@ -187,7 +188,10 @@ javapackager {
     url = "https://github.com/kovzol/Java-Geometry-Expert"
     organizationEmail = "jgex@googlegroups.com"
     version = softwareVersion
-    // fileAssociations = ["application/vnd.geometry-expert", "gex", "Geometry Expert File" ] // FIXME: use correct syntax
+    fileAssociations = [
+        new FileAssociation(mimeType: 'application/vnd.geometry-expert', extension: 'gex', description: 'Geometry Expert File')
+    ]
+
 
     winConfig.generateMsi = false
     winConfig.setupLanguages.english = "compiler:Default.isl"
