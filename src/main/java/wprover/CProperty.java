@@ -59,17 +59,8 @@ public class CProperty extends JPanel implements ActionListener {
     }
 
     @Deprecated
-    public String getLanguage(int n, String s) {
+    public String getLanguage(String s) {
         return GExpert.getLanguage(s);
-        /*
-        if (lan == null)
-            return s;
-
-        String s1 = lan.getString(n);
-        if (s1 != null && s1.length() > 0)
-            return s1;
-        return s;
-         */
     }
 
 
@@ -238,7 +229,7 @@ public class CProperty extends JPanel implements ActionListener {
 
             this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
             this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(
-                    new TitledBorder(getLanguage(3207, "Basic")),
+                    new TitledBorder(getLanguage("Basic")),
                     BorderFactory.createEmptyBorder(2, 2, 2, 2)),
                     this.getBorder()));
 
@@ -246,7 +237,7 @@ public class CProperty extends JPanel implements ActionListener {
             color.addActionListener(this);
 
 
-            tb1 = CProperty.createTable(getLanguage(350, "Color"), "");
+            tb1 = CProperty.createTable(getLanguage("Color"), "");
             TableColumn cn = tb1.getColumnModel().getColumn(1);
             color_render = new ColorComboRender(0, 100, 20);
             cn.setCellRenderer(color_render);
@@ -263,7 +254,7 @@ public class CProperty extends JPanel implements ActionListener {
             line_type.setRenderer(render1);
             line_type.addActionListener(this);
 
-            tc1 = CProperty.createTable(getLanguage(730, "Type"), "");
+            tc1 = CProperty.createTable(getLanguage("Type"), "");
             TableColumn cn1 = tc1.getColumnModel().getColumn(1);
             line_type_render = new ColorComboRender(2, 100, 20);
             cn1.setCellRenderer(line_type_render);
@@ -283,7 +274,7 @@ public class CProperty extends JPanel implements ActionListener {
             line_width.addActionListener(this);
 
 
-            td1 = CProperty.createTable(getLanguage(731, "Width"), "");
+            td1 = CProperty.createTable(getLanguage("Width"), "");
             TableColumn cn2 = td1.getColumnModel().getColumn(1);
             line_width_render = new ColorComboRender(1, 100, 20);
             cn2.setCellRenderer(line_width_render);
@@ -374,7 +365,7 @@ public class CProperty extends JPanel implements ActionListener {
             d = dd;
 
             this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            border = new TitledBorder(getLanguage(40, "Line"));
+            border = new TitledBorder(getLanguage("Line"));
 
             this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(border,
                     BorderFactory.createEmptyBorder(2, 2, 2, 2)),
@@ -393,7 +384,7 @@ public class CProperty extends JPanel implements ActionListener {
             JPanel panel = new JPanel();
             panel.setMaximumSize(new Dimension(200, 50));
             panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-            JLabel label = new JLabel(getLanguage(730, "Type") + ":   ");
+            JLabel label = new JLabel(getLanguage("Type") + ":   ");
             panel.add(label);
             panel.add(Box.createHorizontalStrut(10));
             panel.add(button1);
@@ -494,7 +485,7 @@ public class CProperty extends JPanel implements ActionListener {
 
 
             this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            border = new TitledBorder(getLanguage(3106, "Circle"));
+            border = new TitledBorder(getLanguage("Circle"));
             this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(border,
                     BorderFactory.createEmptyBorder(2, 2, 2, 2)),
                     this.getBorder()));
@@ -551,7 +542,7 @@ public class CProperty extends JPanel implements ActionListener {
 
 
             this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            border = new TitledBorder(getLanguage(33, "Point") + " a");
+            border = new TitledBorder(getLanguage("Point") + " a");
 
             this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(border,
                     BorderFactory.createEmptyBorder(2, 2, 2, 2)),
@@ -632,7 +623,7 @@ public class CProperty extends JPanel implements ActionListener {
         public Panel_Angle(DPanel dd) {
             d = dd;
             this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            border = new TitledBorder(getLanguage(40, "Line"));
+            border = new TitledBorder(getLanguage("Line"));
 
             this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(border,
                     BorderFactory.createEmptyBorder(2, 2, 2, 2)),
@@ -640,12 +631,12 @@ public class CProperty extends JPanel implements ActionListener {
             bcolor = CCoBox.CreateAInstance();
             bcolor.addActionListener(this);
 
-            tb1 = CProperty.createTable(getLanguage(730, "Type"), "");
+            tb1 = CProperty.createTable(getLanguage("Type"), "");
             TableColumn cn1 = tb1.getColumnModel().getColumn(1);
             JComboBox comboBox = new JComboBox();
 
             for (int i = 0; i < type.length; i++)
-                comboBox.addItem(getLanguage(383 + i, type[i]));
+                comboBox.addItem(getLanguage(type[i]));
 
             cn1.setCellEditor(new DefaultCellEditor(comboBox));
             DefaultTableCellRenderer renderer =
@@ -653,7 +644,7 @@ public class CProperty extends JPanel implements ActionListener {
             // renderer.setToolTipText("Click to select the angle type.");
             cn1.setCellRenderer(renderer);
 
-            tbt = CProperty.createTable(getLanguage(363, "Angle Text"), "");
+            tbt = CProperty.createTable(getLanguage("Angle Text"), "");
             TableColumn cnt = tbt.getColumnModel().getColumn(1);
             comboBox = new JComboBox();
             for (int i = 0; i < text_type.length; i++)
@@ -664,7 +655,7 @@ public class CProperty extends JPanel implements ActionListener {
             //  renderer.setToolTipText("Click to select the angle text type.");
             cnt.setCellRenderer(renderer);
 
-            tb2 = CProperty.createTable(getLanguage(350, "Color"), "");
+            tb2 = CProperty.createTable(getLanguage("Color"), "");
             TableColumn cn = tb2.getColumnModel().getColumn(1);
             ColorComboRender cr = new ColorComboRender(0, 100, 20);
             cn.setCellRenderer(cr);
@@ -672,7 +663,7 @@ public class CProperty extends JPanel implements ActionListener {
             color_render = new ColorComboRender(0, 100, 20);
             cn.setCellRenderer(color_render);
 
-            tb3 = CProperty.createTable(getLanguage(390, "Arc Num"), "");
+            tb3 = CProperty.createTable(getLanguage("Arc Num"), "");
 
             tb1.getModel().addTableModelListener(this);
             tb2.getModel().addTableModelListener(this);
@@ -795,7 +786,7 @@ public class CProperty extends JPanel implements ActionListener {
 
             Object[][] obj =
                     {
-                            {getLanguage(365, "Label"), new String("")}
+                            {getLanguage("Label"), new String("")}
                     };
 
 
@@ -804,8 +795,8 @@ public class CProperty extends JPanel implements ActionListener {
             table = new JTable(model);
             Object[][] obj1 =
                     {
-                            {getLanguage(348, "Show Label"), Boolean.TRUE},
-                            {getLanguage(349, "Show Text"), Boolean.TRUE},
+                            {getLanguage("Show Label"), Boolean.TRUE},
+                            {getLanguage("Show Text"), Boolean.TRUE},
 
                     };
 
@@ -814,7 +805,7 @@ public class CProperty extends JPanel implements ActionListener {
 
             Object[][] obj2 =
                     {
-                            {getLanguage(347, "Significant Digits"), 0}
+                            {getLanguage("Significant Digits"), 0}
 
                     };
 
@@ -905,7 +896,7 @@ public class CProperty extends JPanel implements ActionListener {
 
             Object[][] obj =
                     {
-                            {getLanguage(450, "Point number"), 1}, // FIXME: what is this?
+                            {getLanguage("Point number"), 1}, // FIXME: what is this?
                     };
 
 
@@ -914,7 +905,7 @@ public class CProperty extends JPanel implements ActionListener {
             table = new JTable(model);
             Object[][] obj1 =
                     {
-                            {getLanguage(451, "Draw Line"), Boolean.TRUE},
+                            {getLanguage("Draw Line"), Boolean.TRUE},
                     };
 
             model1 = new propertyTableModel(obj1);
@@ -960,8 +951,8 @@ public class CProperty extends JPanel implements ActionListener {
 
             Object[][] obj =
                     {
-                            {getLanguage(452, "Num"), 1},
-                            {getLanguage(247, "Length"), 1}
+                            {getLanguage("Num"), 1},
+                            {getLanguage("Length"), 1}
                     };
 
             table = new JTable(new propertyTableModel(obj));
@@ -1010,18 +1001,18 @@ public class CProperty extends JPanel implements ActionListener {
             d = dd;
 
             this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            border = new TitledBorder(getLanguage(70, "Polygon"));
+            border = new TitledBorder(getLanguage("Polygon"));
 
             this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(border,
                     BorderFactory.createEmptyBorder(2, 2, 2, 2)),
                     this.getBorder()));
 
 
-            JTable tb1 = CProperty.createTable(getLanguage(730, "Type"), "");
+            JTable tb1 = CProperty.createTable(getLanguage("Type"), "");
             TableColumn cn1 = tb1.getColumnModel().getColumn(1);
             comboBox = new JComboBox();
             for (int i = 0; i < type.length; i++)
-                comboBox.addItem(getLanguage(4000 + i, type[i]));
+                comboBox.addItem(getLanguage(type[i]));
 
             cn1.setCellEditor(new DefaultCellEditor(comboBox));
             DefaultTableCellRenderer renderer =
@@ -1094,8 +1085,8 @@ public class CProperty extends JPanel implements ActionListener {
 
             Object[][] obj =
                     {
-                            {getLanguage(452, "Angle"), 30},
-                            {getLanguage(247, "Length"), 1}
+                            {getLanguage("Angle"), 30},
+                            {getLanguage("Length"), 1}
                     };
 
             table = new JTable(new propertyTableModel(obj));
@@ -1217,11 +1208,11 @@ public class CProperty extends JPanel implements ActionListener {
     class PointTableModel extends AbstractTableModel {
         private String[] names = {"", ""};
         private Object[][] data = {
-                {getLanguage(245, "Name"), new String()},
-                {getLanguage(4004, "Radius"), -1},
-                {getLanguage(4005, "X Coordinate"), 0},
-                {getLanguage(4006, "Y Coordinate"), 0},
-                {getLanguage(4007, "Freezed"), false}
+                {getLanguage("Name"), new String()},
+                {getLanguage("Radius"), -1},
+                {getLanguage("X Coordinate"), 0},
+                {getLanguage("Y Coordinate"), 0},
+                {getLanguage("Freezed"), false}
         };
 
         public int getColumnCount() {
@@ -1261,8 +1252,8 @@ public class CProperty extends JPanel implements ActionListener {
     class LineTableModel extends AbstractTableModel {
         private String[] names = {"", ""};
         private Object[][] data = {
-                {getLanguage(245, "Name"), new String()},
-                {getLanguage(4008, "Point on Line"), new String()},
+                {getLanguage("Name"), new String()},
+                {getLanguage("Point on Line"), new String()},
                 {"X1 ", 0},
                 {"Y1 ", 0},
                 {"X2 ", 0},
@@ -1307,12 +1298,12 @@ public class CProperty extends JPanel implements ActionListener {
     class CircleTableModel extends AbstractTableModel {
         private String[] names = {"", ""};
         private Object[][] data = {
-                {getLanguage(245, "Name"), new String()},
-                {getLanguage(4009, "Point on Circle"), new String()},
-                {getLanguage(4012, "Center"), new String()},
-                {getLanguage(4010, "Center X"), 0},
-                {getLanguage(4011, "Center Y"), 0},
-                {getLanguage(4004, "Radius"), 0}
+                {getLanguage("Name"), new String()},
+                {getLanguage("Point on Circle"), new String()},
+                {getLanguage( "Center"), new String()},
+                {getLanguage("Center X"), 0},
+                {getLanguage("Center Y"), 0},
+                {getLanguage("Radius"), 0}
         };
 
         public int getColumnCount() {
@@ -1352,8 +1343,8 @@ public class CProperty extends JPanel implements ActionListener {
     class PolygonTableModel extends AbstractTableModel {
         private String[] names = {"", ""};
         private Object[][] data = {
-                {getLanguage(4013, "Grid Step"), 0},
-                {getLanguage(4014, "Slope Angle"), 0},
+                {getLanguage("Grid Step"), 0},
+                {getLanguage("Slope Angle"), 0},
         };
 
         public int getColumnCount() {
