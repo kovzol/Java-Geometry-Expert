@@ -2952,7 +2952,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         frame.setVisible(true);
 
         // In case there was a command line request, let us do it:
-        if (!commandlineCommand.isEmpty()) {
+        if (commandlineCommand != null && !commandlineCommand.isEmpty()) {
             exp.sendAction(commandlineCommand, commandlineSrc);
         }
         // After this point we have no control on any actions automatically,
