@@ -816,7 +816,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
         menu = new JMenu(getLanguage("Construct"));
         menuBar.add(menu);
-        addRadioButtonMenuItem(menu, "Point by Point and Segment", "Click three points A, B, C, then click a point D on an object to get AB = CD", this);
+        addRadioButtonMenuItem(menu, "Intersection by compass and circle/line", "You need 3 points and a circle/ segment/ line. Select the distance AB, click into the center C and and then select the intersecting point D with a circle/ segment/ line. AB = CD.", this);
         addRadioButtonMenuItem(menu, "Radical of Two Circles", "Click two circles to construct their radical axis", this);
         menu.addSeparator();
 
@@ -1582,7 +1582,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                 dp.SetCurrentAction(DrawProcess.SETTRACK);
             } else if (command.equalsIgnoreCase("Locus")) {
                 dp.SetCurrentAction(DrawProcess.LOCUS);
-            } else if (command.equalsIgnoreCase("point by point and segment")) {
+            } else if (command.equalsIgnoreCase("Intersection by compass and circle/line")) {
                 dp.SetCurrentAction(DrawProcess.D_PTDISTANCE);
             } else if (command.equalsIgnoreCase("propline")) {
                 String s = ((JMenuItem) src).getText();
