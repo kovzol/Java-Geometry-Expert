@@ -76,7 +76,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
         this.addFocusListener(this);
         this.getContentPane().add(panel);
-        this.setSize(550, 530);
+        this.setSize(550, 600); //Changed the size of the window, so 'Save Preferences' was visible. TODO: Modify the height automatically to the chosen appearance.
 
     }
 
