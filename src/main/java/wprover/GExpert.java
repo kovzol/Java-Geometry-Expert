@@ -1036,8 +1036,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
         if (tooltip != null)
             miten.setToolTipText(tooltip);
-
-        if (s1 != null && s1.length() > 0)
+        else if (s1 != null && s1.length() > 0)
             miten.setToolTipText(s1);
 
         miten.addActionListener(listener);
