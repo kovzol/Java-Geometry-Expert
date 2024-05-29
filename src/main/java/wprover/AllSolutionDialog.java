@@ -319,3 +319,5 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
     public void windowDeactivated(WindowEvent e) {
     }
 }
+
+
