@@ -1262,6 +1262,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         } else if (command.equalsIgnoreCase("Prove")) {
             if (((String) src).equalsIgnoreCase("gdd")) {
                 pprove.proveGdd(); // TODO: Add more provers
+            } else {
+                pprove.prove();
             }
         } else if (command.equalsIgnoreCase("Wait")) {
             Integer secs = (Integer) src;
