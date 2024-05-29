@@ -930,7 +930,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
     public void showTime(long n) {
         float t = (float) (n / 1000.0);
         if (gxInstance != null)
-            gxInstance.setTextLabel2(getLanguage(1003, "Time:") + " " + t + " " + getLanguage(308, "second(s)"));
+            gxInstance.setTextLabel2(getLanguage("Time:") + " " + t + " " + getLanguage("second(s)"));
              //       + ";" );//+ getLanguage(10001, "  Facts") + ": " + Prover.getNumberofProperties());
     }
 
@@ -993,44 +993,44 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         Vector v1 = db.getAll_ln();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(401, "lines") + " (" + size + ")", v1);
+            add_predicates(getLanguage("lines") + " (" + size + ")", v1);
         }
 
         v1 = db.getAll_pn();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(402, "parallel lines") + " (" + size + ")", v1);
+            add_predicates(getLanguage("parallel lines") + " (" + size + ")", v1);
         }
 
         v1 = db.getAll_tn();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(403, "perpendicular lines") + " (" + size + ")", v1);
+            add_predicates(getLanguage("perpendicular lines") + " (" + size + ")", v1);
         }
 
         v1 = db.getAll_md();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(404, "midpoints") + " (" + size + ")", v1);
+            add_predicates(getLanguage("midpoints") + " (" + size + ")", v1);
         }
 
         v1 = db.getAll_cir();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(405, "circles") + " (" + size + ")", v1);
+            add_predicates(getLanguage("circles") + " (" + size + ")", v1);
         }
 
         v1 = db.getAll_cg();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(406, "congruent segments") + " (" + size + ")", v1);
+            add_predicates(getLanguage("congruent segments") + " (" + size + ")", v1);
         }
 
 
         v1 = db.getAll_as();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(407, "congruent angles") + " (" + size + ")", v1);
+            add_predicates(getLanguage("congruent angles") + " (" + size + ")", v1);
         }
 
 //        v1 = db.getAll_rg();
@@ -1042,24 +1042,24 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         v1 = db.getAll_sts();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(408, "similiar triangles") + " (" + size + ")", v1);
+            add_predicates(getLanguage("similiar triangles") + " (" + size + ")", v1);
         }
         v1 = db.getAll_cts();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(409, "congruent triangles") + " (" + size + ")", v1);
+            add_predicates(getLanguage("congruent triangles") + " (" + size + ")", v1);
         }
 
 
         v1 = db.getAll_at();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(410, "special angles") + " (" + size + ")", v1);
+            add_predicates(getLanguage("special angles") + " (" + size + ")", v1);
         }
         v1 = db.getAll_atn();
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(411, "perp-acong angles") + " (" + size + ")", v1);
+            add_predicates(getLanguage("perp-acong angles") + " (" + size + ")", v1);
         }
 
         v1 = db.getAll_rg();
@@ -1067,7 +1067,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         v1.addAll(v2);
         size = v1.size();
         if (size != 0) {
-            add_predicates(getLanguage(412, "ratio segments") + " (" + size + ")", v1);
+            add_predicates(getLanguage("ratio segments") + " (" + size + ")", v1);
         }
         ((DefaultTreeModel) tree_db.getModel()).reload();
 
@@ -1086,7 +1086,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         if (top_full.getChildCount() == 0)
             node = top;
         if (node.getChildCount() == 0) {
-            JOptionPane.showMessageDialog(gxInstance, getLanguage(1004, "Can not find any proof!"),
+            JOptionPane.showMessageDialog(gxInstance, getLanguage("Can not find any proof!"),
                     getLanguage("Warning"), JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -1227,20 +1227,6 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
          */
     }
 
-    @Deprecated
-    public String getLanguage(int n, String s) {
-        return GExpert.getLanguage(s);
-        /*
-        String s1 = "";
-        if (gxInstance != null)
-            s1 = gxInstance.getLanguage(s); // avoid using number n, instead, always use the string
-        if (s1 != null && s1.length() > 0)
-            return s1;
-        return s;
-         */
-    }
-
-
     public void drawConstruction() {
         if (dp.inConstruction()) {
             dp.SetCurrentAction(DrawProcess.CONSTRUCT_FROM_TEXT);
@@ -1265,8 +1251,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
         GTerm gt = condPane.getTerm();
         if (gt == null || !gt.hasConclusion()) {
-            JOptionPane.showMessageDialog(gxInstance, getLanguage(1006, "No conclusion has been set!"),
-                    getLanguage(1005, "No conclusion"),
+            JOptionPane.showMessageDialog(gxInstance, getLanguage("No conclusion has been set!"),
+                    getLanguage("No conclusion"),
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -1304,7 +1290,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             this.setSelectedComponent(gddPanel);
         } else {
             String s = "Failed to prove this theorem with Deductive Database Method.";
-            s = this.getLanguage(1132, s);
+            s = this.getLanguage(s);
             if (gxInstance != null)
                 gxInstance.setTextLabel2(s);
 
@@ -1321,8 +1307,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         int n2 = dp.getPointSize();
 
         if (n2 < n1 && dp.getPt(n1) == null) {
-            JOptionPane.showMessageDialog(gxInstance, getLanguage(1008, "Please construct the diagram first!"),
-                    getLanguage(1009, "Diagram not completed"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(gxInstance, getLanguage("Please construct the diagram first!"),
+                    getLanguage("Diagram not completed"), JOptionPane.WARNING_MESSAGE);
             return false;
 
         } else return true;
@@ -1348,8 +1334,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         if (gddPanel == null)
             this.createGDDTreePanel();
         if (co.pred == 0) {
-            JOptionPane.showMessageDialog(gxInstance, getLanguage(1006, "No conclusion has been set!"),
-                    getLanguage(1005, "No conclusion"),
+            JOptionPane.showMessageDialog(gxInstance, getLanguage("No conclusion has been set!"),
+                    getLanguage("No conclusion"),
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -1395,7 +1381,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             }
         } else {
             JOptionPane.showMessageDialog(gxInstance,
-                    getLanguage(1012, "Can not prove this theorem"),
+                    getLanguage("Can not prove this theorem"),
                     getLanguage("Information"),
                     JOptionPane.INFORMATION_MESSAGE);
         }
@@ -1407,8 +1393,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
         GTerm t = condPane.getTerm();
         if (t == null || !t.hasConclusion()) {
-            JOptionPane.showMessageDialog(gxInstance, getLanguage(1006, "No conclusion has been set!"),
-                    getLanguage(1005, "No conclusion"),
+            JOptionPane.showMessageDialog(gxInstance, getLanguage("No conclusion has been set!"),
+                    getLanguage("No conclusion"),
                     JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
@@ -1417,17 +1403,17 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         int nx = Prover.getPFullResult();
 
         if (nx == 1) {
-            Object[] options = {getLanguage(1133, "Show Detail"), getLanguage("OK")};
+            Object[] options = {getLanguage("Show Detail"), getLanguage("OK")};
             int n1 = Prover.getErrorType();
-            String s = getLanguage(1012, "Can not prove this theorem");
+            String s = getLanguage("Can not prove this theorem");
             int n = JOptionPane.showOptionDialog(null, s, getLanguage("Failed"),
                     JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
                     null, options, options[0]);
             if (n == 1)
                 return false;
         } else if (nx == 2) {
-            JOptionPane.showMessageDialog(gxInstance, getLanguage(1134, "The conclusion can not be translated to " +
-                    "full-angle expression."), getLanguage(1135, "Not Supported"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(gxInstance, getLanguage("The conclusion can not be translated to " +
+                    "full-angle expression."), getLanguage("Not Supported"), JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
@@ -2408,33 +2394,33 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 group = new ButtonGroup();
                 popup1 = new JPopupMenu();
                 JRadioButtonMenuItem item1 = new JRadioButtonMenuItem(
-                        getLanguage(3001, "Deductive Database Method"));
+                        getLanguage("Deductive Database Method"));
                 item1.setActionCommand("GDD");
                 item1.addActionListener(this);
                 item1.setSelected(true);
                 popup1.add(item1);
                 group.add(item1);
-                item1 = new JRadioButtonMenuItem(getLanguage(3002, "Full Angle Method"));
+                item1 = new JRadioButtonMenuItem(getLanguage("Full Angle Method"));
                 item1.setActionCommand("Full");
                 item1.addActionListener(this);
                 popup1.add(item1);
                 group.add(item1);
 
-                item1 = new JRadioButtonMenuItem(getLanguage(3003, "Traditional Method"));
+                item1 = new JRadioButtonMenuItem(getLanguage("Traditional Method"));
                 item1.setActionCommand("TRAD");
                 item1.addActionListener(this);
                 item1.setEnabled(false);
                 popup1.add(item1);
                 group.add(item1);
 
-                item1 = new JRadioButtonMenuItem(getLanguage(3004, "Area Method"));
+                item1 = new JRadioButtonMenuItem(getLanguage("Area Method"));
                 item1.setActionCommand("Area");
                 item1.addActionListener(this);
                 item1.setEnabled(false);
                 popup1.add(item1);
                 group.add(item1);
 
-                item1 = new JRadioButtonMenuItem(getLanguage(3005, "Groebner Basis Method"));
+                item1 = new JRadioButtonMenuItem(getLanguage("Groebner Basis Method"));
                 item1.setActionCommand("GB");
                 item1.addActionListener(this);
                 item1.setEnabled(true);
@@ -2442,7 +2428,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 group.add(item1);
 
 
-                item1 = new JRadioButtonMenuItem(getLanguage(3006, "Wu's Method"));
+                item1 = new JRadioButtonMenuItem(getLanguage("Wu's Method"));
                 item1.setActionCommand("Wu");
                 item1.addActionListener(this);
                 popup1.add(item1);
@@ -2460,7 +2446,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 JMenu m = new JMenu(getLanguage("To Prove"));
                 String[] ts = ConcDialog.ts;
                 for (int i = 0; i < ts.length; i++) {
-                    JMenuItem it = new JMenuItem(getLanguage(200 + i, ts[i]));
+                    JMenuItem it = new JMenuItem(getLanguage(ts[i]));
                     it.setActionCommand("CONC");
                     it.addActionListener(this);
                     m.add(it);
