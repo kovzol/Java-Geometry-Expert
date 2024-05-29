@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
  * Date: 2005-7-8
  * Time: 16:00:08
  * To change this template use File | Settings | File Templates.
+ * This class serves as the base class for all geometry items.
  */
 // class as the baseclass for all the geometry item.
 
@@ -34,22 +35,28 @@ abstract public class CClass {
     final public static int TEMP_POINT = 99;
 
     int m_id;
-
     int m_type;
     String m_name;
-
     int m_color;
-    int m_dash;    //if any
-    int m_width;   //if any
-
+    int m_dash;    // if any
+    int m_width;   // if any
     boolean visible = true;
-
     int mode = 0; // 0. normal  1. in flash.
 
+    /**
+     * Gets the type of the geometry item.
+     *
+     * @return the type of the geometry item
+     */
     public int get_type() {
         return m_type;
     }
 
+    /**
+     * Sets the flashing mode for the geometry item.
+     *
+     * @param flash true to enable flashing, false to disable
+     */
     public void setInFlashing(boolean flash) {
         if (flash)
             mode = 1;
@@ -57,27 +64,49 @@ abstract public class CClass {
             mode = 0;
     }
 
+    /**
+     * Stops the flashing mode for the geometry item.
+     */
     public void stopFlash() {
         mode = 0;
     }
 
+    /**
+     * Determines if the geometry item should be drawn.
+     *
+     * @return true if the item should be drawn, false otherwise
+     */
     public boolean isdraw() {
         return (visible == true && mode == 0) || (visible == false && mode == 1);
     }
 
+    /**
+     * Determines if the geometry item is visible.
+     *
+     * @return true if the item is visible, false otherwise
+     */
     public boolean visible() {
         return visible;
     }
 
+    /**
+     * Constructs a CClass object by copying another CClass object.
+     *
+     * @param c the CClass object to copy
+     */
     public CClass(CClass c) {
         m_type = c.m_type;
         m_id = CMisc.getObjectId();
         m_dash = c.m_dash;
         m_width = c.m_width;
         m_color = c.m_color;
-
     }
 
+    /**
+     * Constructs a CClass object with the specified type.
+     *
+     * @param type the type of the geometry item
+     */
     public CClass(int type) {
         m_type = type;
 
@@ -87,7 +116,6 @@ abstract public class CClass {
 
         m_dash = DrawData.dindex;
         m_width = DrawData.windex;
-
 
         if (type == TEMP_POINT) {
             m_color = DrawData.pointcolor;
@@ -115,12 +143,20 @@ abstract public class CClass {
         }
     }
 
+    /**
+     * Sets auxiliary attributes for the geometry item.
+     */
     public void setAttrAux() {
         m_color = DrawData.RED;
         m_dash = DrawData.DASH8;
         m_width = DrawData.WIDTH2;
     }
 
+    /**
+     * Sets attributes for the geometry item by copying another CClass object.
+     *
+     * @param c the CClass object to copy attributes from
+     */
     public void setAttr(CClass c) {
         if (c == null) return;
         this.m_color = c.m_color;
@@ -128,6 +164,11 @@ abstract public class CClass {
         this.m_width = c.m_width;
     }
 
+    /**
+     * Copies attributes from another CClass object.
+     *
+     * @param c the CClass object to copy attributes from
+     */
     public void copy(CClass c) {
         if (c == null) return;
         this.m_color = c.m_color;
@@ -135,57 +176,140 @@ abstract public class CClass {
         this.m_width = c.m_width;
     }
 
+    /**
+     * Sets the dash style for the geometry item.
+     *
+     * @param d the dash style index
+     */
     public void setDash(int d) {
         m_dash = d;
     }
 
+    /**
+     * Sets the width for the geometry item.
+     *
+     * @param index the width index
+     */
     public void setWidth(int index) {
         m_width = index;
     }
 
+    /**
+     * Gets the name of the geometry item.
+     *
+     * @return the name of the geometry item
+     */
     public String getname() {
         return m_name;
     }
 
+    /**
+     * Checks if the geometry item has a name set.
+     *
+     * @return true if the item has a name set, false otherwise
+     */
     public boolean hasNameSet() {
         return m_name != null && m_name.length() != 0;
     }
 
+    /**
+     * Gets the color of the geometry item.
+     *
+     * @return the color of the geometry item
+     */
     public Color getColor() {
         return DrawData.getColor(m_color);
     }
 
+    /**
+     * Gets the color index of the geometry item.
+     *
+     * @return the color index of the geometry item
+     */
     public int getColorIndex() {
         return m_color;
     }
 
+    /**
+     * Draws the geometry item using the given Graphics2D object.
+     *
+     * @param g2 the Graphics2D object
+     */
     public void draw(Graphics2D g2) {
     }
 
+    /**
+     * Sets the color for the geometry item.
+     *
+     * @param c the color index
+     */
     public void setColor(int c) {
         m_color = c;
     }
 
+    /**
+     * Gets the type string of the geometry item.
+     *
+     * @return the type string of the geometry item
+     */
     abstract public String TypeString();
 
+    /**
+     * Gets the description of the geometry item.
+     *
+     * @return the description of the geometry item
+     */
     abstract public String getDescription();
 
+    /**
+     * Draws the geometry item with the option to highlight if selected.
+     *
+     * @param g2 the Graphics2D object
+     * @param selected true if the item is selected, false otherwise
+     */
     abstract void draw(Graphics2D g2, boolean selected);
 
+    /**
+     * Selects the geometry item if the given coordinates are within its range.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if the item is selected, false otherwise
+     */
     abstract boolean select(double x, double y);
 
-
+    /**
+     * Moves the geometry item by the given distances.
+     *
+     * @param dx the distance to move in the x direction
+     * @param dy the distance to move in the y direction
+     */
     void move(double dx, double dy) {
     }
 
+    /**
+     * Sets the visibility of the geometry item.
+     *
+     * @param v true to make the item visible, false to hide it
+     */
     void setVisible(boolean v) {
         this.visible = v;
     }
 
+    /**
+     * Returns the string representation of the geometry item.
+     *
+     * @return the string representation of the geometry item
+     */
     public String toString() {
         return m_name;
     }
 
+    /**
+     * Sets the drawing style for a selected geometry item.
+     *
+     * @param g2 the Graphics2D object
+     */
     void setDrawSelect(Graphics2D g2) {
         float w = (float) DrawData.getWidth(m_width);
         g2.setStroke(new BasicStroke(w + 5));
@@ -193,6 +317,12 @@ abstract public class CClass {
         g2.setColor(c);
     }
 
+    /**
+     * Sets the drawing style for a selected geometry item with a specified width.
+     *
+     * @param g2 the Graphics2D object
+     * @param w the width
+     */
     void setDrawSelect(Graphics2D g2, int w) {
 //        float w = (float) drawData.getWidth(m_width);
         g2.setStroke(new BasicStroke(w + 5));
@@ -200,6 +330,11 @@ abstract public class CClass {
         g2.setColor(c);
     }
 
+    /**
+     * Sets the drawing style for the geometry item.
+     *
+     * @param g2 the Graphics2D object
+     */
     void setDraw(Graphics2D g2) {
         float w = (float) DrawData.getWidth(m_width);
         if (m_dash > 0) {
@@ -223,11 +358,25 @@ abstract public class CClass {
             g2.setPaint(c);
     }
 
+    /**
+     * Writes a string to the data output stream.
+     *
+     * @param out the data output stream
+     * @param s the string to write
+     * @throws IOException if an I/O error occurs
+     */
     public static void WriteString(DataOutputStream out, String s) throws IOException {
         out.writeInt(s.length());
         out.writeChars(s);
     }
 
+    /**
+     * Writes the font to the data output stream.
+     *
+     * @param out the data output stream
+     * @param f the font to write
+     * @throws IOException if an I/O error occurs
+     */
     public void WriteFont(DataOutputStream out, Font f) throws IOException {
         String s = f.getName();
         WriteString(out, s);
@@ -235,6 +384,13 @@ abstract public class CClass {
         out.writeInt(f.getSize());
     }
 
+    /**
+     * Reads a string from the data input stream.
+     *
+     * @param in the data input stream
+     * @return the string read from the input stream
+     * @throws IOException if an I/O error occurs
+     */
     public static String ReadString(DataInputStream in) throws IOException {
         int size = in.readInt();
         if (size == 0) return new String("");
@@ -244,22 +400,47 @@ abstract public class CClass {
         return s;
     }
 
+    /**
+     * Reads a font from the data input stream.
+     *
+     * @param in the data input stream
+     * @return the font read from the input stream
+     * @throws IOException if an I/O error occurs
+     */
     public Font ReadFont(DataInputStream in) throws IOException {
         String name = ReadString(in);
         int stye = in.readInt();
         int size = in.readInt();
 
         return new Font(name, stye, size);
-
     }
 
+    /**
+     * Saves the geometry item to a PostScript file.
+     *
+     * @param fp the file output stream
+     * @param stype the show type
+     * @throws IOException if an I/O error occurs
+     */
     public abstract void SavePS(FileOutputStream fp, int stype) throws IOException;
 
+    /**
+     * Saves the color of the geometry item to a PostScript file.
+     *
+     * @param fp the file output stream
+     * @throws IOException if an I/O error occurs
+     */
     public void saveSuperColor(FileOutputStream fp) throws IOException {
         String s = " Color" + m_color + " ";
         fp.write(s.getBytes());
     }
 
+    /**
+     * Saves the geometry item to a PostScript file.
+     *
+     * @param fp the file output stream
+     * @throws IOException if an I/O error occurs
+     */
     public void saveSuper(FileOutputStream fp) throws IOException {
         String s = " Color" + m_color + " ";
         s += "Dash" + m_dash + " ";
@@ -268,12 +449,26 @@ abstract public class CClass {
         fp.write(s.getBytes());
     }
 
+    /**
+     * Gets the PostScript line string representation of the geometry item.
+     *
+     * @param x1 the x-coordinate of the starting point
+     * @param y1 the y-coordinate of the starting point
+     * @param x2 the x-coordinate of the ending point
+     * @param y2 the y-coordinate of the ending point
+     * @return the PostScript line string representation
+     */
     public String getPSLineString(int x1, int y1, int x2, int y2) {
         String s = x1 + " " + y1 + " moveto " + x2 + " " + y2 + " lineto ";
         return s;
     }
 
-
+    /**
+     * Saves the geometry item to a data output stream.
+     *
+     * @param out the data output stream
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
         out.writeInt(m_id);
 
@@ -294,16 +489,20 @@ abstract public class CClass {
         out.writeInt(m_dash);
         out.writeInt(m_width);
         out.writeBoolean(visible);
-
-
     }
 
+    /**
+     * Loads the geometry item from a data input stream.
+     *
+     * @param in the data input stream
+     * @param dp the draw process
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         m_id = in.readInt();
 
         int size = in.readInt();
         if (size != 0) {
-
             m_name = new String();
             for (int i = 0; i < size; i++)
                 m_name += in.readChar();
@@ -317,6 +516,5 @@ abstract public class CClass {
         if (CMisc.version_load_now >= 0.017)
             visible = in.readBoolean();
     }
-
 
 }

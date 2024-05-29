@@ -12,35 +12,60 @@ import java.io.DataInputStream;
  * Date: 2009-12-13
  * Time: 13:43:52
  * To change this template use File | Settings | File Templates.
- */                  
+ */
 public class CArrow extends CClass {
     public static int ANGLE = 30;
     public static int LENGTH = 12;
-                                        
+
     CPoint st, ed;
     int angle = ANGLE;
     int length = LENGTH;
 
-
+    /**
+     * Constructs a CArrow object.
+     *
+     * @param p1 the starting point of the arrow
+     * @param p2 the ending point of the arrow
+     */
     public CArrow(CPoint p1, CPoint p2) {
         super(CClass.ARROW);
         st = p1;
         ed = p2;
     }
 
+    /**
+     * Gets the type string of the arrow.
+     *
+     * @return the type string
+     */
     public String TypeString() {
         return "Arrow" + m_id;
     }
 
+    /**
+     * Gets the description of the arrow.
+     *
+     * @return the description string
+     */
     public String getDescription() {
         return "Arrow(" + st + ed + ")";
     }
 
+    /**
+     * Draws the arrow using the given Graphics2D object.
+     *
+     * @param g2 the Graphics2D object
+     */
     public void draw(Graphics2D g2) {
         draw(g2, false);
     }
 
-
+    /**
+     * Draws the arrow with the option to highlight if selected.
+     *
+     * @param g2 the Graphics2D object
+     * @param selected true if the arrow is selected, false otherwise
+     */
     void draw(Graphics2D g2, boolean selected) {
         if (!isdraw()) return;
 
@@ -70,7 +95,6 @@ public class CArrow extends CClass {
         double px2 = xx1 + ddx * cos + ddy * sin;
         double py2 = yy1 - ddx * sin + ddy * cos;
 
-
         ddx = -ddx;
         ddy = -ddy;
         double qx1 = xx2 + ddx * cos - ddy * sin;
@@ -98,6 +122,13 @@ public class CArrow extends CClass {
         g2.setColor(Color.black);
     }
 
+    /**
+     * Selects the arrow if the given coordinates are within the arrow's range.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if the arrow is selected, false otherwise
+     */
     boolean select(double x, double y) {
         double x1, y1, x2, y2;
         x1 = st.getx();
@@ -120,12 +151,24 @@ public class CArrow extends CClass {
         return false;
     }
 
+    /**
+     * Gets the slope of the arrow.
+     *
+     * @return the slope of the arrow
+     */
     public double getK() {
         CPoint p1 = st;
         CPoint p2 = ed;
         return (p2.gety() - p1.gety()) / (p2.getx() - p1.getx());
     }
 
+    /**
+     * Calculates the distance from the given coordinates to the arrow.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return the distance to the arrow
+     */
     public double distance(double x, double y) {
         double k = -getK();
         CPoint pt = st;
@@ -137,10 +180,23 @@ public class CArrow extends CClass {
         return len;
     }
 
+    /**
+     * Saves the arrow to a PostScript file.
+     *
+     * @param fp the file output stream
+     * @param stype the show type
+     * @throws IOException if an I/O error occurs
+     */
     public void SavePS(FileOutputStream fp, int stype) throws IOException {
 
     }
 
+    /**
+     * Saves the arrow data to an output stream.
+     *
+     * @param out the data output stream
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
         super.Save(out);
         out.writeInt(st.m_id);
@@ -150,6 +206,13 @@ public class CArrow extends CClass {
 
     }
 
+    /**
+     * Loads the arrow data from an input stream.
+     *
+     * @param in the data input stream
+     * @param dp the draw process
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         st = dp.getPointById(in.readInt());

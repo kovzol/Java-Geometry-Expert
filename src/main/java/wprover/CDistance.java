@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
  * Date: 2005-1-19
  * Time: 10:16:32
  * To change this template use File | Settings | File Templates.
+ *
+ * This class represents a geometric distance between two points.
  */
 public class CDistance extends CClass {
 
@@ -19,10 +21,19 @@ public class CDistance extends CClass {
     CPoint pend;
     double len = 18;
 
+    /**
+     * Default constructor for CDistance.
+     */
     public CDistance() {
         super(CClass.DISTANCE);
     }
 
+    /**
+     * Constructs a CDistance object with the specified start and end points.
+     *
+     * @param p1 the start point
+     * @param p2 the end point
+     */
     public CDistance(CPoint p1, CPoint p2) {
         super(CClass.DISTANCE);
         m_color = 6;
@@ -30,9 +41,14 @@ public class CDistance extends CClass {
         pend = p2;
         m_name = "|" + p1.getname() + p2.getname() + "|";
         if (pstart == null || pend == null)
-            CMisc.print("Tow end of the Distance can not be null");
+            CMisc.print("Two ends of the Distance cannot be null");
     }
 
+    /**
+     * Gets the type string of the distance.
+     *
+     * @return the type string of the distance
+     */
     public String TypeString() {
         String st = Language.getLs("Measure Distance");
         if (st == null)
@@ -42,6 +58,11 @@ public class CDistance extends CClass {
         return st + " " + m_name;
     }
 
+    /**
+     * Gets the description of the distance.
+     *
+     * @return the description of the distance
+     */
     public String getDescription() {
         String st = Language.getLs("Measure Distance");
         if (st == null)
@@ -50,6 +71,12 @@ public class CDistance extends CClass {
         return st + " " + pstart.m_name + " " + pend.m_name;
     }
 
+    /**
+     * Drags the distance to a new position.
+     *
+     * @param xx the x-coordinate of the new position
+     * @param yy the y-coordinate of the new position
+     */
     public void drag(double xx, double yy) {
         double x1, y1, x2, y2, x3, y3;
         x1 = pstart.getx();
@@ -58,7 +85,6 @@ public class CDistance extends CClass {
         y2 = pend.gety();
         x3 = xx;
         y3 = yy;
-
 
         double x = x2 - x1;
         double y = y2 - y1;
@@ -72,6 +98,13 @@ public class CDistance extends CClass {
         len = m * dy - n * dx;
     }
 
+    /**
+     * Selects the distance if the given coordinates are within its range.
+     *
+     * @param xx the x-coordinate
+     * @param yy the y-coordinate
+     * @return true if the distance is selected, false otherwise
+     */
     public boolean select(double xx, double yy) {
         double x1, y1, x2, y2, x3, y3;
         x1 = pstart.getx();
@@ -80,7 +113,6 @@ public class CDistance extends CClass {
         y2 = pend.gety();
         x3 = xx;
         y3 = yy;
-
 
         double x = x2 - x1;
         double y = y2 - y1;
@@ -97,10 +129,21 @@ public class CDistance extends CClass {
         return false;
     }
 
+    /**
+     * Draws the distance using the given Graphics2D object.
+     *
+     * @param g2 the Graphics2D object
+     */
     public void draw(Graphics2D g2) {
         draw(g2, false);
     }
 
+    /**
+     * Draws the distance with the option to highlight if selected.
+     *
+     * @param g2 the Graphics2D object
+     * @param isSelected true if the distance is selected, false otherwise
+     */
     public void draw(Graphics2D g2, boolean isSelected) {
         if (!isdraw()) return;
 
@@ -130,14 +173,12 @@ public class CDistance extends CClass {
         double px2 = xx1 + ddx * cos + ddy * sin;
         double py2 = yy1 - ddx * sin + ddy * cos;
 
-
         ddx = -ddx;
         ddy = -ddy;
         double qx1 = xx2 + ddx * cos - ddy * sin;
         double qy1 = yy2 + ddx * sin + ddy * cos;
         double qx2 = xx2 + ddx * cos + ddy * sin;
         double qy2 = yy2 - ddx * sin + ddy * cos;
-
 
         if (!isSelected) {
             //g2.setStroke(new BasicStroke(1));
@@ -159,6 +200,13 @@ public class CDistance extends CClass {
         g2.drawString("" + pstart.m_name + pend.m_name + " = " + ((float) ((int) (dis * 100))) / 100, (int) ((xx1 + xx2) / 2), (int) ((yy1 + yy2) / 2));
     }
 
+    /**
+     * Saves the distance to a PostScript file.
+     *
+     * @param fp the file output stream
+     * @param stype the show type
+     * @throws IOException if an I/O error occurs
+     */
     public void SavePS(FileOutputStream fp, int stype) throws IOException {
         if (!isdraw()) return;
         double x1, y1, x2, y2;
@@ -187,7 +235,6 @@ public class CDistance extends CClass {
         double px2 = xx1 + ddx * cos + ddy * sin;
         double py2 = yy1 - ddx * sin + ddy * cos;
 
-
         ddx = -ddx;
         ddy = -ddy;
         double qx1 = xx2 + ddx * cos - ddy * sin;
@@ -213,10 +260,14 @@ public class CDistance extends CClass {
         s = "black";
         s += " mf " + (int) ((xx1 + xx2) / 2) + " " + (-(int) ((yy1 + yy2) / 2) - 15) + " moveto (" + sv + ") " + "show\n";
         fp.write(s.getBytes());
-
-
     }
 
+    /**
+     * Saves the distance data to an output stream.
+     *
+     * @param out the data output stream
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
         super.Save(out);
         out.writeInt(pstart.m_id);
@@ -224,6 +275,13 @@ public class CDistance extends CClass {
         out.writeDouble(len);
     }
 
+    /**
+     * Loads the distance data from an input stream.
+     *
+     * @param in the data input stream
+     * @param dp the draw process
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         if (CMisc.version_load_now < 0.01) {

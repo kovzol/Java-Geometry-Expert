@@ -13,6 +13,8 @@ import java.awt.*;
  * Date: 2004-12-9
  * Time: 12:29:48
  * To change this template use File | Settings | File Templates.
+ *
+ * This class represents a circle in geometric constructions.
  */
 public class Circle extends CClass {
     public static int PCircle = 0;
@@ -25,14 +27,31 @@ public class Circle extends CClass {
     Vector points = new Vector();
     Vector cons = new Vector();
 
+    /**
+     * Gets the number of points on the circle.
+     *
+     * @return the number of points on the circle
+     */
     public int psize() {
         return points.size();
     }
 
+    /**
+     * Gets the point at the specified index.
+     *
+     * @param i the index of the point
+     * @return the point at the specified index
+     */
     public CPoint getP(int i) {
         return (CPoint) points.get(i);
     }
 
+    /**
+     * Checks if the given point is on the circle.
+     *
+     * @param p the point to check
+     * @return true if the point is on the circle, false otherwise
+     */
     public boolean p_on_circle(CPoint p) {
         for (int i = 0; i < points.size(); i++)
             if (p == points.get(i))
@@ -40,6 +59,12 @@ public class Circle extends CClass {
         return false;
     }
 
+    /**
+     * Draws the circle using the given Graphics2D object.
+     *
+     * @param g2 the Graphics2D object
+     * @param selected true if the circle is selected, false otherwise
+     */
     public void draw(Graphics2D g2, boolean selected) {
         if (!isdraw()) return;
         if (selected) {
@@ -82,52 +107,63 @@ public class Circle extends CClass {
             double x2 = p1.getx() + dx * 2000 / sl;
             double y2 = p1.gety() + dy * 2000 / sl;
             g2.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-
-
         }
-
-
     }
 
+    /**
+     * Draws the circle using the given Graphics2D object.
+     *
+     * @param g2 the Graphics2D object
+     */
     public void draw(Graphics2D g2) {
         this.draw(g2, false);
     }
 
+    /**
+     * Gets the type string of the circle.
+     *
+     * @return the type string of the circle
+     */
     public String TypeString() {
-        // if (m_name == null) return Language.getLs(50, "circle ");
         if (m_name == null) return GExpert.getLanguage("Circle");
         return GExpert.getTranslationViaGettext("Circle {0}" , m_name);
-        // return Language.getLs(50, "circle ") + m_name;
     }
 
+    /**
+     * Gets the description of the circle.
+     *
+     * @return the description of the circle
+     */
     public String getDescription() {
-        // String st =  Language.getLs(50, "circle ");
-
         if (type == PCircle)
             return GExpert.getTranslationViaGettext("Circle {0}", "(" + o.m_name + "," + o.m_name + this.getSidePoint().getname() + ")");
-            // return st + "(" + o.m_name + "," + o.m_name + this.getSidePoint().getname() + ")";
         else if (type == SCircle) {
             CPoint p1, p2, p3;
             p1 = p2 = p3 = null;
-            if (points.size() < 3) return GExpert.getLanguage("Circle"); // st;
+            if (points.size() < 3) return GExpert.getLanguage("Circle");
 
             p1 = (CPoint) points.get(0);
             p2 = (CPoint) points.get(1);
             p3 = (CPoint) points.get(2);
             return GExpert.getTranslationViaGettext("Circle {0}", "(" + o.getname() + "," + p1.getname() + p2.getname() + p3.getname() + ")");
-            // return st + "(" + o.getname() + "," + p1.getname() + p2.getname() + p3.getname() + ")";
         } else if (type == RCircle) {
             Constraint cs = (Constraint) cons.get(0);
             if (cs.GetConstraintType() == Constraint.RCIRCLE) {
                 CClass p1 = (CClass) cs.getelement(0);
                 CClass p2 = (CClass) cs.getelement(1);
                 return GExpert.getTranslationViaGettext("Circle {0}","(" + o.m_name + "," + p1.getname() + p2.getname() + ")");
-                        // return st + "(" + o.m_name + "," + p1.getname() + p2.getname() + ")";
             }
         }
         return this.TypeString();
     }
 
+    /**
+     * Selects the circle if the given coordinates are within its range.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if the circle is selected, false otherwise
+     */
     public boolean select(double x, double y) {
         if (!visible) return false;
         double ox, oy;
@@ -139,13 +175,22 @@ public class Circle extends CClass {
         if (Math.abs(r - len) < CMisc.PIXEPS)
             return true;
         return false;
-
     }
 
+    /**
+     * Sets the type of the circle.
+     *
+     * @param type the type to set
+     */
     public void setType(int type) {
         this.type = type;
     }
 
+    /**
+     * Gets the names of all points on the circle.
+     *
+     * @return a string containing the names of all points on the circle
+     */
     public String getAllPointName() {
         String s = new String();
         for (int i = 0; i < points.size(); i++) {
@@ -158,9 +203,13 @@ public class Circle extends CClass {
         return s;
     }
 
-
-    public CPoint getSidePoint() // point that with least number
-    {
+    /**
+     * Gets the point on the circle with the least index.
+     *
+     * @return the point on the circle with the least index
+     */
+    // point that with least number
+    public CPoint getSidePoint() {
         CPoint pt = null;
 
         for (int i = 0; i < points.size(); i++) {
@@ -171,19 +220,33 @@ public class Circle extends CClass {
                 pt = p;
             else if (pt.x1.xindex > p.x1.xindex)
                 pt = p;
-
         }
         return pt;
     }
 
+    /**
+     * Gets the x-coordinate of the center of the circle.
+     *
+     * @return the x-coordinate of the center
+     */
     public double getCenterOX() {
         return o.getx();
     }
 
+    /**
+     * Gets the y-coordinate of the center of the circle.
+     *
+     * @return the y-coordinate of the center
+     */
     public double getCenterOY() {
         return o.gety();
     }
 
+    /**
+     * Gets the radius of the circle.
+     *
+     * @return the radius of the circle
+     */
     public double getRadius() {
         if (type == RCircle) {
             //constraint cs = null;
@@ -202,6 +265,11 @@ public class Circle extends CClass {
         }
     }
 
+    /**
+     * Gets the points that define the radius of the circle.
+     *
+     * @return an array containing the points that define the radius
+     */
     public CPoint[] getRadiusPoint() {
         CPoint[] pl = new CPoint[2];
         if (type == Circle.RCircle) {
@@ -214,6 +282,8 @@ public class Circle extends CClass {
                 }
             }
 
+
+
         } else if (type == Circle.PCircle | type == Circle.SCircle) {
             pl[0] = o;
             pl[1] = this.getSidePoint();
@@ -222,10 +292,20 @@ public class Circle extends CClass {
 
     }
 
+
+    /**
+     * This class represents a circle in geometric constructions.
+     */
     public Circle() {
         super(CClass.CIRCLE);
     }
 
+    /** Create a circle using the four points O, A, B, and C.
+     * @param O Center of the circle
+     * @param A Point on the circle line
+     * @param B Point on the circle line
+     * @param C Point on the circle line
+     */
     public Circle(CPoint O, CPoint A, CPoint B, CPoint C) {
         super(CClass.CIRCLE);
         type = SCircle;

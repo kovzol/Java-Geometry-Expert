@@ -11,10 +11,23 @@ import java.awt.event.*;
 import java.util.Vector;
 import java.io.File;
 
-
+/**
+ * Created by IntelliJ IDEA.
+ * User: Administrator
+ * Date: 2005-3-4
+ * Time: 14:25:06
+ * To change this template use File | Settings | File Templates.
+ *
+ * This class represents a dialog for proving geometric statements.
+ */
 public class CDialogProve extends JBaseDialog {
     ProvePane m_cp;
 
+    /**
+     * Constructs a CDialogProve object.
+     *
+     * @param owner the owner of this dialog
+     */
     public CDialogProve(GExpert owner) {
         super((JFrame) null);
         m_cp = new ProvePane(owner, this);
@@ -22,20 +35,38 @@ public class CDialogProve extends JBaseDialog {
         this.setSize(650, 230);
     }
 
+    /**
+     * Shows the dialog with the given CProveText.
+     *
+     * @param cp the CProveText to display in the dialog
+     */
     void showDialog(CProveText cp) {
         m_cp.setValue(cp);
         this.setVisible(true);
     }
 
+    /**
+     * Sets the selected items in the dialog.
+     *
+     * @param v the vector of selected items
+     */
     public void setSelect(Vector v) {
         m_cp.setSelect(v);
     }
 
+    /**
+     * Sets the CProveField in the dialog.
+     *
+     * @param cpv the CProveField to set
+     */
     public void setProveField(CProveField cpv) {
         m_cp.setProveField(cpv);
     }
 }
 
+/**
+ * This class represents the panel used in CDialogProve.
+ */
 class ProvePane extends JPanel
         implements ActionListener, ListSelectionListener, ItemListener, PopupMenuListener {
     private CProveField Cpv = null;
@@ -62,7 +93,12 @@ class ProvePane extends JPanel
 
     final static int GAP = 10;
 
-
+    /**
+     * Constructs a ProvePane object.
+     *
+     * @param gx the GExpert instance
+     * @param dlg the JDialog instance
+     */
     public ProvePane(GExpert gx, JDialog dlg) {
         gxInstance = gx;
         dialog = dlg;
@@ -84,10 +120,18 @@ class ProvePane extends JPanel
         add(createAddressDisplay());
     }
 
+    /**
+     * Sets the CProveField for this panel.
+     *
+     * @param cpv the CProveField to set
+     */
     public void setProveField(CProveField cpv) {
         Cpv = cpv;
     }
 
+    /**
+     * Sets the rule list for this panel.
+     */
     public void setRuleList() {
         String user_directory = GExpert.getUserDir();
         File f = new File(user_directory + "/wprover/rules");
@@ -95,6 +139,13 @@ class ProvePane extends JPanel
         addDirectory(mrule, f, "rules");
     }
 
+    /**
+     * Adds directories and files to the given menu.
+     *
+     * @param menu the menu to add items to
+     * @param f the directory file
+     * @param apath the path of the directory
+     */
     public void addDirectory(JMenu menu, File f, String apath) {
         if (!f.exists()) return;
         File[] flist = f.listFiles();
@@ -119,6 +170,11 @@ class ProvePane extends JPanel
         }
     }
 
+    /**
+     * Sets the value for the panel.
+     *
+     * @param cp the CProveText to set
+     */
     public void setValue(CProveText cp) {
         cptext = cp;
         captainField.setForeground(cp.getCaptainColor());
@@ -150,24 +206,29 @@ class ProvePane extends JPanel
         cbox.setSelected(cp.getVisible());
         srule = cp.getRule();
         lrule.setText(cp.getRule());
-
     }
 
+    /**
+     * Resets the model for the list.
+     */
     public void resetModel() {
         listModel.clear();
         for (int i = 0; i < vlist.size(); i++) {
             CClass cc = (CClass) vlist.get(i);
             listModel.addElement(cc.TypeString());
         }
-
     }
 
+    /**
+     * Creates the buttons for the panel.
+     *
+     * @return the created button component
+     */
     protected JComponent createButtons() {
         JPanel top = new JPanel();
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 
         JPanel prule = new JPanel();
-
         prule.setLayout(new BoxLayout(prule, BoxLayout.Y_AXIS));
         lrule = new JTextField(20);
         prule.add(lrule);
@@ -202,6 +263,11 @@ class ProvePane extends JPanel
         return top;
     }
 
+    /**
+     * Handles the value change event for the list selection.
+     *
+     * @param e the list selection event
+     */
     public void valueChanged(ListSelectionEvent e) {
         int index = selectField.getSelectedIndex();
         if (index >= 0 && index < vlist.size()) {
@@ -211,6 +277,11 @@ class ProvePane extends JPanel
         }
     }
 
+    /**
+     * Handles the action event for the buttons and menu items.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         String sname = e.getActionCommand();
@@ -249,9 +320,13 @@ class ProvePane extends JPanel
             lrule.setText(sname);
             srule = path;
         }
-
     }
 
+    /**
+     * Sets the selected items for the panel.
+     *
+     * @param v the vector of selected items
+     */
     public void setSelect(Vector v) {
         vlist.clear();
         vlist.addAll(v);
@@ -261,10 +336,13 @@ class ProvePane extends JPanel
                 vlist.add(obj);
         }
         this.resetModel();
-
     }
 
-
+    /**
+     * Creates the address display component.
+     *
+     * @return the created address display component
+     */
     protected JComponent createAddressDisplay() {
         JPanel panel = new JPanel(new BorderLayout());
         listModel = new DefaultListModel();
@@ -282,7 +360,11 @@ class ProvePane extends JPanel
         return all;
     }
 
-
+    /**
+     * Creates the entry fields component.
+     *
+     * @return the created entry fields component
+     */
     protected JComponent createEntryFields() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -301,8 +383,7 @@ class ProvePane extends JPanel
         p.add(color_captain);
         panel.add(p);
 
-        label1 = new JLabel("Prove",
-                JLabel.TRAILING);
+        label1 = new JLabel("Prove", JLabel.TRAILING);
         panel.add(label1);
         proveField = new JTextArea(5, 20);
         panel.add(new JScrollPane(proveField));
@@ -328,7 +409,6 @@ class ProvePane extends JPanel
         lbpanel.add(Box.createHorizontalStrut(5));
 
         bsize = new JComboBox(new Object[]{10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 26, 27, 28, 29, 30, 36, 72});
-
         bsize.setMaximumRowCount(9);
         bsize.addItemListener(this);
         lbpanel.add(bsize);
@@ -340,9 +420,13 @@ class ProvePane extends JPanel
         lbpanel.setMaximumSize(lbpanel.getPreferredSize());
         panel.add(lbpanel);
         return panel;
-
     }
 
+    /**
+     * Handles the item state changed event for the combo boxes.
+     *
+     * @param e the item event
+     */
     public void itemStateChanged(ItemEvent e) {
         Object obj = e.getSource();
 
@@ -362,31 +446,38 @@ class ProvePane extends JPanel
         }
     }
 
+    /**
+     * Handles the popup menu will become visible event.
+     *
+     * @param e the popup menu event
+     */
     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
     }
 
+    /**
+     * Handles the popup menu will become invisible event.
+     *
+     * @param e the popup menu event
+     */
     public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-
         Object obj = e.getSource();
-
 
         if (obj == color_captain.getColorMenu()) {
             Color color = color_captain.setNewColor();
             if (color != null) {
                 captainField.setForeground(color);
             }
-
         } else if (obj == color_text.getColorMenu()) {
             Color c = color_text.setNewColor();
             proveField.setForeground(c);
         }
-
     }
 
+    /**
+     * Handles the popup menu canceled event.
+     *
+     * @param e the popup menu event
+     */
     public void popupMenuCanceled(PopupMenuEvent e) {
     }
-
-////////////////////////////////////////////////////////////////////////////////
-
-
 }
