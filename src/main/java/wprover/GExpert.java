@@ -201,6 +201,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
         if (GExpert.lan.equals("Chinese"))
             loc = Locale.SIMPLIFIED_CHINESE;
+        if (GExpert.lan.equals("French"))
+            loc = Locale.FRENCH;
         if (GExpert.lan.equals("German"))
             loc = Locale.GERMAN;
         if (GExpert.lan.equals("Hebrew"))
