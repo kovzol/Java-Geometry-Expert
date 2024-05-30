@@ -46,7 +46,7 @@ public class HelpMode {
         addItem("Parallel", "parallel.html");
         addItem("Perpendicular", "perpendicular.html");
 
-        addItem("Point by Point and Segment", "point_by_point_and_segement.html");
+        addItem("Intersection by compass and circle/line", "point_by_point_and_segement.html");
         addItem("Radical of Two Circles", "radical_of_two_circles.html");
         addItem("Oriented Segment", "oriented_segment.html");
         addItem("Oriented T Segment", "oriented_segment.html");
