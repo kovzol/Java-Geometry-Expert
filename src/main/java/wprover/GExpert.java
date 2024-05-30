@@ -1340,14 +1340,18 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             }
             // Handle import of ggb file
         } else if (command.equals("Import")) {
-            JFileChooser chooser = getFileChooser();
-            int result = chooser.showOpenDialog(this);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                try {
-                    File file = chooser.getSelectedFile();
-                    openGGBFile(file);
-                } catch (Exception ee) {
-                    ee.printStackTrace();
+            if (src instanceof File) {
+                openGGBFile((File) src);
+            } else {
+                JFileChooser chooser = getFileChooser();
+                int result = chooser.showOpenDialog(this);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        File file = chooser.getSelectedFile();
+                        openGGBFile(file);
+                    } catch (Exception ee) {
+                        ee.printStackTrace();
+                    }
                 }
             }
         } else if (command.equals("Exit")) {
@@ -3050,8 +3054,13 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             }
 
             // Process first argument as a file:
-            commandlineCommand.add("Open");
-            commandlineSrc.add(new File(cmd.getArgList().get(0)));
+            String filename = cmd.getArgList().get(0);
+            if (filename.endsWith(".gex")) {
+                commandlineCommand.add("Open");}
+            else {
+                commandlineCommand.add("Import");
+                }
+            commandlineSrc.add(new File(filename));
 
             if (cmd.hasOption("p")) {
                 commandlineCommand.add("Prove");
