@@ -471,12 +471,15 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return pdialog;
     }
 
-    public JFileChooser getFileChooser() {
+    public JFileChooser getFileChooser(boolean importGgb) {
         if (filechooser == null) {
             filechooser = new JFileChooser();
             String dr = getUserDir();
             filechooser.setCurrentDirectory(new File(dr));
+        }
+        if (importGgb) {
             filechooser.setFileFilter(new JFileFilter("ggb"));
+        } else {
             filechooser.setFileFilter(new JFileFilter("gex"));
         }
         filechooser.setSelectedFile(null);
@@ -1327,7 +1330,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                 openAFile((File) src);
                 } else {
 
-                JFileChooser chooser = getFileChooser();
+                JFileChooser chooser = getFileChooser(false);
                 int result = chooser.showOpenDialog(this);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     try {
@@ -1343,7 +1346,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             if (src instanceof File) {
                 openGGBFile((File) src);
             } else {
-                JFileChooser chooser = getFileChooser();
+                JFileChooser chooser = getFileChooser(true);
                 int result = chooser.showOpenDialog(this);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     try {
@@ -1855,7 +1858,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
         if (need_save()) {
             if (file == null || n) { //command.equals("Save as...")
-                JFileChooser chooser = this.getFileChooser();
+                JFileChooser chooser = this.getFileChooser(false);
 
                 try {
                     if (file != null && file.exists())
@@ -1863,7 +1866,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     result = chooser.showSaveDialog(this);
                 } catch (Exception ee) {
                     filechooser = null;
-                    chooser = this.getFileChooser();
+                    chooser = this.getFileChooser(false);
                     result = chooser.showSaveDialog(this);
                 }
 
