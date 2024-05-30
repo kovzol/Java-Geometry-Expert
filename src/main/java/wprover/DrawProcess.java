@@ -11655,6 +11655,39 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                         c.add_pt(p3, 2);
                                                         c.set_conc(true);
                                                         gxInstance.getpprove().set_conclusion(c, true);
+                                                    } else if (parameter.startsWith("AreConcyclic")) {
+                                                        int condtype = CST.getClu_D("Cyclic");
+                                                        Cons c = new Cons(condtype);
+                                                        String parameterPoints = parameter.substring(parameter.indexOf("["));
+                                                        // Remove "]":
+                                                        parameterPoints = parameterPoints.substring(1, parameterPoints.length()-1);
+                                                        String[] parameterList = parameterPoints.split(",");
+                                                        for (int k = 0; k < 4; k++) {
+                                                            parameterList[k] = parameterList[k].trim();
+                                                        }
+                                                        CPoint p1 = null;
+                                                        CPoint p2 = null;
+                                                        CPoint p3 = null;
+                                                        CPoint p4 = null;
+                                                        for (CPoint p : points) {
+                                                            if (p.getname().equals(parameterList[0])) {
+                                                                p1 = p;
+                                                            } else if (p.getname().equals(parameterList[1])) {
+                                                                p2 = p;
+                                                            } else if (p.getname().equals(parameterList[2])) {
+                                                                p3 = p;
+                                                            } else if (p.getname().equals(parameterList[3])) {
+                                                                p4 = p;
+                                                            }
+                                                        }
+                                                        c.add_pt(p1, 0);
+                                                        c.add_pt(p2, 1);
+                                                        c.add_pt(p3, 2);
+                                                        c.add_pt(p4, 3);
+                                                        c.set_conc(true);
+                                                        gxInstance.getpprove().set_conclusion(c, true);
+                                                    } else {
+                                                        System.err.println("Unimplemented: " + parameter);
                                                     }
                                                 }
                                             }
