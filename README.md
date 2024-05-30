@@ -86,13 +86,17 @@ batik (which uses xml-apis and xmlgraphics).
 This fork is maintained by Zoltán Kovács (PHDL Linz, Austria). The following contributors helped adding/fixing
 some features in this version:
 <ul>
+ <li>Piotr Błaszczyk (Polish translation)
  <li>Jorge Cassio (Portuguese translation)
+ <li>Noah Dana-Picard (French and Hebrew translation)
  <li>Ines Ganglmayr (German translation)
  <li>Benedek Kovács (Localization support)
- <li>Zoltán Kovács (Hungarian translation)
+ <li>Zoltán Kovács (Hungarian and German translations)
  <li>Predrag Janičić (Serbian translation)
+ <li>Vesna Marinković (Serbian translation)
  <li>Jelena Marković (Serbian translation)
+ <li>Anna Petiurenko (Polish translation)
  <li>Alexander Thaller (German translation)
- <li>Alexander Vujic (Serbian translation)
+ <li>Alexander Vujič (Serbian and German translations)
  <li>Engelbert Zeintl (German translation)
 </ul>
