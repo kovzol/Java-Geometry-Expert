@@ -11620,10 +11620,45 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     this.charsetAndAddPoly(false);
                                                     this.UndoAdded(c.getDescription());
                                                 }
+
+                                            } else if (step.getAttribute("name").equals("Prove")) {
+                                                NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
+                                                NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
+                                                if (inputName.getLength() == 1) {
+                                                    String parameter = inputName.getNamedItem("a0").getTextContent();
+                                                    // input (String): "AreCollinear[F, G, H]"
+                                                    // output (Cons): SHOW: COLLINEAR F G H
+                                                    if (parameter.startsWith("AreCollinear")) {
+                                                        int condtype = CST.getClu_D("Collinear");
+                                                        Cons c = new Cons(condtype);
+                                                        String parameterPoints = parameter.substring(parameter.indexOf("["));
+                                                        // Remove "]":
+                                                        parameterPoints = parameterPoints.substring(1, parameterPoints.length()-1);
+                                                        String[] parameterList = parameterPoints.split(",");
+                                                        for (int k = 0; k < 3; k++) {
+                                                            parameterList[k] = parameterList[k].trim();
+                                                        }
+                                                        CPoint p1 = null;
+                                                        CPoint p2 = null;
+                                                        CPoint p3 = null;
+                                                        for (CPoint p : points) {
+                                                            if (p.getname().equals(parameterList[0])) {
+                                                                p1 = p;
+                                                            } else if (p.getname().equals(parameterList[1])) {
+                                                                p2 = p;
+                                                            } else if (p.getname().equals(parameterList[2])) {
+                                                                p3 = p;
+                                                            }
+                                                        }
+                                                        c.add_pt(p1, 0);
+                                                        c.add_pt(p2, 1);
+                                                        c.add_pt(p3, 2);
+                                                        c.set_conc(true);
+                                                        gxInstance.getpprove().set_conclusion(c, true);
+                                                    }
+                                                }
                                             }
                                             break;
-
-
                                     }
                                 }
                             }
