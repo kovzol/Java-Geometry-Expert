@@ -9,3 +9,5 @@ Parallel lines, perpendicular or angle bisectors.
 These need to be constructed via simple Euclidean steps (see above).
 
 Colors and other properties of the objects are ignored.
+
+The command Prove(AreCollinear(A, B, C)) is supported as a prototype.
