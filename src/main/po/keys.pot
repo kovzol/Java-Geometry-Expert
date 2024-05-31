@@ -55,11 +55,13 @@ msgid "False"
 msgstr ""
 
 #: ../wprover/concDialog.java:156
-msgid "Set One"
+# Changed from Set One to ...
+msgid "First set"
 msgstr ""
 
 #: ../wprover/concDialog.java:157
-msgid "Set Two"
+# Changed from Set Two to ...
+msgid "Second set"
 msgstr ""
 
 #: ../wprover/concDialog.java:184
@@ -869,12 +871,15 @@ msgid "Saved"
 msgstr ""
 
 #: ../wprover/MiscDialog.java:154
-msgid "Polygon Alpha"
+# Changed Polygon Alpha to ...
+msgid "Filling of Polygons"
 msgstr ""
 
 #: ../wprover/MiscDialog.java:195
-msgid "Radius of Point"
+# Changed from Radius of Point
+msgid "Point Size"
 msgstr ""
+
 
 #: ../wprover/MiscDialog.java:212 ../wprover/MiscDialog.java:468
 msgid "Point's Text"

@@ -55,13 +55,15 @@ msgstr "נכון"
 msgid "False"
 msgstr "לא נכון"
 
+# Changed from Set One to ...
 #: ../wprover/concDialog.java:156
-msgid "Set One"
-msgstr "קבוצה 1"
+msgid "First set"
+msgstr ""
 
 #: ../wprover/concDialog.java:157
-msgid "Set Two"
-msgstr "קבוצה 2"
+#, fuzzy
+msgid "Second set"
+msgstr "שניות"
 
 #: ../wprover/concDialog.java:184
 msgid "Please select"
@@ -71,10 +73,13 @@ msgstr "נא לבחור אפשרות אחת"
 msgid "true"
 msgstr "נכון"
 
-#: ../wprover/concDialog.java:205 ../wprover/GIFOptionDialog.java:56 ../wprover/MiscDialog.java:66
-#: ../wprover/mproveInputPanel.java:252 ../wprover/PanelProve1.java:1407 ../wprover/RatioSelectDialog.java:49
-#: ../wprover/RectChooser1.java:81 ../wprover/RectChooser.java:84 ../wprover/SpecificAngleDialog.java:55
-#: ../wprover/TextFrame.java:121 ../wprover/TextValueEditor.java:123 ../wprover/Update.java:188 ../wprover/vFontChooser.java:170
+#: ../wprover/concDialog.java:205 ../wprover/GIFOptionDialog.java:56
+#: ../wprover/MiscDialog.java:66 ../wprover/mproveInputPanel.java:252
+#: ../wprover/PanelProve1.java:1407 ../wprover/RatioSelectDialog.java:49
+#: ../wprover/RectChooser1.java:81 ../wprover/RectChooser.java:84
+#: ../wprover/SpecificAngleDialog.java:55 ../wprover/TextFrame.java:121
+#: ../wprover/TextValueEditor.java:123 ../wprover/Update.java:188
+#: ../wprover/vFontChooser.java:170
 msgid "OK"
 msgstr "בסדר"
 
@@ -82,10 +87,12 @@ msgstr "בסדר"
 msgid "Clear"
 msgstr "נקה"
 
-#: ../wprover/concDialog.java:211 ../wprover/DialogPsProperty.java:36 ../wprover/GIFOptionDialog.java:57
-#: ../wprover/mproveInputPanel.java:284 ../wprover/RatioSelectDialog.java:50 ../wprover/RectChooser1.java:82
-#: ../wprover/RectChooser.java:85 ../wprover/SpecificAngleDialog.java:56 ../wprover/TextFrame.java:122
-#: ../wprover/TextValueEditor.java:124 ../wprover/Update.java:187 ../wprover/vFontChooser.java:182
+#: ../wprover/concDialog.java:211 ../wprover/DialogPsProperty.java:36
+#: ../wprover/GIFOptionDialog.java:57 ../wprover/mproveInputPanel.java:284
+#: ../wprover/RatioSelectDialog.java:50 ../wprover/RectChooser1.java:82
+#: ../wprover/RectChooser.java:85 ../wprover/SpecificAngleDialog.java:56
+#: ../wprover/TextFrame.java:122 ../wprover/TextValueEditor.java:124
+#: ../wprover/Update.java:187 ../wprover/vFontChooser.java:182
 msgid "Cancel"
 msgstr "בטל"
 
@@ -97,13 +104,16 @@ msgstr "מספר הנקודות שיש לבחור:"
 msgid "Basic"
 msgstr "בסיסי"
 
-#: ../wprover/CProperty.java:246 ../wprover/CProperty.java:664 ../wprover/CStyleDialog.java:93 ../wprover/CStyleDialog.java:141
-#: ../wprover/DialogPsProperty.java:30 ../wprover/MiscDialog.java:44 ../wprover/MiscDialog.java:641
-#: ../wprover/RightClickPopMenu.java:34 ../wprover/vFontChooser.java:149
+#: ../wprover/CProperty.java:246 ../wprover/CProperty.java:664
+#: ../wprover/CStyleDialog.java:93 ../wprover/CStyleDialog.java:141
+#: ../wprover/DialogPsProperty.java:30 ../wprover/MiscDialog.java:44
+#: ../wprover/MiscDialog.java:641 ../wprover/RightClickPopMenu.java:34
+#: ../wprover/vFontChooser.java:149
 msgid "Color"
 msgstr "צבע"
 
-#: ../wprover/CProperty.java:263 ../wprover/CProperty.java:393 ../wprover/CProperty.java:640 ../wprover/CProperty.java:1017
+#: ../wprover/CProperty.java:263 ../wprover/CProperty.java:393
+#: ../wprover/CProperty.java:640 ../wprover/CProperty.java:1017
 #: ../wprover/CStyleDialog.java:149
 msgid "Type"
 msgstr "סוג"
@@ -112,16 +122,19 @@ msgstr "סוג"
 msgid "Width"
 msgstr "רוחב"
 
-#: ../wprover/CProperty.java:374 ../wprover/CProperty.java:632 ../wprover/GExpert.java:854 ../wprover/GExpert.java:855
+#: ../wprover/CProperty.java:374 ../wprover/CProperty.java:632
+#: ../wprover/GExpert.java:854 ../wprover/GExpert.java:855
 #: ../wprover/HelpMode.java:45
 msgid "Line"
 msgstr "ישר"
 
-#: ../wprover/CProperty.java:494 ../wprover/GExpert.java:864 ../wprover/GExpert.java:865 ../wprover/HelpMode.java:67
+#: ../wprover/CProperty.java:494 ../wprover/GExpert.java:864
+#: ../wprover/GExpert.java:865 ../wprover/HelpMode.java:67
 msgid "Circle"
 msgstr "מעגל"
 
-#: ../wprover/CProperty.java:551 ../wprover/GExpert.java:842 ../wprover/GExpert.java:843 ../wprover/HelpMode.java:42
+#: ../wprover/CProperty.java:551 ../wprover/GExpert.java:842
+#: ../wprover/GExpert.java:843 ../wprover/HelpMode.java:42
 #: ../wprover/LeadVariableDialog.java:425
 msgid "Point"
 msgstr "נקודה"
@@ -162,12 +175,14 @@ msgstr "צייר ישר"
 msgid "Num"
 msgstr "נומרי"
 
-#: ../wprover/CProperty.java:961 ../wprover/CProperty.java:1095 ../wprover/LeadVariableDialog.java:244
+#: ../wprover/CProperty.java:961 ../wprover/CProperty.java:1095
+#: ../wprover/LeadVariableDialog.java:244
 #: ../wprover/LeadVariableDialog.java:427 ../wprover/MiscDialog.java:319
 msgid "Length"
 msgstr "אורך"
 
-#: ../wprover/CProperty.java:1010 ../wprover/GExpert.java:874 ../wprover/GExpert.java:887 ../wprover/HelpMode.java:86
+#: ../wprover/CProperty.java:1010 ../wprover/GExpert.java:874
+#: ../wprover/GExpert.java:887 ../wprover/HelpMode.java:86
 msgid "Polygon"
 msgstr "מצולע"
 
@@ -175,13 +190,14 @@ msgstr "מצולע"
 msgid "Angle"
 msgstr "זוית"
 
-#: ../wprover/CProperty.java:1217 ../wprover/CProperty.java:1261 ../wprover/CProperty.java:1307
-#: ../wprover/LeadVariableDialog.java:242 ../wprover/CProperty.java:625
+#: ../wprover/CProperty.java:1217 ../wprover/CProperty.java:1261
+#: ../wprover/CProperty.java:1307 ../wprover/LeadVariableDialog.java:242
+#: ../wprover/CProperty.java:625
 msgid "Name"
 msgstr "שם"
 
-#: ../wprover/CProperty.java:1218 ../wprover/CProperty.java:1312 ../wprover/drawProcess.java:10509
-#: ../wprover/RightClickPopMenu.java:93
+#: ../wprover/CProperty.java:1218 ../wprover/CProperty.java:1312
+#: ../wprover/drawProcess.java:10509 ../wprover/RightClickPopMenu.java:93
 msgid "Radius"
 msgstr "רדיוס"
 
@@ -228,7 +244,8 @@ msgstr "זוית השפוע"
 msgid "Slope"
 msgstr "שפוע"
 
-#: ../wprover/DialogPsProperty.java:26 ../wprover/GExpert.java:766 ../wprover/HelpMode.java:35
+#: ../wprover/DialogPsProperty.java:26 ../wprover/GExpert.java:766
+#: ../wprover/HelpMode.java:35
 msgid "Save as PS"
 msgstr "שמור כ PS"
 
@@ -252,7 +269,8 @@ msgstr "חיתוך"
 msgid "Angle Specification must be done before drawing anything"
 msgstr "הגדרת הזוית חייבת להיות לפני ציור כלשהו"
 
-#: ../wprover/drawProcess.java:2243 ../wprover/drawProcess.java:3038 ../wprover/PanelProve1.java:1087 ../wprover/Update.java:127
+#: ../wprover/drawProcess.java:2243 ../wprover/drawProcess.java:3038
+#: ../wprover/PanelProve1.java:1087 ../wprover/Update.java:127
 msgid "Warning"
 msgstr "אזהרה"
 
@@ -268,7 +286,8 @@ msgstr "לא נקודת חיתוך"
 msgid "The two lines you selected are parallel, don't have any intersection!"
 msgstr "שני השירים שבחרת הם מקבילים, לכן אין להם נקודת חיתוך!"
 
-#: ../wprover/drawProcess.java:8071 ../wprover/drawProcess.java:8132 ../wprover/drawProcess.java:8205
+#: ../wprover/drawProcess.java:8071 ../wprover/drawProcess.java:8132
+#: ../wprover/drawProcess.java:8205
 msgid "No intersection"
 msgstr "אין חיתוך"
 
@@ -277,7 +296,8 @@ msgid "The line and the circle you selected don't have any intersection"
 msgstr "הישר והמעגל שנבחרו לא נחתכים"
 
 #: ../wprover/drawProcess.java:8147
-msgid "The two objects you selected already have two points as their intersections"
+msgid ""
+"The two objects you selected already have two points as their intersections"
 msgstr "שני העצמים בנבחרו לא נחתכים"
 
 #: ../wprover/drawProcess.java:8148 ../wprover/drawProcess.java:8221
@@ -288,8 +308,8 @@ msgstr "החיתוך כבר הוגדר"
 msgid "The circles you selected don't have any intersection"
 msgstr "שני המעגלים שנבחרו לא נחתכים"
 
-#: ../wprover/drawProcess.java:10449 ../wprover/drawProcess.java:10501 ../wprover/RightClickPopMenu.java:87
-#: ../wprover/RightClickPopMenu.java:98
+#: ../wprover/drawProcess.java:10449 ../wprover/drawProcess.java:10501
+#: ../wprover/RightClickPopMenu.java:87 ../wprover/RightClickPopMenu.java:98
 msgid "Area"
 msgstr "שטח"
 
@@ -317,7 +337,8 @@ msgstr "פתיחה"
 msgid "Import"
 msgstr "יבוא"
 
-#: ../wprover/GExpert.java:756 ../wprover/GExpert.java:1867 ../wprover/HelpMode.java:33
+#: ../wprover/GExpert.java:756 ../wprover/GExpert.java:1867
+#: ../wprover/HelpMode.java:33
 msgid "Save"
 msgstr "שמור"
 
@@ -385,7 +406,8 @@ msgstr "קטע T מכוון"
 msgid "Oriented Segment * Ratio"
 msgstr "קטע מכוון * יחס"
 
-#: ../wprover/GExpert.java:822 ../wprover/GExpert.java:828 ../wprover/GExpert.java:839 ../wprover/GExpert.java:898
+#: ../wprover/GExpert.java:822 ../wprover/GExpert.java:828
+#: ../wprover/GExpert.java:839 ../wprover/GExpert.java:898
 #: ../wprover/GExpert.java:918
 msgid "Other..."
 msgstr "אחר..."
@@ -398,7 +420,8 @@ msgstr "קטע T מכוון * יחס"
 msgid "Proportional Segment"
 msgstr "קטע פרופרוציונלי"
 
-#: ../wprover/GExpert.java:844 ../wprover/HelpMode.java:43 ../wprover/MProveTree.java:1817
+#: ../wprover/GExpert.java:844 ../wprover/HelpMode.java:43
+#: ../wprover/MProveTree.java:1817
 msgid "Midpoint"
 msgstr "נקודת אמצע"
 
@@ -422,11 +445,13 @@ msgstr "מרכז המעגל החסום"
 msgid "Foot"
 msgstr "רגל"
 
-#: ../wprover/GExpert.java:856 ../wprover/HelpMode.java:46 ../wprover/MProveTree.java:1816
+#: ../wprover/GExpert.java:856 ../wprover/HelpMode.java:46
+#: ../wprover/MProveTree.java:1816
 msgid "Parallel"
 msgstr "מקביל"
 
-#: ../wprover/GExpert.java:857 ../wprover/HelpMode.java:47 ../wprover/MProveTree.java:1816
+#: ../wprover/GExpert.java:857 ../wprover/HelpMode.java:47
+#: ../wprover/MProveTree.java:1816
 msgid "Perpendicular"
 msgstr "מאונך"
 
@@ -472,11 +497,13 @@ msgstr "שקף"
 msgid "Triangle"
 msgstr "משולש"
 
-#: ../wprover/GExpert.java:876 ../wprover/HelpMode.java:75 ../wprover/MProveTree.java:1822
+#: ../wprover/GExpert.java:876 ../wprover/HelpMode.java:75
+#: ../wprover/MProveTree.java:1822
 msgid "Isosceles Triangle"
 msgstr "משולש שווה שוקיים"
 
-#: ../wprover/GExpert.java:877 ../wprover/HelpMode.java:76 ../wprover/MProveTree.java:1823
+#: ../wprover/GExpert.java:877 ../wprover/HelpMode.java:76
+#: ../wprover/MProveTree.java:1823
 msgid "Equilateral Triangle"
 msgstr "משולש שווה צלעות"
 
@@ -492,11 +519,13 @@ msgstr "משולש יישר זוית ושווה שוקיים"
 msgid "Quadrangle"
 msgstr "מרובע"
 
-#: ../wprover/GExpert.java:881 ../wprover/HelpMode.java:80 ../wprover/MProveTree.java:1820
+#: ../wprover/GExpert.java:881 ../wprover/HelpMode.java:80
+#: ../wprover/MProveTree.java:1820
 msgid "Parallelogram"
 msgstr "מקבילית"
 
-#: ../wprover/GExpert.java:882 ../wprover/HelpMode.java:81 ../wprover/MProveTree.java:1823
+#: ../wprover/GExpert.java:882 ../wprover/HelpMode.java:81
+#: ../wprover/MProveTree.java:1823
 msgid "Trapezoid"
 msgstr "טרפז"
 
@@ -504,14 +533,16 @@ msgstr "טרפז"
 msgid "Right-angled Trapezoid"
 msgstr "טרפז ישר זווית"
 
-#: ../wprover/GExpert.java:884 ../wprover/HelpMode.java:83 ../wprover/MProveTree.java:1824
+#: ../wprover/GExpert.java:884 ../wprover/HelpMode.java:83
+#: ../wprover/MProveTree.java:1824
 msgid "Rectangle"
 msgstr "מלבן"
 
 msgid "Rectangle {0}"
 msgstr "מלבן {0}"
 
-#: ../wprover/GExpert.java:885 ../wprover/HelpMode.java:84 ../wprover/MProveTree.java:1824
+#: ../wprover/GExpert.java:885 ../wprover/HelpMode.java:84
+#: ../wprover/MProveTree.java:1824
 msgid "Square"
 msgstr "ריבוע"
 
@@ -527,7 +558,8 @@ msgstr "זוויות מיוחדות"
 msgid "Constraint"
 msgstr "אילוץ"
 
-#: ../wprover/GExpert.java:904 ../wprover/HelpMode.java:89 ../wprover/MProveTree.java:1818
+#: ../wprover/GExpert.java:904 ../wprover/HelpMode.java:89
+#: ../wprover/MProveTree.java:1818
 msgid "Eqangle"
 msgstr "זווית שווה"
 
@@ -535,7 +567,8 @@ msgstr "זווית שווה"
 msgid "Eqangle3p"
 msgstr "זווית ע\"י 3 נקודות"
 
-#: ../wprover/GExpert.java:907 ../wprover/HelpMode.java:91 ../wprover/SpecificAngleDialog.java:32
+#: ../wprover/GExpert.java:907 ../wprover/HelpMode.java:91
+#: ../wprover/SpecificAngleDialog.java:32
 msgid "Angle Specification"
 msgstr "מפרט זווית"
 
@@ -555,7 +588,8 @@ msgstr "יחס בין המרחקים"
 msgid "CCtangent"
 msgstr "משיק CC"
 
-#: ../wprover/GExpert.java:924 ../wprover/HelpMode.java:98 ../wprover/RightClickPopMenu.java:73
+#: ../wprover/GExpert.java:924 ../wprover/HelpMode.java:98
+#: ../wprover/RightClickPopMenu.java:73
 msgid "Trace"
 msgstr "עקבה"
 
@@ -588,7 +622,8 @@ msgstr "סימן שוויון"
 msgid "Right-angle Mark"
 msgstr "סימן של זוית ישרה"
 
-#: ../wprover/GExpert.java:941 ../wprover/HelpMode.java:108 ../wprover/TextValueEditor.java:45
+#: ../wprover/GExpert.java:941 ../wprover/HelpMode.java:108
+#: ../wprover/TextValueEditor.java:45
 msgid "Calculation"
 msgstr "חישוב"
 
@@ -637,11 +672,13 @@ msgstr "חוקים לשיטת GDD"
 msgid "Options"
 msgstr "אופציות"
 
-#: ../wprover/GExpert.java:965 ../wprover/HelpMode.java:119 ../wprover/MiscDialog.java:32
+#: ../wprover/GExpert.java:965 ../wprover/HelpMode.java:119
+#: ../wprover/MiscDialog.java:32
 msgid "Preferences"
 msgstr "העדפות"
 
-#: ../wprover/GExpert.java:968 ../wprover/HelpMode.java:120 ../wprover/ListTree.java:60 ../wprover/UndoEditDialog.java:20
+#: ../wprover/GExpert.java:968 ../wprover/HelpMode.java:120
+#: ../wprover/ListTree.java:60 ../wprover/UndoEditDialog.java:20
 msgid "Construct History"
 msgstr "הסטוריית הבנייה"
 
@@ -653,7 +690,8 @@ msgstr "הראה סרגל הצעדים"
 msgid "Style Dialog"
 msgstr "סגנון הדו-שיח"
 
-#: ../wprover/GExpert.java:975 ../wprover/GExpert.java:976 ../wprover/HelpMode.java:125
+#: ../wprover/GExpert.java:975 ../wprover/GExpert.java:976
+#: ../wprover/HelpMode.java:125
 msgid "Help"
 msgstr "עזרה"
 
@@ -765,11 +803,13 @@ msgstr "טעינה מחדש"
 msgid "Close"
 msgstr "סגור"
 
-#: ../wprover/LeadVariableDialog.java:243 ../wprover/LeadVariableDialog.java:426
+#: ../wprover/LeadVariableDialog.java:243
+#: ../wprover/LeadVariableDialog.java:426
 msgid "Variable"
 msgstr "משתנה"
 
-#: ../wprover/LeadVariableDialog.java:245 ../wprover/LeadVariableDialog.java:333
+#: ../wprover/LeadVariableDialog.java:245
+#: ../wprover/LeadVariableDialog.java:333
 msgid "Polynomial"
 msgstr "פולינום"
 
@@ -785,8 +825,8 @@ msgstr "העתק"
 msgid "Paste"
 msgstr "הדבק"
 
-#: ../wprover/LeadVariableDialog.java:379 ../wprover/MProveTree.java:752 ../wprover/MProveTree.java:756
-#: ../wprover/MProveTree.java:807
+#: ../wprover/LeadVariableDialog.java:379 ../wprover/MProveTree.java:752
+#: ../wprover/MProveTree.java:756 ../wprover/MProveTree.java:807
 msgid "Delete"
 msgstr "מחיקה"
 
@@ -802,7 +842,8 @@ msgstr "הראה"
 msgid "Mode"
 msgstr "מצב"
 
-#: ../wprover/MiscDialog.java:45 ../wprover/MiscDialog.java:287 ../wprover/vFontChooser.java:108
+#: ../wprover/MiscDialog.java:45 ../wprover/MiscDialog.java:287
+#: ../wprover/vFontChooser.java:108
 msgid "Font"
 msgstr "גופן"
 
@@ -835,12 +876,14 @@ msgid "Saved"
 msgstr "נשמר"
 
 #: ../wprover/MiscDialog.java:154
-msgid "Polygon Alpha"
-msgstr "מצולה אלפה"
+#, fuzzy
+msgid "Filling of Polygons"
+msgstr "מילוי מצולע"
 
 #: ../wprover/MiscDialog.java:195
-msgid "Radius of Point"
-msgstr "רדיוס הנדקוה"
+#, fuzzy
+msgid "Point Size"
+msgstr "נקודה על ישר"
 
 #: ../wprover/MiscDialog.java:212 ../wprover/MiscDialog.java:468
 msgid "Point's Text"
@@ -883,7 +926,8 @@ msgstr "עם חץ"
 msgid "Multiple Arc"
 msgstr "קשת מרובה"
 
-#: ../wprover/MiscDialog.java:384 ../wprover/CProperty.java:624 ../wprover/CProperty.java:997
+#: ../wprover/MiscDialog.java:384 ../wprover/CProperty.java:624
+#: ../wprover/CProperty.java:997
 msgid "Fill"
 msgstr "מילוי"
 
@@ -947,7 +991,8 @@ msgstr "צבעוני"
 msgid "Grid"
 msgstr "שריג"
 
-#: ../wprover/MiscDialog.java:700 ../wprover/MiscDialog.java:711 ../wprover/CProperty.java:318
+#: ../wprover/MiscDialog.java:700 ../wprover/MiscDialog.java:711
+#: ../wprover/CProperty.java:318
 msgid "Choose Color"
 msgstr "בחירת צבע"
 
@@ -1151,15 +1196,18 @@ msgstr "אי אפשר למצוא הוכחה כלשהי!"
 msgid "Not Found"
 msgstr "לא נמצא"
 
-#: ../wprover/PanelProve1.java:1258 ../wprover/PanelProve1.java:1340 ../wprover/PanelProve1.java:1397
+#: ../wprover/PanelProve1.java:1258 ../wprover/PanelProve1.java:1340
+#: ../wprover/PanelProve1.java:1397
 msgid "No conclusion has been set!"
 msgstr "שום מסקנה לא התקבלה!"
 
-#: ../wprover/PanelProve1.java:1259 ../wprover/PanelProve1.java:1341 ../wprover/PanelProve1.java:1398
+#: ../wprover/PanelProve1.java:1259 ../wprover/PanelProve1.java:1341
+#: ../wprover/PanelProve1.java:1398
 msgid "No conclusion"
 msgstr "אין מסקנה"
 
-#: ../wprover/PanelProve1.java:1300 ../wprover/PanelProve1.java:1373 ../wprover/PanelProve1.java:1379
+#: ../wprover/PanelProve1.java:1300 ../wprover/PanelProve1.java:1373
+#: ../wprover/PanelProve1.java:1379
 msgid "Message"
 msgstr "מסר"
 
@@ -1203,7 +1251,8 @@ msgstr "לא ניתן לתרגם את המסקנה לביטוי זווית מל�
 msgid "Not Supported"
 msgstr "איננו נתמך"
 
-#: ../wprover/PanelProve1.java:2057 ../wprover/PanelProve1.java:2390 ../wprover/PanelProve1.java:2392
+#: ../wprover/PanelProve1.java:2057 ../wprover/PanelProve1.java:2390
+#: ../wprover/PanelProve1.java:2392
 msgid "Prove"
 msgstr "הוכח"
 
@@ -1265,7 +1314,8 @@ msgstr "ההשערות המשולשות:"
 
 # I do not understand the notion in English, we will have to check this.
 #: ../wprover/panelWu.java:159
-msgid "Successive Pseudo Remainder of the conclusion wrt Triangulized Hypotheses:"
+msgid ""
+"Successive Pseudo Remainder of the conclusion wrt Triangulized Hypotheses:"
 msgstr "שארית פסאודו עוקבת  המסקנה בהתאם להשערות משולשות:"
 
 #: ../wprover/panelWu.java:168
@@ -1320,16 +1370,19 @@ msgstr "רגיל"
 msgid "Bold"
 msgstr "גופן עבה"
 
-#: ../wprover/RuleApplicationDialog.java:309 ../wprover/MProveTree.java:1000 ../wprover/MProveTree.java:1001
-#: ../wprover/MProveTree.java:1002 ../wprover/MProveTree.java:1003 ../wprover/MProveTree.java:1004
-#: ../wprover/MProveTree.java:1005 ../wprover/MProveTree.java:1006 ../wprover/MProveTree.java:1007
-#: ../wprover/MProveTree.java:1008 ../wprover/MProveTree.java:1009 ../wprover/MProveTree.java:1010
-#: ../wprover/MProveTree.java:1011 ../wprover/MProveTree.java:1012 ../wprover/MProveTree.java:1013
-#: ../wprover/MProveTree.java:1015
+#: ../wprover/RuleApplicationDialog.java:309 ../wprover/MProveTree.java:1000
+#: ../wprover/MProveTree.java:1001 ../wprover/MProveTree.java:1002
+#: ../wprover/MProveTree.java:1003 ../wprover/MProveTree.java:1004
+#: ../wprover/MProveTree.java:1005 ../wprover/MProveTree.java:1006
+#: ../wprover/MProveTree.java:1007 ../wprover/MProveTree.java:1008
+#: ../wprover/MProveTree.java:1009 ../wprover/MProveTree.java:1010
+#: ../wprover/MProveTree.java:1011 ../wprover/MProveTree.java:1012
+#: ../wprover/MProveTree.java:1013 ../wprover/MProveTree.java:1015
 msgid "because"
 msgstr "משום ש"
 
-#: ../wprover/TextFrame.java:196 ../wprover/TextFrame.java:198 ../wprover/MProveTree.java:1518
+#: ../wprover/TextFrame.java:196 ../wprover/TextFrame.java:198
+#: ../wprover/MProveTree.java:1518
 msgid "Text"
 msgstr "טקסט"
 
@@ -1469,7 +1522,8 @@ msgid "Print the client area"
 msgstr "הדפס איזור לקוח"
 
 #: ../wprover/GExpert.java:811
-msgid "Click three points A, B, C, then click a point D on an object to get AB = CD"
+msgid ""
+"Click three points A, B, C, then click a point D on an object to get AB = CD"
 msgstr "לחץ על שלוש נקודות A,B,C ואח\"כ על נקודה D על עצם כדי לקבל AB=CD"
 
 #: ../wprover/GExpert.java:812
@@ -1481,10 +1535,13 @@ msgid "Click two points A, B, then a point C to get AB //= CD"
 msgstr "לחץ על שתי נקודות A,B, אח\"כ נקודה C כדי לקבל AB//=CD"
 
 #: ../wprover/GExpert.java:816
-msgid "Click two points A, B, then point C to get CD equal and perpendicular to +- AB"
+msgid ""
+"Click two points A, B, then point C to get CD equal and perpendicular to +- "
+"AB"
 msgstr "לחץ על שתי נקודות A, B, ואז gk נקודה C כדי לקבל CD שווה וניצב ל- +-AB"
 
-#: ../wprover/GExpert.java:822 ../wprover/GExpert.java:828 ../wprover/GExpert.java:839
+#: ../wprover/GExpert.java:822 ../wprover/GExpert.java:828
+#: ../wprover/GExpert.java:839
 msgid "Input your own ratio"
 msgstr "הכנס את היחס שלך"
 
@@ -1666,8 +1723,10 @@ msgid "Set two circles to be tangent"
 msgstr "קבע שני מעגלים משיקים"
 
 #: ../wprover/GExpert.java:924
-msgid "Select a point to trace its locus (in combination with move or animation)"
-msgstr "בחר נקודה כדי להתחקות אחרהמקום הגאומטרי שלה (בשילוב עם move או אנימציה)"
+msgid ""
+"Select a point to trace its locus (in combination with move or animation)"
+msgstr ""
+"בחר נקודה כדי להתחקות אחרהמקום הגאומטרי שלה (בשילוב עם move או אנימציה)"
 
 #: ../wprover/GExpert.java:925
 msgid "The locus of a point"
@@ -1967,7 +2026,8 @@ msgstr "הזז"
 msgid "point"
 msgstr "נקודה"
 
-#: ../wprover/GExpert.java:2433 ../wprover/MProveTree.java:1252 ../wprover/MProveTree.java:1363
+#: ../wprover/GExpert.java:2433 ../wprover/MProveTree.java:1252
+#: ../wprover/MProveTree.java:1363
 msgid "line"
 msgstr "ישר"
 
@@ -1983,7 +2043,8 @@ msgstr "מאונך"
 msgid "foot"
 msgstr "רגל"
 
-#: ../wprover/GExpert.java:2453 ../wprover/MProveTree.java:1252 ../wprover/MProveTree.java:1369
+#: ../wprover/GExpert.java:2453 ../wprover/MProveTree.java:1252
+#: ../wprover/MProveTree.java:1369
 msgid "circle"
 msgstr "מעגל"
 
@@ -1995,11 +2056,13 @@ msgstr "מעגל שלוש נקודות"
 msgid "compass"
 msgstr "מחוגה"
 
-#: ../wprover/GExpert.java:2468 ../wprover/GExpert.java:2505 ../wprover/GExpert.java:2569
+#: ../wprover/GExpert.java:2468 ../wprover/GExpert.java:2505
+#: ../wprover/GExpert.java:2569
 msgid "polygon"
 msgstr "מצולע"
 
-#: ../wprover/GExpert.java:2472 ../wprover/MProveTree.java:1252 ../wprover/MProveTree.java:1388
+#: ../wprover/GExpert.java:2472 ../wprover/MProveTree.java:1252
+#: ../wprover/MProveTree.java:1388
 msgid "angle"
 msgstr "זווית"
 
@@ -2026,11 +2089,13 @@ msgstr "קטע"
 msgid "midpoint"
 msgstr "אמצע"
 
-#: ../wprover/GExpert.java:2496 ../wprover/GExpert.java:2562 ../wprover/MProveTree.java:1252 ../wprover/MProveTree.java:1372
+#: ../wprover/GExpert.java:2496 ../wprover/GExpert.java:2562
+#: ../wprover/MProveTree.java:1252 ../wprover/MProveTree.java:1372
 msgid "square"
 msgstr "ריבוע"
 
-#: ../wprover/GExpert.java:2500 ../wprover/GExpert.java:2531 ../wprover/GExpert.java:2543 ../wprover/MProveTree.java:1252
+#: ../wprover/GExpert.java:2500 ../wprover/GExpert.java:2531
+#: ../wprover/GExpert.java:2543 ../wprover/MProveTree.java:1252
 #: ../wprover/MProveTree.java:1366
 msgid "triangle"
 msgstr "משולש"
@@ -2039,7 +2104,8 @@ msgstr "משולש"
 msgid "equilateral triangle"
 msgstr "משולש שווה צלעות"
 
-#: ../wprover/GExpert.java:2547 ../wprover/MProveTree.java:1253 ../wprover/MProveTree.java:1395
+#: ../wprover/GExpert.java:2547 ../wprover/MProveTree.java:1253
+#: ../wprover/MProveTree.java:1395
 msgid "quadrangle"
 msgstr "מרובע"
 
@@ -2047,7 +2113,8 @@ msgstr "מרובע"
 msgid "pentagon"
 msgstr "מחומש"
 
-#: ../wprover/GExpert.java:2553 ../wprover/MProveTree.java:1253 ../wprover/MProveTree.java:1399
+#: ../wprover/GExpert.java:2553 ../wprover/MProveTree.java:1253
+#: ../wprover/MProveTree.java:1399
 msgid "trapezoid"
 msgstr "טרפז"
 
@@ -2055,7 +2122,8 @@ msgstr "טרפז"
 msgid "right angle trapezoid"
 msgstr "טרפז ישר זווית"
 
-#: ../wprover/GExpert.java:2559 ../wprover/MProveTree.java:1253 ../wprover/MProveTree.java:1392
+#: ../wprover/GExpert.java:2559 ../wprover/MProveTree.java:1253
+#: ../wprover/MProveTree.java:1392
 msgid "rectangle"
 msgstr "מלבן"
 
@@ -2063,8 +2131,8 @@ msgstr "מלבן"
 msgid "hence"
 msgstr "מזה נובע ש"
 
-#: ../wprover/MProveTree.java:1022 ../wprover/MProveTree.java:1265 ../wprover/MProveTree.java:1023
-#: ../wprover/MProveTree.java:1025
+#: ../wprover/MProveTree.java:1022 ../wprover/MProveTree.java:1265
+#: ../wprover/MProveTree.java:1023 ../wprover/MProveTree.java:1025
 msgid "Can not find image: {0}"
 msgstr "אי אפשר למצוא את התמונה: {0} "
 
@@ -2187,7 +2255,8 @@ msgstr "משוואה"
 msgid "Rule"
 msgstr "כלל"
 
-#: ../wprover/MProveTree.java:1549 ../wprover/MProveTree.java:1554 ../wprover/MProveTree.java:1672
+#: ../wprover/MProveTree.java:1549 ../wprover/MProveTree.java:1554
+#: ../wprover/MProveTree.java:1672
 msgid "Rule1"
 msgstr "כלל 1"
 
@@ -2215,8 +2284,9 @@ msgstr "צצ\"צ (צלע צלע צלע)"
 msgid "ASA"
 msgstr "זצ\"ז (זווית צלע זווית)"
 
-#: ../wprover/MProveTree.java:1682 ../wprover/MProveTree.java:1684 ../wprover/MProveTree.java:1758
-#: ../wprover/MProveTree.java:1759 ../wprover/MProveTree.java:1816
+#: ../wprover/MProveTree.java:1682 ../wprover/MProveTree.java:1684
+#: ../wprover/MProveTree.java:1758 ../wprover/MProveTree.java:1759
+#: ../wprover/MProveTree.java:1816
 msgid "Collinear"
 msgstr "על אותו ישר"
 
@@ -2299,7 +2369,8 @@ msgstr "קמור"
 msgid "assertion type: {0} not defined."
 msgstr "טענה מסוג: {0} לא מוגדרת"
 
-#: ../wprover/MProveTree.java:2056 ../wprover/MProveTree.java:2066 ../wprover/CProperty.java:27
+#: ../wprover/MProveTree.java:2056 ../wprover/MProveTree.java:2066
+#: ../wprover/CProperty.java:27
 msgid "No Selected"
 msgstr "אין בחירה"
 
@@ -2442,7 +2513,8 @@ msgstr "השתמש בכפתור שמאל כדי לבחור מיקום"
 msgid "Select two points to determine a line"
 msgstr "בחר שתי נקודות כדי להגדיר ישר"
 
-msgid "Please use the menu \"Action -> Animation\" to define an animation first."
+msgid ""
+"Please use the menu \"Action -> Animation\" to define an animation first."
 msgstr "אנא השתמש בתפריט \"פעולה -> אנימציה\" כדי להגדיר תחילה אנימציה."
 
 msgid "Groebner Basis Method"
@@ -2466,8 +2538,11 @@ msgstr "נא לבחור 3 נקודות (0 נקודה נבחרה)"
 msgid "Can not open link {0}"
 msgstr "אי אפשר לפתוח את הקישור {0}"
 
-msgid "Construct a circle by clicking two points as radius and another point as center"
-msgstr "בנה מעגל על ​​ידי לחיצה על שתי נקודות כדי להגדיר רדיוס ונקודה נוספת כמרכז"
+msgid ""
+"Construct a circle by clicking two points as radius and another point as "
+"center"
+msgstr ""
+"בנה מעגל על ​​ידי לחיצה על שתי נקודות כדי להגדיר רדיוס ונקודה נוספת כמרכז"
 
 msgid "Click a point then drag to construct a circle"
 msgstr "לחץ על נקודה וגרור אותה כדי לבנות מעגל"
@@ -2514,10 +2589,12 @@ msgstr "אמצע {0}"
 msgid "{0} is the midpoint of {1}"
 msgstr "{1} היא אמצע של {0}"
 
-msgid "parallel to {0} passing {1}"
+#, fuzzy
+msgid "parallel to {0} passing through {1}"
 msgstr "מקביל ל {0} העובר דרך {1}"
 
-msgid "passing {0}"
+#, fuzzy
+msgid "passing through {0}"
 msgstr "עובר דרך {0}"
 
 msgid "with foot {0}"
@@ -2704,11 +2781,15 @@ msgstr "לא נמצא שום דבר!"
 msgid "No result"
 msgstr "אין תוצאה"
 
-msgid "Press SHIFT and drag with right mouseclick to zoom, press SHIFT and drag with left mouseclick to move"
-msgstr "הקש SHIFT וגרור בלחיצה ימנית בעכבר כדי להגדיל, הקש SHIFT וגרור בלחיצת עכבר שמאל כדי להזיז+"
+msgid ""
+"Press SHIFT and drag with right mouseclick to zoom, press SHIFT and drag "
+"with left mouseclick to move"
+msgstr ""
+"הקש SHIFT וגרור בלחיצה ימנית בעכבר כדי להגדיל, הקש SHIFT וגרור בלחיצת עכבר "
+"שמאל כדי להזיז+"
 
-msgid "â³{0}"
-msgstr "â³{0}"
+msgid "△{0}"
+msgstr ""
 
 msgid "Click to see the detail"
 msgstr "לחץ כדי לראות פירוט"
@@ -2735,49 +2816,78 @@ msgid "rule {0}"
 msgstr "כלל {0}"
 
 # don't understand the sign (Japanese Yen)
-msgid "If AB â¥ BC, then A, B and C are collinear."
+#, fuzzy
+msgid "If AB ∥ BC, then A, B and C are collinear."
 msgstr "אם AB מקביל ל BC, אז A, B ו-C הן קולינאריות (דהיינו על ישר אחד)."
 
 # GDD 2/1
-msgid "For two angles â [l1,l2], â [l3,l4]. If l1 = l3 and l2 â¥ l4, then â [l1,l2] = â [l3,l4]."
-msgstr "עבור שתי זוויות < [l1,l2] ו < [l3,l4] . אם  l1 = l3   ו-l2 מאונך ל, l4  אז.< [l1,l2] = < [l3,l4]."
+#, fuzzy
+msgid ""
+"For two angles ∠[l1,l2], ∠[l3,l4]. If l1 = l3 and l2 ∥ l4, then ∠[l1,l2] = "
+"∠[l3,l4]."
+msgstr ""
+"עבור שתי זוויות < [l1,l2] ו < [l3,l4] . אם  l1 = l3   ו-l2 מאונך ל, l4  אז.< "
+"[l1,l2] = < [l3,l4]."
 
 # GDD 2/2
-msgid "For example, in parallelogram ABCD, AD â¥ BC and AC = CA, hence â [CAD] = â [ACB]."
+#, fuzzy
+msgid ""
+"For example, in parallelogram ABCD, AD ∥ BC and AC = CA, hence ∠[CAD] = "
+"∠[ACB]."
 msgstr "לדוגמא, במקבילית ABCD, אם AD מקביל ל BC ו- AC=CA, אז  CAD=<ACB>."
 
 # GDD 3/1
-msgid "If AB â¥ CD and E is the intersection of AC and BD, then EA / EC = EB / ED."
+#, fuzzy
+msgid ""
+"If AB ∥ CD and E is the intersection of AC and BD, then EA / EC = EB / ED."
 msgstr ""
 "אם AB â¥ CD ו-E הוא המפגש בין AC ו-BD, אז EA / EC = EB / ED.\n"
 "."
 
 # GDD 4 /1
-msgid "If AB â¥ EF and CD â¥ EF, then CD â¥ EF."
+#, fuzzy
+msgid "If AB ∥ EF and CD ⊥ EF, then CD ⊥ EF."
 msgstr "אם AB מקביל לEF ו CD מאונך ל EF, אזי CD מאונך ל EF."
 
 # GDD 5/1
-msgid "If AB â¥ CD, then â [AB,CD] = [1] (or 90 degrees)."
+#, fuzzy
+msgid "If AB ⊥ CD, then ∠[AB,CD] = [1] (or 90 degrees)."
 msgstr "אם AB מאונך ל CD, אז  [AB,CD] >= [1] (או 90 מעלות)."
 
 # GDD 6/1
-msgid "In a right triangle ACB, â C = [1], if E is the midpoint of AB, then E is the circumcenter of ABC with EA = EB = EC."
-msgstr "במשולש ישר זווית ABC,  ו-   [1]=C>,  אם E היא נקודת האמצע של AB, אז E הוא המרכז ההיקפי של ABC כאשר EA = EB = EC."
+#, fuzzy
+msgid ""
+"In a right triangle ACB, ∠C = [1], if E is the midpoint of AB, then E is the "
+"circumcenter of ABC with EA = EB = EC."
+msgstr ""
+"במשולש ישר זווית ABC,  ו-   [1]=C>,  אם E היא נקודת האמצע של AB, אז E הוא "
+"המרכז ההיקפי של ABC כאשר EA = EB = EC."
 
 # GDD 7/1
-msgid "If AB â¥ CD and CD â¥ EF, then AB â¥ EF."
+#, fuzzy
+msgid "If AB ⊥ CD and CD ⊥ EF, then AB ∥ EF."
 msgstr "אם AB ⟂ CD ו-CD ⟂EF, אז AB || EF."
 
 # GDD 8/1
-msgid "For four points A,B,C,D, if AC â¥ BC and AD â¥ BD, then A,B,C,D are concyclic."
-msgstr "עבור ארבע נקודות A,B,C,D, אם AC ⟂ BC ו-AD ⟂ BD, אז A,B,C,D הן על מעגל אחד."
+#, fuzzy
+msgid ""
+"For four points A,B,C,D, if AC ⊥ BC and AD ⊥ BD, then A,B,C,D are concyclic."
+msgstr ""
+"עבור ארבע נקודות A,B,C,D, אם AC ⟂ BC ו-AD ⟂ BD, אז A,B,C,D הן על מעגל אחד."
 
 # GDD 9/1
-msgid "For a circle c(O,AB) and a point C on circle c, if A,B,O are collinear, then AC â¥ BC and â ACB = [1]."
-msgstr "עבור מעגל c(O,AB) ונקודה C במעגל c, אם A,B,O הן קולינאריות, אז AC â¥ BC ו-â ACB = [1]."
+#, fuzzy
+msgid ""
+"For a circle c(O,AB) and a point C on circle c, if A,B,O are collinear, then "
+"AC ⊥ BC and ∠ACB = [1]."
+msgstr ""
+"עבור מעגל c(O,AB) ונקודה C במעגל c, אם A,B,O הן קולינאריות, אז AC â¥ BC ו-â "
+"ACB = [1]."
 
 # GDD 10/1
-msgid "If AB is the diameter of a circle and point D is on the circle, then AD â¥ BD."
+#, fuzzy
+msgid ""
+"If AB is the diameter of a circle and point D is on the circle, then AD ⊥ BD."
 msgstr "אם AB הוא קוטר של מעגל ונקודה D נמצאת על המעגל, אז AD מאונך ל BD."
 
 # GDD 11/1
@@ -2785,11 +2895,13 @@ msgid "Angle of circumference equals to half of the angle at the center."
 msgstr "זווית היקפית שווה למחצית מהזווית המרכזית."
 
 # GDD 12/1
-msgid "If AB â¥ CD and A,B,C,D are concyclic, then â ABC = â DAB."
+#, fuzzy
+msgid "If AB ∥ CD and A,B,C,D are concyclic, then ∠ABC = ∠DAB."
 msgstr "אם  AB מאונך ל CD ו-A,B,C,D הן על מעגל אחד, אז    ABC  =  < DAB>."
 
 # GDD 13/1
-msgid "If A,B,C,D are concyclic, then â ADB = â ACB and vice versa."
+#, fuzzy
+msgid "If A,B,C,D are concyclic, then ∠ADB = ∠ACB and vice versa."
 msgstr "אם A,B,C,D הן על מעגל אחד, אז  ADB = < ACB > וכן להיפך."
 
 # GDD 14/1
@@ -2797,31 +2909,46 @@ msgid "Chord tangent angle theorem."
 msgstr "משפט  זווית משיק מיתר."
 
 # GDD 15/1
-msgid "A line passing the centers of two circles is perpendicular to the common chord of two circles."
-msgstr "ישר העובר דרך המרכזים של שני מעגלים הוא מאונך למיתר המשותף של שני עיגולים."
+msgid ""
+"A line passing the centers of two circles is perpendicular to the common "
+"chord of two circles."
+msgstr ""
+"ישר העובר דרך המרכזים של שני מעגלים הוא מאונך למיתר המשותף של שני עיגולים."
 
 # GDD 15/2
-msgid "For example, given two circles C1(O,AB) and C2(O1,AB), A and B are two common points, then OO1 â¥ AB."
-msgstr "לדוגמה, בהינתן שני מעגלים C1(O,AB) ו-C2(O1,AB), שתי נקודות A ו-B משותפות, ואז OO1 â¥ AB."
+#, fuzzy
+msgid ""
+"For example, given two circles C1(O,AB) and C2(O1,AB), A and B are two "
+"common points, then OO1 ⊥ AB."
+msgstr ""
+"לדוגמה, בהינתן שני מעגלים C1(O,AB) ו-C2(O1,AB), שתי נקודות A ו-B משותפות, "
+"ואז OO1 â¥ AB."
 
 # GDD 16/1
 msgid "The Addition for Full Angle."
 msgstr "התוספת לזווית מלאה."
 
 # GDD 16/2
-msgid "If â [l1,l2] = â [l3,l4] and â [l5,l6] = â [l7,l8], and l2 = l6 and l4 = l7, then â [l1,l4] = â [l5,l8]."
-msgstr "אם < [l1,l2] = < [l3,l4] ו-< [l5,l6] = < [l7,l8], ואם l2 = l6 ו-l4 = l7, אז < [l1,l4] = < [l5,l8]."
+#, fuzzy
+msgid ""
+"If ∠[l1,l2] = ∠[l3,l4] and ∠[l5,l6] = ∠[l7,l8], and l2 = l6 and l4 = l7, "
+"then ∠[l1,l4] = ∠[l5,l8]."
+msgstr ""
+"אם < [l1,l2] = < [l3,l4] ו-< [l5,l6] = < [l7,l8], ואם l2 = l6 ו-l4 = l7, אז "
+"< [l1,l4] = < [l5,l8]."
 
 # GDD 17/1
 msgid "ASPP12"
 msgstr "אם  [l1,l2] = <[l3,l4] > ואם l1 || l2 , אזי l3 || l4."
 
 # GDD 17/2
-msgid "If â [l1,l2] = â [l3,l4] and l1 â¥ l2, then l3 â¥ l4."
+#, fuzzy
+msgid "If ∠[l1,l2] = ∠[l3,l4] and l1 ∥ l2, then l3 ∥ l4."
 msgstr "אם < [l1,l2] = < [l3,l4] ואם  l1 ⟂ l2, אז l3 ⟂ l4."
 
 # GDD 17/3
-msgid "Because if l1 â¥ l2, then â [l1,l2] = [0]. Hence â [l3,l4] = [0]."
+#, fuzzy
+msgid "Because if l1 ∥ l2, then ∠[l1,l2] = [0]. Hence ∠[l3,l4] = [0]."
 msgstr "אם l1⟂ l2, אז  [l1,l2] >= [0]."
 
 # GDD 18/1
@@ -2829,7 +2956,8 @@ msgid "ASPP13"
 msgstr "אם  [l1,l2] = <[l3,l4] > ואם l1 || l3, אזי l2 || l4"
 
 # GDD 18/2
-msgid "If â [l1,l2] = â [l3,l4] and l1 â¥ l3, then l2 â¥ l4."
+#, fuzzy
+msgid "If ∠[l1,l2] = ∠[l3,l4] and l1 ∥ l3, then l2 ∥ l4."
 msgstr "אם  [l1,l2] = <[l3,l4] > ו-l1 ⟂ l3, אז l2 ⟂ l4."
 
 # GDD 19/1
@@ -2837,7 +2965,8 @@ msgid "ASTT12"
 msgstr "אם  [l1,l2] = <[l3,l4] > ואם l1⟂l2 , אזי l3⟂l4."
 
 # GDD 19/2
-msgid "If â [l1,l2] = â [l3,l4] and l1 â¥ l2, then l3 â¥ l4."
+#, fuzzy
+msgid "If ∠[l1,l2] = ∠[l3,l4] and l1 ⊥ l2, then l3 ⊥ l4."
 msgstr "אם < [l1,l2] = < [l3,l4] ואם  l1 ⟂ l2, אז l3 ⟂ l4."
 
 # GDD 20/1
@@ -2845,7 +2974,8 @@ msgid "ASTT13"
 msgstr "אם  [l1,l2] = <[l3,l4] >  ו l1 ⟂ l3, אזי l2 ⟂ l4"
 
 # GDD 20/2
-msgid "If â [l1,l2] = â [l3,l4] and l1 â¥ l3, then l2 â¥ l4."
+#, fuzzy
+msgid "If ∠[l1,l2] = ∠[l3,l4] and l1 ⊥ l3, then l2 ⊥ l4."
 msgstr "אם < [l1,l2] = < [l3,l4] ואם  l1 מאונך ל l3, אז l2 מאונך ל- l4."
 
 # GDD 21/1
@@ -2866,14 +2996,18 @@ msgstr "משפט על משולש שווה שוקיים"
 
 # GDD 24/2
 msgid ""
-"For an isosceles triangle ABC and a point D on line BC, if one of the following statements is true, the other two are also "
-"true:"
-msgstr "עבור משולש שווה שוקיים ABC ונקודה D על קו BC, אם אחד המשפטים הבאים נכון, גם שני האחרים נכונים:"
+"For an isosceles triangle ABC and a point D on line BC, if one of the "
+"following statements is true, the other two are also true:"
+msgstr ""
+"עבור משולש שווה שוקיים ABC ונקודה D על קו BC, אם אחד המשפטים הבאים נכון, גם "
+"שני האחרים נכונים:"
 
 # GDD 24/3
-msgid "1. AD â¥ BC, 2. D is the midpoint of BC, 3. â BAD = â DAC."
+#, fuzzy
+msgid "1. AD ⊥ BC, 2. D is the midpoint of BC, 3. ∠BAD = ∠DAC."
 msgstr ""
-"עבור משולש שווה שוקיים ABC ונקודה D על הישר BC, אם אחת הטענות הבאות נכונה, אזי שתי האחרות נכונות גם כן:\n"
+"עבור משולש שווה שוקיים ABC ונקודה D על הישר BC, אם אחת הטענות הבאות נכונה, "
+"אזי שתי האחרות נכונות גם כן:\n"
 "1.\tAD מאונך ל BC.  2. D היא האמצע של BC.  3. <BAD=<DAC."
 
 # GDD 25/1
@@ -2882,16 +3016,21 @@ msgstr "משולשים חופפים."
 
 # GDD 25/2
 msgid ""
-"Triangles are called congruent if they have the same size and shape. That is, corresponding angles have the same measure, and "
-"corresponding sides have the same length."
-msgstr "משולשים נקראים חופפים אם יש להם אותו גודל וצורה. כלומר, לזוויות מתאימות יש אותה מידה, ולצלעות המתאימות יש אותו אורך."
+"Triangles are called congruent if they have the same size and shape. That "
+"is, corresponding angles have the same measure, and corresponding sides have "
+"the same length."
+msgstr ""
+"משולשים נקראים חופפים אם יש להם אותו גודל וצורה. כלומר, לזוויות מתאימות יש "
+"אותה מידה, ולצלעות המתאימות יש אותו אורך."
 
 # GDD 26 #ASA/1
 msgid "ASA (angle-side-angle) congruence."
 msgstr "חפיפה זצ\"ז (זווית צלע זווית)"
 
 # GDD 26 #ASA/2
-msgid "Two triangles are congruent if a pair of corresponding angles and the included side are equal."
+msgid ""
+"Two triangles are congruent if a pair of corresponding angles and the "
+"included side are equal."
 msgstr "שני משולשים חופפים אם זוג זוויות מתאימות והצלע ביניהן שווים."
 
 # GDD 27 #SAS/1
@@ -2899,22 +3038,29 @@ msgid "SAS (side-angle-side) congruence."
 msgstr "משט חפיפה צז\"צ (צלע זווית צלע)."
 
 # GDD 27 #SAS/2
-msgid "Two triangles are congruent if a pair of corresponding sides and the included angle are equal."
+msgid ""
+"Two triangles are congruent if a pair of corresponding sides and the "
+"included angle are equal."
 msgstr "שני משולשים חופפים אם זוג צלעות מתאימות והזווית ביניהן שווים."
 
 # GDD 28 #SSS/1
 msgid "SSS (side-side-side) congruence."
-msgstr "משפט חפיפה צלע צלע צלע:  אם שלושת זגות הצלעות המתאימות שוות, השמשולים חופפים. "
+msgstr ""
+"משפט חפיפה צלע צלע צלע:  אם שלושת זגות הצלעות המתאימות שוות, השמשולים "
+"חופפים. "
 
 # GDD 28 #SSS/2
 msgid "Two triangles are congruent if their corresponding sides are equal."
 msgstr "שני משולשים חופפים אם הצלעות המתאימות שלהם שוות."
 
 msgid "SAS (side-angle-side) congruence for right triangles."
-msgstr "משפט חפיפה צלע-זווית-צלע למשולשים ישרי זווית: שני משולשים ישר זווית הם חופפים  אם יש להם שני זוגות של צלעות שוות."
+msgstr ""
+"משפט חפיפה צלע-זווית-צלע למשולשים ישרי זווית: שני משולשים ישר זווית הם "
+"חופפים  אם יש להם שני זוגות של צלעות שוות."
 
 # GDD 29 #SAS/2
-msgid "Two right triangles are congruent if their two corresponding sides are equal."
+msgid ""
+"Two right triangles are congruent if their two corresponding sides are equal."
 msgstr "שני משולשים ישרי זווית חופפים אם שתי הצלעות המתאימות שלהם שוות."
 
 # GDD 30/1
@@ -2923,25 +3069,31 @@ msgstr "משולשים דומים."
 
 # GDD 30/2
 msgid ""
-"Similar triangles are triangles that have the same shape but possibly different size. In particular, corresponding angles are "
-"congruent, and corresponding sides are in proportion."
+"Similar triangles are triangles that have the same shape but possibly "
+"different size. In particular, corresponding angles are congruent, and "
+"corresponding sides are in proportion."
 msgstr ""
-"משולשים דומים הם משולשים בעלי אותה צורה אך אולי גודל שונה. בפרט, זוויות מתאימות שוות, והצלעות המתאימות הן פרורפורציונליות."
+"משולשים דומים הם משולשים בעלי אותה צורה אך אולי גודל שונה. בפרט, זוויות "
+"מתאימות שוות, והצלעות המתאימות הן פרורפורציונליות."
 
 # GDD 31 #AAA/1
 msgid "AAA (angle-angle-angle) similarity."
 msgstr ""
-"משפט דמיון זווית-זווית-זווית:\vאם לשני משולשים יש שני זוגות של זוויות שוות, אזי המשולים הם דומים. כיון שסכום הזויות הפנימיות "
-"של משולש הוא שווה ל 180 מעלות, זה מספיק, כי מזה נובע שגם הזוג השלישי הוא של זוויות שוות."
+"משפט דמיון זווית-זווית-זווית:\vאם לשני משולשים יש שני זוגות של זוויות שוות, "
+"אזי המשולים הם דומים. כיון שסכום הזויות הפנימיות של משולש הוא שווה ל 180 "
+"מעלות, זה מספיק, כי מזה נובע שגם הזוג השלישי הוא של זוויות שוות."
 
 # GDD 31 #AAA/2
+#, fuzzy
 msgid ""
-"If two triangles have two corresponding angles that are congruent, then the triangles are similar. Because the sum of the "
-"angles in a triangle must be Ï, we really only need to know that two pairs of corresponding angles are congruent to know that "
-"the triangles are similar."
+"If two triangles have two corresponding angles that are congruent, then the "
+"triangles are similar. Because the sum of the angles in a triangle must be "
+"π, we really only need to know that two pairs of corresponding angles are "
+"congruent to know that the triangles are similar."
 msgstr ""
-"נתונים שני משולשים. אם קיימים שני זוגות של זוויות שוות בהתאמה, אזי המשולשים דומים. כיון שסכום הזוויות במשולש שוה ל 180 מעלות, "
-"הזוויות של הזוג השלישי גם שוות זו לזו."
+"נתונים שני משולשים. אם קיימים שני זוגות של זוויות שוות בהתאמה, אזי המשולשים "
+"דומים. כיון שסכום הזוויות במשולש שוה ל 180 מעלות, הזוויות של הזוג השלישי גם "
+"שוות זו לזו."
 
 # GDD 32 #SAS/1
 msgid "SAS (side-angle-side) similarity."
@@ -2949,16 +3101,23 @@ msgstr "משפט דמיון צלע זווית צלע."
 
 # GDD 32 #SAS/2
 msgid ""
-"The side-angle-side (SAS) similarity test says that if two triangles have two pairs of sides that are proportional and the "
-"included angles are congruent, then the triangles are similar."
-msgstr "משפט הדמיון צלע-זווית-צלע: אם לשני משולשים יש שני זוגות צלעות פרופורציונליות והזוויות ביניהן חופפות, אז המשולשים דומים."
+"The side-angle-side (SAS) similarity test says that if two triangles have "
+"two pairs of sides that are proportional and the included angles are "
+"congruent, then the triangles are similar."
+msgstr ""
+"משפט הדמיון צלע-זווית-צלע: אם לשני משולשים יש שני זוגות צלעות פרופורציונליות "
+"והזוויות ביניהן חופפות, אז המשולשים דומים."
 
 # GDD 33 #SSS/1
 msgid "SSS (side-side-side) similarity."
-msgstr "דמיון צלע-צלע-צלע: אם לשני משולשים יש שלושה זוגות של צלעות פרופורציונליים, אזי המשולשים דומים.."
+msgstr ""
+"דמיון צלע-צלע-צלע: אם לשני משולשים יש שלושה זוגות של צלעות פרופורציונליים, "
+"אזי המשולשים דומים.."
 
 # GDD 33 #SSS/2
-msgid "If two triangles have all three pairs of sides in proportion, the triangles are similar."
+msgid ""
+"If two triangles have all three pairs of sides in proportion, the triangles "
+"are similar."
 msgstr "אם היחס בין שתי הצלעות שווה לכל זוגות הצלעות המתאימות, המושלים דומים."
 
 # GDD 34/1
@@ -2970,26 +3129,38 @@ msgid "Middle Connection Theorem for Triangles."
 msgstr "משפט קטע אמצעים."
 
 # GDD 35/2
-msgid "The line connects the midpoints of two sides of a triangle is parallel to the third side of the triangle."
-msgstr "הקו המחבר את נקודות האמצע של שתי צלעות המשולש מקביל לצלע השלישית של המשולש."
+msgid ""
+"The line connects the midpoints of two sides of a triangle is parallel to "
+"the third side of the triangle."
+msgstr ""
+"הקו המחבר את נקודות האמצע של שתי צלעות המשולש מקביל לצלע השלישית של המשולש."
 
 # GDD 36/1
 msgid ""
-"The hypotenuse of a right triangle is the diameter of the circumscribed circle of the triangle, and the midpoint of the "
-"hypotenuse is the center of the circle."
+"The hypotenuse of a right triangle is the diameter of the circumscribed "
+"circle of the triangle, and the midpoint of the hypotenuse is the center of "
+"the circle."
 msgstr ""
-"נתון משולש ישר זווית. היתר (דהיינו הצלע מול הזווית הישרה) היא הקוטר של המעגל החוסם, ואמצע היתר הוא מרכז המעגל החוסם את המשולש."
+"נתון משולש ישר זווית. היתר (דהיינו הצלע מול הזווית הישרה) היא הקוטר של המעגל "
+"החוסם, ואמצע היתר הוא מרכז המעגל החוסם את המשולש."
 
 # GDD 36/2
-msgid "For a right triangle ACB, if AC â¥ BC and D is the midpoint of AB, then DC = DA = DB, D is the center of circle ABC."
-msgstr "נתון משולש ישר זווית ACB, כך ש AC ⟂ BC ו-D  נקודת האמצע של AB.  אז DC = DA = DB דהיינו D הוא מרכז המעגל החוסם את  ABC."
+#, fuzzy
+msgid ""
+"For a right triangle ACB, if AC ⊥ BC and D is the midpoint of AB, then DC = "
+"DA = DB, D is the center of circle ABC."
+msgstr ""
+"נתון משולש ישר זווית ACB, כך ש AC ⟂ BC ו-D  נקודת האמצע של AB.  אז DC = DA = "
+"DB דהיינו D הוא מרכז המעגל החוסם את  ABC."
 
 # GDD 37/1
 msgid "Equilateral Triangles."
 msgstr "משולשים שווי צלעות."
 
 # GDD 37/2
-msgid "An equilateral triangle is a triangle in which all three sides have equal lengths."
+msgid ""
+"An equilateral triangle is a triangle in which all three sides have equal "
+"lengths."
 msgstr "משולש שווה צלעות הוא משולש שבו לשלוש הצלעות אותו אורך."
 
 # GDD 38/1
@@ -2998,12 +3169,18 @@ msgstr "משםט פיתגורס."
 
 # GDD 38/2
 msgid ""
-"In any right triangle, the area of the square whose side is the hypotenuse (the side of a right triangle opposite the right "
-"angle) is equal to the sum of areas of the squares whose sides are the two legs (i.e. the two sides other than the hypotenuse)."
-msgstr "נתון משולש ישר זווית. שטח הריבוע הבנוי על היתר שווה לסכום השטחים של הריבועים הבנויים על שני הניצבים."
+"In any right triangle, the area of the square whose side is the hypotenuse "
+"(the side of a right triangle opposite the right angle) is equal to the sum "
+"of areas of the squares whose sides are the two legs (i.e. the two sides "
+"other than the hypotenuse)."
+msgstr ""
+"נתון משולש ישר זווית. שטח הריבוע הבנוי על היתר שווה לסכום השטחים של הריבועים "
+"הבנויים על שני הניצבים."
 
 # GDD 39/1
-msgid "The sum of three interior angles of a triangle is [0] (or 180 degree for traditional angles)."
+msgid ""
+"The sum of three interior angles of a triangle is [0] (or 180 degree for "
+"traditional angles)."
 msgstr "סכום הזויות הפנימיות של כל משולש שוה ל [0] (180 מעלות)."
 
 # GDD 40/1
@@ -3011,7 +3188,8 @@ msgid "Parallelogram."
 msgstr "מקבילית."
 
 # GDD 40/2
-msgid "A parallelogram is a quadrilateral with two sets of opposite parallel sides."
+msgid ""
+"A parallelogram is a quadrilateral with two sets of opposite parallel sides."
 msgstr "מקבילית היא מרובע שיש לו זוג של צלעות מקבילות. "
 
 # GDD 41/1
@@ -3031,8 +3209,11 @@ msgid "Ratio by angle bisector."
 msgstr "יחס לפי חוצה זווית."
 
 # GDD 43/2
-msgid "In triangle ABC, if AD is the bisector of angle A, and D is on line BC, then AB/BD = AC/DC."
-msgstr "במשולש ABC, אם AD הוא חוצה הזווית A, ו-D הוא על הקו BC, אז AB/BD = AC/DC."
+msgid ""
+"In triangle ABC, if AD is the bisector of angle A, and D is on line BC, then "
+"AB/BD = AC/DC."
+msgstr ""
+"במשולש ABC, אם AD הוא חוצה הזווית A, ו-D הוא על הקו BC, אז AB/BD = AC/DC."
 
 msgid "Rules related to parallel lines"
 msgstr "משפטים על ישרים מקבילים"
@@ -3057,19 +3238,25 @@ msgid "The Definition of Full Angle"
 msgstr "הגדרה של  זווית מלאה"
 
 # Full 1/2
-msgid "A full angle is defined as an ordered pair of two lines u and v denoted by â [u,v]."
+#, fuzzy
+msgid ""
+"A full angle is defined as an ordered pair of two lines u and v denoted by "
+"∠[u,v]."
 msgstr "זווית מלאה מוגדרת כזוג מסודר של שני קווים u ו-v המסומנים ב [u,v]>."
 
 # Full 2/1
-msgid "â [u,v] = -â [v,u]."
+#, fuzzy
+msgid "∠[u,v] = -∠[v,u]."
 msgstr "[u,v] = - ∠[v,u]∠"
 
 # Full 3/1
-msgid "â [u,v] = â [0] if and only if u â¥ v (including u = v)."
+#, fuzzy
+msgid "∠[u,v] = ∠[0] if and only if u ∥ v (including u = v)."
 msgstr "[0]∠=[u,v]∠ אם, ורק אם, u || v (וזה כולל u=v)."
 
 # Full 4/1
-msgid "â [u,v] = â [1] if and only if u â¥ v."
+#, fuzzy
+msgid "∠[u,v] = ∠[1] if and only if u ⊥ v."
 msgstr "[1]∠=[u,v]∠ אם, ורק אם, u⟂v."
 
 # Full 5/1
@@ -3077,19 +3264,28 @@ msgid "Addition of Full Angles"
 msgstr "סכום של זוויות מלאות"
 
 # Full 5/2
-msgid "â [u,s] + â [s,v] = â [u,v]. This rule is to split an angle into two or more angles."
-msgstr "[u,s]+∠[s,v]=∠[u,v]∠. כלל זה הוא שימושי לפצל זווית לסכום שתי זוויות (או יותר)."
+#, fuzzy
+msgid ""
+"∠[u,s] + ∠[s,v] = ∠[u,v]. This rule is to split an angle into two or more "
+"angles."
+msgstr ""
+"[u,s]+∠[s,v]=∠[u,v]∠. כלל זה הוא שימושי לפצל זווית לסכום שתי זוויות (או "
+"יותר)."
 
 # Full 5/3
-msgid "For example, for any line m, we have â [u,v] = â [u,m] + â [m,v]."
+#, fuzzy
+msgid "For example, for any line m, we have ∠[u,v] = ∠[u,m] + ∠[m,v]."
 msgstr "לדוגמא, עבור כל ישר m, מתקיים."
 
 # Full 6/1
-msgid "If l â¥ v or â [l,v] = â [1], then â [u,v] = â [u,l] + â [l,v] = â [u,l] + â [1]."
+#, fuzzy
+msgid ""
+"If l ⊥ v or ∠[l,v] = ∠[1], then ∠[u,v] = ∠[u,l] + ∠[l,v] = ∠[u,l] + ∠[1]."
 msgstr "אם l⟂v או  [l,v]∠=[1]∠, אזי   [1]∠+<[u,v]=∠[u,l]+∠[l,v]=∠[u,l∠."
 
 # Full 6/2
-msgid "For example, if we have AC â¥ BC, then â [CBA] = â [BAC] + â [1]."
+#, fuzzy
+msgid "For example, if we have AC ⊥ BC, then ∠[CBA] = ∠[BAC] + ∠[1]."
 msgstr "לדוגמא, אם AC ⟂ BC, אזי [1]∠+[CBA]=∠[BAC]∠."
 
 # Full 7/1
@@ -3097,130 +3293,196 @@ msgid "The Isosceles Triangle Theorem for Full Angle."
 msgstr "משפט משולש שווה שוקיים לזווית מלאה."
 
 # Full 7/2
-msgid "If AC = BC, we have â [ABC] = â [CAB]. Conversely, if â [ABC] = â [CAB], then AB = AC or A, B and C are collinear."
-msgstr "אם AC = BC, מתקיים  [ABC]=∠[CAB]∠  .להיפך, אם [ABC]=∠[CAB]∠,  אז AB = AC או A, B ו- C הם קולינאריים (על ישר אחד)."
+#, fuzzy
+msgid ""
+"If AC = BC, we have ∠[ABC] = ∠[CAB]. Conversely, if ∠[ABC] = ∠[CAB], then AB "
+"= AC or A, B and C are collinear."
+msgstr ""
+"אם AC = BC, מתקיים  [ABC]=∠[CAB]∠  .להיפך, אם [ABC]=∠[CAB]∠,  אז AB = AC או "
+"A, B ו- C הם קולינאריים (על ישר אחד)."
 
 # Full 8/1
 msgid "The Inscribed Angle Theorem."
 msgstr "משפט הזווית הפנימית."
 
 # Full 8/2
-msgid "Points A,B,C and D are concyclic if and only if â [ACB] = â [ADB]."
-msgstr "נקודות A,B,C ו-D הן קוציקליות (על מעגל אחד) אם, ורק אם,  [ACB]=<[ADB]>."
+#, fuzzy
+msgid "Points A,B,C and D are concyclic if and only if ∠[ACB] = ∠[ADB]."
+msgstr ""
+"נקודות A,B,C ו-D הן קוציקליות (על מעגל אחד) אם, ורק אם,  [ACB]=<[ADB]>."
 
 # Full 9/1
+#, fuzzy
 msgid ""
-"If A,B,M,N are concyclic, then â [AB, AM] = â [BN,NM]. Hence we have â [AB, CD] = â [AB, AM] + â [AM, CD] = â [BN,NM] + â [AM, "
-"CD]."
-msgstr "אם הנקודות  A,B,M,N הן קוציקליות, אז [AB,AM]=∠[BN,NM]∠. לכן מתקיים [AB,CD]=∠[AB,AM]+∠[AM,CD]=∠[BN,NM]+∠[AM,CD]∠ ."
+"If A,B,M,N are concyclic, then ∠[AB, AM] = ∠[BN,NM]. Hence we have ∠[AB, CD] "
+"= ∠[AB, AM] + ∠[AM, CD] = ∠[BN,NM] + ∠[AM, CD]."
+msgstr ""
+"אם הנקודות  A,B,M,N הן קוציקליות, אז [AB,AM]=∠[BN,NM]∠. לכן מתקיים [AB,"
+"CD]=∠[AB,AM]+∠[AM,CD]=∠[BN,NM]+∠[AM,CD]∠ ."
 
 # Full 10/1
 msgid "Rule 10."
 msgstr "כלל 10."
 
 # Full 11/1
+#, fuzzy
 msgid ""
-"If AB is the diameter of the circumcircle of triangle ABC and D is on the circumcircle, then for any line FG, we have â [CD,"
-"FG] = â [DBA] + â [ACB] + â [BC, FG]."
+"If AB is the diameter of the circumcircle of triangle ABC and D is on the "
+"circumcircle, then for any line FG, we have ∠[CD,FG] = ∠[DBA] + ∠[ACB] + "
+"∠[BC, FG]."
 msgstr ""
-"אם AB הוא הקוטר של מעגל החוסם את המשולש ABC ו-D היא נקודה על המעגל, אז עבור כל קו ישר  FG, מקיים  \n"
+"אם AB הוא הקוטר של מעגל החוסם את המשולש ABC ו-D היא נקודה על המעגל, אז עבור "
+"כל קו ישר  FG, מקיים  \n"
 "[CD,FG]=<[DBA]+>[ACB]+<[BC,FG]>."
 
 # Full 12/1
+#, fuzzy
 msgid ""
-"If O is the intersection of circle (O1,OP1P3I) and circle (O2,OP2P4J) and O,I,J are collinear, then â [P1O, OP2] = â [P1P2, "
-"IP3] + â [JP4, P2P4]."
+"If O is the intersection of circle (O1,OP1P3I) and circle (O2,OP2P4J) and O,"
+"I,J are collinear, then ∠[P1O, OP2] = ∠[P1P2, IP3] + ∠[JP4, P2P4]."
 msgstr ""
-"אם O הhtיא נקודת חיתוך של של המעגל (O1,OP1P3I) והמעגל (O2,OP2P4J) ואם O,I,J הן קולינאריות, אזי\n"
+"אם O הhtיא נקודת חיתוך של של המעגל (O1,OP1P3I) והמעגל (O2,OP2P4J) ואם O,I,J "
+"הן קולינאריות, אזי\n"
 "  [P1O, OP2] = ∠[P1P2, IP3] + ∠[JP4, P2P4]∠."
 
 # Full 13/1
-msgid "If O is the circumcenter of triangle ABC, then â [BOC] = 2 Â· â [BAC]."
+#, fuzzy
+msgid "If O is the circumcenter of triangle ABC, then ∠[BOC] = 2 · ∠[BAC]."
 msgstr "אם O הוא מרכז המעגל החוסם את המשולש ABC, אז  [BOC] = 2 ∠[BAC]∠."
 
 # Full 14/1
-msgid "For a circle (O,ABCD), if O is the intersection of AD and BC, then â [AOB] = 2 Â· â [CDA]."
-msgstr "עבור מעגל (O,ABCD), אם O הוא נקודת חיתוך של  AD ו-BC, אז  [AOB] = 2 <[CDA]>."
+#, fuzzy
+msgid ""
+"For a circle (O,ABCD), if O is the intersection of AD and BC, then ∠[AOB] = "
+"2 · ∠[CDA]."
+msgstr ""
+"עבור מעגל (O,ABCD), אם O הוא נקודת חיתוך של  AD ו-BC, אז  [AOB] = 2 <[CDA]>."
 
 # Full 15/1
-msgid "For a circle (O,AB), O is the center of circle, we have â [OAB] = â [ABO]."
-msgstr "עבור המעגל (O,AB), כאשר הנקודה O היא מרכז המעגל, מתקיים  [OAB] = ∠ [ABO]∠."
+#, fuzzy
+msgid ""
+"For a circle (O,AB), O is the center of circle, we have ∠[OAB] = ∠[ABO]."
+msgstr ""
+"עבור המעגל (O,AB), כאשר הנקודה O היא מרכז המעגל, מתקיים  [OAB] = ∠ [ABO]∠."
 
 # Full 16/1
+#, fuzzy
 msgid ""
-"If triangle ABE is a right triangle and O is the midpoint of the hypotenuse (i.e. AB), then for any line CD, we have â [AB, "
-"CD] = â [BAE] + â [1] + â [BE, CD]."
+"If triangle ABE is a right triangle and O is the midpoint of the hypotenuse "
+"(i.e. AB), then for any line CD, we have ∠[AB, CD] = ∠[BAE] + ∠[1] + ∠[BE, "
+"CD]."
 msgstr ""
-"אם המשולש ABE הוא משולש ישר זוית ו-O הוא נקודת האמצע של ההיתר AB, אזי עבור כל ישר CD מתקיים\n"
+"אם המשולש ABE הוא משולש ישר זוית ו-O הוא נקודת האמצע של ההיתר AB, אזי עבור "
+"כל ישר CD מתקיים\n"
 " [AB, CD] = ∠ [BAE] + ∠ [1] + ∠ [BE, CD]∠."
 
 # Full 17/1
-msgid "For a circle (O,ABC) and D is midpoint of BC, we have â [AB, EF] = â [BOD] + â [AC, EF]."
-msgstr "עבור מעגל (O,ABC) ו-D  נקודת האמצע של BC, מתקיים  [AB, EF] = ∠ [BOD] + ∠ [AC, EF]∠."
+#, fuzzy
+msgid ""
+"For a circle (O,ABC) and D is midpoint of BC, we have ∠[AB, EF] = ∠[BOD] + "
+"∠[AC, EF]."
+msgstr ""
+"עבור מעגל (O,ABC) ו-D  נקודת האמצע של BC, מתקיים  [AB, EF] = ∠ [BOD] + ∠ "
+"[AC, EF]∠."
 
 # Full 18/1
-msgid "For a circle (O,ABF), if E is the midpoint of AF, we have â [AB, CD] = â [EOA] + â [BF, CD]."
-msgstr "עבור מעגל (O,ABF), אם E היא נקודת האמצע של AF, מתקיים  [AB, CD] = ∠ [EOA] + ∠ [BF, CD]∠."
+#, fuzzy
+msgid ""
+"For a circle (O,ABF), if E is the midpoint of AF, we have ∠[AB, CD] = ∠[EOA] "
+"+ ∠[BF, CD]."
+msgstr ""
+"עבור מעגל (O,ABF), אם E היא נקודת האמצע של AF, מתקיים  [AB, CD] = ∠ [EOA] + "
+"∠ [BF, CD]∠."
 
 # Full 19/1
-msgid "If G is the orthocenter of ABC, â [AE, HI] = â [AE, BE] + â [BE, HI] = â [1] + â [BE, HI]."
-msgstr "אם G הוא נקודת המפגש של הגבהים במשולש ABC, אזי מתקיים:   [AE, HI] = ∠ [AE, BE] + ∠ [BE, HI] = ∠ [1] + ∠ [BE, HI]∠."
+#, fuzzy
+msgid ""
+"If G is the orthocenter of ABC, ∠[AE, HI] = ∠[AE, BE] + ∠[BE, HI] = ∠[1] + "
+"∠[BE, HI]."
+msgstr ""
+"אם G הוא נקודת המפגש של הגבהים במשולש ABC, אזי מתקיים:   [AE, HI] = ∠ [AE, "
+"BE] + ∠ [BE, HI] = ∠ [1] + ∠ [BE, HI]∠."
 
 # Full 20/1
-msgid "If A is the incenter of P2KI, â [AB, CD] = â [AB, BK] + â [BK, CD] = â [1] + â [KI, KA] + â [IA, IK] + â [BK, CD]."
+#, fuzzy
+msgid ""
+"If A is the incenter of P2KI, ∠[AB, CD] = ∠[AB, BK] + ∠[BK, CD] = ∠[1] + "
+"∠[KI, KA] + ∠[IA, IK] + ∠[BK, CD]."
 msgstr ""
 "אם A הוא המרכז של המעגל החסום במשולש P2Kl  , אזי מתקיים: \n"
-"  [AB, CD] =∠ [AB, BK] + ∠ [BK, CD] = ∠ [1] + ∠ [KI, KA] +∠ [IA, IK] + ∠ [BK, CD]∠."
+"  [AB, CD] =∠ [AB, BK] + ∠ [BK, CD] = ∠ [1] + ∠ [KI, KA] +∠ [IA, IK] + ∠ "
+"[BK, CD]∠."
 
 # Full 21/1
 msgid "Equal angle found in the Geometry Deductive Database."
 msgstr "זווית שווה שנמצאה במסד הנתונים הגאומטרי הדדוקטיבי."
 
 # Full 22/1
-msgid "If AB â¥ AC and AB = AC, then â [AB,AC] = 2 Â· â [AB,BC]."
+#, fuzzy
+msgid "If AB ⊥ AC and AB = AC, then ∠[AB,AC] = 2 · ∠[AB,BC]."
 msgstr "אם    AB⟂ AC ו- AB=AC,  אז <[AB,AC]=2.<[AB,BC] ."
 
 # Full 23/1
 # I transformed somehow te formula, because of a problem of right-to-left vs left-to-right.
 # Please check that it makes sense.
-msgid "If AB â¥ AC and AB = AC, then 2 Â· â [AB,DE] = 2 Â· â [AB,BC] + 2 Â· â [BC,DE] = â [1] + 2 Â· â [BC,DE]."
-msgstr "אם   AB=AC  ו- AB ⟂ AC, אז  [AB,DE] = ∠[AB,BC] +  ∠[BC,DE] =(1/2) ∠[1] +  ∠[BC,DE]>. "
+#, fuzzy
+msgid ""
+"If AB ⊥ AC and AB = AC, then 2 · ∠[AB,DE] = 2 · ∠[AB,BC] + 2 · ∠[BC,DE] = "
+"∠[1] + 2 · ∠[BC,DE]."
+msgstr ""
+"אם   AB=AC  ו- AB ⟂ AC, אז  [AB,DE] = ∠[AB,BC] +  ∠[BC,DE] =(1/2) ∠[1] +  "
+"∠[BC,DE]>. "
 
 # Full 24/1
-msgid "If OB // DE and A is on the circle (O,B), then 2 Â· â [AB, DE] = â [OA,OB]."
+#, fuzzy
+msgid ""
+"If OB // DE and A is on the circle (O,B), then 2 · ∠[AB, DE] = ∠[OA,OB]."
 msgstr ""
 "אם OB || DE  ו A על המעגל (O,B),  אז  \n"
 " <[AB,DE]=(1/2)<[OA,OB]> . "
 
 # Full 25/1
-msgid "A is on circle (O,B), then 2 Â· â [AB, DE] = â [OA,OB] + 2 Â· â [OA,DE]."
+#, fuzzy
+msgid "A is on circle (O,B), then 2 · ∠[AB, DE] = ∠[OA,OB] + 2 · ∠[OA,DE]."
 msgstr "A נמצא במעגל (O,B), ואז  [AB, DE] = ∠ [OA,OB] + 2 ∠ [OA,DE]∠."
 
 # Full 26/1
 # Here too, I transformed the expression (divide by 2 instead of multiplying by 2...)
-msgid "CD is the diameter of a circle (A,BCD), AB â¥ CD, then 2 Â· â [DB,BA] = â [1]."
+#, fuzzy
+msgid ""
+"CD is the diameter of a circle (A,BCD), AB ⊥ CD, then 2 · ∠[DB,BA] = ∠[1]."
 msgstr ""
 "CD הוא הקוטר של מעגל (A,BCD) ו- AB ⟂ CD , אז \n"
 "[1]>(1/2)=[DB,BA]> .  "
 
 # Full 27/1
 # as above for 26/1
-msgid "A, B, C, D, E are concyclic and AC = AD, then 2 Â· â [AB, BC] = â [CE, ED]."
+#, fuzzy
+msgid ""
+"A, B, C, D, E are concyclic and AC = AD, then 2 · ∠[AB, BC] = ∠[CE, ED]."
 msgstr ""
 "A,B,C,D הן קוציקליות (על מעגל אחד) וכך ש- AC=AD. אז:\n"
 "[CE,ED]=[AB,BC]>(1/2)"
 
 # Full 28/1
 # as above for 26/1 etc
-msgid "If A, B, E, F, G are concyclic and AE = AF, then 2 Â· â [AB, CD] = 2 Â· â [BE, CD] + â [EG, GF]."
+#, fuzzy
+msgid ""
+"If A, B, E, F, G are concyclic and AE = AF, then 2 · ∠[AB, CD] = 2 · ∠[BE, "
+"CD] + ∠[EG, GF]."
 msgstr ""
 "אם A,B,E,F,G הן קוציקליות (על מעגל אחד) ואם AE=AF, אז מתקיים:\n"
 "<[AB,CD]=<[BE,CD]+(1/2)<[EG,GF]"
 
 # Full 29/1
 # The Formula is not written as it should be, I havce a problem of right-to-left and left-to-right. We will see that later.
-msgid "If AB = AC = BC, i.e., triangle ABC is an equilateral triangle, then 3 Â· â [AB, BC] = â [0]."
-msgstr "אם AB = AC = BC, כלומר, המשולש ABC הוא משולש שווה צלעות, אזי   [0]>=3. [AB,BC]> ."
+#, fuzzy
+msgid ""
+"If AB = AC = BC, i.e., triangle ABC is an equilateral triangle, then 3 · "
+"∠[AB, BC] = ∠[0]."
+msgstr ""
+"אם AB = AC = BC, כלומר, המשולש ABC הוא משולש שווה צלעות, אזי   [0]>=3. [AB,"
+"BC]> ."
 
 msgid "Full Rules"
 msgstr "כללים מלאים"
@@ -3338,3 +3600,18 @@ msgstr "גודל"
 
 msgid "Date Modified"
 msgstr "שונה לאחרונה בתאריך"
+
+#~ msgid "Set One"
+#~ msgstr "קבוצה 1"
+
+#~ msgid "Set Two"
+#~ msgstr "קבוצה 2"
+
+#~ msgid "Polygon Alpha"
+#~ msgstr "מצולה אלפה"
+
+#~ msgid "Radius of Point"
+#~ msgstr "רדיוס הנדקוה"
+
+#~ msgid "â³{0}"
+#~ msgstr "â³{0}"

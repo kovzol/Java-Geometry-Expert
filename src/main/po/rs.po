@@ -55,13 +55,15 @@ msgstr "Tačno"
 msgid "False"
 msgstr "Netačno"
 
+# Changed from Set One to ...
 #: ../wprover/concDialog.java:156
-msgid "Set One"
-msgstr "Podesi jedan"
+msgid "First set"
+msgstr ""
 
 #: ../wprover/concDialog.java:157
-msgid "Set Two"
-msgstr "Podesi dva"
+#, fuzzy
+msgid "Second set"
+msgstr "sekundi"
 
 #: ../wprover/concDialog.java:184
 msgid "Please select"
@@ -880,12 +882,14 @@ msgid "Saved"
 msgstr "Sačuvano"
 
 #: ../wprover/MiscDialog.java:154
-msgid "Polygon Alpha"
-msgstr "Mnogougao Alfa"
+#, fuzzy
+msgid "Filling of Polygons"
+msgstr "Popuni mnogougao"
 
 #: ../wprover/MiscDialog.java:195
-msgid "Radius of Point"
-msgstr "Poluprečnik tačke"
+#, fuzzy
+msgid "Point Size"
+msgstr "Tačka na pravoj"
 
 #: ../wprover/MiscDialog.java:212 ../wprover/MiscDialog.java:468
 msgid "Point's Text"
@@ -3582,6 +3586,18 @@ msgstr "Veličina fonta"
 
 msgid "Date Modified"
 msgstr "Datum promene"
+
+#~ msgid "Set One"
+#~ msgstr "Podesi jedan"
+
+#~ msgid "Set Two"
+#~ msgstr "Podesi dva"
+
+#~ msgid "Polygon Alpha"
+#~ msgstr "Mnogougao Alfa"
+
+#~ msgid "Radius of Point"
+#~ msgstr "Poluprečnik tačke"
 
 #~ msgid "Freezed"
 #~ msgstr "Zamrznuto"

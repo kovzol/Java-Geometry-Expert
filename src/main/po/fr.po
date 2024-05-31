@@ -56,13 +56,15 @@ msgstr "Vrai"
 msgid "False"
 msgstr "Faux"
 
+# Changed from Set One to ...
 #: ../wprover/concDialog.java:156
-msgid "Set One"
-msgstr "Ensemble un"
+msgid "First set"
+msgstr ""
 
 #: ../wprover/concDialog.java:157
-msgid "Set Two"
-msgstr "Ensemble deux"
+#, fuzzy
+msgid "Second set"
+msgstr "secondes"
 
 #: ../wprover/concDialog.java:184
 msgid "Please select"
@@ -663,6 +665,16 @@ msgstr "Règles pour l'angle plein"
 msgid "Rules for GDD"
 msgstr "Règles pour GDD"
 
+#: ../wprover/GExpert.java:959 ../wprover/HelpMode.java:116
+#, fuzzy
+msgid "Rules for the Full Angle Method"
+msgstr "Règle {0} pour la méthode des angles complets"
+
+#: ../wprover/GExpert.java:960 ../wprover/HelpMode.java:117
+#, fuzzy
+msgid "Rules for the GDD Method"
+msgstr "Règle {0} pour la méthode GDD"
+
 #: ../wprover/GExpert.java:963
 msgid "Options"
 msgstr "Options"
@@ -871,12 +883,14 @@ msgid "Saved"
 msgstr "Enregistré"
 
 #: ../wprover/MiscDialog.java:154
-msgid "Polygon Alpha"
-msgstr "Alpha du polygone"
+#, fuzzy
+msgid "Filling of Polygons"
+msgstr "Remplir le polygone"
 
 #: ../wprover/MiscDialog.java:195
-msgid "Radius of Point"
-msgstr "Rayon du point"
+#, fuzzy
+msgid "Point Size"
+msgstr "Point sur la ligne"
 
 #: ../wprover/MiscDialog.java:212 ../wprover/MiscDialog.java:468
 msgid "Point's Text"
@@ -2240,13 +2254,15 @@ msgstr "perpendiculaire"
 msgid "Keywords"
 msgstr "Mots-clés"
 
+#: ../wprover/MProveTree.java:1518
 msgid "Symbol"
 msgstr "Symbole"
 
+#: ../wprover/MProveTree.java:1518
 msgid "Assertion"
 msgstr "Assertion"
 
-#: ../wprover/MProveTree.java:1518
+#: ../wprover/MProveTree.java:1519
 msgid "Object"
 msgstr "Objet"
 
@@ -2254,6 +2270,7 @@ msgstr "Objet"
 msgid "Draw"
 msgstr "Dessiner"
 
+#: ../wprover/MProveTree.java:1519
 msgid "Equation"
 msgstr "Équation"
 
@@ -2270,18 +2287,23 @@ msgstr "Règle 1"
 msgid "Rule2"
 msgstr "Règle 2"
 
+#: ../wprover/MProveTree.java:1672
 msgid "Rule3"
 msgstr "Règle 3"
 
+#: ../wprover/MProveTree.java:1672
 msgid "SAS"
 msgstr "côté-angle-côté"
 
+#: ../wprover/MProveTree.java:1672
 msgid "AAS"
 msgstr "angle-angle-côté"
 
+#: ../wprover/MProveTree.java:1672
 msgid "SSS"
 msgstr "côté-côté-côté"
 
+#: ../wprover/MProveTree.java:1672
 msgid "ASA"
 msgstr "angle-côté-angle"
 
@@ -2295,6 +2317,7 @@ msgstr "Colinéaire"
 msgid "Eqdistant"
 msgstr "Équidistant"
 
+#: ../wprover/MProveTree.java:1817
 msgid "Cyclic"
 msgstr "Cyclique"
 
@@ -2302,19 +2325,23 @@ msgstr "Cyclique"
 msgid "Congruent"
 msgstr "Congruent"
 
+#: ../wprover/MProveTree.java:1818
 msgid "Similar"
 msgstr "Similaire"
 
+#: ../wprover/MProveTree.java:1818
 msgid "Distance Less"
 msgstr "Distance inférieure"
 
-#: ../wprover/MProveTree.java:1818
+#: ../wprover/MProveTree.java:1819
 msgid "Angle Less"
 msgstr "Angle inférieur"
 
+#: ../wprover/MProveTree.java:1819
 msgid "Concurrent"
 msgstr "Concurrent"
 
+#: ../wprover/MProveTree.java:1819
 msgid "Perp-Bisector"
 msgstr "Bissectrice perpendiculaire"
 
@@ -2330,13 +2357,16 @@ msgstr "Triangle rectangle isocèle"
 msgid "Between"
 msgstr "Entre"
 
+#: ../wprover/MProveTree.java:1825
 msgid "Angle Inside"
 msgstr "Angle intérieur"
 
+#: ../wprover/MProveTree.java:1825
 msgid "Angle Outside"
 msgstr "Angle extérieur"
 
 # Maybe "Triangle inscrit"?
+#: ../wprover/MProveTree.java:1825
 msgid "Triangle Inside"
 msgstr "Triangle intérieur"
 
@@ -2344,6 +2374,7 @@ msgstr "Triangle intérieur"
 msgid "Para Inside"
 msgstr "Parallèle intérieur"
 
+#: ../wprover/MProveTree.java:1826
 msgid "Opposite Inside"
 msgstr "Opposé intérieur"
 
@@ -2586,10 +2617,12 @@ msgstr "Milieu de {0}"
 msgid "{0} is the midpoint of {1}"
 msgstr "{0} est le milieu de {1}"
 
-msgid "parallel to {0} passing {1}"
+#, fuzzy
+msgid "parallel to {0} passing through {1}"
 msgstr "Parallèle à {0} passant par {1}"
 
-msgid "passing {0}"
+#, fuzzy
+msgid "passing through {0}"
 msgstr "Passant par {1}"
 
 msgid "with foot {0}"
@@ -3559,3 +3592,15 @@ msgstr "Taille"
 
 msgid "Date Modified"
 msgstr "Date de modification"
+
+#~ msgid "Set One"
+#~ msgstr "Ensemble un"
+
+#~ msgid "Set Two"
+#~ msgstr "Ensemble deux"
+
+#~ msgid "Polygon Alpha"
+#~ msgstr "Alpha du polygone"
+
+#~ msgid "Radius of Point"
+#~ msgstr "Rayon du point"

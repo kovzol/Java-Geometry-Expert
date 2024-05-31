@@ -54,13 +54,15 @@ msgstr ""
 msgid "False"
 msgstr ""
 
+# Changed from Set One to ...
 #: ../wprover/concDialog.java:156
-msgid "Set One"
-msgstr "Selecione um"
+msgid "First set"
+msgstr ""
 
 #: ../wprover/concDialog.java:157
-msgid "Set Two"
-msgstr "Selecione dois"
+#, fuzzy
+msgid "Second set"
+msgstr "Segundo(s)"
 
 #: ../wprover/concDialog.java:184
 msgid "Please select"
@@ -886,12 +888,14 @@ msgid "Saved"
 msgstr "Salvo"
 
 #: ../wprover/MiscDialog.java:154
-msgid "Polygon Alpha"
-msgstr "Alpha de polígonos"
+#, fuzzy
+msgid "Filling of Polygons"
+msgstr "Preencher polígono"
 
 #: ../wprover/MiscDialog.java:195
-msgid "Radius of Point"
-msgstr "Raio dos pontos"
+#, fuzzy
+msgid "Point Size"
+msgstr "Ponto na reta"
 
 #: ../wprover/MiscDialog.java:212 ../wprover/MiscDialog.java:468
 msgid "Point's Text"
@@ -3580,6 +3584,18 @@ msgstr "Tamanho da Fonte"
 
 msgid "Date Modified"
 msgstr ""
+
+#~ msgid "Set One"
+#~ msgstr "Selecione um"
+
+#~ msgid "Set Two"
+#~ msgstr "Selecione dois"
+
+#~ msgid "Polygon Alpha"
+#~ msgstr "Alpha de polígonos"
+
+#~ msgid "Radius of Point"
+#~ msgstr "Raio dos pontos"
 
 #~ msgid "Freezed"
 #~ msgstr "Fixo"

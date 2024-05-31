@@ -54,13 +54,15 @@ msgstr ""
 msgid "False"
 msgstr ""
 
+# Changed from Set One to ...
 #: ../wprover/concDialog.java:156
-msgid "Set One"
-msgstr "集合一"
+msgid "First set"
+msgstr ""
 
 #: ../wprover/concDialog.java:157
-msgid "Set Two"
-msgstr "集合二"
+#, fuzzy
+msgid "Second set"
+msgstr "秒"
 
 #: ../wprover/concDialog.java:184
 msgid "Please select"
@@ -886,12 +888,14 @@ msgid "Saved"
 msgstr "已保存"
 
 #: ../wprover/MiscDialog.java:154
-msgid "Polygon Alpha"
-msgstr "填充多边形的透明度"
+#, fuzzy
+msgid "Filling of Polygons"
+msgstr "填充"
 
 #: ../wprover/MiscDialog.java:195
-msgid "Radius of Point"
-msgstr "点的半径"
+#, fuzzy
+msgid "Point Size"
+msgstr "在线上的点"
 
 #: ../wprover/MiscDialog.java:212 ../wprover/MiscDialog.java:468
 msgid "Point's Text"
@@ -3575,6 +3579,18 @@ msgstr "字体大小"
 
 msgid "Date Modified"
 msgstr ""
+
+#~ msgid "Set One"
+#~ msgstr "集合一"
+
+#~ msgid "Set Two"
+#~ msgstr "集合二"
+
+#~ msgid "Polygon Alpha"
+#~ msgstr "填充多边形的透明度"
+
+#~ msgid "Radius of Point"
+#~ msgstr "点的半径"
 
 #~ msgid "Freezed"
 #~ msgstr "固定"
