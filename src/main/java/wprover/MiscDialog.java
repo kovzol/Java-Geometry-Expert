@@ -171,7 +171,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
                     if (onSetting) return;
                     JSlider slider = (JSlider) e.getSource();
                     int n = slider.getValue();
-                    float f = (100 - n) / 100.0f;
+                    float f = (n) / 100.0f;
                     CMisc.setFillCompositeAlpha(f);
                     text.setText(n + "");
                     gxInstance.d.repaint();
