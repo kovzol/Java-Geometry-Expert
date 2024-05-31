@@ -153,9 +153,9 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
         public DisplayPanel() {
             this.setLayout(new GridLayout(5, 1));
             JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Polygon Alpha")));
+            p1.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Filling of Polygons")));
             float f = CMisc.getFillCompositeAlpha();
-            int n = 100 - (int) (f * 100);
+            int n = (int) (f * 100);
 
             slider = new JSlider(0, 100);
             slider.setValue(n);
@@ -194,7 +194,7 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
             slider1.setPaintTrack(true);
             slider1.setPaintLabels(true);
 
-            p2.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Radius of Point")));
+            p2.setBorder(BorderFactory.createTitledBorder(GExpert.getLanguage("Point Size")));
             p2.add(slider1);
             slider1.addChangeListener(new ChangeListener() {
                 public void stateChanged(ChangeEvent e) {

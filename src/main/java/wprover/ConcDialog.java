@@ -144,8 +144,8 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         topPane.setLayout(new FlowLayout(FlowLayout.LEFT));
         JPanel topPane1 = new JPanel();
         topPane1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        topPane.add(new JLabel(GExpert.getLanguage("Set One")));
-        topPane1.add(new JLabel(GExpert.getLanguage("Set Two")));
+        topPane.add(new JLabel(GExpert.getLanguage("First Set")));
+        topPane1.add(new JLabel(GExpert.getLanguage("Second Set")));
 
         for (int i = 0; i < 4; i++) {
             JComboBox b = new JComboBox();

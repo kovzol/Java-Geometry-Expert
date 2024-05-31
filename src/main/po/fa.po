@@ -54,13 +54,15 @@ msgstr ""
 msgid "False"
 msgstr ""
 
+# Changed from Set One to ...
 #: ../wprover/concDialog.java:156
-msgid "Set One"
-msgstr "مجموعه یک"
+msgid "First set"
+msgstr ""
 
 #: ../wprover/concDialog.java:157
-msgid "Set Two"
-msgstr "مجموعه دو"
+#, fuzzy
+msgid "Second set"
+msgstr "ثانیه ( ها )"
 
 #: ../wprover/concDialog.java:184
 msgid "Please select"
@@ -880,12 +882,14 @@ msgid "Saved"
 msgstr "ذخیره شده"
 
 #: ../wprover/MiscDialog.java:154
-msgid "Polygon Alpha"
-msgstr "آلفای چند جمله"
+#, fuzzy
+msgid "Filling of Polygons"
+msgstr "پرکردن چند ضلعی"
 
 #: ../wprover/MiscDialog.java:195
-msgid "Radius of Point"
-msgstr "شعاع نقطه"
+#, fuzzy
+msgid "Point Size"
+msgstr "نقطه روی خط"
 
 #: ../wprover/MiscDialog.java:212 ../wprover/MiscDialog.java:468
 msgid "Point's Text"
@@ -3536,6 +3540,18 @@ msgstr "اندازه فونت"
 
 msgid "Date Modified"
 msgstr ""
+
+#~ msgid "Set One"
+#~ msgstr "مجموعه یک"
+
+#~ msgid "Set Two"
+#~ msgstr "مجموعه دو"
+
+#~ msgid "Polygon Alpha"
+#~ msgstr "آلفای چند جمله"
+
+#~ msgid "Radius of Point"
+#~ msgstr "شعاع نقطه"
 
 #~ msgid "FF"
 #~ msgstr "بعدی"

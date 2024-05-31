@@ -2440,7 +2440,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         toolBar.add(button);
         group.add(button);
 
-        button = makeAButton("mirror", "Mirror", "Mirror a object by clicking and then click a reflection axis or point", "reflectr");
+        button = makeAButton("mirror", "Mirror", "Mirror a object by clicking and then click a reflection axis or point", "mirror");
         toolBar.add(button);
         group.add(button);
 

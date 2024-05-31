@@ -52,13 +52,15 @@ msgstr "Igaz"
 msgid "False"
 msgstr "Hamis"
 
+# Changed from Set One to ...
 #: ../wprover/concDialog.java:156
-msgid "Set One"
-msgstr "1. halmaz"
+msgid "First set"
+msgstr ""
 
 #: ../wprover/concDialog.java:157
-msgid "Set Two"
-msgstr "2. halmaz"
+#, fuzzy
+msgid "Second set"
+msgstr "másodperc"
 
 #: ../wprover/concDialog.java:184
 msgid "Please select"
@@ -867,12 +869,14 @@ msgid "Saved"
 msgstr "Elmentve"
 
 #: ../wprover/MiscDialog.java:154
-msgid "Polygon Alpha"
-msgstr "Sokszög átlátszósága"
+#, fuzzy
+msgid "Filling of Polygons"
+msgstr "Sokszög kitöltése"
 
 #: ../wprover/MiscDialog.java:195
-msgid "Radius of Point"
-msgstr "Pont sugara"
+#, fuzzy
+msgid "Point Size"
+msgstr "Pont az egyenesen"
 
 #: ../wprover/MiscDialog.java:212 ../wprover/MiscDialog.java:468
 msgid "Point's Text"
@@ -3543,3 +3547,15 @@ msgstr "Méret"
 
 msgid "Date Modified"
 msgstr "Módosítás dátuma"
+
+#~ msgid "Set One"
+#~ msgstr "1. halmaz"
+
+#~ msgid "Set Two"
+#~ msgstr "2. halmaz"
+
+#~ msgid "Polygon Alpha"
+#~ msgstr "Sokszög átlátszósága"
+
+#~ msgid "Radius of Point"
+#~ msgstr "Pont sugara"
