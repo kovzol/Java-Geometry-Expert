@@ -2979,19 +2979,34 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                 (int) (screenSize.getHeight() - 900) / 2); //center
         frame.setVisible(true);
 
-        // In case there was a command line request, let us do it:
+        // In case there were command line requests, let us do them:
+        performCommandLineRequests(exp, true);
+        // After this point we have no control on any actions automatically,
+        // each action will be done by the user via the sendAction() mechanism
+        // or via the GUI.
+    }
+
+    /**
+     * Perform command line requests. In the array commandlineCommand there are the
+     * commands requested by the user and in the array commandLineSrc the parameters for them.
+     * Some commands (now it is the "Prove" command) may be done asynchronous,
+     * so we cannot wait for their finish her and cannot continue with the remaining requests. Instead,
+     * we will continue performing the requests later, when the asynchronous command finishes.
+     *
+     * @param exp a GExpert instance
+     * @param breakOnProve if the "Prove" command should be assumed as an asynchronous call
+     */
+    public static void performCommandLineRequests(GExpert exp, boolean breakOnProve) {
         int commandLineRequests = commandlineCommand.size();
-        for (commandLineRequestsPerformed = 0;
+        for (;
              commandLineRequestsPerformed < commandLineRequests;
              commandLineRequestsPerformed++) {
             exp.sendAction(commandlineCommand.get(commandLineRequestsPerformed),
                     commandlineSrc.get(commandLineRequestsPerformed));
-            if (commandlineCommand.get(commandLineRequestsPerformed).equals("Prove")) {
+            if (breakOnProve && commandlineCommand.get(commandLineRequestsPerformed).equals("Prove")) {
                 break; // Continued later in GProver...
             }
         }
-        // After this point we have no control on any actions automatically,
-        // each action will be done by the user via the sendAction() mechanism.
     }
 
     public static void setLookAndFeel() {

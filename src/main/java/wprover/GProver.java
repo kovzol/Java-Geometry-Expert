@@ -94,13 +94,7 @@ public class GProver implements Runnable {
 
         isRunning = false;
         // Do the remaining steps from the command line request...
-        int commandLineRequests = commandlineCommand.size();
-        for (;
-             GExpert.commandLineRequestsPerformed < commandLineRequests;
-             GExpert.commandLineRequestsPerformed++) {
-                gxInstance.sendAction(commandlineCommand.get(GExpert.commandLineRequestsPerformed),
-                    GExpert.commandlineSrc.get(GExpert.commandLineRequestsPerformed));
-            }
+        GExpert.performCommandLineRequests(gxInstance, false);
         }
 
     public void start() {
