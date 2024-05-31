@@ -92,15 +92,6 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         return s;
     }
 
-    public String getLanguage(int n, String s) {
-        String s1 = "";
-        if (gxInstance != null)
-            s1 = GExpert.getLanguage(s); // avoid using the number n, instead, use the string
-        if (s1 != null && s1.length() > 0)
-            return s1;
-        return s;
-    }
-
     public Dimension getMaximumSize() {
         Dimension dm = super.getPreferredSize();
         dm.setSize(Integer.MAX_VALUE, dm.getHeight());
@@ -231,7 +222,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
         JPanel ocPanel = new JPanel();
         ocPanel.setLayout(new BoxLayout(ocPanel, BoxLayout.X_AXIS));
-        JToggleButton button = new JToggleButton(getLanguage(3200, "Edit"));
+        JToggleButton button = new JToggleButton(getLanguage("Edit"));
         button.setActionCommand("Edit");
         button.setSelected(true);
         button.addActionListener(this);
@@ -246,7 +237,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         ocPanel.add(button);
         ocPanel.add(Box.createHorizontalStrut(2));
         ocPanel.add(Box.createHorizontalGlue());
-        bok = button = new JToggleButton(getLanguage(3204, "OK"));
+        bok = button = new JToggleButton(getLanguage("OK"));
         button.setActionCommand("OK");
         button.addActionListener(this);
         button.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -254,7 +245,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         ImageIcon upicon = GExpert.createImageIcon("images/dtree/up1.gif");
         ocPanel.add(Box.createHorizontalStrut(2));
         ocPanel.add(button);
-        badd = button = new JToggleButton(getLanguage(3201, "Add"), upicon);
+        badd = button = new JToggleButton(getLanguage("Add"), upicon);
         button.setActionCommand("Add");
         button.setAlignmentX(Component.RIGHT_ALIGNMENT);
         button.setHorizontalTextPosition(AbstractButton.LEFT);
@@ -262,7 +253,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         button.setUI(ui);
         ocPanel.add(Box.createHorizontalStrut(2));
         ocPanel.add(button);
-        bappend = button = new JToggleButton(getLanguage(3202, "Append"), upicon);
+        bappend = button = new JToggleButton(getLanguage("Append"), upicon);
         button.setActionCommand("Append");
         button.setHorizontalTextPosition(AbstractButton.LEFT);
         button.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -270,7 +261,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         button.setUI(ui);
         ocPanel.add(Box.createHorizontalStrut(2));
         ocPanel.add(button);
-        bchild = button = new JToggleButton(getLanguage(3203, "Child"), upicon);
+        bchild = button = new JToggleButton(getLanguage("Child"), upicon);
         button.setActionCommand("Child");
         button.setAlignmentX(Component.RIGHT_ALIGNMENT);
         button.setHorizontalTextPosition(AbstractButton.LEFT);
@@ -278,7 +269,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         button.setUI(ui);
         ocPanel.add(Box.createHorizontalStrut(2));
         ocPanel.add(button);
-        bcancel = button = new JToggleButton(getLanguage(3205, "Cancel"));
+        bcancel = button = new JToggleButton(getLanguage("Cancel"));
         button.setActionCommand("Cancel");
         button.setAlignmentX(Component.RIGHT_ALIGNMENT);
         button.addActionListener(this);
@@ -1141,7 +1132,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
 
 //            JPanel panel1 = new JPanel(new GridLayout(10, 3));
 
-            JMenu menu1 = new JMenu(getLanguage(3220, "Basic Assertions"));
+            JMenu menu1 = new JMenu(getLanguage("Basic Assertions"));
 
             for (int i = 0; i < 12; i++) {
                 if (i == 9 || i == 10)
@@ -1163,7 +1154,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
             int n2 = 18;
 
 
-            JMenu menu2 = new JMenu(getLanguage(3221, "Polygon Related"));
+            JMenu menu2 = new JMenu(getLanguage("Polygon Related"));
 
             for (int i = 13; i < 20; i++) {
                 String s = MAssertion.cStrings[i];
@@ -1172,7 +1163,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
                 item.addActionListener(this);
             }
 
-            JMenu menu3 = new JMenu(getLanguage(3222, "Inequality"));
+            JMenu menu3 = new JMenu(getLanguage("Inequality"));
 
             for (int i = 9; i <= 10; i++) {
                 String s = MAssertion.cStrings[i];

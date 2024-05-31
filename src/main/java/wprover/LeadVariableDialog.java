@@ -31,7 +31,7 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
 
         super(f.getFrame());
         gxInstance = f;
-        this.setTitle(getLanguage(154, "Algebraic Translation"));
+        this.setTitle(getLanguage("Algebraic Translation"));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -65,9 +65,9 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
                 return dm;
             }
         };
-        JButton bb = new JButton(getLanguage(241, "Reduce"));
-        JButton b = new JButton(getLanguage(242, "Details"));
-        JButton b1 = new JButton(getLanguage(243, "Reload"));
+        JButton bb = new JButton(getLanguage("Reduce"));
+        JButton b = new JButton(getLanguage("Details"));
+        JButton b1 = new JButton(getLanguage("Reload"));
         JButton b2 = new JButton(getLanguage("Close"));
         bb.setActionCommand("Reduce");
         b.setActionCommand("Details");
@@ -101,19 +101,6 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         /*
         if (gxInstance != null)
             return gxInstance.getLanguage(s);
-        return s;
-         */
-    }
-
-    @Deprecated
-    public String getLanguage(int n, String s) {
-        return GExpert.getLanguage(s);
-        /*
-        String s1 = "";
-        if (gxInstance != null)
-            s1 = gxInstance.getLanguage(n);
-        if (s1 != null && s1.length() > 0)
-            return s1;
         return s;
          */
     }
@@ -246,10 +233,10 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         Vector vdlist = new Vector();
 
         public LVTableModel() {
-            vlist.add(getLanguage(245, "Name"));
-            vlist.add(getLanguage(246, "Variable"));
-            vlist.add(getLanguage(247, "Length"));
-            vlist.add(getLanguage(248, "Polynomial"));
+            vlist.add(getLanguage("Name"));
+            vlist.add(getLanguage("Variable"));
+            vlist.add(getLanguage("Length"));
+            vlist.add(getLanguage("Polynomial"));
         }
 
         public void setDataList(Vector v) {
@@ -337,7 +324,7 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
             });
 
             pane.setAutoscrolls(false);
-            pane.setBorder(BorderFactory.createTitledBorder(getLanguage(248, "Polynomial")));
+            pane.setBorder(BorderFactory.createTitledBorder(getLanguage("Polynomial")));
             this.add(pane);
         }
 
@@ -380,10 +367,10 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
             JMenuItem m1, m2, m3, m4;
 
             public TextPopupMenu() {
-                m1 = new JMenuItem(getLanguage(249, "Cut"));
-                m2 = new JMenuItem(getLanguage(250, "Copy"));
-                m3 = new JMenuItem(getLanguage(251, "Paste"));
-                m4 = new JMenuItem(getLanguage(252, "Delete"));
+                m1 = new JMenuItem(getLanguage("Cut"));
+                m2 = new JMenuItem(getLanguage("Copy"));
+                m3 = new JMenuItem(getLanguage("Paste"));
+                m4 = new JMenuItem(getLanguage("Delete"));
                 ActionListener ls = new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         String s = e.getActionCommand();
@@ -430,8 +417,8 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         private String[] names = {"", ""};
         private Object[][] data = {
                 {getLanguage("Point"), new String()},
-                {getLanguage(246, "Variable"), new String()},
-                {getLanguage(247, "Length"), new String()},
+                {getLanguage("Variable"), new String()},
+                {getLanguage("Length"), new String()},
         };
 
         public int getColumnCount() {
