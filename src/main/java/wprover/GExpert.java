@@ -3033,7 +3033,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     private static void processCommandLineOptions(String[] args) {
         Options options = new Options();
 
-        Option helpOption = new Option("h", "help", false, "show help");
+        Option helpOption = new Option("h", "help", false, "show help, then exit");
         helpOption.setRequired(false);
         options.addOption(helpOption);
 
@@ -3041,7 +3041,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         proveOption.setRequired(false);
         options.addOption(proveOption);
 
-        Option outputOption = new Option("o", "output", true, "save proof to file <arg>");
+        Option outputOption = new Option("o", "output", true, "save GraphViz proof to file <arg>");
         outputOption.setRequired(false);
         options.addOption(outputOption);
 
@@ -3062,6 +3062,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             if (cmd.hasOption("h")) {
                 formatter.printHelp("jgex [options] [input file]", options);
                 System.out.println("Example: jgex -p gdd -o test.gv -x full_path_to_input.gex");
+                System.out.println("Paths are relative to " + Path.of("").toAbsolutePath() + ".");
                 System.out.println("Order of the given parameters is important.");
                 System.exit(0);
             }
@@ -3092,7 +3093,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             }
             if (cmd.hasOption("w")) {
                 commandlineCommand.add("Wait");
-                commandlineSrc.add(new Integer(cmd.getOptionValue("w")));
+                commandlineSrc.add(Integer.valueOf(cmd.getOptionValue("w")));
             }
             if (cmd.hasOption("x")) {
                 commandlineCommand.add("Exit");
