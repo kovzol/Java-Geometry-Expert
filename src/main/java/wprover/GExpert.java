@@ -3061,8 +3061,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             cmd = parser.parse(options, args);
             if (cmd.hasOption("h")) {
                 formatter.printHelp("jgex [options] [input file]", options);
-                System.out.println("Example: jgex -p gdd -o test.gv -w 5 -x -h full_path_to_input.gex");
-                System.out.println("Order of the given parameters are important.");
+                System.out.println("Example: jgex -p gdd -o test.gv -x full_path_to_input.gex");
+                System.out.println("Order of the given parameters is important.");
                 System.exit(0);
             }
             if (cmd.getArgs().length == 0) {
