@@ -1281,8 +1281,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             }
 
         } else if (command.equals("Save") || command.equals("Save as...")) {
-            if (command.equals("Save"))
+            if (command.equals("Save")) {
+                if (src instanceof File) {
+                    dp.setFile((File) src);
+                }
                 this.saveAFile(false);
+            }
             else this.saveAFile(true);
 
         } else if (command.equalsIgnoreCase("Save GDD Proof as GraphViz File")) {
@@ -3045,6 +3049,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         outputOption.setRequired(false);
         options.addOption(outputOption);
 
+        Option saveOption = new Option("s", "save", true, "save to file <arg>");
+        saveOption.setRequired(false);
+        options.addOption(saveOption);
+
         Option waitOption = new Option("w", "wait", true, "wait <arg> seconds");
         waitOption.setRequired(false);
         options.addOption(waitOption);
@@ -3086,6 +3094,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             if (cmd.hasOption("p")) {
                 commandlineCommand.add("Prove");
                 commandlineSrc.add(cmd.getOptionValue("p"));
+            }
+            if (cmd.hasOption("s")) {
+                commandlineCommand.add("Save");
+                commandlineSrc.add(new File(cmd.getOptionValue("s")));
             }
             if (cmd.hasOption("o")) {
                 commandlineCommand.add("Save GDD Proof as GraphViz File");
