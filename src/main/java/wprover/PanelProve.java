@@ -1600,8 +1600,24 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         int rule = getRule(co);
         // System.out.println("GV: Rule " + rule + " is used for node " + co.getNo());
         String c = getRuleColor(rule);
-        return co.getNo() + " [ label = \"" + co.getNo() + ") " + co.getText()
-                + "\", fillcolor = \"" + c + "\"];\n";
+        String ret;
+        ret = co.getNo() + " [ label = <" + co.getNo() + ") " + co.getText();
+        if (rule >= 1 && rule <= 43) {
+            ret += "<BR/>\n" + "<FONT POINT-SIZE=\"10\">"
+                    + GExpert.getTranslationViaGettext("Rule {0}", rule + "")
+                    + "</FONT>";
+        }
+        ret += ">";
+        if (rule >= 1 && rule <= 43) {
+            ret += ", tooltip = \""
+                    + getLanguage(((GRule) RuleList.GDDLIST.get(rule)).description)
+                    + "\"";
+        }
+        else {
+            ret += ", tooltip = \" \""; // do not show any tooltip
+        }
+        ret += ", fillcolor = \"" + c + "\"];\n";
+        return ret;
     }
 
     /**
@@ -1732,7 +1748,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     addLine(from, to);
 
                     // This may duplicate some entries, FIXME:
-                    hypotheses += "\"" + st + "\" [ fillcolor = \"" + COLOR_HYPOTHESIS + "\", shape = oval, style = filled ];\n";
+                    hypotheses += "\"" + st + "\" [ fillcolor = \"" + COLOR_HYPOTHESIS
+                            + "\", shape = oval, style = filled, tooltip = \" \" ];\n";
                 }
             }
             Cond leaf = searchSubCond(root, num);
