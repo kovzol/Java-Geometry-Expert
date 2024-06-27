@@ -1,0 +1,21 @@
+#!/bin/bash
+# This script runs all .gex files from ../docs/examples/6_GDD_FULL,
+# proves them via the GDD method and saves the proof tree as .gv and .svg in ../docs.
+
+# Run this script with
+# xvfb-run -a -s "-screen 0 1280x800x24" ./prove-gdd-export-gv-svg
+# to hide the graphical input.
+
+TIMEOUT=5
+
+cd ../..
+./gradlew installDist
+
+RUNTIME=`pwd`/build/install/jgex/bin/Java-Geometry-Expert
+MYDIR=`pwd`
+
+for FULLNAME in `find src/docs/examples/6_GDD_FULL -name '*.gex' `; do
+ NAME=`basename $FULLNAME .gex`
+ /bin/time -o src/docs/$NAME.txt /usr/bin/timeout -k $TIMEOUT $TIMEOUT $RUNTIME -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME
+ dot -Tsvg $NAME.gv > src/docs/$NAME.svg
+ done
