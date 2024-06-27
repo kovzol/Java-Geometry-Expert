@@ -1809,11 +1809,11 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
         if (drawStructure) {
             // We don't want multiple edges:
-            graphvizProgram = "strict digraph G {\n";
+            graphvizProgram = "strict digraph \" \" {\n";
             // We create yellow boxes:
             graphvizProgram += "node [shape = box, color = black, style = filled];\n";
             // We set the direction for the arrows reversed:
-            graphvizProgram += "edge [dir = back];\n";
+            graphvizProgram += "edge [dir = back, tooltip = \" \"];\n";
             // Reset hypotheses:
             hypotheses = "";
         }
