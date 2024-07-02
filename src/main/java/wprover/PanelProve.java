@@ -1583,6 +1583,25 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         COLOR_OTHER = "#C0C0C0", // grey
         COLOR_HYPOTHESIS = "#F7CAC9"; // pink
 
+    String FORM_TRIVIAL = "box",
+            FORM_PARALLEL_LINES = "invtrapezium",
+            FORM_PERPENDICULAR_LINES = "rectangle",
+            FORM_CIRCLES = "oval",
+            FORM_ANGLES = "diamond",
+            FORM_TRIANGLES = "invtriangle",
+            FORM_OTHER = "hexagon",
+            FORM_HYPOTHESIS = "oval";
+
+    String STYLE_TRIVIAL = "rounded, filled",
+            STYLE_PARALLEL_LINES = "filled",
+            STYLE_PERPENDICULAR_LINES = "filled",
+            STYLE_CIRCLES = "filled",
+            STYLE_ANGLES = "filled",
+            STYLE_TRIANGLES = "filled",
+            STYLE_OTHER = "filled",
+            STYLE_HYPOTHESIS = "filled";
+
+
     int getRule(Cond co) {
         int rule = co.getRule();
         if (rule == 0) {
@@ -1600,6 +1619,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         int rule = getRule(co);
         // System.out.println("GV: Rule " + rule + " is used for node " + co.getNo());
         String c = getRuleColor(rule);
+        String f = getRuleForm(rule);
+        String s = getRuleStyle(rule);
         String ret;
         ret = co.getNo() + " [ label = <" + co.getNo() + ") " + co.getText();
         if (rule >= 1 && rule <= 43) {
@@ -1618,7 +1639,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         else {
             ret += ", tooltip = \" \""; // do not show any tooltip
         }
-        ret += ", fillcolor = \"" + c + "\"];\n";
+        ret += ", style = \"" + s + "\", shape = " + f + ", fillcolor = \"" + c + "\"];\n";
         return ret;
     }
 
@@ -1659,6 +1680,54 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             return COLOR_OTHER;
         }
         return "#ffffff"; // this should not happen
+    }
+
+    String getRuleForm(int rule) {
+        if (rule == 0)
+            return FORM_TRIVIAL;
+        if (rule >= 1 && rule <= 4) {
+            return FORM_PARALLEL_LINES;
+        }
+        if (rule >= 5 && rule <= 8) {
+            return FORM_PERPENDICULAR_LINES;
+        }
+        if (rule >= 9 && rule <= 15) {
+            return FORM_CIRCLES;
+        }
+        if (rule >= 16 && rule <= 22) {
+            return FORM_ANGLES;
+        }
+        if (rule >= 23 && rule <= 37) {
+            return FORM_TRIANGLES;
+        }
+        if (rule >= 38) {
+            return FORM_OTHER;
+        }
+        return "box"; // this should not happen
+    }
+
+    String getRuleStyle(int rule) {
+        if (rule == 0)
+            return STYLE_TRIVIAL;
+        if (rule >= 1 && rule <= 4) {
+            return STYLE_PARALLEL_LINES;
+        }
+        if (rule >= 5 && rule <= 8) {
+            return STYLE_PERPENDICULAR_LINES;
+        }
+        if (rule >= 9 && rule <= 15) {
+            return STYLE_CIRCLES;
+        }
+        if (rule >= 16 && rule <= 22) {
+            return STYLE_ANGLES;
+        }
+        if (rule >= 23 && rule <= 37) {
+            return STYLE_TRIANGLES;
+        }
+        if (rule >= 38) {
+            return STYLE_OTHER;
+        }
+        return "filled"; // this should not happen
     }
 
     /**
@@ -1751,7 +1820,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
                     // This may duplicate some entries, FIXME:
                     hypotheses += "\"" + st + "\" [ fillcolor = \"" + COLOR_HYPOTHESIS
-                            + "\", shape = oval, style = filled, tooltip = \" \" ];\n";
+                            + "\", shape = " + FORM_HYPOTHESIS + ", style = \"" + STYLE_HYPOTHESIS
+                            + "\", tooltip = \" \" ];\n";
                 }
             }
             Cond leaf = searchSubCond(root, num);
