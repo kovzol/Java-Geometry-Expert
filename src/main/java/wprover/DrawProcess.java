@@ -11595,7 +11595,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
                                                 NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
 
-                                                if (inputName.getLength() == 2) {
+                                                if (inputName.getLength() == 2) { // circle with center and radius
                                                     String name = outputName.getNamedItem("a0").getTextContent();
                                                     String nameCenterPoint = inputName.getNamedItem("a0").getTextContent();
                                                     String namePointOnCircle = inputName.getNamedItem("a1").getTextContent();
@@ -11614,9 +11614,49 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     c.m_name = name;
                                                     circles.add(c);
                                                     circlesGgb.add(new GgbCircle(name));
-                                                    addCircleToList(c);
+                                                    // addCircleToList(c); // This would change the name by appending a number, don't do that!
+                                                    circlelist.add(c); // Instead, we add the circle directly to the list.
                                                     Constraint cs = new Constraint(Constraint.CIRCLE, p1, p2);
                                                     this.addConstraintToList(cs);
+                                                    this.charsetAndAddPoly(false);
+                                                    this.UndoAdded(c.getDescription());
+                                                }
+
+                                                if (inputName.getLength() == 3) { // circumcircle of a triangle
+                                                    String name = outputName.getNamedItem("a0").getTextContent();
+                                                    String namePoint1 = inputName.getNamedItem("a0").getTextContent();
+                                                    String namePoint2 = inputName.getNamedItem("a1").getTextContent();
+                                                    String namePoint3 = inputName.getNamedItem("a2").getTextContent();
+
+                                                    CPoint p1 = null;
+                                                    CPoint p2 = null;
+                                                    CPoint p3 = null;
+                                                    for (CPoint p : points) {
+                                                        // This is ugly, consider doing it more elegantly:
+                                                        if (p.getname().equals(namePoint1)) {
+                                                            p1 = p;
+                                                        } else if (p.getname().equals(namePoint2)) {
+                                                            p2 = p;
+                                                        }  else if (p.getname().equals(namePoint3)) {
+                                                            p3 = p;
+                                                        }
+                                                    }
+
+                                                    // Center (creating it auxiliarily).
+                                                    String poname = name + "center"; // FIXME: check if this name already exists
+                                                    CPoint po = this.CreateANewPoint(0, 0, poname);
+                                                    Constraint cs = new Constraint(Constraint.CIRCUMCENTER, po, p1, p2, p3);
+                                                    this.addConstraintToList(cs);
+                                                    this.addPointToList(po);
+                                                    points.add(po);
+                                                    pointsGgb.add(new GgbPoint(poname));
+
+                                                    Circle c = new Circle(po, p1, p2, p3);
+                                                    c.m_name = name;
+                                                    circles.add(c);
+                                                    circlesGgb.add(new GgbCircle(name));
+                                                    // addCircleToList(c); // This would change the name by appending a number, don't do that!
+                                                    circlelist.add(c); // Instead, we add the circle directly to the list.
                                                     this.charsetAndAddPoly(false);
                                                     this.UndoAdded(c.getDescription());
                                                 }
@@ -11686,6 +11726,54 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                         c.add_pt(p4, 3);
                                                         c.set_conc(true);
                                                         gxInstance.getpprove().set_conclusion(c, true);
+                                                    } else if (parameter.contains("≟")) {
+                                                        System.err.println("Unimplemented: " + parameter);
+                                                    } else if (parameter.contains("∈")) {
+                                                        int condtype = -1; // dummy init
+                                                        String parameterPoint = parameter.substring(0, parameter.indexOf("∈")).trim();
+                                                        String parameterRest = parameter.substring(parameter.indexOf("∈") + 1).trim();
+                                                        CPoint p1 = null;
+                                                        CPoint p2 = null;
+                                                        CPoint p3 = null;
+                                                        CPoint p4 = null;
+                                                        for (CPoint p : points) {
+                                                            if (p.getname().equals(parameterPoint)) {
+                                                                p1 = p;
+                                                            }
+                                                        }
+                                                        for (CLine l : lines) {
+                                                            if (l.getname().equals(parameterRest)) {
+                                                                p2 = l.getfirstPoint();
+                                                                p3 = l.getSecondPoint(p2);
+                                                                condtype = CST.getClu_D("Collinear");
+                                                            }
+                                                        }
+                                                        for (Circle c : circles) {
+                                                            if (c.getname().equals(parameterRest)) {
+                                                                if (c.points.size() < 3) {
+                                                                    p2 = c.o;
+                                                                    p3 = c.getP(0);
+                                                                    p4 = c.o;
+                                                                    condtype = CST.getClu_D("Equal distance");
+                                                                } else { // we assume that there are at least 3 points
+                                                                    p2 = c.getP(0);
+                                                                    p3 = c.getP(1);
+                                                                    p4 = c.getP(2);
+                                                                    condtype = CST.getClu_D("Cyclic");
+                                                                }
+                                                            }
+                                                        }
+                                                        if (condtype != -1) {
+                                                            Cons c = new Cons(condtype);
+                                                            c.add_pt(p1, 0);
+                                                            c.add_pt(p2, 1);
+                                                            c.add_pt(p3, 2);
+                                                            c.add_pt(p4, 3);
+                                                            c.set_conc(true);
+                                                            gxInstance.getpprove().set_conclusion(c, true);
+                                                        } else {
+                                                            System.err.println("Unidentified object: " + parameterRest);
+                                                        }
                                                     } else {
                                                         System.err.println("Unimplemented: " + parameter);
                                                     }
