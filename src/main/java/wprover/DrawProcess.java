@@ -11410,8 +11410,58 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                             }
                                             break;
                                         case "command":
+                                            // Polygon
+                                            if (step.getAttribute("name").equals("Polygon")) {
+                                                NamedNodeMap output = step.getElementsByTagName("output").item(0).getAttributes();
+                                                NamedNodeMap input = step.getElementsByTagName("input").item(0).getAttributes();
+                                                String name = output.getNamedItem("a0").getTextContent();
+                                                boolean processed = false;
+                                                int n;
+                                                for (n=0; !processed; n++) {
+                                                    Node node = input.getNamedItem("a" + n);
+                                                    if (node == null) {
+                                                        processed = true;
+                                                    }
+                                                }
+                                                n--;
+                                                // n contains the number of vertices of the polygon
+                                                for (int vertex=0; vertex < n; vertex++) {
+                                                    String nameP1 = input.getNamedItem("a" + vertex).getTextContent();
+                                                    String nameP2 = input.getNamedItem("a" + (vertex + 1) % n).getTextContent();
+                                                    String nameSegment = output.getNamedItem("a" + (vertex + 1)).getTextContent();
+
+                                                    // Below is the same code as for single segment creation. TODO: Unify.
+                                                    segmentsGgb.add(new GgbSegment(nameSegment, nameP1, nameP2));
+
+                                                    CPoint[] pts = new CPoint[2];
+                                                    // Make a line for every segment
+                                                    for (CPoint p : points) {
+                                                        if (p.getname().equals(nameP1)) {
+                                                            pts[0] = p;
+                                                        } else if (p.getname().equals(nameP2)) {
+                                                            pts[1] = p;
+                                                        }
+                                                    }
+                                                    CPoint tp = pts[0];
+                                                    CPoint pp = pts[1];
+                                                    lines.add(new CLine(nameSegment, tp, pp));
+
+                                                    getSmartPV(pts[0], pts[1]);
+
+                                                    if (tp != pp && tp != null && pp != null) {
+                                                        setSmartPVLine(tp, pp);
+                                                        addPointToList(pp);
+                                                        CLine ln = new CLine(pp, tp, CLine.LLine);
+                                                        this.addLineToList(ln);
+                                                        Constraint cs = new Constraint(Constraint.LINE, tp, pp);
+                                                        addConstraintToList(cs);
+                                                        this.reCalculate();
+                                                        this.UndoAdded(ln.getDescription());
+                                                    }
+                                                }
+                                            }
                                             // Midpoint
-                                            if (step.getAttribute("name").equals("Midpoint")) {
+                                            else if (step.getAttribute("name").equals("Midpoint")) {
                                                 NamedNodeMap output = step.getElementsByTagName("output").item(0).getAttributes();
                                                 NamedNodeMap input = step.getElementsByTagName("input").item(0).getAttributes();
                                                 String name = output.getNamedItem("a0").getTextContent();
