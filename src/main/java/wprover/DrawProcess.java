@@ -2979,9 +2979,9 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                     //         pt.getname());
                     UndoStruct u = this.UndoAdded(line1.TypeString() + " " + GExpert.getTranslationViaGettext("parallel to {0} passing {1}",
                             line.getDiscription(), pt.getname()));
-                    u.adddOjbect(line1);
-                    u.adddOjbect(line);
-                    u.adddOjbect(pt);
+                    u.addObject(line1);
+                    u.addObject(line);
+                    u.addObject(pt);
                     clearSelection();
                     STATUS = 0;
 
@@ -3018,9 +3018,9 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                             // pt.getname());
                             line.getDescription() + " " +
                             GExpert.getTranslationViaGettext("passing {0}", pt.getname()));
-                            u.adddOjbect(line1);
-                    u.adddOjbect(line);
-                    u.adddOjbect(pt);
+                            u.addObject(line1);
+                    u.addObject(line);
+                    u.addObject(pt);
                     STATUS = 0;
                     clearSelection();
                 }
@@ -5281,7 +5281,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
     public CPoint meetTwoObject(Object obj1, Object obj2, boolean d, double x, double y) {
         if (obj1 instanceof CLine && obj2 instanceof CLine) {
-            return MeetDifineAPoint((CLine) obj1, (CLine) obj2);
+            return MeetDefineAPoint((CLine) obj1, (CLine) obj2);
         } else if (obj1 instanceof Circle && obj2 instanceof Circle) {
             return MeetCCToDefineAPoint((Circle) obj1, (Circle) obj2, d, x, y);
         } else {
@@ -8104,7 +8104,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
     }
 
 
-    public CPoint MeetDifineAPoint(CLine line1, CLine line2) {
+    public CPoint MeetDefineAPoint(CLine line1, CLine line2) {
         if (CLine.commonPoint(line1, line2) != null)
             return null;
         if (check_para(line1, line2)) {
@@ -11572,6 +11572,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                         setSmartPVLine(tp, pp);
                                                         addPointToList(pp);
                                                         CLine ln = new CLine(pp, tp, CLine.LLine);
+                                                        ln.ext_type = 2; // this is a line, not a segment (0)
                                                         this.addLineToList(ln);
                                                         Constraint cs = new Constraint(Constraint.LINE, tp, pp);
                                                         addConstraintToList(cs);
@@ -11601,6 +11602,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                         }
                                                     }
                                                     CLine linePerp = new CLine(footPoint, CLine.TLine);
+                                                    linePerp.ext_type = 2;
                                                     lines.add(linePerp);
 
                                                     Constraint c = new Constraint(Constraint.PERPENDICULAR, linePerp, origLine);
@@ -11613,10 +11615,39 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     UndoStruct u = this.UndoAdded(linePerp.TypeString() + " perp " +
                                                             origLine.getDiscription() + " passing " +
                                                             footPoint.getname());
-                                                    u.adddOjbect(linePerp);
-                                                    u.adddOjbect(origLine);
-                                                    u.adddOjbect(footPoint);
+                                                    u.addObject(linePerp);
+                                                    u.addObject(origLine);
+                                                    u.addObject(footPoint);
                                                     linePerp.m_name=nameLinePerp;
+                                                }
+                                            } else if (step.getAttribute("name").equals("LineBisector")) {
+                                                NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
+                                                NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
+                                                if (inputName.getLength() == 1) {
+                                                    String nameLineBisector = outputName.getNamedItem("a0").getTextContent();
+                                                    String nameLine = inputName.getNamedItem("a0").getTextContent();
+                                                    linesGgb.add(new GgbLine(nameLineBisector));
+                                                    CLine origLine = null;
+                                                    // Make a line for every segment
+                                                    for (CLine l : lines) {
+                                                        if (l.getname().equals(nameLine)) {
+                                                            origLine = l;
+                                                        }
+                                                    }
+                                                    CLine lineBisector = new CLine(CLine.BLine);
+                                                    lineBisector.ext_type = 2;
+                                                    CPoint p1 = origLine.getPoint(0);
+                                                    CPoint p2 = origLine.getPoint(1);
+                                                    Constraint c = new Constraint(Constraint.BLINE, lineBisector, p1, p2);
+                                                    lineBisector.addconstraint(c);
+                                                    this.addLineToList(lineBisector);
+                                                    this.addConstraintToList(c);
+                                                    lines.add(lineBisector);
+                                                    UndoStruct u = this.UndoAdded("Bline " + lineBisector.getDescription());
+                                                    u.addObject(lineBisector);
+                                                    lineBisector.m_name=nameLineBisector;
+                                                    addCTMark(origLine, lineBisector);
+
                                                 }
                                             } else if (step.getAttribute("name").equals("Intersect")) { // Handle intersect command
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
@@ -11636,10 +11667,43 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                             line2 = l;
                                                         }
                                                     }
-                                                    CPoint intersectionPoint = MeetDifineAPoint(line1, line2);
-                                                    intersectionPoint.m_name = name;
-                                                    points.add(intersectionPoint);
-                                                    pointsGgb.add(new GgbPoint(name));
+                                                    if (line1 != null && line2 != null) {
+                                                        CPoint intersectionPoint = MeetDefineAPoint(line1, line2);
+                                                        intersectionPoint.m_name = name;
+                                                        points.add(intersectionPoint);
+                                                        pointsGgb.add(new GgbPoint(name));
+                                                    } else { // One of the inputs should be a circle.
+                                                        Circle circle1 = null;
+                                                        Circle circle2 = null;
+                                                        for (Circle c : circles) {
+                                                            if (c.getname().equals(nameO1)) {
+                                                                circle1 = c;
+                                                            } else if (c.getname().equals(nameO2)) {
+                                                                circle2 = c;
+                                                            }
+                                                        }
+                                                        // FIXME: The x=0, y=0 workarounds below can be problematic if
+                                                        // there are more intersection points.
+                                                        if (circle1 != null && circle2 != null) {
+                                                            CPoint intersectionPoint = MeetCCToDefineAPoint(circle1, circle2, false,
+                                                                    0, 0);
+                                                            intersectionPoint.m_name = name;
+                                                            points.add(intersectionPoint);
+                                                            pointsGgb.add(new GgbPoint(name));
+                                                        } else if (circle1 != null && line2 != null) {
+                                                            CPoint intersectionPoint = MeetLCToDefineAPoint(line2, circle1, false,
+                                                                    0, 0);
+                                                            intersectionPoint.m_name = name;
+                                                            points.add(intersectionPoint);
+                                                            pointsGgb.add(new GgbPoint(name));
+                                                        } else if (line1 != null && circle2 != null) {
+                                                            CPoint intersectionPoint = MeetLCToDefineAPoint(line1, circle2, false,
+                                                                    0, 0);
+                                                            intersectionPoint.m_name = name;
+                                                            points.add(intersectionPoint);
+                                                            pointsGgb.add(new GgbPoint(name));
+                                                        }
+                                                    }
                                                 }
                                             } else if (step.getAttribute("name").equals("Circle")) { // Handle Circle command Circle(Point,Point)
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
@@ -11661,15 +11725,15 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     }
 
                                                     Circle c = new Circle(p1, p2);
-                                                    c.m_name = name;
+                                                    // c.m_name = name;
                                                     circles.add(c);
                                                     circlesGgb.add(new GgbCircle(name));
-                                                    // addCircleToList(c); // This would change the name by appending a number, don't do that!
-                                                    circlelist.add(c); // Instead, we add the circle directly to the list.
                                                     Constraint cs = new Constraint(Constraint.CIRCLE, p1, p2);
                                                     this.addConstraintToList(cs);
                                                     this.charsetAndAddPoly(false);
                                                     this.UndoAdded(c.getDescription());
+                                                    addCircleToList(c);
+                                                    c.m_name = name;
                                                 }
 
                                                 if (inputName.getLength() == 3) { // circumcircle of a triangle
@@ -11702,11 +11766,10 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     pointsGgb.add(new GgbPoint(poname));
 
                                                     Circle c = new Circle(po, p1, p2, p3);
-                                                    c.m_name = name;
                                                     circles.add(c);
                                                     circlesGgb.add(new GgbCircle(name));
-                                                    // addCircleToList(c); // This would change the name by appending a number, don't do that!
-                                                    circlelist.add(c); // Instead, we add the circle directly to the list.
+                                                    addCircleToList(c);
+                                                    c.m_name = name;
                                                     this.charsetAndAddPoly(false);
                                                     this.UndoAdded(c.getDescription());
                                                 }

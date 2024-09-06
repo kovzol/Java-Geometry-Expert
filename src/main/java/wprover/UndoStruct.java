@@ -90,7 +90,7 @@ class UndoStruct {
     ////////////////////////////////////////////// added 2006.7.8.
     Vector dlist = new Vector();
 
-    public void adddOjbect(Object obj) {
+    public void addObject(Object obj) {
         dlist.add(obj);
     }
 
