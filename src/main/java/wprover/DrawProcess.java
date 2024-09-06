@@ -11749,6 +11749,18 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 c.add_pt(p4, 3);
                 c.set_conc(true);
                 gxInstance.getpprove().set_conclusion(c, true);
+            } else if (parameter.startsWith("AreParallel")) { // TODO: also implement || (with UTF8)
+                int condtype = CST.getClu_D("Parallel");
+                Cons c = new Cons(condtype);
+                String[] parameterList = getParameterList(parameter);
+                CLine l1 = getCLine(lines, parameterList[0]);
+                CLine l2 = getCLine(lines, parameterList[1]);
+                c.add_pt(l1.getPoint(0), 0);
+                c.add_pt(l1.getPoint(1), 1);
+                c.add_pt(l2.getPoint(0), 2);
+                c.add_pt(l2.getPoint(1), 3);
+                c.set_conc(true);
+                gxInstance.getpprove().set_conclusion(c, true);
             } else if (parameter.contains("≟")) {
                 System.err.println("Unimplemented: " + parameter);
             } else if (parameter.contains("∈")) {
