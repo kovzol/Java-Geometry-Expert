@@ -11775,7 +11775,33 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 c.set_conc(true);
                 gxInstance.getpprove().set_conclusion(c, true);
             } else if (parameter.contains("≟")) {
-                System.err.println("Unimplemented: " + parameter);
+                int condtype = -1; // dummy init
+                String parameter1 = parameter.substring(0, parameter.indexOf("≟")).trim();
+                String parameter2 = parameter.substring(parameter.indexOf("≟") + 1).trim();
+                CPoint p1 = null;
+                CPoint p2 = null;
+                CPoint p3 = null;
+                CPoint p4 = null;
+                CLine s1 = getCLine(lines, parameter1);
+                CLine s2 = getCLine(lines, parameter2);
+                if (s1 != null && s2 != null) {
+                    p1 = s1.getfirstPoint();
+                    p2 = s1.getSecondPoint(p1);
+                    p3 = s2.getfirstPoint();
+                    p4 = s2.getSecondPoint(p3);
+                    condtype = CST.getClu_D("Equal Distance");
+                }
+                if (condtype != -1) {
+                    Cons c = new Cons(condtype);
+                    c.add_pt(p1, 0);
+                    c.add_pt(p2, 1);
+                    c.add_pt(p3, 2);
+                    c.add_pt(p4, 3);
+                    c.set_conc(true);
+                    gxInstance.getpprove().set_conclusion(c, true);
+                } else {
+                    System.err.println("Unidentified objects in " + parameter);
+                }
             } else if (parameter.contains("∈")) {
                 int condtype = -1; // dummy init
                 String parameterPoint = parameter.substring(0, parameter.indexOf("∈")).trim();
