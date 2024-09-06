@@ -11792,8 +11792,19 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 } else {
                     System.err.println("Unidentified object: " + parameterRest);
                 }
-            } else {
-                System.err.println("Unimplemented: " + parameter);
+            } else if (parameter.contains("⊥")) { // TODO: add also ArePerpendicular[f,g]
+                String parameter1 = parameter.substring(0, parameter.indexOf("⊥")).trim();
+                String parameter2 = parameter.substring(parameter.indexOf("⊥") + 1).trim();
+                CLine l1 = getCLine(lines, parameter1);
+                CLine l2 = getCLine(lines, parameter2);
+                int condtype = CST.getClu_D("Perpendicular");
+                Cons c = new Cons(condtype);
+                c.add_pt(l1.getPoint(0), 0);
+                c.add_pt(l1.getPoint(1), 1);
+                c.add_pt(l2.getPoint(0), 2);
+                c.add_pt(l2.getPoint(1), 3);
+                c.set_conc(true);
+                gxInstance.getpprove().set_conclusion(c, true);
             }
         }
     }
