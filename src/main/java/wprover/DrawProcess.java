@@ -11322,7 +11322,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
         // Save names of all the points
         ArrayList<GgbPoint> pointsGgb = new ArrayList<>();
-// Save names of all the segments
+        // Save names of all the segments
         ArrayList<GgbSegment> segmentsGgb = new ArrayList<>();
         // Save names of all the lines
         ArrayList<GgbLine> linesGgb = new ArrayList<>();
@@ -11775,122 +11775,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 }
 
                                             } else if (step.getAttribute("name").equals("Prove")) {
-                                                NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
-                                                NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
-                                                if (inputName.getLength() == 1) {
-                                                    String parameter = inputName.getNamedItem("a0").getTextContent();
-                                                    // input (String): "AreCollinear[F, G, H]"
-                                                    // output (Cons): SHOW: COLLINEAR F G H
-                                                    if (parameter.startsWith("AreCollinear")) {
-                                                        int condtype = CST.getClu_D("Collinear");
-                                                        Cons c = new Cons(condtype);
-                                                        String parameterPoints = parameter.substring(parameter.indexOf("["));
-                                                        // Remove "]":
-                                                        parameterPoints = parameterPoints.substring(1, parameterPoints.length()-1);
-                                                        String[] parameterList = parameterPoints.split(",");
-                                                        for (int k = 0; k < 3; k++) {
-                                                            parameterList[k] = parameterList[k].trim();
-                                                        }
-                                                        CPoint p1 = null;
-                                                        CPoint p2 = null;
-                                                        CPoint p3 = null;
-                                                        for (CPoint p : points) {
-                                                            if (p.getname().equals(parameterList[0])) {
-                                                                p1 = p;
-                                                            } else if (p.getname().equals(parameterList[1])) {
-                                                                p2 = p;
-                                                            } else if (p.getname().equals(parameterList[2])) {
-                                                                p3 = p;
-                                                            }
-                                                        }
-                                                        c.add_pt(p1, 0);
-                                                        c.add_pt(p2, 1);
-                                                        c.add_pt(p3, 2);
-                                                        c.set_conc(true);
-                                                        gxInstance.getpprove().set_conclusion(c, true);
-                                                    } else if (parameter.startsWith("AreConcyclic")) {
-                                                        int condtype = CST.getClu_D("Cyclic");
-                                                        Cons c = new Cons(condtype);
-                                                        String parameterPoints = parameter.substring(parameter.indexOf("["));
-                                                        // Remove "]":
-                                                        parameterPoints = parameterPoints.substring(1, parameterPoints.length()-1);
-                                                        String[] parameterList = parameterPoints.split(",");
-                                                        for (int k = 0; k < 4; k++) {
-                                                            parameterList[k] = parameterList[k].trim();
-                                                        }
-                                                        CPoint p1 = null;
-                                                        CPoint p2 = null;
-                                                        CPoint p3 = null;
-                                                        CPoint p4 = null;
-                                                        for (CPoint p : points) {
-                                                            if (p.getname().equals(parameterList[0])) {
-                                                                p1 = p;
-                                                            } else if (p.getname().equals(parameterList[1])) {
-                                                                p2 = p;
-                                                            } else if (p.getname().equals(parameterList[2])) {
-                                                                p3 = p;
-                                                            } else if (p.getname().equals(parameterList[3])) {
-                                                                p4 = p;
-                                                            }
-                                                        }
-                                                        c.add_pt(p1, 0);
-                                                        c.add_pt(p2, 1);
-                                                        c.add_pt(p3, 2);
-                                                        c.add_pt(p4, 3);
-                                                        c.set_conc(true);
-                                                        gxInstance.getpprove().set_conclusion(c, true);
-                                                    } else if (parameter.contains("≟")) {
-                                                        System.err.println("Unimplemented: " + parameter);
-                                                    } else if (parameter.contains("∈")) {
-                                                        int condtype = -1; // dummy init
-                                                        String parameterPoint = parameter.substring(0, parameter.indexOf("∈")).trim();
-                                                        String parameterRest = parameter.substring(parameter.indexOf("∈") + 1).trim();
-                                                        CPoint p1 = null;
-                                                        CPoint p2 = null;
-                                                        CPoint p3 = null;
-                                                        CPoint p4 = null;
-                                                        for (CPoint p : points) {
-                                                            if (p.getname().equals(parameterPoint)) {
-                                                                p1 = p;
-                                                            }
-                                                        }
-                                                        for (CLine l : lines) {
-                                                            if (l.getname().equals(parameterRest)) {
-                                                                p2 = l.getfirstPoint();
-                                                                p3 = l.getSecondPoint(p2);
-                                                                condtype = CST.getClu_D("Collinear");
-                                                            }
-                                                        }
-                                                        for (Circle c : circles) {
-                                                            if (c.getname().equals(parameterRest)) {
-                                                                if (c.points.size() < 3) {
-                                                                    p2 = c.o;
-                                                                    p3 = c.getP(0);
-                                                                    p4 = c.o;
-                                                                    condtype = CST.getClu_D("Equal distance");
-                                                                } else { // we assume that there are at least 3 points
-                                                                    p2 = c.getP(0);
-                                                                    p3 = c.getP(1);
-                                                                    p4 = c.getP(2);
-                                                                    condtype = CST.getClu_D("Cyclic");
-                                                                }
-                                                            }
-                                                        }
-                                                        if (condtype != -1) {
-                                                            Cons c = new Cons(condtype);
-                                                            c.add_pt(p1, 0);
-                                                            c.add_pt(p2, 1);
-                                                            c.add_pt(p3, 2);
-                                                            c.add_pt(p4, 3);
-                                                            c.set_conc(true);
-                                                            gxInstance.getpprove().set_conclusion(c, true);
-                                                        } else {
-                                                            System.err.println("Unidentified object: " + parameterRest);
-                                                        }
-                                                    } else {
-                                                        System.err.println("Unimplemented: " + parameter);
-                                                    }
-                                                }
+                                                handleGGBProve(step, points, lines, circles);
                                             }
                                             break;
                                     }
@@ -11909,6 +11794,127 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
         setSavedTag();
         return true;
+    }
+
+    void handleGGBProve(Element step, ArrayList<CPoint> points,
+                        ArrayList<CLine> lines, ArrayList<Circle> circles) {
+
+        NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
+        NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
+        if (inputName.getLength() == 1) {
+            String parameter = inputName.getNamedItem("a0").getTextContent();
+            // input (String): "AreCollinear[F, G, H]"
+            // output (Cons): SHOW: COLLINEAR F G H
+            if (parameter.startsWith("AreCollinear")) {
+                int condtype = CST.getClu_D("Collinear");
+                Cons c = new Cons(condtype);
+                String parameterPoints = parameter.substring(parameter.indexOf("["));
+                // Remove "]":
+                parameterPoints = parameterPoints.substring(1, parameterPoints.length()-1);
+                String[] parameterList = parameterPoints.split(",");
+                for (int k = 0; k < 3; k++) {
+                    parameterList[k] = parameterList[k].trim();
+                }
+                CPoint p1 = null;
+                CPoint p2 = null;
+                CPoint p3 = null;
+                for (CPoint p : points) {
+                    if (p.getname().equals(parameterList[0])) {
+                        p1 = p;
+                    } else if (p.getname().equals(parameterList[1])) {
+                        p2 = p;
+                    } else if (p.getname().equals(parameterList[2])) {
+                        p3 = p;
+                    }
+                }
+                c.add_pt(p1, 0);
+                c.add_pt(p2, 1);
+                c.add_pt(p3, 2);
+                c.set_conc(true);
+                gxInstance.getpprove().set_conclusion(c, true);
+            } else if (parameter.startsWith("AreConcyclic")) {
+                int condtype = CST.getClu_D("Cyclic");
+                Cons c = new Cons(condtype);
+                String parameterPoints = parameter.substring(parameter.indexOf("["));
+                // Remove "]":
+                parameterPoints = parameterPoints.substring(1, parameterPoints.length()-1);
+                String[] parameterList = parameterPoints.split(",");
+                for (int k = 0; k < 4; k++) {
+                    parameterList[k] = parameterList[k].trim();
+                }
+                CPoint p1 = null;
+                CPoint p2 = null;
+                CPoint p3 = null;
+                CPoint p4 = null;
+                for (CPoint p : points) {
+                    if (p.getname().equals(parameterList[0])) {
+                        p1 = p;
+                    } else if (p.getname().equals(parameterList[1])) {
+                        p2 = p;
+                    } else if (p.getname().equals(parameterList[2])) {
+                        p3 = p;
+                    } else if (p.getname().equals(parameterList[3])) {
+                        p4 = p;
+                    }
+                }
+                c.add_pt(p1, 0);
+                c.add_pt(p2, 1);
+                c.add_pt(p3, 2);
+                c.add_pt(p4, 3);
+                c.set_conc(true);
+                gxInstance.getpprove().set_conclusion(c, true);
+            } else if (parameter.contains("≟")) {
+                System.err.println("Unimplemented: " + parameter);
+            } else if (parameter.contains("∈")) {
+                int condtype = -1; // dummy init
+                String parameterPoint = parameter.substring(0, parameter.indexOf("∈")).trim();
+                String parameterRest = parameter.substring(parameter.indexOf("∈") + 1).trim();
+                CPoint p1 = null;
+                CPoint p2 = null;
+                CPoint p3 = null;
+                CPoint p4 = null;
+                for (CPoint p : points) {
+                    if (p.getname().equals(parameterPoint)) {
+                        p1 = p;
+                    }
+                }
+                for (CLine l : lines) {
+                    if (l.getname().equals(parameterRest)) {
+                        p2 = l.getfirstPoint();
+                        p3 = l.getSecondPoint(p2);
+                        condtype = CST.getClu_D("Collinear");
+                    }
+                }
+                for (Circle c : circles) {
+                    if (c.getname().equals(parameterRest)) {
+                        if (c.points.size() < 3) {
+                            p2 = c.o;
+                            p3 = c.getP(0);
+                            p4 = c.o;
+                            condtype = CST.getClu_D("Equal distance");
+                        } else { // we assume that there are at least 3 points
+                            p2 = c.getP(0);
+                            p3 = c.getP(1);
+                            p4 = c.getP(2);
+                            condtype = CST.getClu_D("Cyclic");
+                        }
+                    }
+                }
+                if (condtype != -1) {
+                    Cons c = new Cons(condtype);
+                    c.add_pt(p1, 0);
+                    c.add_pt(p2, 1);
+                    c.add_pt(p3, 2);
+                    c.add_pt(p4, 3);
+                    c.set_conc(true);
+                    gxInstance.getpprove().set_conclusion(c, true);
+                } else {
+                    System.err.println("Unidentified object: " + parameterRest);
+                }
+            } else {
+                System.err.println("Unimplemented: " + parameter);
+            }
+        }
     }
 }
 
