@@ -10999,13 +10999,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                     // Make all Midpoints between two Points or Segments
                     for (GgbMidpoint mp : midpointsGgb) {
                         CPoint[] pts = new CPoint[2];
-                        for (CPoint p : points) {
-                            if (p.getname().equals(mp.getNameP1())) {
-                                pts[0] = p;
-                            } else if (p.getname().equals(mp.getNameP2())) {
-                                pts[1] = p;
-                            }
-                        }
+                        pts[0] = getCPoint(points, mp.getNameP1());
+                        pts[1] = getCPoint(points, mp.getNameP2());
                         CPoint po = this.CreateANewPoint(0, 0);
                         Constraint cs = new Constraint(Constraint.MIDPOINT, po, pts[0], pts[1]);
                         CPoint pu = this.addADecidedPointWithUnite(po);
@@ -11028,13 +11023,9 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                     // Make a line for every segment
                     for (GgbSegment seg : segmentsGgb) {
                         CPoint[] pts = new CPoint[2];
-                        for (CPoint p : points) {
-                            if (p.getname().equals(seg.getNameP1())) {
-                                pts[0] = p;
-                            } else if (p.getname().equals(seg.getNameP2())) {
-                                pts[1] = p;
-                            }
-                        }
+                        pts[0] = getCPoint(points, seg.getNameP1());
+                        pts[1] = getCPoint(points, seg.getNameP2());
+
                         CPoint tp = pts[0];
                         CPoint pp = pts[1];
 
@@ -11055,13 +11046,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                     // Make a line for every line
                     for (GgbLine l : linesGgb) {
                         CPoint[] pts = new CPoint[2];
-                        for (CPoint p : points) {
-                            if (p.getname().equals(l.getNameP1())) {
-                                pts[0] = p;
-                            } else if (p.getname().equals(l.getNameP2())) {
-                                pts[1] = p;
-                            }
-                        }
+                        pts[0] = getCPoint(points, l.getNameP1());
+                        pts[1] = getCPoint(points, l.getNameP2());
                         CPoint tp = pts[0];
                         CPoint pp = pts[1];
 
@@ -11434,14 +11420,9 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     segmentsGgb.add(new GgbSegment(nameSegment, nameP1, nameP2));
 
                                                     CPoint[] pts = new CPoint[2];
+                                                    pts[0] = getCPoint(points, nameP1);
+                                                    pts[1] = getCPoint(points, nameP2);
                                                     // Make a line for every segment
-                                                    for (CPoint p : points) {
-                                                        if (p.getname().equals(nameP1)) {
-                                                            pts[0] = p;
-                                                        } else if (p.getname().equals(nameP2)) {
-                                                            pts[1] = p;
-                                                        }
-                                                    }
                                                     CPoint tp = pts[0];
                                                     CPoint pp = pts[1];
                                                     lines.add(new CLine(nameSegment, tp, pp));
@@ -11483,13 +11464,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 }
 
                                                 CPoint[] pts = new CPoint[2];
-                                                for (CPoint p : points) {
-                                                    if (p.getname().equals(nameP1)) {
-                                                        pts[0] = p;
-                                                    } else if (p.getname().equals(nameP2)) {
-                                                        pts[1] = p;
-                                                    }
-                                                }
+                                                pts[0] = getCPoint(points, nameP1);
+                                                pts[1] = getCPoint(points, nameP2);
                                                 CPoint po = this.CreateANewPoint(0, 0, name);
                                                 Constraint cs = new Constraint(Constraint.MIDPOINT, po, pts[0], pts[1]);
                                                 CPoint pu = this.addADecidedPointWithUnite(po);
@@ -11520,13 +11496,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
                                                     CPoint[] pts = new CPoint[2];
                                                     // Make a line for every segment
-                                                    for (CPoint p : points) {
-                                                        if (p.getname().equals(nameP1)) {
-                                                            pts[0] = p;
-                                                        } else if (p.getname().equals(nameP2)) {
-                                                            pts[1] = p;
-                                                        }
-                                                    }
+                                                    pts[0] = getCPoint(points, nameP1);
+                                                    pts[1] = getCPoint(points, nameP2);
                                                     CPoint tp = pts[0];
                                                     CPoint pp = pts[1];
                                                     lines.add(new CLine(nameSegment, tp, pp));
@@ -11555,13 +11526,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     linesGgb.add(new GgbLine(nameLine, nameP1, nameP2));
                                                     CPoint[] pts = new CPoint[2];
                                                     // Make a line for every segment
-                                                    for (CPoint p : points) {
-                                                        if (p.getname().equals(nameP1)) {
-                                                            pts[0] = p;
-                                                        } else if (p.getname().equals(nameP2)) {
-                                                            pts[1] = p;
-                                                        }
-                                                    }
+                                                    pts[0] = getCPoint(points, nameP1);
+                                                    pts[1] = getCPoint(points, nameP2);
                                                     CPoint tp = pts[0];
                                                     CPoint pp = pts[1];
                                                     lines.add(new CLine(nameLine, tp, pp));
@@ -11588,21 +11554,10 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     String nameP = inputName.getNamedItem("a0").getTextContent();
                                                     String nameLine = inputName.getNamedItem("a1").getTextContent();
                                                     linesGgb.add(new GgbLine(nameLinePerp));
-                                                    CPoint footPoint = null;
-                                                    CLine origLine = null;
-                                                    // Make a line for every segment
-                                                    for (CPoint p : points) {
-                                                        if (p.getname().equals(nameP)) {
-                                                            footPoint = p;
-                                                        }
-                                                    }
-                                                    for (CLine l : lines) {
-                                                        if (l.getname().equals(nameLine)) {
-                                                            origLine = l;
-                                                        }
-                                                    }
+                                                    CPoint footPoint = getCPoint(points, nameP);
+                                                    CLine origLine = getCLine(lines, nameLine);
                                                     CLine linePerp = new CLine(footPoint, CLine.TLine);
-                                                    linePerp.ext_type = 2;
+                                                    linePerp.ext_type = 2; // line, not a segment (0)
                                                     lines.add(linePerp);
 
                                                     Constraint c = new Constraint(Constraint.PERPENDICULAR, linePerp, origLine);
@@ -11627,15 +11582,9 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     String nameLineBisector = outputName.getNamedItem("a0").getTextContent();
                                                     String nameLine = inputName.getNamedItem("a0").getTextContent();
                                                     linesGgb.add(new GgbLine(nameLineBisector));
-                                                    CLine origLine = null;
-                                                    // Make a line for every segment
-                                                    for (CLine l : lines) {
-                                                        if (l.getname().equals(nameLine)) {
-                                                            origLine = l;
-                                                        }
-                                                    }
+                                                    CLine origLine = getCLine(lines, nameLine);
                                                     CLine lineBisector = new CLine(CLine.BLine);
-                                                    lineBisector.ext_type = 2;
+                                                    lineBisector.ext_type = 2; // line, not a segment (0)
                                                     CPoint p1 = origLine.getPoint(0);
                                                     CPoint p2 = origLine.getPoint(1);
                                                     Constraint c = new Constraint(Constraint.BLINE, lineBisector, p1, p2);
@@ -11658,30 +11607,16 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     String name = outputName.getNamedItem("a0").getTextContent();
                                                     String nameO1 = inputName.getNamedItem("a0").getTextContent();
                                                     String nameO2 = inputName.getNamedItem("a1").getTextContent();
-                                                    CLine line1 = null;
-                                                    CLine line2 = null;
-                                                    for (CLine l : lines) {
-                                                        if (l.getname().equals(nameO1)) {
-                                                            line1 = l;
-                                                        } else if (l.getname().equals(nameO2)) {
-                                                            line2 = l;
-                                                        }
-                                                    }
+                                                    CLine line1 = getCLine(lines, nameO1);
+                                                    CLine line2 = getCLine(lines, nameO2);
                                                     if (line1 != null && line2 != null) {
                                                         CPoint intersectionPoint = MeetDefineAPoint(line1, line2);
                                                         intersectionPoint.m_name = name;
                                                         points.add(intersectionPoint);
                                                         pointsGgb.add(new GgbPoint(name));
                                                     } else { // One of the inputs should be a circle.
-                                                        Circle circle1 = null;
-                                                        Circle circle2 = null;
-                                                        for (Circle c : circles) {
-                                                            if (c.getname().equals(nameO1)) {
-                                                                circle1 = c;
-                                                            } else if (c.getname().equals(nameO2)) {
-                                                                circle2 = c;
-                                                            }
-                                                        }
+                                                        Circle circle1 = getCircle(circles, nameO1);
+                                                        Circle circle2 = getCircle(circles, nameO2);
                                                         // FIXME: The x=0, y=0 workarounds below can be problematic if
                                                         // there are more intersection points.
                                                         if (circle1 != null && circle2 != null) {
@@ -11714,15 +11649,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     String nameCenterPoint = inputName.getNamedItem("a0").getTextContent();
                                                     String namePointOnCircle = inputName.getNamedItem("a1").getTextContent();
 
-                                                    CPoint p1 = null;
-                                                    CPoint p2 = null;
-                                                    for (CPoint p : points) {
-                                                        if (p.getname().equals(nameCenterPoint)) {
-                                                            p1 = p;
-                                                        } else if (p.getname().equals(namePointOnCircle)) {
-                                                            p2 = p;
-                                                        }
-                                                    }
+                                                    CPoint p1 = getCPoint(points, nameCenterPoint);
+                                                    CPoint p2 = getCPoint(points, namePointOnCircle);
 
                                                     Circle c = new Circle(p1, p2);
                                                     // c.m_name = name;
@@ -11742,19 +11670,9 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     String namePoint2 = inputName.getNamedItem("a1").getTextContent();
                                                     String namePoint3 = inputName.getNamedItem("a2").getTextContent();
 
-                                                    CPoint p1 = null;
-                                                    CPoint p2 = null;
-                                                    CPoint p3 = null;
-                                                    for (CPoint p : points) {
-                                                        // This is ugly, consider doing it more elegantly:
-                                                        if (p.getname().equals(namePoint1)) {
-                                                            p1 = p;
-                                                        } else if (p.getname().equals(namePoint2)) {
-                                                            p2 = p;
-                                                        }  else if (p.getname().equals(namePoint3)) {
-                                                            p3 = p;
-                                                        }
-                                                    }
+                                                    CPoint p1 = getCPoint(points, namePoint1);
+                                                    CPoint p2 = getCPoint(points, namePoint2);
+                                                    CPoint p3 = getCPoint(points, namePoint3);
 
                                                     // Center (creating it auxiliarily).
                                                     String poname = name + "center"; // FIXME: check if this name already exists
@@ -11808,25 +11726,10 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             if (parameter.startsWith("AreCollinear")) {
                 int condtype = CST.getClu_D("Collinear");
                 Cons c = new Cons(condtype);
-                String parameterPoints = parameter.substring(parameter.indexOf("["));
-                // Remove "]":
-                parameterPoints = parameterPoints.substring(1, parameterPoints.length()-1);
-                String[] parameterList = parameterPoints.split(",");
-                for (int k = 0; k < 3; k++) {
-                    parameterList[k] = parameterList[k].trim();
-                }
-                CPoint p1 = null;
-                CPoint p2 = null;
-                CPoint p3 = null;
-                for (CPoint p : points) {
-                    if (p.getname().equals(parameterList[0])) {
-                        p1 = p;
-                    } else if (p.getname().equals(parameterList[1])) {
-                        p2 = p;
-                    } else if (p.getname().equals(parameterList[2])) {
-                        p3 = p;
-                    }
-                }
+                String[] parameterList = getParameterList(parameter);
+                CPoint p1 = getCPoint(points, parameterList[0]);
+                CPoint p2 = getCPoint(points, parameterList[1]);
+                CPoint p3 = getCPoint(points, parameterList[2]);
                 c.add_pt(p1, 0);
                 c.add_pt(p2, 1);
                 c.add_pt(p3, 2);
@@ -11835,28 +11738,11 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             } else if (parameter.startsWith("AreConcyclic")) {
                 int condtype = CST.getClu_D("Cyclic");
                 Cons c = new Cons(condtype);
-                String parameterPoints = parameter.substring(parameter.indexOf("["));
-                // Remove "]":
-                parameterPoints = parameterPoints.substring(1, parameterPoints.length()-1);
-                String[] parameterList = parameterPoints.split(",");
-                for (int k = 0; k < 4; k++) {
-                    parameterList[k] = parameterList[k].trim();
-                }
-                CPoint p1 = null;
-                CPoint p2 = null;
-                CPoint p3 = null;
-                CPoint p4 = null;
-                for (CPoint p : points) {
-                    if (p.getname().equals(parameterList[0])) {
-                        p1 = p;
-                    } else if (p.getname().equals(parameterList[1])) {
-                        p2 = p;
-                    } else if (p.getname().equals(parameterList[2])) {
-                        p3 = p;
-                    } else if (p.getname().equals(parameterList[3])) {
-                        p4 = p;
-                    }
-                }
+                String[] parameterList = getParameterList(parameter);
+                CPoint p1 = getCPoint(points, parameterList[0]);
+                CPoint p2 = getCPoint(points, parameterList[1]);
+                CPoint p3 = getCPoint(points, parameterList[2]);
+                CPoint p4 = getCPoint(points, parameterList[3]);
                 c.add_pt(p1, 0);
                 c.add_pt(p2, 1);
                 c.add_pt(p3, 2);
@@ -11869,15 +11755,10 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 int condtype = -1; // dummy init
                 String parameterPoint = parameter.substring(0, parameter.indexOf("∈")).trim();
                 String parameterRest = parameter.substring(parameter.indexOf("∈") + 1).trim();
-                CPoint p1 = null;
                 CPoint p2 = null;
                 CPoint p3 = null;
                 CPoint p4 = null;
-                for (CPoint p : points) {
-                    if (p.getname().equals(parameterPoint)) {
-                        p1 = p;
-                    }
-                }
+                CPoint p1 = getCPoint(points, parameterPoint);
                 for (CLine l : lines) {
                     if (l.getname().equals(parameterRest)) {
                         p2 = l.getfirstPoint();
@@ -11916,6 +11797,48 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             }
         }
     }
+
+    String[] getParameterList(String parameter) {
+        // We assume that the list begins and ends with "[" and "]".
+        String parameterItems = parameter.substring(parameter.indexOf("["));
+        // Remove "]":
+        parameterItems = parameterItems.substring(1, parameterItems.length() - 1);
+        String[] parameterList = parameterItems.split(",");
+        int parameterLength = parameterList.length;
+        for (int k = 0; k < parameterLength; k++) {
+            parameterList[k] = parameterList[k].trim();
+        }
+        return parameterList;
+    }
+
+    CPoint getCPoint(ArrayList<CPoint> points, String parameterItem) {
+        for (CPoint p : points) {
+            if (p.getname().equals(parameterItem)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    CLine getCLine(ArrayList<CLine> lines, String parameterItem) {
+        for (CLine l : lines) {
+            if (l.getname().equals(parameterItem)) {
+                return l;
+            }
+        }
+        return null;
+    }
+
+    Circle getCircle(ArrayList<Circle> circles, String parameterItem) {
+        for (Circle c : circles) {
+            if (c.getname().equals(parameterItem)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+
 }
 
 
