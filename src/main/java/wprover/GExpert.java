@@ -90,6 +90,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     public static I18n i18n;
 
+    public static gprover.Cons conclusion = null; // Temporary fix for storing conclusion with == in GGB import
+
     public GExpert() {
         super();  //GAPPLET.
         if (CMisc.isApplication())

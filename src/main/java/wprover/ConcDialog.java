@@ -450,6 +450,7 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         if (command.equalsIgnoreCase("OK")) {
             returnValue = CONCLUSION_OK;
             this.setVisible(false);
+            GExpert.conclusion = null; // reset
             if (type == 0)
                 gxInstance.getpprove().set_conclusion(getProve(), this.checkValid());
             else
@@ -689,7 +690,7 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         return c;
     }
 
-    public String getSpecilaAngle() {
+    public String getSpecialAngle() {
         Object o = bx1.getSelectedItem();
         if (o != null)
             return o.toString();

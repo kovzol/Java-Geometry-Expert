@@ -1264,8 +1264,14 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         tree.setVisible(false);
 
         Prover.set_gterm(gt);
-        gprover.setProve();
-        gprover.start();
+
+        // Threaded version:
+        // gprover.setProve();
+        // gprover.start();
+
+        // Non-threaded version:
+        boolean t = Prover.prove();
+        displayGDDProve(t);
     }
 
     public void displayGDDProve(boolean t) {
@@ -1316,6 +1322,12 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     public void prove() {
         if (!check_construction_finished()) return;
+
+        // Override conclusion from GGB import:
+        if (GExpert.conclusion != null) {
+            gxInstance.getpprove().set_conclusion(GExpert.conclusion, true);
+        }
+
         String s1 = tbar.getProveMethodSelected();
         if (s1.equals("GDD")) {
             proveGdd();

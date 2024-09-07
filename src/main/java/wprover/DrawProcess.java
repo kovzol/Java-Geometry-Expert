@@ -11614,6 +11614,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                         intersectionPoint.m_name = name;
                                                         points.add(intersectionPoint);
                                                         pointsGgb.add(new GgbPoint(name));
+                                                        this.addPointToList(intersectionPoint);
+                                                        this.UndoAdded(intersectionPoint.getDescription());
                                                     } else { // One of the inputs should be a circle.
                                                         Circle circle1 = getCircle(circles, nameO1);
                                                         Circle circle2 = getCircle(circles, nameO2);
@@ -11625,18 +11627,24 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                             intersectionPoint.m_name = name;
                                                             points.add(intersectionPoint);
                                                             pointsGgb.add(new GgbPoint(name));
+                                                            this.addPointToList(intersectionPoint);
+                                                            this.UndoAdded(intersectionPoint.getDescription());
                                                         } else if (circle1 != null && line2 != null) {
                                                             CPoint intersectionPoint = MeetLCToDefineAPoint(line2, circle1, false,
                                                                     0, 0);
                                                             intersectionPoint.m_name = name;
                                                             points.add(intersectionPoint);
                                                             pointsGgb.add(new GgbPoint(name));
+                                                            this.addPointToList(intersectionPoint);
+                                                            this.UndoAdded(intersectionPoint.getDescription());
                                                         } else if (line1 != null && circle2 != null) {
                                                             CPoint intersectionPoint = MeetLCToDefineAPoint(line1, circle2, false,
                                                                     0, 0);
                                                             intersectionPoint.m_name = name;
                                                             points.add(intersectionPoint);
                                                             pointsGgb.add(new GgbPoint(name));
+                                                            this.addPointToList(intersectionPoint);
+                                                            this.UndoAdded(intersectionPoint.getDescription());
                                                         }
                                                     }
                                                 }
@@ -11716,7 +11724,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
     void handleGGBProve(Element step, ArrayList<CPoint> points,
                         ArrayList<CLine> lines, ArrayList<Circle> circles) {
-
+        GExpert.conclusion = null; // reinitalize
         NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
         NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
         if (inputName.getLength() == 1) {
@@ -11798,7 +11806,9 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                     c.add_pt(p3, 2);
                     c.add_pt(p4, 3);
                     c.set_conc(true);
+                    GExpert.conclusion = c; // working around that some data may be missing here:
                     gxInstance.getpprove().set_conclusion(c, true);
+                    // We add the fully working conclusion later, when the proof is initiated.
                 } else {
                     System.err.println("Unidentified objects in " + parameter);
                 }
