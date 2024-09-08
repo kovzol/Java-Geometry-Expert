@@ -1266,12 +1266,12 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         Prover.set_gterm(gt);
 
         // Threaded version:
-        // gprover.setProve();
-        // gprover.start();
+        gprover.setProve();
+        gprover.start();
 
         // Non-threaded version:
-        boolean t = Prover.prove();
-        displayGDDProve(t);
+        // boolean t = Prover.prove();
+        // displayGDDProve(t);
     }
 
     public void displayGDDProve(boolean t) {
