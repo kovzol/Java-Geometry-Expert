@@ -11518,7 +11518,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                             } else if (step.getAttribute("name").equals("Line")) { // Handle line command
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
                                                 NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
-                                                // TODO: Handle parallel lines as well (Line(Point, Parallel Line)
+                                                // TODO: Handle parallel lines as well (Line(Point, Parallel Line))
                                                 if (inputName.getLength() == 2) { // Line between two points Line(Point,Point)
                                                     String nameLine = outputName.getNamedItem("a0").getTextContent();
                                                     String nameP1 = inputName.getNamedItem("a0").getTextContent();

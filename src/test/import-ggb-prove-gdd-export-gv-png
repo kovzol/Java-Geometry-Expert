@@ -1,0 +1,61 @@
+#!/bin/bash
+# This script runs all .ggb files from ../docs/import/ggb-benchmarks,
+# proves them via the GDD method and saves the proof tree as .gv and .png in ../docs.
+
+# Run this script with
+# xvfb-run -a -s "-screen 0 1280x800x24" ./import-ggb-prove-gdd-export-gv-png
+# to hide the graphical input.
+
+# This script accepts the argument "local" or "snap" to choose
+# the required executable. "local" uses Gradle to recompile the program on each run.
+# "snap" uses the snapcraft installation and considered therefore faster.
+
+BENCHMARKS_FOLDER=../docs/import/ggb-benchmarks # this may be changed on demand
+TIMEOUT=5 # JGEX forgets to quit sometimes, this timeout ensures proper exit
+
+test -x $BENCHMARKS_FOLDER || {
+ echo "No folder $BENCHMARKS_FOLDER exists."
+ echo "Consider downloading some (or all) from e.g. https://github.com/kovzol/geogebra/tree/master/test/scripts/benchmark/prover/tests/true first, then retry."
+ exit 1
+ }
+
+MYDIR=`pwd`
+WARNING_COLOR="\033[91m"
+RESUME_COLOR="\033[0m"
+
+if [ "$1" != "local" -a "$1" != "snap" -a "$1" != "" ]; then
+ echo "Unsupported parameter: $1"
+ exit 2
+ fi
+
+if [ "$1" = "local" -o "$1" = "" ]; then
+ GV_DIR=../docs
+else
+ JGEX_SNAP=`which jgex` && {
+  echo "Using jgex from snap ($JGEX_SNAP)"
+  } || {
+  echo "JGEX is not installed. Consider installing it from https://snapcraft.io/jgex."
+  exit 3
+  }
+ GV_DIR=~/snap/jgex/current/.jgex
+ fi
+
+for FULLNAME in `find $BENCHMARKS_FOLDER -name 'Thales*.ggb' | sort`; do
+ NAME=`basename $FULLNAME .ggb`
+ GV=$GV_DIR/$NAME.gv
+ if [ "$1" = "snap" ]; then
+  /bin/time -o ../docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT jgex -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME > ../docs/$NAME.log 2>&1
+ else
+  pushd ../.. >/dev/null
+  /bin/time -o src/docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT ./gradlew run --args="-p gdd -o $NAME.gv -x $MYDIR/$FULLNAME" > src/docs/$NAME.log
+  popd >/dev/null
+  fi
+ test -s $GV && {
+  dot -Tpng $GV > ../docs/$NAME.png
+  LENGTH=`cat $GV | wc -l`
+  echo "$NAME successful: $LENGTH lines of gv output"
+  } || {
+  PROBLEM=`cat ../docs/$NAME.log | grep "Unimplemented\|Unidentified\|Exception" | head -1`
+  echo -e "$WARNING_COLOR$NAME unsuccessful: $PROBLEM$RESUME_COLOR"
+  }
+ done
