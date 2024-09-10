@@ -1249,6 +1249,11 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             this.createGDDTreePanel();
         }
 
+        // Override conclusion from GGB import:
+        if (GExpert.conclusion != null) {
+            gxInstance.getpprove().set_conclusion(GExpert.conclusion, true);
+        }
+
         GTerm gt = condPane.getTerm();
         if (gt == null || !gt.hasConclusion()) {
             JOptionPane.showMessageDialog(gxInstance, getLanguage("No conclusion has been set!"),
@@ -1265,13 +1270,16 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
         Prover.set_gterm(gt);
 
+        boolean threaded = false; // temporary change because of command-line
         // Threaded version:
-        gprover.setProve();
-        gprover.start();
-
-        // Non-threaded version:
-        // boolean t = Prover.prove();
-        // displayGDDProve(t);
+        if (threaded) {
+            gprover.setProve();
+            gprover.start();
+        } else {
+            // Non-threaded version:
+            boolean t = Prover.prove();
+            displayGDDProve(t);
+        }
     }
 
     public void displayGDDProve(boolean t) {
@@ -1322,11 +1330,6 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     public void prove() {
         if (!check_construction_finished()) return;
-
-        // Override conclusion from GGB import:
-        if (GExpert.conclusion != null) {
-            gxInstance.getpprove().set_conclusion(GExpert.conclusion, true);
-        }
 
         String s1 = tbar.getProveMethodSelected();
         if (s1.equals("GDD")) {

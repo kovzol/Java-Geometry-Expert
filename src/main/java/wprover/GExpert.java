@@ -1275,6 +1275,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         } else if (command.equalsIgnoreCase("Prove")) {
             if (((String) src).equalsIgnoreCase("gdd")) {
                 pprove.proveGdd(); // TODO: Add more provers
+                // Workaround: certain imported GGB conclusions may need
+                // a re-computation. FIXME
+                if (GExpert.conclusion != null)
+                    pprove.proveGdd();
+                GExpert.performCommandLineRequests(this, true);
+
             } else {
                 pprove.prove();
             }
@@ -3008,13 +3014,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
      */
     public static void performCommandLineRequests(GExpert exp, boolean breakOnProve) {
         int commandLineRequests = commandlineCommand.size();
-        for (;
-             commandLineRequestsPerformed < commandLineRequests;
-             commandLineRequestsPerformed++) {
-            exp.sendAction(commandlineCommand.get(commandLineRequestsPerformed),
-                    commandlineSrc.get(commandLineRequestsPerformed));
-            if (breakOnProve && commandlineCommand.get(commandLineRequestsPerformed).equals("Prove")) {
-                break; // Continued later in GProver...
+        while (commandLineRequestsPerformed < commandLineRequests) {
+            commandLineRequestsPerformed++;
+            exp.sendAction(commandlineCommand.get(commandLineRequestsPerformed - 1),
+                    commandlineSrc.get(commandLineRequestsPerformed - 1));
+            if (breakOnProve && commandlineCommand.get(commandLineRequestsPerformed - 1).equals("Prove")) {
+                return; // Continued later in GProver...
             }
         }
     }
