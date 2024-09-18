@@ -11702,6 +11702,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
                                             } else if (step.getAttribute("name").equals("Prove")) {
                                                 handleGGBProve(step, points, lines, circles);
+                                            } else {
+                                                System.out.println("Unsupported command: " + step.getAttribute("name"));
                                             }
                                             break;
                                     }
@@ -11769,6 +11771,19 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 c.add_pt(l2.getPoint(1), 3);
                 c.set_conc(true);
                 gxInstance.getpprove().set_conclusion(c, true);
+            } else if (parameter.startsWith("AreCongruent")) {
+                int condtype = CST.getClu_D("Equal Distance");
+                Cons c = new Cons(condtype);
+                String[] parameterList = getParameterList(parameter);
+                CLine l1 = getCLine(lines, parameterList[0]);
+                CLine l2 = getCLine(lines, parameterList[1]);
+                c.add_pt(l1.getPoint(0), 0);
+                c.add_pt(l1.getPoint(1), 1);
+                c.add_pt(l2.getPoint(0), 2);
+                c.add_pt(l2.getPoint(1), 3);
+                c.set_conc(true);
+                GExpert.conclusion = c; // working around that some data may be missing here:
+                gxInstance.getpprove().set_conclusion(c, true);
             } else if (parameter.contains("∥")) {
                 int condtype = CST.getClu_D("Parallel");
                 String parameter1 = parameter.substring(0, parameter.indexOf("∥")).trim();
@@ -11799,6 +11814,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                     p4 = s2.getSecondPoint(p3);
                     condtype = CST.getClu_D("Equal Distance");
                 }
+                // To implement:
+                // k / l ≟ m / n
                 if (condtype != -1) {
                     Cons c = new Cons(condtype);
                     c.add_pt(p1, 0);
@@ -11866,6 +11883,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 c.add_pt(l2.getPoint(1), 3);
                 c.set_conc(true);
                 gxInstance.getpprove().set_conclusion(c, true);
+            } else {
+                System.out.println("Unimplemented: " + parameter);
             }
         }
     }
