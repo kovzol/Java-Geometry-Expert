@@ -11305,6 +11305,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         ArrayList<CLine> lines = new ArrayList<>();
         ArrayList<Circle> circles = new ArrayList<>();
         ArrayList<CAngle> angles = new ArrayList<>();
+        HashMap<String, Cons> exprs = new HashMap<>();
 
         // Save names of all the points
         ArrayList<GgbPoint> pointsGgb = new ArrayList<>();
@@ -11614,6 +11615,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     UndoStruct u = this.UndoAdded("Bline " + lineBisector.getDescription());
                                                     u.addObject(lineBisector);
                                                     lineBisector.m_name = nameLineBisector;
+                                                    // This may be insufficient if the line bisector is later referenced.
+                                                    // FIXME: Somehow two of its points should be created automatically.
                                                 }
                                                 } else if (step.getAttribute("name").equals("Intersect")) { // Handle intersect command
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
@@ -11718,12 +11721,70 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 }
 
                                             } else if (step.getAttribute("name").equals("Prove")) {
-                                                handleGGBProve(step, points, lines, circles);
+                                                handleGGBProve(step, points, lines, circles, exprs);
                                             } else if (step.getAttribute("name").equals("Point")) {
                                                 System.out.println("Command 'Point' should be handled automatically");
-                                            } else {
+                                            } else if (step.getAttribute("name").equals("AreParallel")) {
+                                                int condtype = CST.getClu_D("Parallel");
+                                                Cons c = new Cons(condtype);
+                                                NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
+                                                NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
+                                                String name = outputName.getNamedItem("a0").getTextContent();
+                                                String nameLine1 = inputName.getNamedItem("a0").getTextContent();
+                                                String nameLine2 = inputName.getNamedItem("a1").getTextContent();
+                                                CLine l1 = getCLine(lines, nameLine1);
+                                                CLine l2 = getCLine(lines, nameLine2);
+                                                c.add_pt(l1.getPoint(0), 0);
+                                                c.add_pt(l1.getPoint(1), 1);
+                                                c.add_pt(l2.getPoint(0), 2);
+                                                c.add_pt(l2.getPoint(1), 3);
+                                                c.set_conc(true);
+                                                exprs.put(name, c);
+                                            } else if (step.getAttribute("name").equals("ArePerpendicular")) {
+                                                int condtype = CST.getClu_D("Perpendicular");
+                                                Cons c = new Cons(condtype);
+                                                NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
+                                                NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
+                                                String name = outputName.getNamedItem("a0").getTextContent();
+                                                String nameLine1 = inputName.getNamedItem("a0").getTextContent();
+                                                String nameLine2 = inputName.getNamedItem("a1").getTextContent();
+                                                CLine l1 = getCLine(lines, nameLine1);
+                                                CLine l2 = getCLine(lines, nameLine2);
+                                                c.add_pt(l1.getPoint(0), 0);
+                                                c.add_pt(l1.getPoint(1), 1);
+                                                c.add_pt(l2.getPoint(0), 2);
+                                                c.add_pt(l2.getPoint(1), 3);
+                                                c.set_conc(true);
+                                                exprs.put(name, c);
+                                            } else if (step.getAttribute("name").equals("AreCongruent")) {
+                                                int condtype = CST.getClu_D("Equal Distance");
+                                                Cons c = new Cons(condtype);
+                                                NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
+                                                NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
+                                                String name = outputName.getNamedItem("a0").getTextContent();
+                                                String nameLine1 = inputName.getNamedItem("a0").getTextContent();
+                                                String nameLine2 = inputName.getNamedItem("a1").getTextContent();
+                                                CLine l1 = getCLine(lines, nameLine1);
+                                                CLine l2 = getCLine(lines, nameLine2);
+                                                c.add_pt(l1.getPoint(0), 0);
+                                                c.add_pt(l1.getPoint(1), 1);
+                                                c.add_pt(l2.getPoint(0), 2);
+                                                c.add_pt(l2.getPoint(1), 3);
+                                                c.set_conc(true);
+                                                GExpert.conclusion = c; // working around that some data may be missing here
+                                                exprs.put(name, c);
+                                            }
+                                            else {
                                                 System.out.println("Unsupported command: " + step.getAttribute("name"));
                                             }
+                                            break;
+                                        case "expression":
+                                            String label = step.getAttribute("label");
+                                            String expr = step.getAttribute("exp");
+                                            // getConclusion() covers a bigger number of cases,
+                                            // but it should be safe to use it in general:
+                                            Cons c = getConclusion(expr, points, lines, circles);
+                                            exprs.put(label, c);
                                             break;
                                     }
                                 }
@@ -11754,6 +11815,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
     Cons getConclusion(String parameter, ArrayList<CPoint> points,
                        ArrayList<CLine> lines, ArrayList<Circle> circles) {
         Cons c = null;
+        // input (String): "AreCollinear[F, G, H]"
+        // output (Cons): SHOW: COLLINEAR F G H
         if (parameter.startsWith("AreCollinear")) {
             int condtype = CST.getClu_D("Collinear");
             c = new Cons(condtype);
@@ -11908,15 +11971,18 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
     }
 
     void handleGGBProve(Element step, ArrayList<CPoint> points,
-                        ArrayList<CLine> lines, ArrayList<Circle> circles) {
+                        ArrayList<CLine> lines, ArrayList<Circle> circles, HashMap<String, Cons> exprs) {
         GExpert.conclusion = null; // reinitalize
         NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
         NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
         if (inputName.getLength() == 1) {
+            Cons c = null;
             String parameter = inputName.getNamedItem("a0").getTextContent();
-            // input (String): "AreCollinear[F, G, H]"
-            // output (Cons): SHOW: COLLINEAR F G H
-            Cons c = getConclusion(parameter, points, lines, circles);
+            if (exprs.containsKey(parameter)) {
+                c = exprs.get(parameter);
+            } else {
+                c = getConclusion(parameter, points, lines, circles);
+            }
             gxInstance.getpprove().set_conclusion(c, true);
         }
     }
