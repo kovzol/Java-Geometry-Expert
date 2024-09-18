@@ -11743,6 +11743,170 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         return true;
     }
 
+    /**
+     * Get conclusion (and eventually set it globally if a workaround is required).
+     * @param parameter input string, e.g. AreCollinear(A, B, C)
+     * @param points
+     * @param lines
+     * @param circles
+     * @return the conclusion in JGEX format
+     */
+    Cons getConclusion(String parameter, ArrayList<CPoint> points,
+                       ArrayList<CLine> lines, ArrayList<Circle> circles) {
+        Cons c = null;
+        if (parameter.startsWith("AreCollinear")) {
+            int condtype = CST.getClu_D("Collinear");
+            c = new Cons(condtype);
+            String[] parameterList = getParameterList(parameter);
+            CPoint p1 = getCPoint(points, parameterList[0]);
+            CPoint p2 = getCPoint(points, parameterList[1]);
+            CPoint p3 = getCPoint(points, parameterList[2]);
+            c.add_pt(p1, 0);
+            c.add_pt(p2, 1);
+            c.add_pt(p3, 2);
+            c.set_conc(true);
+        } else if (parameter.startsWith("AreConcyclic")) {
+            int condtype = CST.getClu_D("Cyclic");
+            c = new Cons(condtype);
+            String[] parameterList = getParameterList(parameter);
+            CPoint p1 = getCPoint(points, parameterList[0]);
+            CPoint p2 = getCPoint(points, parameterList[1]);
+            CPoint p3 = getCPoint(points, parameterList[2]);
+            CPoint p4 = getCPoint(points, parameterList[3]);
+            c.add_pt(p1, 0);
+            c.add_pt(p2, 1);
+            c.add_pt(p3, 2);
+            c.add_pt(p4, 3);
+            c.set_conc(true);
+        } else if (parameter.startsWith("AreParallel")) {
+            int condtype = CST.getClu_D("Parallel");
+            c = new Cons(condtype);
+            String[] parameterList = getParameterList(parameter);
+            CLine l1 = getCLine(lines, parameterList[0]);
+            CLine l2 = getCLine(lines, parameterList[1]);
+            c.add_pt(l1.getPoint(0), 0);
+            c.add_pt(l1.getPoint(1), 1);
+            c.add_pt(l2.getPoint(0), 2);
+            c.add_pt(l2.getPoint(1), 3);
+            c.set_conc(true);
+        } else if (parameter.startsWith("AreCongruent")) {
+            int condtype = CST.getClu_D("Equal Distance");
+            c = new Cons(condtype);
+            String[] parameterList = getParameterList(parameter);
+            CLine l1 = getCLine(lines, parameterList[0]);
+            CLine l2 = getCLine(lines, parameterList[1]);
+            c.add_pt(l1.getPoint(0), 0);
+            c.add_pt(l1.getPoint(1), 1);
+            c.add_pt(l2.getPoint(0), 2);
+            c.add_pt(l2.getPoint(1), 3);
+            c.set_conc(true);
+            GExpert.conclusion = c; // working around that some data may be missing here:
+        } else if (parameter.contains("∥")) {
+            int condtype = CST.getClu_D("Parallel");
+            String parameter1 = parameter.substring(0, parameter.indexOf("∥")).trim();
+            String parameter2 = parameter.substring(parameter.indexOf("∥") + 1).trim();
+            c = new Cons(condtype);
+            CLine l1 = getCLine(lines, parameter1);
+            CLine l2 = getCLine(lines, parameter2);
+            c.add_pt(l1.getPoint(0), 0);
+            c.add_pt(l1.getPoint(1), 1);
+            c.add_pt(l2.getPoint(0), 2);
+            c.add_pt(l2.getPoint(1), 3);
+            c.set_conc(true);
+        } else if (parameter.contains("≟")) {
+            int condtype = -1; // dummy init
+            String parameter1 = parameter.substring(0, parameter.indexOf("≟")).trim();
+            String parameter2 = parameter.substring(parameter.indexOf("≟") + 1).trim();
+            CPoint p1 = null;
+            CPoint p2 = null;
+            CPoint p3 = null;
+            CPoint p4 = null;
+            CLine s1 = getCLine(lines, parameter1);
+            CLine s2 = getCLine(lines, parameter2);
+            if (s1 != null && s2 != null) {
+                p1 = s1.getfirstPoint();
+                p2 = s1.getSecondPoint(p1);
+                p3 = s2.getfirstPoint();
+                p4 = s2.getSecondPoint(p3);
+                condtype = CST.getClu_D("Equal Distance");
+            }
+            // To implement:
+            // k / l ≟ m / n
+            // Segment[D, F] / Segment[F, A] ≟ 1 / 2
+            // (2 * f) ≟ a
+            if (condtype != -1) {
+                c = new Cons(condtype);
+                c.add_pt(p1, 0);
+                c.add_pt(p2, 1);
+                c.add_pt(p3, 2);
+                c.add_pt(p4, 3);
+                c.set_conc(true);
+                GExpert.conclusion = c; // working around that some data may be missing here:
+                // We add the fully working conclusion later, when the proof is initiated.
+            } else {
+                System.err.println("Unidentified objects in " + parameter);
+            }
+        } else if (parameter.contains("∈")) {
+            int condtype = -1; // dummy init
+            String parameterPoint = parameter.substring(0, parameter.indexOf("∈")).trim();
+            String parameterRest = parameter.substring(parameter.indexOf("∈") + 1).trim();
+            CPoint p2 = null;
+            CPoint p3 = null;
+            CPoint p4 = null;
+            CPoint p1 = getCPoint(points, parameterPoint);
+            for (CLine l : lines) {
+                if (l.getname().equals(parameterRest)) {
+                    p2 = l.getfirstPoint();
+                    p3 = l.getSecondPoint(p2);
+                    condtype = CST.getClu_D("Collinear");
+                }
+            }
+            for (Circle ci : circles) {
+                if (ci.getname().equals(parameterRest)) {
+                    if (ci.points.size() < 3) {
+                        p2 = ci.o;
+                        p3 = ci.getP(0);
+                        p4 = ci.o;
+                        condtype = CST.getClu_D("Equal distance");
+                    } else { // we assume that there are at least 3 points
+                        p2 = ci.getP(0);
+                        p3 = ci.getP(1);
+                        p4 = ci.getP(2);
+                        condtype = CST.getClu_D("Cyclic");
+                    }
+                }
+            }
+            if (condtype != -1) {
+                c = new Cons(condtype);
+                c.add_pt(p1, 0);
+                c.add_pt(p2, 1);
+                c.add_pt(p3, 2);
+                c.add_pt(p4, 3);
+                c.set_conc(true);
+            } else {
+                System.err.println("Unidentified object: " + parameterRest);
+            }
+        } else if (parameter.contains("⊥")) { // TODO: add also ArePerpendicular[f,g]
+            String parameter1 = parameter.substring(0, parameter.indexOf("⊥")).trim();
+            String parameter2 = parameter.substring(parameter.indexOf("⊥") + 1).trim();
+            CLine l1 = getCLine(lines, parameter1);
+            CLine l2 = getCLine(lines, parameter2);
+            int condtype = CST.getClu_D("Perpendicular");
+            c = new Cons(condtype);
+            c.add_pt(l1.getPoint(0), 0);
+            c.add_pt(l1.getPoint(1), 1);
+            c.add_pt(l2.getPoint(0), 2);
+            c.add_pt(l2.getPoint(1), 3);
+            c.set_conc(true);
+        } else {
+            // To implement:
+            // AreConcurrent[d, e, f]
+            // h
+            System.out.println("Unimplemented: " + parameter);
+        }
+        return c;
+    }
+
     void handleGGBProve(Element step, ArrayList<CPoint> points,
                         ArrayList<CLine> lines, ArrayList<Circle> circles) {
         GExpert.conclusion = null; // reinitalize
@@ -11752,163 +11916,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             String parameter = inputName.getNamedItem("a0").getTextContent();
             // input (String): "AreCollinear[F, G, H]"
             // output (Cons): SHOW: COLLINEAR F G H
-            if (parameter.startsWith("AreCollinear")) {
-                int condtype = CST.getClu_D("Collinear");
-                Cons c = new Cons(condtype);
-                String[] parameterList = getParameterList(parameter);
-                CPoint p1 = getCPoint(points, parameterList[0]);
-                CPoint p2 = getCPoint(points, parameterList[1]);
-                CPoint p3 = getCPoint(points, parameterList[2]);
-                c.add_pt(p1, 0);
-                c.add_pt(p2, 1);
-                c.add_pt(p3, 2);
-                c.set_conc(true);
-                gxInstance.getpprove().set_conclusion(c, true);
-            } else if (parameter.startsWith("AreConcyclic")) {
-                int condtype = CST.getClu_D("Cyclic");
-                Cons c = new Cons(condtype);
-                String[] parameterList = getParameterList(parameter);
-                CPoint p1 = getCPoint(points, parameterList[0]);
-                CPoint p2 = getCPoint(points, parameterList[1]);
-                CPoint p3 = getCPoint(points, parameterList[2]);
-                CPoint p4 = getCPoint(points, parameterList[3]);
-                c.add_pt(p1, 0);
-                c.add_pt(p2, 1);
-                c.add_pt(p3, 2);
-                c.add_pt(p4, 3);
-                c.set_conc(true);
-                gxInstance.getpprove().set_conclusion(c, true);
-            } else if (parameter.startsWith("AreParallel")) {
-                int condtype = CST.getClu_D("Parallel");
-                Cons c = new Cons(condtype);
-                String[] parameterList = getParameterList(parameter);
-                CLine l1 = getCLine(lines, parameterList[0]);
-                CLine l2 = getCLine(lines, parameterList[1]);
-                c.add_pt(l1.getPoint(0), 0);
-                c.add_pt(l1.getPoint(1), 1);
-                c.add_pt(l2.getPoint(0), 2);
-                c.add_pt(l2.getPoint(1), 3);
-                c.set_conc(true);
-                gxInstance.getpprove().set_conclusion(c, true);
-            } else if (parameter.startsWith("AreCongruent")) {
-                int condtype = CST.getClu_D("Equal Distance");
-                Cons c = new Cons(condtype);
-                String[] parameterList = getParameterList(parameter);
-                CLine l1 = getCLine(lines, parameterList[0]);
-                CLine l2 = getCLine(lines, parameterList[1]);
-                c.add_pt(l1.getPoint(0), 0);
-                c.add_pt(l1.getPoint(1), 1);
-                c.add_pt(l2.getPoint(0), 2);
-                c.add_pt(l2.getPoint(1), 3);
-                c.set_conc(true);
-                GExpert.conclusion = c; // working around that some data may be missing here:
-                gxInstance.getpprove().set_conclusion(c, true);
-            } else if (parameter.contains("∥")) {
-                int condtype = CST.getClu_D("Parallel");
-                String parameter1 = parameter.substring(0, parameter.indexOf("∥")).trim();
-                String parameter2 = parameter.substring(parameter.indexOf("∥") + 1).trim();
-                Cons c = new Cons(condtype);
-                CLine l1 = getCLine(lines, parameter1);
-                CLine l2 = getCLine(lines, parameter2);
-                c.add_pt(l1.getPoint(0), 0);
-                c.add_pt(l1.getPoint(1), 1);
-                c.add_pt(l2.getPoint(0), 2);
-                c.add_pt(l2.getPoint(1), 3);
-                c.set_conc(true);
-                gxInstance.getpprove().set_conclusion(c, true);
-            } else if (parameter.contains("≟")) {
-                int condtype = -1; // dummy init
-                String parameter1 = parameter.substring(0, parameter.indexOf("≟")).trim();
-                String parameter2 = parameter.substring(parameter.indexOf("≟") + 1).trim();
-                CPoint p1 = null;
-                CPoint p2 = null;
-                CPoint p3 = null;
-                CPoint p4 = null;
-                CLine s1 = getCLine(lines, parameter1);
-                CLine s2 = getCLine(lines, parameter2);
-                if (s1 != null && s2 != null) {
-                    p1 = s1.getfirstPoint();
-                    p2 = s1.getSecondPoint(p1);
-                    p3 = s2.getfirstPoint();
-                    p4 = s2.getSecondPoint(p3);
-                    condtype = CST.getClu_D("Equal Distance");
-                }
-                // To implement:
-                // k / l ≟ m / n
-                // Segment[D, F] / Segment[F, A] ≟ 1 / 2
-                if (condtype != -1) {
-                    Cons c = new Cons(condtype);
-                    c.add_pt(p1, 0);
-                    c.add_pt(p2, 1);
-                    c.add_pt(p3, 2);
-                    c.add_pt(p4, 3);
-                    c.set_conc(true);
-                    GExpert.conclusion = c; // working around that some data may be missing here:
-                    gxInstance.getpprove().set_conclusion(c, true);
-                    // We add the fully working conclusion later, when the proof is initiated.
-                } else {
-                    System.err.println("Unidentified objects in " + parameter);
-                }
-            } else if (parameter.contains("∈")) {
-                int condtype = -1; // dummy init
-                String parameterPoint = parameter.substring(0, parameter.indexOf("∈")).trim();
-                String parameterRest = parameter.substring(parameter.indexOf("∈") + 1).trim();
-                CPoint p2 = null;
-                CPoint p3 = null;
-                CPoint p4 = null;
-                CPoint p1 = getCPoint(points, parameterPoint);
-                for (CLine l : lines) {
-                    if (l.getname().equals(parameterRest)) {
-                        p2 = l.getfirstPoint();
-                        p3 = l.getSecondPoint(p2);
-                        condtype = CST.getClu_D("Collinear");
-                    }
-                }
-                for (Circle c : circles) {
-                    if (c.getname().equals(parameterRest)) {
-                        if (c.points.size() < 3) {
-                            p2 = c.o;
-                            p3 = c.getP(0);
-                            p4 = c.o;
-                            condtype = CST.getClu_D("Equal distance");
-                        } else { // we assume that there are at least 3 points
-                            p2 = c.getP(0);
-                            p3 = c.getP(1);
-                            p4 = c.getP(2);
-                            condtype = CST.getClu_D("Cyclic");
-                        }
-                    }
-                }
-                if (condtype != -1) {
-                    Cons c = new Cons(condtype);
-                    c.add_pt(p1, 0);
-                    c.add_pt(p2, 1);
-                    c.add_pt(p3, 2);
-                    c.add_pt(p4, 3);
-                    c.set_conc(true);
-                    gxInstance.getpprove().set_conclusion(c, true);
-                } else {
-                    System.err.println("Unidentified object: " + parameterRest);
-                }
-            } else if (parameter.contains("⊥")) { // TODO: add also ArePerpendicular[f,g]
-                String parameter1 = parameter.substring(0, parameter.indexOf("⊥")).trim();
-                String parameter2 = parameter.substring(parameter.indexOf("⊥") + 1).trim();
-                CLine l1 = getCLine(lines, parameter1);
-                CLine l2 = getCLine(lines, parameter2);
-                int condtype = CST.getClu_D("Perpendicular");
-                Cons c = new Cons(condtype);
-                c.add_pt(l1.getPoint(0), 0);
-                c.add_pt(l1.getPoint(1), 1);
-                c.add_pt(l2.getPoint(0), 2);
-                c.add_pt(l2.getPoint(1), 3);
-                c.set_conc(true);
-                gxInstance.getpprove().set_conclusion(c, true);
-            } else {
-                // To implement:
-                // AreConcurrent[d, e, f]
-                // h
-                System.out.println("Unimplemented: " + parameter);
-            }
+            Cons c = getConclusion(parameter, points, lines, circles);
+            gxInstance.getpprove().set_conclusion(c, true);
         }
     }
 
