@@ -11515,7 +11515,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                         this.UndoAdded(ln.getDescription());
                                                     }
                                                 }
-                                            } else if (step.getAttribute("name").equals("Line")) { // Handle line command
+                                            } else if (step.getAttribute("name").equals("Line") ||
+                                                    step.getAttribute("name").equals("Ray")) { // Handle line-type commands
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
                                                 NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
                                                 // TODO: Handle parallel lines as well (Line(Point, Parallel Line))
