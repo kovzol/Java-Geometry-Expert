@@ -40,7 +40,7 @@ else
  GV_DIR=~/snap/jgex/current/.jgex
  fi
 
-for FULLNAME in `find $BENCHMARKS_FOLDER -name 'Thales*.ggb' | sort`; do
+for FULLNAME in `find $BENCHMARKS_FOLDER -name '*.ggb' | sort`; do
  NAME=`basename $FULLNAME .ggb`
  GV=$GV_DIR/$NAME.gv
  if [ "$1" = "snap" ]; then
