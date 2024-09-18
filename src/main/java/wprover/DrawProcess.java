@@ -11579,8 +11579,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                             } else if (step.getAttribute("name").equals("LineBisector")) {
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
                                                 NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
+                                                String nameLineBisector = outputName.getNamedItem("a0").getTextContent();
                                                 if (inputName.getLength() == 1) {
-                                                    String nameLineBisector = outputName.getNamedItem("a0").getTextContent();
                                                     String nameLine = inputName.getNamedItem("a0").getTextContent();
                                                     linesGgb.add(new GgbLine(nameLineBisector));
                                                     CLine origLine = getCLine(lines, nameLine);
@@ -11597,9 +11597,25 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     u.addObject(lineBisector);
                                                     lineBisector.m_name=nameLineBisector;
                                                     addCTMark(origLine, lineBisector);
-
+                                                } else if (inputName.getLength() == 2) {
+                                                    // TODO: Unify this with the previous case:
+                                                    String namePoint1 = inputName.getNamedItem("a0").getTextContent();
+                                                    String namePoint2 = inputName.getNamedItem("a1").getTextContent();
+                                                    linesGgb.add(new GgbLine(nameLineBisector));
+                                                    CLine lineBisector = new CLine(CLine.BLine);
+                                                    lineBisector.ext_type = 2; // line, not a segment (0)
+                                                    CPoint p1 = getCPoint(points, namePoint1);
+                                                    CPoint p2 = getCPoint(points, namePoint2);
+                                                    Constraint c = new Constraint(Constraint.BLINE, lineBisector, p1, p2);
+                                                    lineBisector.addconstraint(c);
+                                                    this.addLineToList(lineBisector);
+                                                    this.addConstraintToList(c);
+                                                    lines.add(lineBisector);
+                                                    UndoStruct u = this.UndoAdded("Bline " + lineBisector.getDescription());
+                                                    u.addObject(lineBisector);
+                                                    lineBisector.m_name = nameLineBisector;
                                                 }
-                                            } else if (step.getAttribute("name").equals("Intersect")) { // Handle intersect command
+                                                } else if (step.getAttribute("name").equals("Intersect")) { // Handle intersect command
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
                                                 NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
                                                 // Intersect two objects
@@ -11703,6 +11719,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
                                             } else if (step.getAttribute("name").equals("Prove")) {
                                                 handleGGBProve(step, points, lines, circles);
+                                            } else if (step.getAttribute("name").equals("Point")) {
+                                                System.out.println("Command 'Point' should be handled automatically");
                                             } else {
                                                 System.out.println("Unsupported command: " + step.getAttribute("name"));
                                             }
@@ -11817,6 +11835,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 }
                 // To implement:
                 // k / l ≟ m / n
+                // Segment[D, F] / Segment[F, A] ≟ 1 / 2
                 if (condtype != -1) {
                     Cons c = new Cons(condtype);
                     c.add_pt(p1, 0);
@@ -11885,6 +11904,9 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 c.set_conc(true);
                 gxInstance.getpprove().set_conclusion(c, true);
             } else {
+                // To implement:
+                // AreConcurrent[d, e, f]
+                // h
                 System.out.println("Unimplemented: " + parameter);
             }
         }
