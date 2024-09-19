@@ -30,6 +30,10 @@ if [ "$1" != "local" -a "$1" != "snap" -a "$1" != "" ]; then
 
 if [ "$1" = "local" -o "$1" = "" ]; then
  GV_DIR=../docs
+ pushd ../.. >/dev/null
+ echo "Building jgex via Gradle first (silently)"
+ ./gradlew -q installDist
+ popd >/dev/null
 else
  JGEX_SNAP=`which jgex` && {
   echo "Using jgex from snap ($JGEX_SNAP)"
@@ -47,7 +51,8 @@ for FULLNAME in `find $BENCHMARKS_FOLDER -name '*.ggb' | sort`; do
   /bin/time -o ../docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT jgex -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME > ../docs/$NAME.log 2>&1
  else
   pushd ../.. >/dev/null
-  /bin/time -o src/docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT ./gradlew run --args="-p gdd -o $NAME.gv -x $MYDIR/$FULLNAME" > src/docs/$NAME.log
+  RUNTIME=`pwd`/build/install/jgex/bin/Java-Geometry-Expert
+  /bin/time -o src/docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT $RUNTIME -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME > src/docs/$NAME.log 2>&1
   popd >/dev/null
   fi
  test -s $GV && {
