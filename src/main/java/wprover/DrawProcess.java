@@ -11732,7 +11732,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 String name = outputName.getNamedItem("a0").getTextContent();
                                                 String nameLine1 = inputName.getNamedItem("a0").getTextContent();
                                                 String nameLine2 = inputName.getNamedItem("a1").getTextContent();
-                                                setConclusionParametersLineLine(points, lines, c, nameLine1, nameLine2);
+                                                setConclusionParameters2Lines(points, lines, c, nameLine1, nameLine2);
                                                 c.set_conc(true);
                                                 exprs.put(name, c);
                                             } else if (step.getAttribute("name").equals("ArePerpendicular")) {
@@ -11743,7 +11743,19 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 String name = outputName.getNamedItem("a0").getTextContent();
                                                 String nameLine1 = inputName.getNamedItem("a0").getTextContent();
                                                 String nameLine2 = inputName.getNamedItem("a1").getTextContent();
-                                                setConclusionParametersLineLine(points, lines, c, nameLine1, nameLine2);
+                                                setConclusionParameters2Lines(points, lines, c, nameLine1, nameLine2);
+                                                c.set_conc(true);
+                                                exprs.put(name, c);
+                                            } else if (step.getAttribute("name").equals("AreCollinear")) {
+                                                int condtype = CST.getClu_D("Collinear");
+                                                Cons c = new Cons(condtype);
+                                                NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
+                                                NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
+                                                String name = outputName.getNamedItem("a0").getTextContent();
+                                                String namePoint1 = inputName.getNamedItem("a0").getTextContent();
+                                                String namePoint2 = inputName.getNamedItem("a1").getTextContent();
+                                                String namePoint3 = inputName.getNamedItem("a2").getTextContent();
+                                                setConclusionParameters3Points(points, c, namePoint1, namePoint2, namePoint3);
                                                 c.set_conc(true);
                                                 exprs.put(name, c);
                                             } else if (step.getAttribute("name").equals("AreCongruent")) {
@@ -11754,7 +11766,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 String name = outputName.getNamedItem("a0").getTextContent();
                                                 String nameLine1 = inputName.getNamedItem("a0").getTextContent();
                                                 String nameLine2 = inputName.getNamedItem("a1").getTextContent();
-                                                setConclusionParametersLineLine(points, lines, c, nameLine1, nameLine2);
+                                                setConclusionParameters2Lines(points, lines, c, nameLine1, nameLine2);
                                                 c.set_conc(true);
                                                 GExpert.conclusion = c; // working around that some data may be missing here
                                                 exprs.put(name, c);
@@ -11806,43 +11818,33 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             int condtype = CST.getClu_D("Collinear");
             c = new Cons(condtype);
             String[] parameterList = getParameterList(parameter);
-            CPoint p1 = getCPoint(points, parameterList[0]);
-            CPoint p2 = getCPoint(points, parameterList[1]);
-            CPoint p3 = getCPoint(points, parameterList[2]);
-            c.add_pt(p1, 0);
-            c.add_pt(p2, 1);
-            c.add_pt(p3, 2);
+            setConclusionParameters3Points(points, c, parameterList[0], parameterList[1],
+                    parameterList[2]);
             c.set_conc(true);
         } else if (parameter.startsWith("AreConcyclic")) {
             int condtype = CST.getClu_D("Cyclic");
             c = new Cons(condtype);
             String[] parameterList = getParameterList(parameter);
-            CPoint p1 = getCPoint(points, parameterList[0]);
-            CPoint p2 = getCPoint(points, parameterList[1]);
-            CPoint p3 = getCPoint(points, parameterList[2]);
-            CPoint p4 = getCPoint(points, parameterList[3]);
-            c.add_pt(p1, 0);
-            c.add_pt(p2, 1);
-            c.add_pt(p3, 2);
-            c.add_pt(p4, 3);
+            setConclusionParameters4Points(points, c, parameterList[0], parameterList[1],
+                    parameterList[2], parameterList[3]);
             c.set_conc(true);
         } else if (parameter.startsWith("AreParallel")) {
             int condtype = CST.getClu_D("Parallel");
             c = new Cons(condtype);
             String[] parameterList = getParameterList(parameter);
-            setConclusionParametersLineLine(points, lines, c, parameterList[0], parameterList[1]);
+            setConclusionParameters2Lines(points, lines, c, parameterList[0], parameterList[1]);
             c.set_conc(true);
         } else if (parameter.startsWith("ArePerpendicular")) {
             int condtype = CST.getClu_D("Perpendicular");
             c = new Cons(condtype);
             String[] parameterList = getParameterList(parameter);
-            setConclusionParametersLineLine(points, lines, c, parameterList[0], parameterList[1]);
+            setConclusionParameters2Lines(points, lines, c, parameterList[0], parameterList[1]);
             c.set_conc(true);
         } else if (parameter.startsWith("AreCongruent")) {
             int condtype = CST.getClu_D("Equal Distance");
             c = new Cons(condtype);
             String[] parameterList = getParameterList(parameter);
-            setConclusionParametersLineLine(points, lines, c, parameterList[0], parameterList[1]);
+            setConclusionParameters2Lines(points, lines, c, parameterList[0], parameterList[1]);
             c.set_conc(true);
             GExpert.conclusion = c; // working around that some data may be missing here:
         } else if (parameter.contains("∥")) {
@@ -11850,7 +11852,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             String parameter1 = parameter.substring(0, parameter.indexOf("∥")).trim();
             String parameter2 = parameter.substring(parameter.indexOf("∥") + 1).trim();
             c = new Cons(condtype);
-            setConclusionParametersLineLine(points, lines, c, parameter1, parameter2);
+            setConclusionParameters2Lines(points, lines, c, parameter1, parameter2);
             c.set_conc(true);
         } else if (parameter.contains("≟")) {
             int condtype = -1; // dummy init
@@ -11938,7 +11940,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             String parameter2 = parameter.substring(parameter.indexOf("⊥") + 1).trim();
             int condtype = CST.getClu_D("Perpendicular");
             c = new Cons(condtype);
-            setConclusionParametersLineLine(points, lines, c, parameter1, parameter2);
+            setConclusionParameters2Lines(points, lines, c, parameter1, parameter2);
             c.set_conc(true);
         } else {
             // To implement:
@@ -12006,14 +12008,38 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         return null;
     }
 
-    void setConclusionParametersLineLine(ArrayList<CPoint> points, ArrayList<CLine> lines, Cons c, String nameLine1,
-                                         String nameLine2) {
+    void setConclusionParameters2Lines(ArrayList<CPoint> points, ArrayList<CLine> lines, Cons c, String nameLine1,
+                                       String nameLine2) {
         CLine l1 = getCLine(lines, nameLine1);
         CLine l2 = getCLine(lines, nameLine2);
         c.add_pt(l1.getPoint(0), 0);
         c.add_pt(l1.getPoint(1), 1);
         c.add_pt(l2.getPoint(0), 2);
         c.add_pt(l2.getPoint(1), 3);
+    }
+
+    void setConclusionParameters3Points(ArrayList<CPoint> points, Cons c, String namePoint1,
+                                         String namePoint2, String namePoint3) {
+
+        CPoint p1 = getCPoint(points, namePoint1);
+        CPoint p2 = getCPoint(points, namePoint2);
+        CPoint p3 = getCPoint(points, namePoint3);
+        c.add_pt(p1, 0);
+        c.add_pt(p2, 1);
+        c.add_pt(p3, 2);
+    }
+
+    void setConclusionParameters4Points(ArrayList<CPoint> points, Cons c, String namePoint1,
+                                        String namePoint2, String namePoint3, String namePoint4) {
+
+        CPoint p1 = getCPoint(points, namePoint1);
+        CPoint p2 = getCPoint(points, namePoint2);
+        CPoint p3 = getCPoint(points, namePoint3);
+        CPoint p4 = getCPoint(points, namePoint4);
+        c.add_pt(p1, 0);
+        c.add_pt(p2, 1);
+        c.add_pt(p3, 2);
+        c.add_pt(p4, 3);
     }
 
 }
