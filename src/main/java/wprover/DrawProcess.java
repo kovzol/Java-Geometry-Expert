@@ -11732,12 +11732,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 String name = outputName.getNamedItem("a0").getTextContent();
                                                 String nameLine1 = inputName.getNamedItem("a0").getTextContent();
                                                 String nameLine2 = inputName.getNamedItem("a1").getTextContent();
-                                                CLine l1 = getCLine(lines, nameLine1);
-                                                CLine l2 = getCLine(lines, nameLine2);
-                                                c.add_pt(l1.getPoint(0), 0);
-                                                c.add_pt(l1.getPoint(1), 1);
-                                                c.add_pt(l2.getPoint(0), 2);
-                                                c.add_pt(l2.getPoint(1), 3);
+                                                setConclusionParametersLineLine(points, lines, c, nameLine1, nameLine2);
                                                 c.set_conc(true);
                                                 exprs.put(name, c);
                                             } else if (step.getAttribute("name").equals("ArePerpendicular")) {
@@ -11748,12 +11743,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 String name = outputName.getNamedItem("a0").getTextContent();
                                                 String nameLine1 = inputName.getNamedItem("a0").getTextContent();
                                                 String nameLine2 = inputName.getNamedItem("a1").getTextContent();
-                                                CLine l1 = getCLine(lines, nameLine1);
-                                                CLine l2 = getCLine(lines, nameLine2);
-                                                c.add_pt(l1.getPoint(0), 0);
-                                                c.add_pt(l1.getPoint(1), 1);
-                                                c.add_pt(l2.getPoint(0), 2);
-                                                c.add_pt(l2.getPoint(1), 3);
+                                                setConclusionParametersLineLine(points, lines, c, nameLine1, nameLine2);
                                                 c.set_conc(true);
                                                 exprs.put(name, c);
                                             } else if (step.getAttribute("name").equals("AreCongruent")) {
@@ -11764,12 +11754,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 String name = outputName.getNamedItem("a0").getTextContent();
                                                 String nameLine1 = inputName.getNamedItem("a0").getTextContent();
                                                 String nameLine2 = inputName.getNamedItem("a1").getTextContent();
-                                                CLine l1 = getCLine(lines, nameLine1);
-                                                CLine l2 = getCLine(lines, nameLine2);
-                                                c.add_pt(l1.getPoint(0), 0);
-                                                c.add_pt(l1.getPoint(1), 1);
-                                                c.add_pt(l2.getPoint(0), 2);
-                                                c.add_pt(l2.getPoint(1), 3);
+                                                setConclusionParametersLineLine(points, lines, c, nameLine1, nameLine2);
                                                 c.set_conc(true);
                                                 GExpert.conclusion = c; // working around that some data may be missing here
                                                 exprs.put(name, c);
@@ -11845,34 +11830,19 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             int condtype = CST.getClu_D("Parallel");
             c = new Cons(condtype);
             String[] parameterList = getParameterList(parameter);
-            CLine l1 = getCLine(lines, parameterList[0]);
-            CLine l2 = getCLine(lines, parameterList[1]);
-            c.add_pt(l1.getPoint(0), 0);
-            c.add_pt(l1.getPoint(1), 1);
-            c.add_pt(l2.getPoint(0), 2);
-            c.add_pt(l2.getPoint(1), 3);
+            setConclusionParametersLineLine(points, lines, c, parameterList[0], parameterList[1]);
             c.set_conc(true);
         } else if (parameter.startsWith("ArePerpendicular")) {
             int condtype = CST.getClu_D("Perpendicular");
             c = new Cons(condtype);
             String[] parameterList = getParameterList(parameter);
-            CLine l1 = getCLine(lines, parameterList[0]);
-            CLine l2 = getCLine(lines, parameterList[1]);
-            c.add_pt(l1.getPoint(0), 0);
-            c.add_pt(l1.getPoint(1), 1);
-            c.add_pt(l2.getPoint(0), 2);
-            c.add_pt(l2.getPoint(1), 3);
+            setConclusionParametersLineLine(points, lines, c, parameterList[0], parameterList[1]);
             c.set_conc(true);
         } else if (parameter.startsWith("AreCongruent")) {
             int condtype = CST.getClu_D("Equal Distance");
             c = new Cons(condtype);
             String[] parameterList = getParameterList(parameter);
-            CLine l1 = getCLine(lines, parameterList[0]);
-            CLine l2 = getCLine(lines, parameterList[1]);
-            c.add_pt(l1.getPoint(0), 0);
-            c.add_pt(l1.getPoint(1), 1);
-            c.add_pt(l2.getPoint(0), 2);
-            c.add_pt(l2.getPoint(1), 3);
+            setConclusionParametersLineLine(points, lines, c, parameterList[0], parameterList[1]);
             c.set_conc(true);
             GExpert.conclusion = c; // working around that some data may be missing here:
         } else if (parameter.contains("∥")) {
@@ -11880,12 +11850,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             String parameter1 = parameter.substring(0, parameter.indexOf("∥")).trim();
             String parameter2 = parameter.substring(parameter.indexOf("∥") + 1).trim();
             c = new Cons(condtype);
-            CLine l1 = getCLine(lines, parameter1);
-            CLine l2 = getCLine(lines, parameter2);
-            c.add_pt(l1.getPoint(0), 0);
-            c.add_pt(l1.getPoint(1), 1);
-            c.add_pt(l2.getPoint(0), 2);
-            c.add_pt(l2.getPoint(1), 3);
+            setConclusionParametersLineLine(points, lines, c, parameter1, parameter2);
             c.set_conc(true);
         } else if (parameter.contains("≟")) {
             int condtype = -1; // dummy init
@@ -11971,14 +11936,9 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         } else if (parameter.contains("⊥")) {
             String parameter1 = parameter.substring(0, parameter.indexOf("⊥")).trim();
             String parameter2 = parameter.substring(parameter.indexOf("⊥") + 1).trim();
-            CLine l1 = getCLine(lines, parameter1);
-            CLine l2 = getCLine(lines, parameter2);
             int condtype = CST.getClu_D("Perpendicular");
             c = new Cons(condtype);
-            c.add_pt(l1.getPoint(0), 0);
-            c.add_pt(l1.getPoint(1), 1);
-            c.add_pt(l2.getPoint(0), 2);
-            c.add_pt(l2.getPoint(1), 3);
+            setConclusionParametersLineLine(points, lines, c, parameter1, parameter2);
             c.set_conc(true);
         } else {
             // To implement:
@@ -12046,7 +12006,14 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         return null;
     }
 
+    void setConclusionParametersLineLine(ArrayList<CPoint> points, ArrayList<CLine> lines, Cons c, String nameLine1,
+                                         String nameLine2) {
+        CLine l1 = getCLine(lines, nameLine1);
+        CLine l2 = getCLine(lines, nameLine2);
+        c.add_pt(l1.getPoint(0), 0);
+        c.add_pt(l1.getPoint(1), 1);
+        c.add_pt(l2.getPoint(0), 2);
+        c.add_pt(l2.getPoint(1), 3);
+    }
 
 }
-
-
