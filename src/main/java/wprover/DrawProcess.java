@@ -11476,7 +11476,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     CLine ln = fd_line(pts[0], pts[1]);
                                                     if (ln != null) {
                                                         ln.addApoint(po);
-                                                        Constraint cs2 = new Constraint(Constraint.PONLINE, po, ln, false);
+                                                        Constraint cs2 = new Constraint(Constraint.PONLINE, po, ln, false); // is this required?
                                                         this.addConstraintToList(cs2);
                                                     }
                                                     this.UndoAdded(po.getname() + ": the midpoint of " + pts[0].m_name + pts[1].m_name);
@@ -11615,9 +11615,47 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     UndoStruct u = this.UndoAdded("Bline " + lineBisector.getDescription());
                                                     u.addObject(lineBisector);
                                                     lineBisector.m_name = nameLineBisector;
-                                                    // This may be insufficient if the line bisector is later referenced.
-                                                    // FIXME: Somehow two of its points should be created automatically.
+
+                                                    // String mpname = namePoint1 + namePoint2 + "midpoint";
+                                                    String mpname = nameLineBisector + "1";
+                                                    CPoint po = this.CreateANewPoint(0, 0, mpname);
+                                                    Constraint cs = new Constraint(Constraint.MIDPOINT, po, p1, p2);
+                                                    CPoint pu = this.addADecidedPointWithUnite(po);
+                                                    if (pu == null) {
+                                                        this.addConstraintToList(cs);
+                                                        this.addPointToList(po);
+                                                        this.UndoAdded(po.getname() + ": the midpoint of " + p1.m_name + p2.m_name);
+                                                    } else {
+                                                        po = pu;
+                                                    }
+                                                    points.add(po);
+
+                                                    // String rpname = namePoint1 + namePoint2 + "rotated";
+                                                    String rpname = nameLineBisector + "2";
+                                                    double xd = po.getx() - p1.getx();
+                                                    double yd = po.gety() - p1.gety();
+                                                    double xe = po.getx() + yd;
+                                                    double ye = po.gety() - xd;
+
+                                                    CPoint pr = this.CreateANewPoint(xe, ye, rpname);
+
+                                                    lineBisector.addApoint(po);
+                                                    lineBisector.addApoint(pr);
+
+                                                    Constraint cr = new Constraint(Constraint.PERPENDICULAR, p1, p2, po, pr);
+                                                    CPoint pq = this.addADecidedPointWithUnite(pr);
+                                                    if (pq == null) {
+                                                        this.addConstraintToList(cr);
+                                                        this.addPointToList(pr);
+                                                        this.UndoAdded(pr.getname() + ": a second point of " + name);
+                                                    } else {
+                                                        pr = pq;
+                                                    }
+
+                                                    points.add(pr);
+
                                                 }
+
                                                 } else if (step.getAttribute("name").equals("Intersect")) { // Handle intersect command
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
                                                 NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
@@ -12012,10 +12050,43 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                        String nameLine2) {
         CLine l1 = getCLine(lines, nameLine1);
         CLine l2 = getCLine(lines, nameLine2);
+        CPoint p1;
+        CPoint p2;
+        CPoint p3;
+        CPoint p4;
+        p1 = l1.getfirstPoint();
+        p2 = l1.getSecondPoint(p1);
+        p3 = l2.getfirstPoint();
+
+        /*
+        if (p3 == null) {
+            String namePoint3 = nameLine2 + "point1";
+            CPoint po = this.CreateANewPoint(0, 0, namePoint3);
+            Constraint cs = new Constraint(Constraint.PONLINE, po, l2);
+            // CPoint pu = this.addADecidedPointWithUnite(po);
+            points.add(po);
+            addPointToList(po);
+            l2.addconstraint(cs);
+            addConstraintToList(cs);
+            this.UndoAdded(po.getname() + ": a point of " + nameLine2);
+        }
+         */
+
+        p4 = l2.getSecondPoint(p3);
+
+
+
+        c.add_pt(p1, 0);
+        c.add_pt(p2, 1);
+        c.add_pt(p3, 2);
+        c.add_pt(p4, 3);
+
+        /*
         c.add_pt(l1.getPoint(0), 0);
         c.add_pt(l1.getPoint(1), 1);
         c.add_pt(l2.getPoint(0), 2);
         c.add_pt(l2.getPoint(1), 3);
+         */
     }
 
     void setConclusionParameters3Points(ArrayList<CPoint> points, Cons c, String namePoint1,
