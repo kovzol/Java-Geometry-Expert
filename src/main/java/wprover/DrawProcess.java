@@ -11581,82 +11581,77 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
                                                 NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
                                                 String nameLineBisector = outputName.getNamedItem("a0").getTextContent();
+                                                CPoint p1 = null;
+                                                CPoint p2 = null;
+                                                CLine origLine = null;
                                                 if (inputName.getLength() == 1) {
                                                     String nameLine = inputName.getNamedItem("a0").getTextContent();
-                                                    linesGgb.add(new GgbLine(nameLineBisector));
-                                                    CLine origLine = getCLine(lines, nameLine);
-                                                    CLine lineBisector = new CLine(CLine.BLine);
-                                                    lineBisector.ext_type = 2; // line, not a segment (0)
-                                                    CPoint p1 = origLine.getPoint(0);
-                                                    CPoint p2 = origLine.getPoint(1);
-                                                    Constraint c = new Constraint(Constraint.BLINE, lineBisector, p1, p2);
-                                                    lineBisector.addconstraint(c);
-                                                    this.addLineToList(lineBisector);
-                                                    this.addConstraintToList(c);
-                                                    lines.add(lineBisector);
-                                                    UndoStruct u = this.UndoAdded("Bline " + lineBisector.getDescription());
-                                                    u.addObject(lineBisector);
-                                                    lineBisector.m_name=nameLineBisector;
-                                                    addCTMark(origLine, lineBisector);
+                                                    origLine = getCLine(lines, nameLine);
+                                                    p1 = origLine.getPoint(0);
+                                                    p2 = origLine.getPoint(1);
                                                 } else if (inputName.getLength() == 2) {
                                                     // TODO: Unify this with the previous case:
                                                     String namePoint1 = inputName.getNamedItem("a0").getTextContent();
                                                     String namePoint2 = inputName.getNamedItem("a1").getTextContent();
-                                                    linesGgb.add(new GgbLine(nameLineBisector));
-                                                    CLine lineBisector = new CLine(CLine.BLine);
-                                                    lineBisector.ext_type = 2; // line, not a segment (0)
-                                                    CPoint p1 = getCPoint(points, namePoint1);
-                                                    CPoint p2 = getCPoint(points, namePoint2);
-                                                    Constraint c = new Constraint(Constraint.BLINE, lineBisector, p1, p2);
-                                                    lineBisector.addconstraint(c);
-                                                    this.addLineToList(lineBisector);
-                                                    this.addConstraintToList(c);
-                                                    lines.add(lineBisector);
-                                                    UndoStruct u = this.UndoAdded("Bline " + lineBisector.getDescription());
-                                                    u.addObject(lineBisector);
-                                                    lineBisector.m_name = nameLineBisector;
+                                                    p1 = getCPoint(points, namePoint1);
+                                                    p2 = getCPoint(points, namePoint2);
+                                                }
+                                                linesGgb.add(new GgbLine(nameLineBisector));
+                                                CLine lineBisector = new CLine(CLine.BLine);
+                                                lineBisector.ext_type = 2; // line, not a segment (0)
 
-                                                    // String mpname = namePoint1 + namePoint2 + "midpoint";
-                                                    String mpname = nameLineBisector + "1";
-                                                    CPoint po = this.CreateANewPoint(0, 0, mpname);
-                                                    Constraint cs = new Constraint(Constraint.MIDPOINT, po, p1, p2);
-                                                    CPoint pu = this.addADecidedPointWithUnite(po);
-                                                    if (pu == null) {
-                                                        this.addConstraintToList(cs);
-                                                        this.addPointToList(po);
-                                                        this.UndoAdded(po.getname() + ": the midpoint of " + p1.m_name + p2.m_name);
-                                                    } else {
-                                                        po = pu;
-                                                    }
-                                                    points.add(po);
+                                                Constraint c = new Constraint(Constraint.BLINE, lineBisector, p1, p2);
+                                                lineBisector.addconstraint(c);
+                                                this.addLineToList(lineBisector);
+                                                this.addConstraintToList(c);
+                                                lines.add(lineBisector);
+                                                UndoStruct u = this.UndoAdded("Bline " + lineBisector.getDescription());
+                                                u.addObject(lineBisector);
+                                                lineBisector.m_name = nameLineBisector;
 
-                                                    // String rpname = namePoint1 + namePoint2 + "rotated";
-                                                    String rpname = nameLineBisector + "2";
-                                                    double xd = po.getx() - p1.getx();
-                                                    double yd = po.gety() - p1.gety();
-                                                    double xe = po.getx() + yd;
-                                                    double ye = po.gety() - xd;
+                                                // String mpname = namePoint1 + namePoint2 + "midpoint";
+                                                String mpname = nameLineBisector + "1";
+                                                CPoint po = this.CreateANewPoint(0, 0, mpname);
+                                                Constraint cs = new Constraint(Constraint.MIDPOINT, po, p1, p2);
+                                                CPoint pu = this.addADecidedPointWithUnite(po);
+                                                if (pu == null) {
+                                                    this.addConstraintToList(cs);
+                                                    this.addPointToList(po);
+                                                    this.UndoAdded(po.getname() + ": the midpoint of " + p1.m_name + p2.m_name);
+                                                } else {
+                                                    po = pu;
+                                                }
+                                                points.add(po);
 
-                                                    CPoint pr = this.CreateANewPoint(xe, ye, rpname);
+                                                // String rpname = namePoint1 + namePoint2 + "rotated";
+                                                String rpname = nameLineBisector + "2";
+                                                double xd = po.getx() - p1.getx();
+                                                double yd = po.gety() - p1.gety();
+                                                double xe = po.getx() + yd;
+                                                double ye = po.gety() - xd;
 
-                                                    lineBisector.addApoint(po);
-                                                    lineBisector.addApoint(pr);
+                                                CPoint pr = this.CreateANewPoint(xe, ye, rpname);
 
-                                                    Constraint cr = new Constraint(Constraint.PERPENDICULAR, p1, p2, po, pr);
-                                                    CPoint pq = this.addADecidedPointWithUnite(pr);
-                                                    if (pq == null) {
-                                                        this.addConstraintToList(cr);
-                                                        this.addPointToList(pr);
-                                                        this.UndoAdded(pr.getname() + ": a second point of " + name);
-                                                    } else {
-                                                        pr = pq;
-                                                    }
+                                                lineBisector.addApoint(po);
+                                                lineBisector.addApoint(pr);
 
-                                                    points.add(pr);
-
+                                                Constraint cr = new Constraint(Constraint.PERPENDICULAR, p1, p2, po, pr);
+                                                CPoint pq = this.addADecidedPointWithUnite(pr);
+                                                if (pq == null) {
+                                                    this.addConstraintToList(cr);
+                                                    this.addPointToList(pr);
+                                                    this.UndoAdded(pr.getname() + ": a second point of " + name);
+                                                } else {
+                                                    pr = pq;
                                                 }
 
-                                                } else if (step.getAttribute("name").equals("Intersect")) { // Handle intersect command
+                                                points.add(pr);
+
+                                                if (inputName.getLength() == 1) {
+                                                    addCTMark(origLine, lineBisector);
+                                                }
+
+                                            } else if (step.getAttribute("name").equals("Intersect")) { // Handle intersect command
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
                                                 NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
                                                 // Intersect two objects
