@@ -11852,6 +11852,17 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             c.add_pt(l2.getPoint(0), 2);
             c.add_pt(l2.getPoint(1), 3);
             c.set_conc(true);
+        } else if (parameter.startsWith("ArePerpendicular")) {
+            int condtype = CST.getClu_D("Perpendicular");
+            c = new Cons(condtype);
+            String[] parameterList = getParameterList(parameter);
+            CLine l1 = getCLine(lines, parameterList[0]);
+            CLine l2 = getCLine(lines, parameterList[1]);
+            c.add_pt(l1.getPoint(0), 0);
+            c.add_pt(l1.getPoint(1), 1);
+            c.add_pt(l2.getPoint(0), 2);
+            c.add_pt(l2.getPoint(1), 3);
+            c.set_conc(true);
         } else if (parameter.startsWith("AreCongruent")) {
             int condtype = CST.getClu_D("Equal Distance");
             c = new Cons(condtype);
@@ -11891,6 +11902,14 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 p2 = s1.getSecondPoint(p1);
                 p3 = s2.getfirstPoint();
                 p4 = s2.getSecondPoint(p3);
+                condtype = CST.getClu_D("Equal Distance");
+            } else {
+                // P ≟ Q
+                p1 = getCPoint(points, parameter1);
+                p2 = getCPoint(points, parameter2);
+                p3 = p2;
+                p4 = p2;
+                // P = Q is equivalent to PQ = QQ
                 condtype = CST.getClu_D("Equal Distance");
             }
             // To implement:
@@ -11949,7 +11968,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             } else {
                 System.err.println("Unidentified object: " + parameterRest);
             }
-        } else if (parameter.contains("⊥")) { // TODO: add also ArePerpendicular[f,g]
+        } else if (parameter.contains("⊥")) {
             String parameter1 = parameter.substring(0, parameter.indexOf("⊥")).trim();
             String parameter2 = parameter.substring(parameter.indexOf("⊥") + 1).trim();
             CLine l1 = getCLine(lines, parameter1);
