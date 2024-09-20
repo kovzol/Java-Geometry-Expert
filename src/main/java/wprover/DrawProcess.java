@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.print.*;
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -11775,7 +11777,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 }
 
                                             } else if (step.getAttribute("name").equals("Prove")) {
-                                                handleGGBProve(step, points, lines, circles, exprs);
+                                                handleGGBProve(step, points, segmentsGgb, lines, circles, exprs);
                                             } else if (step.getAttribute("name").equals("Point")) {
                                                 System.out.println("Command 'Point' should be handled automatically");
                                             } else if (step.getAttribute("name").equals("AreParallel")) {
@@ -11834,7 +11836,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                             String expr = step.getAttribute("exp");
                                             // getConclusion() covers a bigger number of cases,
                                             // but it should be safe to use it in general:
-                                            Cons c = getConclusion(expr, points, lines, circles);
+                                            Cons c = getConclusion(expr, points, segmentsGgb, lines, circles);
                                             exprs.put(label, c);
                                             break;
                                     }
@@ -11864,6 +11866,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
      * @return the conclusion in JGEX format
      */
     Cons getConclusion(String parameter, ArrayList<CPoint> points,
+                       ArrayList<GgbSegment> segmentsGgb,
                        ArrayList<CLine> lines, ArrayList<Circle> circles) {
         Cons c = null;
         // input (String): "AreCollinear[F, G, H]"
@@ -11916,27 +11919,25 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             CPoint p2 = null;
             CPoint p3 = null;
             CPoint p4 = null;
-            CLine s1 = getCLine(points, lines, parameter1);
-            CLine s2 = getCLine(points, lines, parameter2);
-            if (s1 != null && s2 != null) {
-                p1 = s1.getfirstPoint();
-                p2 = s1.getSecondPoint(p1);
-                p3 = s2.getfirstPoint();
-                p4 = s2.getSecondPoint(p3);
+            GgbSegment s1 = getGgbSegment(segmentsGgb, parameter1);
+            GgbSegment s2 = getGgbSegment(segmentsGgb, parameter2);
+            if (s1 != null && s2 != null) { // compare two segments
+                p1 = getCPoint(points, s1.getNameP1());
+                p2 = getCPoint(points, s1.getNameP2());
+                p3 = getCPoint(points, s2.getNameP1());
+                p4 = getCPoint(points, s2.getNameP2());
                 condtype = CST.getClu_D("Equal Distance");
             } else {
                 // P ≟ Q
                 p1 = getCPoint(points, parameter1);
                 p2 = getCPoint(points, parameter2);
-                p3 = p2;
-                p4 = p2;
-                // P = Q is equivalent to PQ = QQ
-                condtype = CST.getClu_D("Equal Distance");
+                if (p1 != null && p2 != null) {
+                    p3 = p2;
+                    p4 = p2;
+                    // P = Q is equivalent to PQ = QQ
+                    condtype = CST.getClu_D("Equal Distance");
+                }
             }
-            // To implement:
-            // k / l ≟ m / n
-            // Segment[D, F] / Segment[F, A] ≟ 1 / 2
-            // (2 * f) ≟ a
             if (condtype != -1) {
                 c = new Cons(condtype);
                 c.add_pt(p1, 0);
@@ -11947,7 +11948,37 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 GExpert.conclusion = c; // working around that some data may be missing here:
                 // We add the fully working conclusion later, when the proof is initiated.
             } else {
-                System.err.println("Unidentified objects in " + parameter);
+                // To implement:
+                // k / l ≟ m / n
+                // Segment[D, F] / Segment[F, A] ≟ 1 / 2
+                // (2 * f) ≟ a
+
+                if (s1 == null && s2 != null) { // s1 = (2 * f), s2 = a
+                    Pattern p = Pattern.compile("\\((.*) \\* (.*)\\)");
+                    Matcher m = p.matcher(parameter1);
+                    StringBuffer sb = new StringBuffer();
+                    while (m.find()) {
+                        Integer multiplier = Integer.parseInt(m.group(1));
+                        String segment = m.group(2);
+                        condtype = CST.getClu_D("Ratio");
+                        c = new Cons(condtype);
+                        s1 = getGgbSegment(segmentsGgb, segment);
+                        p1 = getCPoint(points, s1.getNameP1());
+                        p2 = getCPoint(points, s1.getNameP2());
+                        p3 = getCPoint(points, s2.getNameP1());
+                        p4 = getCPoint(points, s2.getNameP2());
+                        c.add_pt(p1, 0);
+                        c.add_pt(p2, 1);
+                        c.add_pt(p3, 2);
+                        c.add_pt(p4, 3);
+                        c.add_pt(1, 4);
+                        c.add_pt(multiplier, 5);
+                        c.set_conc(true);
+                        GExpert.conclusion = c;
+                    }
+                } else {
+                    System.err.println("Unidentified objects in " + parameter);
+                }
             }
         } else if (parameter.contains("∈")) {
             int condtype = -1; // dummy init
@@ -12006,6 +12037,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
     }
 
     void handleGGBProve(Element step, ArrayList<CPoint> points,
+                        ArrayList<GgbSegment> segmentsGgb,
                         ArrayList<CLine> lines, ArrayList<Circle> circles, HashMap<String, Cons> exprs) {
         GExpert.conclusion = null; // reinitalize
         NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
@@ -12016,7 +12048,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             if (exprs.containsKey(parameter)) {
                 c = exprs.get(parameter);
             } else {
-                c = getConclusion(parameter, points, lines, circles);
+                c = getConclusion(parameter, points, segmentsGgb, lines, circles);
             }
             gxInstance.getpprove().set_conclusion(c, true);
         }
