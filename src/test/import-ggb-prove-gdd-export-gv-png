@@ -29,7 +29,7 @@ if [ "$1" != "local" -a "$1" != "snap" -a "$1" != "" ]; then
  fi
 
 if [ "$1" = "local" -o "$1" = "" ]; then
- GV_DIR=../docs
+ GV_DIR=../..
  pushd ../.. >/dev/null
  echo "Building jgex via Gradle first (silently)"
  ./gradlew -q installDist
@@ -55,12 +55,17 @@ for FULLNAME in `find $BENCHMARKS_FOLDER -name '*.ggb' | sort`; do
   /bin/time -o src/docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT $RUNTIME -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME > src/docs/$NAME.log 2>&1
   popd >/dev/null
   fi
+ PROBLEM=`cat ../docs/$NAME.log | grep "Unimplemented\|Unidentified\|Exception" | head -1`
  test -s $GV && {
-  dot -Tpng $GV > ../docs/$NAME.png
-  LENGTH=`cat $GV | wc -l`
-  echo "$NAME successful: $LENGTH lines of gv output"
+  MD5SUM=`md5sum $GV | cut -f1 -d" "`
+  if [ "$MD5SUM" = "d872444bcef19cb5462bb9a4fb4e9fb3" -o "$MD5SUM" = "3c964068bf7b811e7570449adc59af0e" -o "$MD5SUM" = "dd5ece2abd55b6f9b27df4df90e66fdf" ]; then
+   echo -e "$WARNING_COLOR$NAME unsuccessful: empty gv tree, $PROBLEM$RESUME_COLOR"
+  else
+   dot -Tpng $GV > ../docs/$NAME.png
+   LENGTH=`cat $GV | wc -l`
+   echo "$NAME successful: $LENGTH lines of gv output"
+   fi
   } || {
-  PROBLEM=`cat ../docs/$NAME.log | grep "Unimplemented\|Unidentified\|Exception" | head -1`
   echo -e "$WARNING_COLOR$NAME unsuccessful: $PROBLEM$RESUME_COLOR"
   }
  done
