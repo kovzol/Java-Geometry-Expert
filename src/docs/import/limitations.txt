@@ -4,12 +4,13 @@ Allowed GeoGebra objects:
 points, segments, lines, circles.
 
 Supported commands:
-Polygon, Midpoint, Segment, Line, OrthogonalLine, LineBisector, Intersect, Circle.
+Polygon, Midpoint, Segment, Line, OrthogonalLine, LineBisector, Intersect, Circle,
+Prove, ArePerpendicular, AreCollinear, AreCongruent.
 
 Support for intersection of a line and a circle or two circles is incomplete.
 
 Not supported at the moment (among other objects):
-Parallel lines, angle bisectors.
+Angle bisectors.
 These need to be constructed via simple Euclidean steps (see above).
 
 Colors and other properties of the objects are ignored.
@@ -19,6 +20,7 @@ The following syntaxes are currently recognized:
 * Prove(AreCollinear(A, B, C))
 * Prove(AreConcyclic(A, B, C, D))
 * Prove(AreParallel(f, g)) or Prove(f ∥ g)
-* Prove(f ≟ g)
+* Prove(ArePerpendicular(f, g)) or Prove(f ⊥ g)
+* Prove(AreCongruent(f, g)) or Prove(f ≟ g) or Prove(AB ≟ CD)
+* Prove(P ≟ Q)
 * Prove(P ∈ l)
-* Prove(f ⊥ g)
