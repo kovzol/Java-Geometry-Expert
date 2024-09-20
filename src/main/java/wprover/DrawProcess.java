@@ -11949,15 +11949,12 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 // We add the fully working conclusion later, when the proof is initiated.
             } else {
                 // To implement:
-                // k / l ≟ m / n
                 // Segment[D, F] / Segment[F, A] ≟ 1 / 2
-                // (2 * f) ≟ a
 
                 if (s1 == null && s2 != null) { // s1 = (2 * f), s2 = a
                     Pattern p = Pattern.compile("\\((.*) \\* (.*)\\)");
                     Matcher m = p.matcher(parameter1);
-                    StringBuffer sb = new StringBuffer();
-                    while (m.find()) {
+                    if (m.find()) {
                         Integer multiplier = Integer.parseInt(m.group(1));
                         String segment = m.group(2);
                         condtype = CST.getClu_D("Ratio");
@@ -11977,7 +11974,46 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                         GExpert.conclusion = c;
                     }
                 } else {
-                    System.err.println("Unidentified objects in " + parameter);
+                    if (s1 == null && s2 == null) { // k / l ≟ m / n (that is, k * n == m * l)
+                        Pattern p = Pattern.compile("(.*) \\/ (.*)");
+                        Matcher m = p.matcher(parameter1);
+                        if (m.find()) {
+                            String segment1 = m.group(1);
+                            String segment2 = m.group(2);
+                            condtype = CST.getClu_D("Equal Product");
+                            c = new Cons(condtype);
+                            s1 = getGgbSegment(segmentsGgb, segment1);
+                            s2 = getGgbSegment(segmentsGgb, segment2);
+                            p1 = getCPoint(points, s1.getNameP1());
+                            p2 = getCPoint(points, s1.getNameP2());
+                            p3 = getCPoint(points, s2.getNameP1());
+                            p4 = getCPoint(points, s2.getNameP2());
+                        }
+                        m = p.matcher(parameter2);
+                        if (m.find()) {
+                            String segment3 = m.group(1);
+                            String segment4 = m.group(2);
+                            GgbSegment s3 = getGgbSegment(segmentsGgb, segment3);
+                            GgbSegment s4 = getGgbSegment(segmentsGgb, segment4);
+                            CPoint p5 = getCPoint(points, s3.getNameP1());
+                            CPoint p6 = getCPoint(points, s3.getNameP2());
+                            CPoint p7 = getCPoint(points, s4.getNameP1());
+                            CPoint p8 = getCPoint(points, s4.getNameP2());
+                            c.add_pt(p1, 0);
+                            c.add_pt(p2, 1);
+                            c.add_pt(p7, 2);
+                            c.add_pt(p8, 3);
+                            c.add_pt(p5, 4);
+                            c.add_pt(p6, 5);
+                            c.add_pt(p3, 6);
+                            c.add_pt(p4, 7);
+                            c.set_conc(true);
+                            GExpert.conclusion = c;
+                        }
+
+                    } else {
+                        System.err.println("Unidentified objects in " + parameter);
+                    }
                 }
             }
         } else if (parameter.contains("∈")) {
