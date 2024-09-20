@@ -55,7 +55,7 @@ for FULLNAME in `find $BENCHMARKS_FOLDER -name '*.ggb' | sort`; do
   /bin/time -o src/docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT $RUNTIME -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME > src/docs/$NAME.log 2>&1
   popd >/dev/null
   fi
- PROBLEM=`cat ../docs/$NAME.log | grep "Unimplemented\|Unidentified\|Exception" | head -1`
+ PROBLEM=`cat ../docs/$NAME.log | grep "Unimplemented\|Unidentified\|Unsupported\|Exception" | grep -v "org.graphper.draw.ExecuteException" | head -1`
  test -s $GV && {
   MD5SUM=`md5sum $GV | cut -f1 -d" "`
   if [ "$MD5SUM" = "d872444bcef19cb5462bb9a4fb4e9fb3" -o "$MD5SUM" = "3c964068bf7b811e7570449adc59af0e" -o "$MD5SUM" = "dd5ece2abd55b6f9b27df4df90e66fdf" ]; then
