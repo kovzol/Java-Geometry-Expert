@@ -11407,6 +11407,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     }
                                                 }
                                                 n--;
+                                                CPolygon polygon = new CPolygon();
                                                 // n contains the number of vertices of the polygon
                                                 for (int vertex=0; vertex < n; vertex++) {
                                                     String nameP1 = input.getNamedItem("a" + vertex).getTextContent();
@@ -11419,6 +11420,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     CPoint[] pts = new CPoint[2];
                                                     pts[0] = getCPoint(points, nameP1);
                                                     pts[1] = getCPoint(points, nameP2);
+                                                    polygon.addAPoint(pts[0]);
                                                     // Make a line for every segment
                                                     CPoint tp = pts[0];
                                                     CPoint pp = pts[1];
@@ -11437,6 +11439,12 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                         this.UndoAdded(ln.getDescription());
                                                     }
                                                 }
+                                                this.UndoAdded(polygon.getDescription());
+                                                // This does not work:
+                                                // Graphics g = gxInstance.getGraphics();
+                                                // this.drawGrid((Graphics2D) g);
+                                                // polygon.draw((Graphics2D) g);
+
                                             }
                                             // Midpoint
                                             else if (step.getAttribute("name").equals("Midpoint")) {
