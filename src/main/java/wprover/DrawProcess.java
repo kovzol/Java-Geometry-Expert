@@ -11513,32 +11513,52 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     step.getAttribute("name").equals("Ray")) { // Handle line-type commands
                                                 NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
                                                 NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
-                                                // TODO: Handle parallel lines as well (Line(Point, Parallel Line))
-                                                if (inputName.getLength() == 2) { // Line between two points Line(Point,Point)
+                                                if (inputName.getLength() == 2) {
                                                     String nameLine = outputName.getNamedItem("a0").getTextContent();
                                                     String nameP1 = inputName.getNamedItem("a0").getTextContent();
                                                     String nameP2 = inputName.getNamedItem("a1").getTextContent();
-                                                    linesGgb.add(new GgbLine(nameLine, nameP1, nameP2));
                                                     CPoint[] pts = new CPoint[2];
                                                     // Make a line for every segment
                                                     pts[0] = getCPoint(points, nameP1);
                                                     pts[1] = getCPoint(points, nameP2);
-                                                    CPoint tp = pts[0];
-                                                    CPoint pp = pts[1];
-                                                    lines.add(new CLine(nameLine, tp, pp));
 
-                                                    getSmartPV(pts[0], pts[1]);
+                                                    if (pts[1] != null) { //  // Line between two points Line(Point,Point)
+                                                        linesGgb.add(new GgbLine(nameLine, nameP1, nameP2));
+                                                        CPoint tp = pts[0];
+                                                        CPoint pp = pts[1];
+                                                        lines.add(new CLine(nameLine, tp, pp));
 
-                                                    if (tp != pp && tp != null && pp != null) {
-                                                        setSmartPVLine(tp, pp);
-                                                        addPointToList(pp);
-                                                        CLine ln = new CLine(pp, tp, CLine.LLine);
-                                                        ln.ext_type = 2; // this is a line, not a segment (0)
-                                                        this.addLineToList(ln);
-                                                        Constraint cs = new Constraint(Constraint.LINE, tp, pp);
-                                                        addConstraintToList(cs);
-                                                        this.reCalculate();
-                                                        this.UndoAdded(ln.getDescription());
+                                                        getSmartPV(pts[0], pts[1]);
+
+                                                        if (tp != pp && tp != null && pp != null) {
+                                                            setSmartPVLine(tp, pp);
+                                                            addPointToList(pp);
+                                                            CLine ln = new CLine(pp, tp, CLine.LLine);
+                                                            ln.ext_type = 2; // this is a line, not a segment (0)
+                                                            this.addLineToList(ln);
+                                                            Constraint cs = new Constraint(Constraint.LINE, tp, pp);
+                                                            addConstraintToList(cs);
+                                                            this.reCalculate();
+                                                            this.UndoAdded(ln.getDescription());
+                                                        }
+                                                    } else { // Handle parallel lines: Line(Point, Parallel Line)
+                                                        CLine origLine = getCLine(points, lines, nameP2);
+                                                        CLine linePar = new CLine(pts[0], CLine.PLine);
+                                                        linePar.ext_type = 2; // line, not a segment (0)
+                                                        lines.add(linePar);
+
+                                                        Constraint c = new Constraint(Constraint.PARALLEL, linePar, origLine);
+                                                        this.addConstraintToList(c);
+                                                        linePar.addconstraint(c);
+                                                        origLine.addconstraint(c);
+                                                        addLineToList(linePar);
+                                                        UndoStruct u = this.UndoAdded(linePar.TypeString() + " parallel " +
+                                                                origLine.getDiscription() + " passing " +
+                                                                pts[0].getname());
+                                                        u.addObject(linePar);
+                                                        u.addObject(origLine);
+                                                        u.addObject(pts[0]);
+                                                        linePar.m_name=nameLine;
                                                     }
                                                 }
                                             } else if (step.getAttribute("name").equals("OrthogonalLine")) { // Handle PerpendicularLine (OrthogonalLine) command
@@ -11793,7 +11813,6 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 String nameLine1 = inputName.getNamedItem("a0").getTextContent();
                                                 String nameLine2 = inputName.getNamedItem("a1").getTextContent();
                                                 setConclusionParameters2Segments(points, segmentsGgb, c, nameLine1, nameLine2);
-                                                // setConclusionParameters2Lines(points, lines, c, nameLine1, nameLine2);
                                                 c.set_conc(true);
                                                 GExpert.conclusion = c; // working around that some data may be missing here
                                                 exprs.put(name, c);
