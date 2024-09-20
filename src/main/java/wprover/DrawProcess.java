@@ -10918,11 +10918,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                     midpointsGgb.add(new GgbMidpoint(nameMidpoint, nameP1, nameP2));
                                 } else if (inputName.getLength() == 1) { // Midpoint of a segment
                                     String nameSegment = inputName.getNamedItem("a0").getTextContent();
-                                    for (GgbSegment segment : segmentsGgb) { // Find segment
-                                        if (segment.getName().equals(nameSegment)) {
-                                            midpointsGgb.add(new GgbMidpoint(nameMidpoint, segment.getNameP1(), segment.getNameP2()));
-                                        }
-                                    }
+                                    GgbSegment segment = getGgbSegment(segmentsGgb, nameSegment);
+                                    midpointsGgb.add(new GgbMidpoint(nameMidpoint, segment.getNameP1(), segment.getNameP2()));
                                 }
                             } else if (eElement.getAttribute("name").equals("Segment")) { // Handle segment command. Segment between two points
                                 NamedNodeMap outputName = eElement.getElementsByTagName("output").item(0).getAttributes();
@@ -10932,7 +10929,6 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                     String nameP1 = inputName.getNamedItem("a0").getTextContent();
                                     String nameP2 = inputName.getNamedItem("a1").getTextContent();
                                     segmentsGgb.add(new GgbSegment(nameSegment, nameP1, nameP2));
-
                                 }
                             } else if (eElement.getAttribute("name").equals("Line")) { // Handle line command
                                 NamedNodeMap outputName = eElement.getElementsByTagName("output").item(0).getAttributes();
@@ -11456,12 +11452,9 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 } else if (input.getLength() == 1) {
                                                     // Midpoint of a segment
                                                     String nameSegment = input.getNamedItem("a0").getTextContent();
-                                                    for (GgbSegment segment : segmentsGgb) { // Find segment
-                                                        if (segment.getName().equals(nameSegment)) {
-                                                            nameP1 = segment.getNameP1();
-                                                            nameP2 = segment.getNameP2();
-                                                        }
-                                                    }
+                                                    GgbSegment segment = getGgbSegment(segmentsGgb, nameSegment);
+                                                    nameP1 = segment.getNameP1();
+                                                    nameP2 = segment.getNameP2();
                                                 }
 
                                                 CPoint[] pts = new CPoint[2];
@@ -11557,7 +11550,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     String nameLine = inputName.getNamedItem("a1").getTextContent();
                                                     linesGgb.add(new GgbLine(nameLinePerp));
                                                     CPoint footPoint = getCPoint(points, nameP);
-                                                    CLine origLine = getCLine(lines, nameLine);
+                                                    CLine origLine = getCLine(points, lines, nameLine);
                                                     CLine linePerp = new CLine(footPoint, CLine.TLine);
                                                     linePerp.ext_type = 2; // line, not a segment (0)
                                                     lines.add(linePerp);
@@ -11586,7 +11579,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 CLine origLine = null;
                                                 if (inputName.getLength() == 1) {
                                                     String nameLine = inputName.getNamedItem("a0").getTextContent();
-                                                    origLine = getCLine(lines, nameLine);
+                                                    origLine = getCLine(points, lines, nameLine);
                                                     p1 = origLine.getPoint(0);
                                                     p2 = origLine.getPoint(1);
                                                 } else if (inputName.getLength() == 2) {
@@ -11610,7 +11603,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 lineBisector.m_name = nameLineBisector;
 
                                                 // String mpname = namePoint1 + namePoint2 + "midpoint";
-                                                String mpname = nameLineBisector + "1";
+                                                String mpname = "P" + nameLineBisector;
                                                 CPoint po = this.CreateANewPoint(0, 0, mpname);
                                                 Constraint cs = new Constraint(Constraint.MIDPOINT, po, p1, p2);
                                                 CPoint pu = this.addADecidedPointWithUnite(po);
@@ -11624,7 +11617,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 points.add(po);
 
                                                 // String rpname = namePoint1 + namePoint2 + "rotated";
-                                                String rpname = nameLineBisector + "2";
+                                                String rpname = "Q" + nameLineBisector;
                                                 double xd = po.getx() - p1.getx();
                                                 double yd = po.gety() - p1.gety();
                                                 double xe = po.getx() + yd;
@@ -11660,8 +11653,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     String name = outputName.getNamedItem("a0").getTextContent();
                                                     String nameO1 = inputName.getNamedItem("a0").getTextContent();
                                                     String nameO2 = inputName.getNamedItem("a1").getTextContent();
-                                                    CLine line1 = getCLine(lines, nameO1);
-                                                    CLine line2 = getCLine(lines, nameO2);
+                                                    CLine line1 = getCLine(points, lines, nameO1);
+                                                    CLine line2 = getCLine(points, lines, nameO2);
                                                     if (line1 != null && line2 != null) {
                                                         CPoint intersectionPoint = MeetDefineAPoint(line1, line2);
                                                         intersectionPoint.m_name = name;
@@ -11736,7 +11729,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     CPoint p3 = getCPoint(points, namePoint3);
 
                                                     // Center (creating it auxiliarily).
-                                                    String poname = name + "center"; // FIXME: check if this name already exists
+                                                    String poname = "O_" + name; // FIXME: check if this name already exists
                                                     CPoint po = this.CreateANewPoint(0, 0, poname);
                                                     Constraint cs = new Constraint(Constraint.CIRCUMCENTER, po, p1, p2, p3);
                                                     this.addConstraintToList(cs);
@@ -11799,7 +11792,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 String name = outputName.getNamedItem("a0").getTextContent();
                                                 String nameLine1 = inputName.getNamedItem("a0").getTextContent();
                                                 String nameLine2 = inputName.getNamedItem("a1").getTextContent();
-                                                setConclusionParameters2Lines(points, lines, c, nameLine1, nameLine2);
+                                                setConclusionParameters2Segments(points, segmentsGgb, c, nameLine1, nameLine2);
+                                                // setConclusionParameters2Lines(points, lines, c, nameLine1, nameLine2);
                                                 c.set_conc(true);
                                                 GExpert.conclusion = c; // working around that some data may be missing here
                                                 exprs.put(name, c);
@@ -11895,8 +11889,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             CPoint p2 = null;
             CPoint p3 = null;
             CPoint p4 = null;
-            CLine s1 = getCLine(lines, parameter1);
-            CLine s2 = getCLine(lines, parameter2);
+            CLine s1 = getCLine(points, lines, parameter1);
+            CLine s2 = getCLine(points, lines, parameter2);
             if (s1 != null && s2 != null) {
                 p1 = s1.getfirstPoint();
                 p2 = s1.getSecondPoint(p1);
@@ -12023,13 +12017,59 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         return null;
     }
 
-    CLine getCLine(ArrayList<CLine> lines, String parameterItem) {
+    GgbSegment getGgbSegment(ArrayList<GgbSegment> segmentsGgb, String parameterItem) {
+        for (GgbSegment segment : segmentsGgb) { // Find segment
+            if (segment.getName().equals(parameterItem)) {
+                return segment;
+            }
+        }
+        return null;
+    }
+
+    CPoint[] detectSegment(ArrayList<CPoint> points, String parameterItem) {
+        // Format Distance[A, B]
+        if (parameterItem.startsWith("Distance")) {
+            String[] parameterItems = getParameterList(parameterItem);
+            if (parameterItems.length == 2) {
+                CPoint p1 = getCPoint(points, parameterItems[0]);
+                CPoint p2 = getCPoint(points, parameterItems[1]);
+                CPoint p[] = {p1, p2};
+                return p;
+            }
+            return null; // invalid syntax
+        }
+        // Format AB
+        for (CPoint p1 : points) {
+            for (CPoint p2 : points) {
+                if ((p1.getname() + p2.getname()).equals(parameterItem)) {
+                    CPoint p[] = {p1, p2};
+                    return p;
+                }
+            }
+        }
+        return null; // not found
+    }
+
+    CLine getCLine(ArrayList<CPoint> points, ArrayList<CLine> lines, String parameterItem) {
+        // Format l
         for (CLine l : lines) {
             if (l.getname().equals(parameterItem)) {
                 return l;
             }
         }
-        return null;
+        // Format AB
+        for (CPoint p1 : points) {
+            for (CPoint p2 : points) {
+                if ((p1.getname() + p2.getname()).equals(parameterItem)) {
+                    for (CLine l : lines) {
+                        if (l.getfirstPoint() == p1 && l.getSecondPoint(p1) == p2 ||
+                                l.getfirstPoint() == p2 && l.getSecondPoint(p2) == p1)
+                            return l;
+                    }
+                }
+            }
+        }
+        return null; // unidentified
     }
 
     Circle getCircle(ArrayList<Circle> circles, String parameterItem) {
@@ -12043,46 +12083,57 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
     void setConclusionParameters2Lines(ArrayList<CPoint> points, ArrayList<CLine> lines, Cons c, String nameLine1,
                                        String nameLine2) {
-        CLine l1 = getCLine(lines, nameLine1);
-        CLine l2 = getCLine(lines, nameLine2);
+        CLine l1 = getCLine(points, lines, nameLine1);
+        CLine l2 = getCLine(points, lines, nameLine2);
         CPoint p1;
         CPoint p2;
         CPoint p3;
         CPoint p4;
+
         p1 = l1.getfirstPoint();
         p2 = l1.getSecondPoint(p1);
         p3 = l2.getfirstPoint();
-
-        /*
-        if (p3 == null) {
-            String namePoint3 = nameLine2 + "point1";
-            CPoint po = this.CreateANewPoint(0, 0, namePoint3);
-            Constraint cs = new Constraint(Constraint.PONLINE, po, l2);
-            // CPoint pu = this.addADecidedPointWithUnite(po);
-            points.add(po);
-            addPointToList(po);
-            l2.addconstraint(cs);
-            addConstraintToList(cs);
-            this.UndoAdded(po.getname() + ": a point of " + nameLine2);
-        }
-         */
-
         p4 = l2.getSecondPoint(p3);
-
-
 
         c.add_pt(p1, 0);
         c.add_pt(p2, 1);
         c.add_pt(p3, 2);
         c.add_pt(p4, 3);
-
-        /*
-        c.add_pt(l1.getPoint(0), 0);
-        c.add_pt(l1.getPoint(1), 1);
-        c.add_pt(l2.getPoint(0), 2);
-        c.add_pt(l2.getPoint(1), 3);
-         */
     }
+
+    void setConclusionParameters2Segments(ArrayList<CPoint> points, ArrayList<GgbSegment> ggbSegments, Cons c, String nameLine1,
+                                       String nameLine2) {
+        CPoint p1;
+        CPoint p2;
+        CPoint p3;
+        CPoint p4;
+
+        GgbSegment s1 = getGgbSegment(ggbSegments, nameLine1);
+        if (s1 != null) {
+            p1 = getCPoint(points, s1.getNameP1());
+            p2 = getCPoint(points, s1.getNameP2());
+        } else {
+            CPoint[] p = detectSegment(points, nameLine1);
+            p1 = p[0];
+            p2 = p[1];
+        }
+
+        GgbSegment s2 = getGgbSegment(ggbSegments, nameLine2);
+        if (s2 != null) {
+            p3 = getCPoint(points, s2.getNameP1());
+            p4 = getCPoint(points, s2.getNameP2());
+        } else {
+            CPoint[] p = detectSegment(points, nameLine1);
+            p3 = p[0];
+            p4 = p[1];
+        }
+
+        c.add_pt(p1, 0);
+        c.add_pt(p2, 1);
+        c.add_pt(p3, 2);
+        c.add_pt(p4, 3);
+    }
+
 
     void setConclusionParameters3Points(ArrayList<CPoint> points, Cons c, String namePoint1,
                                          String namePoint2, String namePoint3) {
