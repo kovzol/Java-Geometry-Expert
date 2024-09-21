@@ -11854,6 +11854,19 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 setConclusionParameters3Points(points, c, namePoint1, namePoint2, namePoint3);
                                                 c.set_conc(true);
                                                 exprs.put(name, c);
+                                            } else if (step.getAttribute("name").equals("AreConcyclic")) {
+                                                int condtype = CST.getClu_D("Cyclic");
+                                                Cons c = new Cons(condtype);
+                                                NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
+                                                NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
+                                                String name = outputName.getNamedItem("a0").getTextContent();
+                                                String namePoint1 = inputName.getNamedItem("a0").getTextContent();
+                                                String namePoint2 = inputName.getNamedItem("a1").getTextContent();
+                                                String namePoint3 = inputName.getNamedItem("a2").getTextContent();
+                                                String namePoint4 = inputName.getNamedItem("a3").getTextContent();
+                                                setConclusionParameters4Points(points, c, namePoint1, namePoint2, namePoint3, namePoint4);
+                                                c.set_conc(true);
+                                                exprs.put(name, c);
                                             } else if (step.getAttribute("name").equals("AreCongruent")) {
                                                 int condtype = CST.getClu_D("Equal Distance");
                                                 Cons c = new Cons(condtype);
