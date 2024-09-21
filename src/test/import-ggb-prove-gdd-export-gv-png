@@ -10,6 +10,7 @@
 # the required executable. "local" uses Gradle to recompile the program on each run.
 # "snap" uses the snapcraft installation and considered therefore faster.
 
+
 BENCHMARKS_FOLDER=../docs/import/ggb-benchmarks # this may be changed on demand
 TIMEOUT=5 # JGEX forgets to quit sometimes, this timeout ensures proper exit
 
@@ -21,6 +22,7 @@ test -x $BENCHMARKS_FOLDER || {
 
 MYDIR=`pwd`
 WARNING_COLOR="\033[91m"
+CORRECT_COLOR="\033[92m"
 RESUME_COLOR="\033[0m"
 
 if [ "$1" != "local" -a "$1" != "snap" -a "$1" != "" ]; then
@@ -44,9 +46,20 @@ else
  GV_DIR=~/snap/jgex/current/.jgex
  fi
 
+function end() {
+ echo "SUMMARY: $GOOD good, $UNPROVEN unproven and $BAD bad tests (of $((GOOD+UNPROVEN+BAD)))"
+ exit 0
+ }
+
+trap end SIGINT
+
+GOOD=0
+BAD=0
+UNPROVEN=0
 for FULLNAME in `find $BENCHMARKS_FOLDER -name '*.ggb' | sort`; do
  NAME=`basename $FULLNAME .ggb`
  GV=$GV_DIR/$NAME.gv
+ rm -f $GV # remove a possible successful export from a previous run
  if [ "$1" = "snap" ]; then
   /bin/time -o ../docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT jgex -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME > ../docs/$NAME.log 2>&1
  else
@@ -60,12 +73,22 @@ for FULLNAME in `find $BENCHMARKS_FOLDER -name '*.ggb' | sort`; do
   MD5SUM=`md5sum $GV | cut -f1 -d" "`
   if [ "$MD5SUM" = "d872444bcef19cb5462bb9a4fb4e9fb3" -o "$MD5SUM" = "3c964068bf7b811e7570449adc59af0e" -o "$MD5SUM" = "dd5ece2abd55b6f9b27df4df90e66fdf" ]; then
    echo -e "$WARNING_COLOR$NAME unsuccessful: empty gv tree, $PROBLEM$RESUME_COLOR"
+   BAD=$((BAD+1))
   else
    dot -Tpng $GV > ../docs/$NAME.png
    LENGTH=`cat $GV | wc -l`
-   echo "$NAME successful: $LENGTH lines of gv output"
+   echo -e "$CORRECT_COLOR$NAME successful: $LENGTH lines of gv output$RESUME_COLOR"
+   GOOD=$((GOOD+1))
    fi
   } || {
-  echo -e "$WARNING_COLOR$NAME unsuccessful: $PROBLEM$RESUME_COLOR"
+  if [ "$PROBLEM" = "" ]; then
+   echo "$NAME can be loaded, but cannot be proven"
+   UNPROVEN=$((UNPROVEN+1))
+  else
+   echo -e "$WARNING_COLOR$NAME unsuccessful: $PROBLEM$RESUME_COLOR"
+   BAD=$((BAD+1))
+   fi
   }
  done
+
+end
