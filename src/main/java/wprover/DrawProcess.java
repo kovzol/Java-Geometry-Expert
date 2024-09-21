@@ -8105,8 +8105,11 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         return p;
     }
 
-
     public CPoint MeetDefineAPoint(CLine line1, CLine line2) {
+        return MeetDefineAPoint(line1, line2, true);
+    }
+
+    public CPoint MeetDefineAPoint(CLine line1, CLine line2, boolean unique) {
         if (CLine.commonPoint(line1, line2) != null)
             return null;
         if (check_para(line1, line2)) {
@@ -8128,7 +8131,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             charsetAndAddPoly(false);
 
             CPoint tp = this.addADecidedPointWithUnite(p);
-            if (tp != null) {
+            if (tp != null && unique) {
                 line2.points.remove(p);
                 line1.points.remove(p);
                 line2.addApoint(tp);
@@ -8148,7 +8151,7 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             CPoint tp = this.addADecidedPointWithUnite(p);
 //            poly.printpoly(p.x1.m);
 //            poly.printpoly(p.y1.m);
-            if (tp != null) {
+            if (tp != null && unique) {
                 line2.addApoint(tp);
                 line1.addApoint(tp);
                 p = tp;
@@ -11635,15 +11638,17 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 String mpname = "P" + nameLineBisector;
                                                 CPoint po = this.CreateANewPoint(0, 0, mpname);
                                                 Constraint cs = new Constraint(Constraint.MIDPOINT, po, p1, p2);
+                                                // This is a helper point, so we don't have to create a new point
+                                                // if there is already existing something which seems the same.
                                                 CPoint pu = this.addADecidedPointWithUnite(po);
                                                 if (pu == null) {
                                                     this.addConstraintToList(cs);
                                                     this.addPointToList(po);
                                                     this.UndoAdded(po.getname() + ": the midpoint of " + p1.m_name + p2.m_name);
+                                                    points.add(po);
                                                 } else {
                                                     po = pu;
                                                 }
-                                                points.add(po);
 
                                                 // String rpname = namePoint1 + namePoint2 + "rotated";
                                                 String rpname = "Q" + nameLineBisector;
@@ -11658,16 +11663,17 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                 lineBisector.addApoint(pr);
 
                                                 Constraint cr = new Constraint(Constraint.PERPENDICULAR, p1, p2, po, pr);
+                                                // This is a helper point, so we don't have to create a new point
+                                                // if there is already existing something which seems the same.
                                                 CPoint pq = this.addADecidedPointWithUnite(pr);
                                                 if (pq == null) {
                                                     this.addConstraintToList(cr);
                                                     this.addPointToList(pr);
                                                     this.UndoAdded(pr.getname() + ": a second point of " + name);
+                                                    points.add(pr);
                                                 } else {
                                                     pr = pq;
                                                 }
-
-                                                points.add(pr);
 
                                                 if (inputName.getLength() == 1) {
                                                     addCTMark(origLine, lineBisector);
@@ -11726,12 +11732,17 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     CLine line1 = getCLine(points, lines, nameO1);
                                                     CLine line2 = getCLine(points, lines, nameO2);
                                                     if (line1 != null && line2 != null) {
-                                                        CPoint intersectionPoint = MeetDefineAPoint(line1, line2);
+                                                        CPoint intersectionPoint = MeetDefineAPoint(line1, line2, false);
+                                                        points.add(intersectionPoint);
+                                                        pointsGgb.add(new GgbPoint(name));
+                                                        this.addPointToList(intersectionPoint);
+                                                        this.UndoAdded(intersectionPoint.getDescription());
                                                         intersectionPoint.m_name = name;
                                                         points.add(intersectionPoint);
                                                         pointsGgb.add(new GgbPoint(name));
                                                         this.addPointToList(intersectionPoint);
                                                         this.UndoAdded(intersectionPoint.getDescription());
+                                                        intersectionPoint.m_name = name;
                                                     } else { // One of the inputs should be a circle.
                                                         Circle circle1 = getCircle(circles, nameO1);
                                                         Circle circle2 = getCircle(circles, nameO2);
@@ -11957,13 +11968,30 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
             setConclusionParameters2Lines(points, lines, c, parameterList[0], parameterList[1]);
             c.set_conc(true);
             GExpert.conclusion = c; // working around that some data may be missing here:
+        } else if (parameter.startsWith("AreEqual")) {
+            String[] parameterList = getParameterList(parameter);
+            int condtype = -1; // dummy init
+            // P ≟ Q
+            CPoint p1 = getCPoint(points, parameterList[0]);
+            CPoint p2 = getCPoint(points, parameterList[1]);
+            if (p1 != null && p2 != null) {
+                // P = Q is equivalent to PQ = QQ
+                condtype = CST.getClu_D("Equal Distance");
+                c = new Cons(condtype);
+                c.add_pt(p1, 0);
+                c.add_pt(p2, 1);
+                c.add_pt(p2, 2);
+                c.add_pt(p2, 3);
+                c.set_conc(true);
+                GExpert.conclusion = c; // working around that some data may be missing here:
+            }
         } else if (parameter.contains("∥")) {
-            int condtype = CST.getClu_D("Parallel");
-            String parameter1 = parameter.substring(0, parameter.indexOf("∥")).trim();
-            String parameter2 = parameter.substring(parameter.indexOf("∥") + 1).trim();
-            c = new Cons(condtype);
-            setConclusionParameters2Lines(points, lines, c, parameter1, parameter2);
-            c.set_conc(true);
+                int condtype = CST.getClu_D("Parallel");
+                String parameter1 = parameter.substring(0, parameter.indexOf("∥")).trim();
+                String parameter2 = parameter.substring(parameter.indexOf("∥") + 1).trim();
+                c = new Cons(condtype);
+                setConclusionParameters2Lines(points, lines, c, parameter1, parameter2);
+                c.set_conc(true);
         } else if (parameter.contains("≟")) {
             int condtype = -1; // dummy init
             String parameter1 = parameter.substring(0, parameter.indexOf("≟")).trim();
