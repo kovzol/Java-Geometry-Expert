@@ -11951,12 +11951,23 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                 // To implement:
                 // Segment[D, F] / Segment[F, A] ≟ 1 / 2
 
-                if (s1 == null && s2 != null) { // s1 = (2 * f), s2 = a
+                if (s1 == null && s2 != null) { // s1 = (2 * f) or (1.5 * f), s2 = a
                     Pattern p = Pattern.compile("\\((.*) \\* (.*)\\)");
                     Matcher m = p.matcher(parameter1);
                     if (m.find()) {
-                        Integer multiplier = Integer.parseInt(m.group(1));
                         String segment = m.group(2);
+                        int[] fraction = new int[2];
+                        try {
+                            double multiplier = Double.parseDouble(m.group(1));
+                            fraction = GetFraction(multiplier);
+                        } catch (Exception e) {
+                            p = Pattern.compile("\\((.*) \\/ (.*) \\* .*\\)"); // (3 / 2 * f)
+                            m = p.matcher(parameter1);
+                            if (m.find()) {
+                                fraction[0] = Integer.parseInt(m.group(1));
+                                fraction[1] = Integer.parseInt(m.group(2));
+                            }
+                        }
                         condtype = CST.getClu_D("Ratio");
                         c = new Cons(condtype);
                         s1 = getGgbSegment(segmentsGgb, segment);
@@ -11968,8 +11979,8 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                         c.add_pt(p2, 1);
                         c.add_pt(p3, 2);
                         c.add_pt(p4, 3);
-                        c.add_pt(1, 4);
-                        c.add_pt(multiplier, 5);
+                        c.add_pt(fraction[1], 4);
+                        c.add_pt(fraction[0], 5);
                         c.set_conc(true);
                         GExpert.conclusion = c;
                     }
@@ -11988,27 +11999,63 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                             p2 = getCPoint(points, s1.getNameP2());
                             p3 = getCPoint(points, s2.getNameP1());
                             p4 = getCPoint(points, s2.getNameP2());
-                        }
-                        m = p.matcher(parameter2);
-                        if (m.find()) {
-                            String segment3 = m.group(1);
-                            String segment4 = m.group(2);
-                            GgbSegment s3 = getGgbSegment(segmentsGgb, segment3);
-                            GgbSegment s4 = getGgbSegment(segmentsGgb, segment4);
-                            CPoint p5 = getCPoint(points, s3.getNameP1());
-                            CPoint p6 = getCPoint(points, s3.getNameP2());
-                            CPoint p7 = getCPoint(points, s4.getNameP1());
-                            CPoint p8 = getCPoint(points, s4.getNameP2());
-                            c.add_pt(p1, 0);
-                            c.add_pt(p2, 1);
-                            c.add_pt(p7, 2);
-                            c.add_pt(p8, 3);
-                            c.add_pt(p5, 4);
-                            c.add_pt(p6, 5);
-                            c.add_pt(p3, 6);
-                            c.add_pt(p4, 7);
-                            c.set_conc(true);
-                            GExpert.conclusion = c;
+                            m = p.matcher(parameter2);
+                            if (m.find()) {
+                                String segment3 = m.group(1);
+                                String segment4 = m.group(2);
+                                GgbSegment s3 = getGgbSegment(segmentsGgb, segment3);
+                                GgbSegment s4 = getGgbSegment(segmentsGgb, segment4);
+                                CPoint p5 = getCPoint(points, s3.getNameP1());
+                                CPoint p6 = getCPoint(points, s3.getNameP2());
+                                CPoint p7 = getCPoint(points, s4.getNameP1());
+                                CPoint p8 = getCPoint(points, s4.getNameP2());
+                                c.add_pt(p1, 0);
+                                c.add_pt(p2, 1);
+                                c.add_pt(p7, 2);
+                                c.add_pt(p8, 3);
+                                c.add_pt(p5, 4);
+                                c.add_pt(p6, 5);
+                                c.add_pt(p3, 6);
+                                c.add_pt(p4, 7);
+                                c.set_conc(true);
+                                GExpert.conclusion = c;
+                            }
+                        } else { // (h * i) ≟ (j * k)
+                            p = Pattern.compile("\\((.*) \\* (.*)\\)");
+                            m = p.matcher(parameter1);
+                            if (m.find()) {
+                                String segment1 = m.group(1);
+                                String segment2 = m.group(2);
+                                condtype = CST.getClu_D("Equal Product");
+                                c = new Cons(condtype);
+                                s1 = getGgbSegment(segmentsGgb, segment1);
+                                s2 = getGgbSegment(segmentsGgb, segment2);
+                                p1 = getCPoint(points, s1.getNameP1());
+                                p2 = getCPoint(points, s1.getNameP2());
+                                p3 = getCPoint(points, s2.getNameP1());
+                                p4 = getCPoint(points, s2.getNameP2());
+                                m = p.matcher(parameter2);
+                                if (m.find()) {
+                                    String segment3 = m.group(1);
+                                    String segment4 = m.group(2);
+                                    GgbSegment s3 = getGgbSegment(segmentsGgb, segment3);
+                                    GgbSegment s4 = getGgbSegment(segmentsGgb, segment4);
+                                    CPoint p5 = getCPoint(points, s3.getNameP1());
+                                    CPoint p6 = getCPoint(points, s3.getNameP2());
+                                    CPoint p7 = getCPoint(points, s4.getNameP1());
+                                    CPoint p8 = getCPoint(points, s4.getNameP2());
+                                    c.add_pt(p1, 0);
+                                    c.add_pt(p2, 1);
+                                    c.add_pt(p3, 2);
+                                    c.add_pt(p4, 3);
+                                    c.add_pt(p5, 4);
+                                    c.add_pt(p6, 5);
+                                    c.add_pt(p7, 6);
+                                    c.add_pt(p8, 7);
+                                    c.set_conc(true);
+                                    GExpert.conclusion = c;
+                                }
+                            }
                         }
 
                     } else {
@@ -12252,6 +12299,53 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
         c.add_pt(p2, 1);
         c.add_pt(p3, 2);
         c.add_pt(p4, 3);
+    }
+
+    // taken from https://stackoverflow.com/a/1657688/1044586
+    public static int[] GetFraction(double input)
+    {
+        int p0 = 1;
+        int q0 = 0;
+        int p1 = (int) Math.floor(input);
+        int q1 = 1;
+        int p2;
+        int q2;
+
+        double r = input - p1;
+        double next_cf;
+        while(true)
+        {
+            r = 1.0 / r;
+            next_cf = Math.floor(r);
+            p2 = (int) (next_cf * p1 + p0);
+            q2 = (int) (next_cf * q1 + q0);
+
+            // Limit the numerator and denominator to be 256 or less
+            if(p2 > 256 || q2 > 256)
+                break;
+
+            // remember the last two fractions
+            p0 = p1;
+            p1 = p2;
+            q0 = q1;
+            q1 = q2;
+
+            r -= next_cf;
+        }
+
+        input = (double) p1 / q1;
+        // hard upper and lower bounds for ratio
+        if(input > 256.0)
+        {
+            p1 = 256;
+            q1 = 1;
+        }
+        else if(input < 1.0 / 256.0)
+        {
+            p1 = 1;
+            q1 = 256;
+        }
+        return new int[] {p1, q1};
     }
 
 }

@@ -2286,7 +2286,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                         Object obj3 = ((DefaultMutableTreeNode) obj2).getUserObject();
                         if (obj3 instanceof CClass) {
                             Cond c = getSelectedCondFromAttr((CClass) obj3);
-                            if (c != null)
+                            if (c != null) // Prove via right-click, from Fixpoint tab
                                 PanelProve.this.proveCond(c, true);
                         }
                     }
