@@ -11613,7 +11613,6 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
                                                     p1 = origLine.getPoint(0);
                                                     p2 = origLine.getPoint(1);
                                                 } else if (inputName.getLength() == 2) {
-                                                    // TODO: Unify this with the previous case:
                                                     String namePoint1 = inputName.getNamedItem("a0").getTextContent();
                                                     String namePoint2 = inputName.getNamedItem("a1").getTextContent();
                                                     p1 = getCPoint(points, namePoint1);
@@ -11672,6 +11671,47 @@ DrawProcess extends DrawBase implements Printable, ActionListener {
 
                                                 if (inputName.getLength() == 1) {
                                                     addCTMark(origLine, lineBisector);
+                                                }
+
+                                            } else if (step.getAttribute("name").equals("AngularBisector")) {
+                                                NamedNodeMap outputName = step.getElementsByTagName("output").item(0).getAttributes();
+                                                NamedNodeMap inputName = step.getElementsByTagName("input").item(0).getAttributes();
+                                                String nameLineABisector = outputName.getNamedItem("a0").getTextContent();
+                                                CPoint p1 = null;
+                                                CPoint p2 = null;
+                                                CPoint p3 = null;
+                                                if (inputName.getLength() == 3) {
+                                                    String namePoint1 = inputName.getNamedItem("a0").getTextContent();
+                                                    String namePoint2 = inputName.getNamedItem("a1").getTextContent();
+                                                    String namePoint3 = inputName.getNamedItem("a2").getTextContent();
+                                                    p1 = getCPoint(points, namePoint1);
+                                                    p2 = getCPoint(points, namePoint2);
+                                                    p3 = getCPoint(points, namePoint3);
+
+                                                    linesGgb.add(new GgbLine(nameLineABisector));
+
+                                                    String ptname = "P" + nameLineABisector;
+                                                    CPoint pt = this.CreateANewPoint(0, 0, ptname);
+
+                                                    Constraint cs1 = new Constraint(Constraint.COLLINEAR, pt, p1, p3);
+                                                    this.addPointToList(pt);
+                                                    this.UndoAdded(pt.getDescription());
+                                                    pt.m_name = ptname;
+                                                    this.addConstraintToList(cs1);
+
+                                                    points.add(pt);
+                                                    CLine lineABisector = new CLine(p2, pt);
+                                                    Constraint cs = new Constraint(Constraint.ANGLE_BISECTOR, p1, p2, p3, lineABisector);
+                                                    lineABisector.ext_type = 2; // line, not a segment (0)
+
+                                                    lineABisector.addconstraint(cs);
+                                                    this.addLineToList(lineABisector);
+                                                    this.addConstraintToList(cs);
+
+                                                    lines.add(lineABisector);
+                                                    UndoStruct u = this.UndoAdded("ABline " + lineABisector.getDescription());
+                                                    u.addObject(lineABisector);
+                                                    lineABisector.m_name = nameLineABisector;
                                                 }
 
                                             } else if (step.getAttribute("name").equals("Intersect")) { // Handle intersect command
