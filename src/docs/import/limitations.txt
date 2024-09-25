@@ -9,10 +9,6 @@ Prove, ArePerpendicular, AreCollinear, AreCongruent.
 
 Support for intersection of a line and a circle or two circles is incomplete.
 
-Not supported at the moment (among other objects):
-Angle bisectors.
-These need to be constructed via simple Euclidean steps (see above).
-
 Colors and other properties of the objects are ignored.
 
 The Prove command is partially supported.
@@ -22,5 +18,7 @@ The following syntaxes are currently recognized:
 * Prove(AreParallel(f, g)) or Prove(f ∥ g)
 * Prove(ArePerpendicular(f, g)) or Prove(f ⊥ g)
 * Prove(AreCongruent(f, g)) or Prove(f ≟ g) or Prove(AB ≟ CD)
-* Prove(P ≟ Q)
+* Prove(P ≟ Q) or AreEqual(P,Q)
 * Prove(P ∈ l)
+
+There may be further limitations that are not documented here.
