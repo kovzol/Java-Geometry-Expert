@@ -1645,7 +1645,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
         ret += ">";
         if (rule >= 1 && rule <= 43) {
-            GRule r = (GRule) RuleList.GDDLIST.get(rule);
+            GRule r = (GRule) RuleList.GDDLIST.get(rule - 1);
             String exstring = r.exstring;
             String description = r.description;
             ret += ", tooltip = \""
