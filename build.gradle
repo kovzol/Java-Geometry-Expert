@@ -148,7 +148,7 @@ dependencies {
             'org.apache.xmlgraphics:batik-xml:1.17',
             'org.apache.xmlgraphics:xmlgraphics-commons:2.9',
             'com.googlecode.gettext-commons:gettext-commons:0.9.8',
-            'org.graphper:graph-support:1.1.5',
+            'org.graphper:graph-support:1.4.0',
             'ch.qos.logback:logback-core:1.2.9',
             'org.slf4j:slf4j-simple:2.0.7',
             'xml-apis:xml-apis:1.4.01',

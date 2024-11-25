@@ -20,6 +20,7 @@ import org.apache.batik.swing.JSVGCanvas;
 import org.graphper.api.Graphviz;
 import org.graphper.api.Graphviz.GraphvizBuilder;
 import org.graphper.api.Node;
+import org.graphper.api.attributes.NodeShape;
 import org.graphper.api.attributes.NodeShapeEnum;
 import org.graphper.api.attributes.Rankdir;
 import org.w3c.dom.svg.SVGDocument;
@@ -1671,7 +1672,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         int rule = getRule(co);
         // System.out.println("GRAPHPER: Rule " + rule + " is used for node " + co.getNo());
         org.graphper.api.attributes.Color c;
-        org.graphper.api.attributes.NodeShape s = NodeShapeEnum.RECT;
+        org.graphper.api.attributes.NodeShape s = getRuleShape(rule);
         c = org.graphper.api.attributes.Color.ofRGB(getRuleColor(rule));
         Node n = Node.builder().label(co.getNo() + ") " + co.getText()).fillColor(c).shape(s).build();
         return n;
@@ -1724,6 +1725,31 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
         return "box"; // this should not happen
     }
+
+    NodeShape getRuleShape(int rule) {
+        if (rule == 0)
+            return NodeShapeEnum.M_RECORD;
+        if (rule >= 1 && rule <= 4) {
+            return NodeShapeEnum.INVTRAPEZIUM;
+        }
+        if (rule >= 5 && rule <= 8) {
+            return NodeShapeEnum.RECT;
+        }
+        if (rule >= 9 && rule <= 15) {
+            return NodeShapeEnum.ELLIPSE;
+        }
+        if (rule >= 16 && rule <= 22) {
+            return NodeShapeEnum.DIAMOND;
+        }
+        if (rule >= 23 && rule <= 37) {
+            return NodeShapeEnum.INVTRIANGLE;
+        }
+        if (rule >= 38) {
+            return NodeShapeEnum.HEXAGON;
+        }
+        return NodeShapeEnum.RECT; // this should not happen
+    }
+
 
     String getRuleStyle(int rule) {
         if (rule == 0)
