@@ -25,6 +25,9 @@ import org.graphper.api.attributes.NodeShapeEnum;
 import org.graphper.api.attributes.Rankdir;
 import org.w3c.dom.svg.SVGDocument;
 
+import static org.graphper.api.Html.table;
+import static org.graphper.api.Html.td;
+
 public class PanelProve extends JTabbedPane implements ChangeListener {
 //    private Font font_thm = new Font("Dialog", Font.BOLD, 12);
 
@@ -1674,7 +1677,25 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         org.graphper.api.attributes.Color c;
         org.graphper.api.attributes.NodeShape s = getRuleShape(rule);
         c = org.graphper.api.attributes.Color.ofRGB(getRuleColor(rule));
-        Node n = Node.builder().label(co.getNo() + ") " + co.getText()).fillColor(c).shape(s).build();
+        String exstring, description;
+        Node n;
+        if (rule >= 1 && rule <= 43) {
+            GRule r = (GRule) RuleList.GDDLIST.get(rule - 1);
+            exstring = r.exstring;
+            description = r.description;
+            String tooltipstring = getLanguage(description);
+            if (exstring != null) {
+                tooltipstring += "\\n" + getLanguage(exstring);
+            }
+            String rulestring = GExpert.getTranslationViaGettext("Rule {0}", rule + "");
+            n = Node.builder().shape(s).table(table().border(0).bgColor(c).
+                    cellBorder(0).cellSpacing(0).cellPadding(6)./* href(""). */ tooltip(tooltipstring).
+                    tr(td().color(c).text(co.getNo() + ") " + co.getText())).
+                    tr(td().color(c).text(rulestring).fontSize(8))).fillColor(c)
+                    .label(co.getNo() + ") " + co.getText()).build();
+        } else {
+            n = Node.builder().label(co.getNo() + ") " + co.getText()).fillColor(c).shape(s).build();
+        }
         return n;
     }
 
