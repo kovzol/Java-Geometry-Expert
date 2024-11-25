@@ -1688,8 +1688,11 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 tooltipstring += "\n" + getLanguage(exstring);
             }
             String rulestring = GExpert.getTranslationViaGettext("Rule {0}", rule + "");
+            String url = "";
+            // url = "https://en.m.wikipedia.org/wiki/File:Example.svg";
+            // url = "https://github.com/kovzol/Java-Geometry-Expert/blob/master/src/docs/help/images_a/rectangle.gif";
             n = Node.builder().shape(s).table(table().border(0).bgColor(c).
-                    cellBorder(0).cellSpacing(0).cellPadding(6).href("").tooltip(tooltipstring).
+                    cellBorder(0).cellSpacing(0).cellPadding(6).href(url).tooltip(tooltipstring).
                     tr(td().color(c).text(co.getNo() + ") " + co.getText())).
                     tr(td().color(c).text(rulestring).fontSize(8))).fillColor(c)
                     .label(co.getNo() + ") " + co.getText()).build();
