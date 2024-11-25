@@ -1995,6 +1995,11 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 Graphviz graphviz = gb.build();
                 String svgString = graphviz.toSvgStr();
                 JSVGCanvas svg = new JSVGCanvas();
+                // Downgrade SVG tooltip to format 1.0 (https://github.com/jamisonjiang/graph-support/issues/6#issuecomment-2498294950):
+                svgString = svgString.replaceAll("<(.*?) xlink:title=\"(.*?)\" (.*?)>", "<$1 $3><title>$2</title>");
+                // Two-line tooltips are handled separately (eventually FIXME):
+                svgString = svgString.replaceAll("<(.*?) xlink:title=\"(.*?)\n(.*?)\" (.*?)>", "<$1 $4><title>$2\n$3</title>");
+
                 StringReader reader = new StringReader(svgString);
                 String uri = "file:make-something-up"; // dummy uri
                 String parser = XMLResourceDescriptor.getXMLParserClassName();
