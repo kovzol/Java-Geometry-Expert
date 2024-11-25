@@ -1685,11 +1685,11 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             description = r.description;
             String tooltipstring = getLanguage(description);
             if (exstring != null) {
-                tooltipstring += "\\n" + getLanguage(exstring);
+                tooltipstring += "\n" + getLanguage(exstring);
             }
             String rulestring = GExpert.getTranslationViaGettext("Rule {0}", rule + "");
             n = Node.builder().shape(s).table(table().border(0).bgColor(c).
-                    cellBorder(0).cellSpacing(0).cellPadding(6)./* href(""). */ tooltip(tooltipstring).
+                    cellBorder(0).cellSpacing(0).cellPadding(6).href("").tooltip(tooltipstring).
                     tr(td().color(c).text(co.getNo() + ") " + co.getText())).
                     tr(td().color(c).text(rulestring).fontSize(8))).fillColor(c)
                     .label(co.getNo() + ") " + co.getText()).build();
