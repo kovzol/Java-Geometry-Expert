@@ -2,7 +2,7 @@ name: jgex
 architectures:
   - build-on: amd64
 base: core18
-version: '0.85'
+version: '0.86'
 summary: Java Geometry Expert
 description: |
   JGEX combines dynamic geometry software,
