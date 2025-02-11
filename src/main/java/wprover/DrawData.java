@@ -96,9 +96,9 @@ public class DrawData {
     public static double getWidth(int index) {
         double d;
         try {
-            d = (double) dd.dashlist.get(index);
+            d = (double) dd.widthlist.get(index);
         } catch (ClassCastException cce) {
-            d = (int) dd.dashlist.get(index);
+            d = (int) dd.widthlist.get(index);
         }
         return d;
     }
