@@ -2940,7 +2940,7 @@ msgid ""
 msgstr ""
 
 # GDD 4 /1
-msgid "If AB ∥ EF and CD ⊥ EF, then CD ⊥ EF."
+msgid "If AB ∥ EF and CD ⊥ AB, then CD ⊥ EF."
 msgstr ""
 
 # GDD 5/1
