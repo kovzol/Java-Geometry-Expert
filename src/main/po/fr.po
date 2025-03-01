@@ -2869,8 +2869,8 @@ msgstr ""
 "Si AB ∥ CD et E est l'intersection de AC et BD, alors EA / EC = EB / ED."
 
 # GDD 4 /1
-msgid "If AB ∥ EF and CD ⊥ EF, then CD ⊥ EF."
-msgstr "Si AB ∥ EF et CD ⊥ EF, alors CD ⊥ EF."
+msgid "If AB ∥ EF and CD ⊥ AB, then CD ⊥ EF."
+msgstr "Si AB ∥ EF et CD ⊥ AB, alors CD ⊥ EF."
 
 # GDD 5/1
 msgid "If AB ⊥ CD, then ∠[AB,CD] = [1] (or 90 degrees)."

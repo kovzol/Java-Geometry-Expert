@@ -2846,7 +2846,7 @@ msgstr ""
 
 # GDD 4 /1
 #, fuzzy
-msgid "If AB ∥ EF and CD ⊥ EF, then CD ⊥ EF."
+msgid "If AB ∥ EF and CD ⊥ AB, then CD ⊥ EF."
 msgstr "אם AB מקביל לEF ו CD מאונך ל EF, אזי CD מאונך ל EF."
 
 # GDD 5/1

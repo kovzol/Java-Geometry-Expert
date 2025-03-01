@@ -2854,8 +2854,8 @@ msgstr ""
 "Ist AB ∥ CD und E der Schnittpunkt von AC und BD, dann gilt EA / EC = EB / "
 "ED."
 
-msgid "If AB ∥ EF and CD ⊥ EF, then CD ⊥ EF."
-msgstr "Wenn AB ∥ CD und CD ⊥ EF, dann gilt AB ⊥ EF."
+msgid "If AB ∥ EF and CD ⊥ AB, then CD ⊥ EF."
+msgstr "Wenn AB ∥ EF und CD ⊥ AB, dann gilt CD ⊥ EF."
 
 msgid "If AB ⊥ CD, then ∠[AB,CD] = [1] (or 90 degrees)."
 msgstr "Wenn AB ⊥ CD, dann gilt ∠[AB,CD] = [1] (oder 90 Grad)."

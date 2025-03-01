@@ -2843,8 +2843,8 @@ msgid ""
 msgstr "Ha AB ∥ CD és E az AC és BD metszete, akkor EA / EC = EB / ED."
 
 # GDD 4 /1
-msgid "If AB ∥ EF and CD ⊥ EF, then CD ⊥ EF."
-msgstr "Ha AB ∥ EF és CD ⊥ EF, akkor CD ⊥ EF."
+msgid "If AB ∥ EF and CD ⊥ AB, then CD ⊥ EF."
+msgstr "Ha AB ∥ EF és CD ⊥ AB, akkor CD ⊥ EF."
 
 # GDD 5/1
 msgid "If AB ⊥ CD, then ∠[AB,CD] = [1] (or 90 degrees)."
