@@ -1,25 +1,38 @@
 package maths;
 
-//import wprover.CMisc;
-
+/**
+ * Represents a character set for polynomial operations.
+ */
 public class CharSet {
     final private static boolean DEBUG = false;
-    private PolyBasic basic = PolyBasic.getInstance();
-    private static CharSet charset = new CharSet();
+    private final PolyBasic basic = PolyBasic.getInstance();
+    private static final CharSet charset = new CharSet();
     private static int REDUCE_LEN = 2;
 
+    /**
+     * Returns the debug status.
+     *
+     * @return true if debug is enabled; false otherwise
+     */
     public static boolean debug() {
         return DEBUG;
     }
 
+    /**
+     * Returns the singleton instance of CharSet.
+     *
+     * @return the singleton instance
+     */
     public static CharSet getinstance() {
         return charset;
     }
 
-    public long freemonos() {
-        return 0;
-    }
-
+    /**
+     * Processes the given polynomial and returns the resulting polynomial.
+     *
+     * @param pp the input polynomial
+     * @return the resulting polynomial
+     */
     public TPoly charset(TPoly pp) {
         TPoly rm, ch, chend, p, output;
         output = null;
@@ -50,7 +63,6 @@ public class CharSet {
             }
             chend.setNext(null);
             rm = tp;
-
 
             if (ch == chend) {
                 output = basic.ppush(ch.getPoly(), output);
@@ -86,11 +98,9 @@ public class CharSet {
                         poly = null;
                     }
                 }
-
             }
         }
 
-//        this.printpoly(output);
         reduce(output);
         TPoly tp = reverse(output);
         if (!cfinished(tp))
@@ -106,15 +116,25 @@ public class CharSet {
         return tp;
     }
 
-    public TPoly reduce1(TPoly poly) // 1, 2, 3, 4, 5
-    {
+    /**
+     * Reduces the given polynomial.
+     *
+     * @param poly the input polynomial
+     * @return the reduced polynomial
+     */
+    public TPoly reduce1(TPoly poly) {
         poly = reverse(poly);
         reduce(poly);
         poly = reverse(poly);
         return poly;
     }
 
-    public void reduce(TPoly poly) {    // n ,n-1,,,,,,, 1.
+    /**
+     * Reduces the given polynomial in place.
+     *
+     * @param poly the input polynomial
+     */
+    public void reduce(TPoly poly) {
         TPoly p1 = poly;
         while (p1 != null) {
             TMono m = p1.poly;
@@ -130,7 +150,12 @@ public class CharSet {
         }
     }
 
-
+    /**
+     * Checks if the given polynomial is finished.
+     *
+     * @param pp the input polynomial
+     * @return true if the polynomial is finished; false otherwise
+     */
     public boolean cfinished(TPoly pp) {
         if (pp == null) return true;
         int a = basic.lv(pp.getPoly());
@@ -147,6 +172,11 @@ public class CharSet {
         return true;
     }
 
+    /**
+     * Prints the given polynomial.
+     *
+     * @param pp the input polynomial
+     */
     public void printpoly(TPoly pp) {
         int i = 0;
         while (pp != null) {
@@ -160,6 +190,12 @@ public class CharSet {
         }
     }
 
+    /**
+     * Reverses the given polynomial.
+     *
+     * @param pp the input polynomial
+     * @return the reversed polynomial
+     */
     public static TPoly reverse(TPoly pp) {
         if (pp == null) return pp;
         TPoly out = null;
@@ -177,16 +213,5 @@ public class CharSet {
             }
         }
         return out;
-
     }
-
-    public TPoly pushpoly(TMono p, TPoly pp) {
-        TPoly pt;
-
-        pt = new TPoly();
-        pt.setNext(pp);
-        pt.setPoly(p);
-        return pt;
-    }
-
 }
