@@ -2,6 +2,9 @@ package maths;
 
 import java.math.BigInteger;
 
+/**
+ * Represents a monomial in a polynomial.
+ */
 public class TMono {
     public int x = 0;
     public int deg = 0;
@@ -9,10 +12,17 @@ public class TMono {
     public TMono coef = null;
     public TMono next = null;
 
+    /**
+     * Default constructor.
+     */
     public TMono() {
-
     }
 
+    /**
+     * Returns the value of the monomial.
+     *
+     * @return the value of the monomial as a long
+     */
     public long value() {
         if (val != null)
             return val.longValue();
@@ -23,6 +33,13 @@ public class TMono {
         }
     }
 
+    /**
+     * Constructs a monomial with the specified variable, value, and degree.
+     *
+     * @param x the variable
+     * @param val the value
+     * @param deg the degree
+     */
     public TMono(int x, BigInteger val, int deg) {
         this.x = x;
         this.deg = deg;
@@ -39,6 +56,13 @@ public class TMono {
         }
     }
 
+    /**
+     * Constructs a monomial with the specified variable, value, and degree.
+     *
+     * @param x the variable
+     * @param val the value
+     * @param deg the degree
+     */
     public TMono(int x, int val, int deg) {
         this.x = x;
         this.deg = deg;
@@ -49,9 +73,15 @@ public class TMono {
         } else {
             this.coef = new TMono(0, val, 0);
         }
-
     }
 
+    /**
+     * Constructs a monomial with the specified variable, coefficient, and degree.
+     *
+     * @param x the variable
+     * @param coef the coefficient
+     * @param deg the degree
+     */
     public TMono(int x, TMono coef, int deg) {
         this.x = x;
         this.deg = deg;
