@@ -8,6 +8,18 @@ import java.util.Vector;
  * JGEX supports loading and saving scripts in a simple textual format.
  * Among the examples, these files have no extension (see, e.g. 3_JAR/simson).
  * This class can load and save them.
+ *  * Represents geometric constructions and their associated operations.
+ *  *
+ *  * <p>This class encapsulates the management of points, construction steps,
+ *  * and constraints within a geometric theorem proving framework.
+ *  * It provides methods for adding, retrieving, and processing geometric data,
+ *  * including the generation of non-degenerate and prerequisite constraints.
+ *  * Fundamental operations include loading, saving, and validating the structure
+ *  * of geometric constructions.</p>
+ *  *
+ *  * <p>Utilize this class to perform geometric analyses and manipulations necessary
+ *  * for automated theorem proving and geometric constraint solving within the
+ *  * framework.</p>
  */
 public class GTerm {
 
@@ -29,13 +41,18 @@ public class GTerm {
     private Vector ccons = new Vector();
     private Vector ncons = new Vector();
 
+    /**
+     * Constructs a new GTerm instance.
+     */
     public GTerm() {
     }
 
-    public Vector getCgs() {
-        return ccons;
-    }
-
+    /**
+     * Returns the constraint at the specified index from the constraint vector.
+     *
+     * @param n the 0-based index of the constraint to retrieve
+     * @return the constraint at index n, or null if n is out of range
+     */
     public Cons getCons(int n) {
         int n1 = gcons.size();
         if (n < 0 || n >= n1)
@@ -43,6 +60,11 @@ public class GTerm {
         return (Cons) gcons.get(n);
     }
 
+    /**
+     * Returns a vector containing non‐degenerate constraints.
+     *
+     * @return a vector of CNdg objects representing non‐degenerate constraints
+     */
     public Vector getNcons() {
         Vector v = new Vector();
 
@@ -64,6 +86,12 @@ public class GTerm {
         return v;
     }
 
+    /**
+     * Generates a string description for the specified CNdg object based on the provided parameters.
+     *
+     * @param dg the CNdg object to update with its description
+     * @param pss the array of parameters used for generating the description
+     */
     public void generateSd(CNdg dg, Object[] pss) {
         switch (dg.type) {
             case Gib.NDG_COLL:
@@ -82,18 +110,21 @@ public class GTerm {
 
     }
 
+    /**
+     * Returns the vector containing all constraints.
+     *
+     * @return the vector of constraint objects
+     */
     public Vector getCons() {
         return gcons;
     }
 
-    public Vector getPureCons() {
-        Vector v = new Vector();
-        int n = gcons.size();
-        for (int i = 1; i < n - 1; i++)
-            v.add(gcons.get(i));
-        return v;
-    }
-
+    /**
+     * Copies all constraints into the given array, starting at index 1.
+     *
+     * @param cn the array in which to store the constraint objects
+     * @return the number of constraints copied
+     */
     public int setAllcons(Cons[] cn) {
         for (int i = 0; i < gcons.size(); i++) {
             Cons c = (Cons) gcons.get(i);
@@ -102,6 +133,12 @@ public class GTerm {
         return gcons.size();
     }
 
+    /**
+     * Copies all points into the given array, starting at index 1.
+     *
+     * @param pp the array in which to store the point objects
+     * @return the number of points copied
+     */
     public int setAllpts(ProPoint[] pp) {
         for (int i = 0; i < gpoints.size(); i++) {
             ProPoint p = (ProPoint) gpoints.get(i);
@@ -110,10 +147,20 @@ public class GTerm {
         return gpoints.size();
     }
 
+    /**
+     * Returns the number of points in the construction.
+     *
+     * @return the number of points
+     */
     public int getPointsNum() {
         return gpoints.size();
     }
 
+    /**
+     * Returns a vector containing the names of all points.
+     *
+     * @return a vector of point names
+     */
     public Vector getAllptsText() {
 
         Vector v = new Vector();
@@ -124,15 +171,29 @@ public class GTerm {
         return v;
     }
 
+    /**
+     * Returns the number of constraints (as derived from the points vector).
+     *
+     * @return the number of constraints
+     */
     public int getCons_no() {
         return gpoints.size();
     }
 
-
+    /**
+     * Returns the current conclusion condition.
+     *
+     * @return the Cond object representing the conclusion
+     */
     public Cond getConc() {
         return conc;
     }
 
+    /**
+     * Retrieves the conclusion constraint if it exists.
+     *
+     * @return the conclusion constraint, or null if none exists
+     */
     public Cons getConclusion() {
         int s = gcons.size();
         if (s == 0) return null;
@@ -142,6 +203,12 @@ public class GTerm {
         return null;
     }
 
+    /**
+     * Sets the conclusion constraint and updates the underlying condition.
+     *
+     * @param c the conclusion constraint to set
+     * @return true if the conclusion was set successfully, false otherwise
+     */
     public boolean setConclusion(Cons c) {
 
         int s = gcons.size();
@@ -177,15 +244,31 @@ public class GTerm {
         return true;
     }
 
+    /**
+     * Returns the name of the construction.
+     *
+     * @return the construction name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name for the construction.
+     *
+     * @param s the name to set
+     */
     public void setName(String s) {
         name = s;
     }
 
-
+    /**
+     * Reads an A-term from the provided BufferedReader.
+     *
+     * @param in the BufferedReader to read from
+     * @return true if the term is successfully read; false otherwise
+     * @throws IOException if an I/O error occurs
+     */
     public boolean readAterm(BufferedReader in) throws IOException {
         Vector glines = new Vector();
         int status = 0;
@@ -255,6 +338,13 @@ public class GTerm {
         return true;
     }
 
+    /**
+     * Writes the current A-term to the specified FileOutputStream.
+     *
+     * @param out the FileOutputStream to write to
+     * @return true if the A-term is successfully written; false otherwise
+     * @throws IOException if an I/O error occurs
+     */
     public boolean writeAterm(FileOutputStream out) throws IOException {
         String sn = name;
         if (sn == null || sn.length() == 0)
@@ -272,6 +362,13 @@ public class GTerm {
         return true;
     }
 
+    /**
+     * Reads an A-term from the given DataInputStream.
+     *
+     * @param in the DataInputStream to read from
+     * @return true if the A-term is successfully read; false otherwise
+     * @throws IOException if an I/O error occurs
+     */
     public boolean readAterm(DataInputStream in) throws IOException {
         int n = in.readInt();
         Vector glines = new Vector();
@@ -286,6 +383,13 @@ public class GTerm {
         return true;
     }
 
+    /**
+     * Writes the current A-term to the provided DataOutputStream using an alternative format.
+     *
+     * @param out the DataOutputStream to write to
+     * @return true if the A-term is successfully written; false otherwise
+     * @throws IOException if an I/O error occurs
+     */
     public boolean writeAterm2(DataOutputStream out) throws IOException {
         int n = gcons.size();
         out.writeInt(n + 2);
@@ -309,6 +413,12 @@ public class GTerm {
         return true;
     }
 
+    /**
+     * Adds a new point with the specified name if it does not already exist.
+     *
+     * @param s the name of the point to add
+     * @return false if the point already exists, otherwise false after adding the point
+     */
     public boolean add_pt(String s) {
         for (int i = 0; i < gpoints.size(); i++) {
             ProPoint p = (ProPoint) gpoints.get(i);
@@ -320,6 +430,16 @@ public class GTerm {
         return false;
     }
 
+    /**
+     * Sets the location for the point matching the given name.
+     *
+     * @param sn the name of the point
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @param x1 the first additional coordinate parameter
+     * @param y1 the second additional coordinate parameter
+     * @return true if the point location is successfully set; false otherwise
+     */
     public boolean setPtLoc(String sn, double x, double y, int x1, int y1) {
         for (int i = 0; i < gpoints.size(); i++) {
             ProPoint p = (ProPoint) gpoints.get(i);
@@ -332,6 +452,13 @@ public class GTerm {
         return false;
     }
 
+    /**
+     * Reads an A-term from the provided DataInputStream while ignoring header lines.
+     *
+     * @param in the DataInputStream to read from
+     * @return true if the A-term is successfully read; false otherwise
+     * @throws IOException if an I/O error occurs
+     */
     public boolean readAterm2(DataInputStream in) throws IOException {
         int n = in.readInt();
         Vector glines = new Vector();
@@ -346,7 +473,9 @@ public class GTerm {
         return true;
     }
 
-
+    /**
+     * Clears all stored points, construction steps, and resets the construction name.
+     */
     public void clear() {
         gpoints.clear();
         gcons.clear();
@@ -354,20 +483,22 @@ public class GTerm {
         name = null;
     }
 
-
+    /**
+     * Clears current construction data and sets constraints from the given vector.
+     *
+     * @param v the vector containing new constraints
+     */
     public void addConsV(Vector v) {
         this.clear();
         gcons.addAll(v);
     }
 
-    public void setGenerated(boolean r) {
-        generated = r;
-    }
-
-    public boolean isGenerated() {
-        return generated;
-    }
-
+    /**
+     * Generates the construction based on the provided vector of input lines.
+     *
+     * @param glines the vector containing construction lines
+     * @return true if the generation is successful; false otherwise
+     */
     public boolean generate(Vector glines) {
         if (generated)
             return true;
@@ -395,7 +526,12 @@ public class GTerm {
         return true;
     }
 
-
+    /**
+     * Generates the positions of points using the stored position string.
+     * Parses the position string, updates each point's coordinates, and sets the position flag.
+     *
+     * @return true if the positions were generated successfully or no positions were provided.
+     */
     boolean generate_position() {
         String s = posString.trim();
         if (s == null || s.length() == 0) {
@@ -492,11 +628,21 @@ public class GTerm {
         return true;
     }
 
-
+    /**
+     * Adds an auxiliary point to the construction.
+     *
+     * @param pt the point to be added.
+     */
     public void addauxedPoint(ProPoint pt) {
         gpoints.add(pt);
     }
 
+    /**
+     * Adds an auxiliary constraint to the construction.
+     * Inserts the constraint appropriately depending on whether a conclusion exists.
+     *
+     * @param c the constraint to be added.
+     */
     public void addauxedCons(Cons c) {
         int n = gcons.size();
         if (n == 0)
@@ -508,6 +654,11 @@ public class GTerm {
         }
     }
 
+    /**
+     * Returns the number of constructions excluding the final conclusion if present.
+     *
+     * @return the count of constructions.
+     */
     public int getconsNum() {
         int n = gcons.size() - 1;
         if (n <= 0)
@@ -518,14 +669,29 @@ public class GTerm {
         return n - 1;
     }
 
+    /**
+     * Determines if the term is animated based on the animation string.
+     *
+     * @return true if the term is animated, false otherwise.
+     */
     public boolean isTermAnimated() {
         return aniString.startsWith("ANI");
     }
 
+    /**
+     * Retrieves the animation string for the term.
+     *
+     * @return the animation string.
+     */
     public String getAnimateString() {
         return aniString;
     }
 
+    /**
+     * Checks if the positions of points have been set.
+     *
+     * @return true if positions are set, false otherwise.
+     */
     public boolean isPositionSet() {
         return is_position_set;
     }
@@ -607,6 +773,13 @@ public class GTerm {
         return true;
     }
 
+    /**
+     * Adds a construction condition parsed from the provided script line.
+     * Handles various types of conditions including point definitions and constraints.
+     *
+     * @param ln the script line representing the condition.
+     * @return true if the condition was added successfully, false otherwise.
+     */
     boolean addCondition(String ln) {
         String st = ln.trim().substring(0, 4);
         if (st.equalsIgnoreCase("show")) {
@@ -659,6 +832,12 @@ public class GTerm {
         return true;
     }
 
+    /**
+     * Retrieves the predicate type corresponding to the provided string.
+     *
+     * @param sh the string representing the predicate.
+     * @return the integer value corresponding to the predicate type.
+     */
     private int getPred(String sh) {
         int t = CST.get_pred(sh);
         if (t == 0)
@@ -666,9 +845,13 @@ public class GTerm {
         return t;
     }
 
-    public void addSquare(String[] list) {
-    }
 
+    /**
+     * Processes an inter-line constraint.
+     * Adds a circumcenter point if required before creating the constraint.
+     *
+     * @param list the array of parameters representing the constraint.
+     */
     public void addInterLS(String[] list) {
         if (list.length != 7) {
             return;
@@ -685,6 +868,13 @@ public class GTerm {
         this.addCd(Gib.C_I_LS, list);
     }
 
+
+    /**
+     * Processes an inter-segment constraint.
+     * Adds circumcenter points if needed before creating the constraint.
+     *
+     * @param list the array of parameters representing the constraint.
+     */
     public void addInterSS(String[] list) {
         if (list.length != 8) {
             return;
@@ -709,21 +899,14 @@ public class GTerm {
         this.addCd(Gib.C_I_SS, list);
     }
 
-    public void addRatio(int type, String[] list) {
 
-        try {
-            ProPoint pt = this.addPt(list[1]);
-            pt.setType(type);
-            int i = 0;
-            for (i = 1; i < list.length - 1; i++)
-                pt.setPS(findPt(list[i]), i - 1);
-            pt.setPS(Integer.parseInt(list[i]), i - 1);
-        } catch (NumberFormatException ee) {
-            Cm.print(ee.getMessage());
-        }
-
-    }
-
+    /**
+     * Adds a constant to the construction.
+     * Creates a new constant constraint using the provided identifier and function.
+     *
+     * @param sf the identifier for the constant.
+     * @param func the function defining the constant.
+     */
     public void addConstant(String sf, String func) {
 
         Cons c = new Cons(Gib.C_CONSTANT);
@@ -771,6 +954,12 @@ public class GTerm {
 
     }
 
+    /**
+     * Adds a point to the list and updates the initial point construction if needed.
+     *
+     * @param pt the point to be added.
+     * @return the new total count of points.
+     */
     int addPtToList(ProPoint pt) {
         gpoints.add(pt);
 
@@ -781,32 +970,11 @@ public class GTerm {
         return gpoints.size();
     }
 
-    void addCircle(String[] list) {
-        for (int i = 1; i <= 3; i++) {
-            ProPoint pt = new ProPoint();
-            pt.name = list[i];
-            pt.type = Gib.C_POINT;
-            addPtToList(pt);
-        }
-
-        ProPoint pt = new ProPoint();
-        pt.name = get_cir_center_name();
-        pt.type = Gib.C_CIRCUM;
-        pt.ps[0] = this.findPt(list[1]);
-        pt.ps[1] = this.findPt(list[2]);
-        pt.ps[2] = this.findPt(list[3]);
-        int o = addPtToList(pt);
-
-        for (int i = 4, j = 0; i < list.length; i++, j++) {
-            ProPoint pt1 = new ProPoint();
-            pt1.name = list[i];
-            pt1.type = Gib.C_O_C;
-            pt1.ps[0] = this.findPt(pt.name);
-            pt1.ps[1] = this.findPt(list[1]);
-            addPtToList(pt1);
-        }
-    }
-
+    /**
+     * Generates a unique name for a circle center that does not conflict with existing points.
+     *
+     * @return the generated circle center name.
+     */
     String get_cir_center_name() {
         int i = 1;
         while (true) {
@@ -826,6 +994,12 @@ public class GTerm {
         }
     }
 
+    /**
+     * Retrieves a point based on its 1-based index.
+     *
+     * @param x the 1-based index of the point.
+     * @return the corresponding ProPoint, or null if the index is out of bounds.
+     */
     public ProPoint getProPoint(int x) {
         if (x <= 0 || x > gpoints.size()) {
             return null;
@@ -833,6 +1007,12 @@ public class GTerm {
         return ((ProPoint) gpoints.get(x - 1));
     }
 
+    /**
+     * Retrieves a construction constraint based on its 1-based index.
+     *
+     * @param x the 1-based index of the constraint.
+     * @return the corresponding Cons object, or null if the index is out of bounds.
+     */
     public Cons getPcons(int x) {
         if (x <= 0 || x > gcons.size()) {
             return null;
@@ -841,6 +1021,12 @@ public class GTerm {
 
     }
 
+    /**
+     * Retrieves the name of a point based on its 1-based index.
+     *
+     * @param x the 1-based index of the point.
+     * @return the point name, or an empty string if the index is invalid.
+     */
     public String getPtName(int x) {
         if (x <= 0 || x > gpoints.size()) {
             return "";
@@ -848,7 +1034,9 @@ public class GTerm {
         return ((ProPoint) gpoints.get(x - 1)).name;
     }
 
-
+    /**
+     * Recalculates and updates constraint point indexes and conclusion values.
+     */
     public void ge_cpt() {
         for (int i = 0; i < gcons.size(); i++) {
             Cons c = (Cons) gcons.get(i);
@@ -908,6 +1096,14 @@ public class GTerm {
 
     }
 
+    /**
+     * Finds the center point index based on three given point names.
+     *
+     * @param a the first point name
+     * @param b the second point name
+     * @param c the third point name
+     * @return the index of the center point if found; 0 otherwise
+     */
     int findCenter(String a, String b, String c) {
         if (a == null || b == null || c == null) {
             return 0;
@@ -934,6 +1130,12 @@ public class GTerm {
         return 0;
     }
 
+    /**
+     * Finds the index of the point that matches the specified name.
+     *
+     * @param sn the name of the point to search for
+     * @return the index of the point if found; 0 otherwise
+     */
     int findPt(String sn) {
         for (int j = 0; j < gpoints.size(); j++) {
             ProPoint p = (ProPoint) gpoints.get(j);
@@ -944,6 +1146,12 @@ public class GTerm {
         return 0;
     }
 
+    /**
+     * Adds a new point with the specified name if it does not exist.
+     *
+     * @param sn the name of the point to add
+     * @return the added or existing ProPoint instance
+     */
     ProPoint addPt(String sn) {
         ProPoint pt;
         if ((pt = fd_pt(sn)) == null) {
@@ -955,6 +1163,12 @@ public class GTerm {
         return pt;
     }
 
+    /**
+     * Retrieves a point with the specified name from the list.
+     *
+     * @param sn the name of the point to retrieve
+     * @return the ProPoint if found; null otherwise
+     */
     protected ProPoint fd_pt(String sn) {
         for (int i = 0; i < gpoints.size(); i++) {
             ProPoint pt = (ProPoint) gpoints.get(i);
@@ -965,6 +1179,12 @@ public class GTerm {
         return null;
     }
 
+    /**
+     * Determines whether the provided string represents a valid integer.
+     *
+     * @param s the string to check
+     * @return true if the string is a valid integer representation; false otherwise
+     */
     boolean isStringTypeInt(String s) {
         if (s == null || s.length() == 0) return false;
         int i = 0;
@@ -977,6 +1197,13 @@ public class GTerm {
         return true;
     }
 
+    /**
+     * Creates and adds a constant constraint using the specified type and parameters.
+     *
+     * @param type the constraint type
+     * @param list the array of parameters
+     * @return the created constant constraint
+     */
     Cons addCd(int type, String[] list) {
         Cons c = getCd(type, list);
         if (c != null)
@@ -984,6 +1211,11 @@ public class GTerm {
         return c;
     }
 
+    /**
+     * Converts the string parameters of the given constraint to point indexes.
+     *
+     * @param c the constraint to process
+     */
     public void ge_pss2ps(Cons c) {
         int i = 0;
         while (true) {
@@ -996,12 +1228,24 @@ public class GTerm {
 
     }
 
+    /**
+     * Updates and adds a non-degenerate constraint if it is not already present.
+     *
+     * @param c the constraint to add
+     */
     public void addNdg(Cons c) {
         ge_pss2ps(c);
         if (!ncons.contains(c))
             ncons.add(c);
     }
 
+    /**
+     * Creates and adds a non-degenerate constraint from the provided type and parameters.
+     *
+     * @param type the constraint type
+     * @param list the array of parameters
+     * @return the created non-degenerate constraint
+     */
     Cons addNdg(int type, String[] list) {
         Cons c = getCd(type, list);
         if (c != null)
@@ -1009,6 +1253,13 @@ public class GTerm {
         return c;
     }
 
+    /**
+     * Creates a constraint based on the provided type and parameter list.
+     *
+     * @param type the constraint type
+     * @param list the array of parameters
+     * @return the created constraint
+     */
     Cons getCd(int type, String[] list) {
         int len = list.length;
         if (len <= 1)
@@ -1049,15 +1300,23 @@ public class GTerm {
         return c;
     }
 
+    /**
+     * Saves data to the given output stream.
+     *
+     * @param out the DataOutputStream to write to
+     * @return true if the save operation is successful
+     * @throws IOException if an I/O error occurs
+     */
     boolean Save(DataOutputStream out) throws IOException {
         out.writeChars("\n");
         return true;
     }
 
-    public String NAME(int i) {
-        return this.getPtName(i);
-    }
-
+    /**
+     * Retrieves the text representation of the current conclusion.
+     *
+     * @return the conclusion text, or "NO" if no conclusion is set
+     */
     public String getConcText() {
         Cons c = this.getConclusion();
         if (c == null)
@@ -1065,10 +1324,18 @@ public class GTerm {
         return CST.getDString(c.pss, c.type);
     }
 
+    /**
+     * Sets the conclusion number.
+     */
     public void setConclusionNo() {
 
     }
 
+    /**
+     * Checks if a valid conclusion exists in the construction.
+     *
+     * @return true if the last condition type is within the valid range (>= 50 and < 100); false otherwise.
+     */
     public boolean hasConclusion() {
         int n = gcons.size();
         if (n == 0)
@@ -1078,6 +1345,12 @@ public class GTerm {
 
     }
 
+    /**
+     * Determines whether the point identified by the given index is free.
+     *
+     * @param n the 1-based index of the point to check.
+     * @return true if the point is not used as the last element in any constraint; false otherwise.
+     */
     public boolean isFreePoint(int n) {
         for (int i = 0; i < gcons.size(); i++) {
             Cons c = (Cons) gcons.get(i);
@@ -1092,6 +1365,11 @@ public class GTerm {
 //        return false;
     }
 
+    /**
+     * Returns a string representation of the construction.
+     *
+     * @return the name of the construction if available; otherwise, the default string representation.
+     */
     public String toString() {
         if (name != null) {
             return name;
@@ -1100,11 +1378,11 @@ public class GTerm {
         }
     }
 
-
     /**
-     * **************pc******************
+     * Processes and returns a vector of processed constraints.
+     *
+     * @return a vector containing the processed constraints.
      */
-
     public Vector pc() {
         Vector vlist = new Vector();
         Vector v = new Vector();
@@ -1179,13 +1457,9 @@ public class GTerm {
         return vlist;
     }
 
-    private void showNCMessage(Cons c1, Cons c2) {
-        String s1 = c1.toDString();
-        if (c2 != null)
-            s1 += "\n" + c2.toDString();
-        JOptionPane.showMessageDialog(null, "NOT CONSTRUCTIVE\n" + s1);
-    }
-
+    /**
+     * Aggregates and computes all circle constraints from the current constraint data.
+     */
     public void getAllCircles() {
         Vector v = ccons;
 
@@ -1249,6 +1523,14 @@ public class GTerm {
         }
     }
 
+    /**
+     * Adds a circle constraint between the two specified points to the provided constraint,
+     * if the connection does not already exist.
+     *
+     * @param a the first point index.
+     * @param b the second point index.
+     * @param cs the constraint to which the circle condition is added.
+     */
     public void addccc(int a, int b, Cons cs) {
         int n = (cs.no + 1) / 2;
         for (int i = 0; i < n; i++) {
@@ -1260,6 +1542,12 @@ public class GTerm {
         cs.no += 2;
     }
 
+    /**
+     * Adds prerequisite equality constraints based on the given type and associated points.
+     *
+     * @param t the constraint type.
+     * @param p an array of point indices representing the constraint.
+     */
     public void add_preq(int t, int[] p) {
         switch (t) {
             case Gib.C_O_C:
@@ -1329,6 +1617,14 @@ public class GTerm {
         }
     }
 
+    /**
+     * Adds an equality constraint equating the distances between the two pairs of points.
+     *
+     * @param a the first point index of the first pair.
+     * @param b the second point index of the first pair.
+     * @param c the first point index of the second pair.
+     * @param d the second point index of the second pair.
+     */
     public void add_eqcons(int a, int b, int c, int d) {
         Cons cs = new Cons(Gib.C_EQDISTANCE, 100);
         cs.add_pt(a);
@@ -1338,7 +1634,13 @@ public class GTerm {
         ccons.add(cs);
     }
 
-
+    /**
+     * Retrieves and removes the first constraint in the vector that contains the specified point.
+     *
+     * @param pt the point identifier to search for in the constraints.
+     * @param v the vector of constraints to search through.
+     * @return the constraint that contains the point, or null if no such constraint exists.
+     */
     public Cons getcons(int pt, Vector v) {
         for (int i = 0; i < v.size(); i++) {
             Cons c = (Cons) v.get(i);
@@ -1350,6 +1652,12 @@ public class GTerm {
         return null;
     }
 
+    /**
+     * Generates all non-degenerate constraints from the given vector.
+     *
+     * @param v the vector of constraints from which to generate non-degenerate constraints.
+     * @return a vector containing all non-degenerate constraints.
+     */
     public Vector getAllNdgs(Vector v) {
 
         Vector v1 = new Vector();
@@ -1360,6 +1668,12 @@ public class GTerm {
         return v1;
     }
 
+    /**
+     * Generates non-degenerate constraints based on the specified constraint and adds them to the provided vector.
+     *
+     * @param c the original constraint used as a basis for generating non-degenerate constraints.
+     * @param v the vector to which the generated constraints will be added.
+     */
     public void generateCons(Cons c, Vector v) {
         switch (c.type) {
 
@@ -1526,14 +1840,19 @@ public class GTerm {
         }
     }
 
-    public Cons getNDG_AA(Cons c) {
-        if (c.type != Gib.C_I_AA)
-            return null;
-        return null;
-
-    }
-
-
+    /**
+     * Creates a non-degenerate parallel constraint from the provided points and associated objects.
+     *
+     * @param t1 the first point identifier.
+     * @param t2 the second point identifier.
+     * @param t3 the third point identifier.
+     * @param t4 the fourth point identifier.
+     * @param o1 the first associated object.
+     * @param o2 the second associated object.
+     * @param o3 the third associated object.
+     * @param o4 the fourth associated object.
+     * @return a Cons object representing the non-degenerate parallel constraint, or null if conditions are not met.
+     */
     public Cons getNDG_PARA(int t1, int t2, int t3, int t4, Object o1, Object o2, Object o3, Object o4) {
         if (t1 > t2) {
             int t = t1;
@@ -1586,6 +1905,19 @@ public class GTerm {
 
     }
 
+    /**
+     * Creates a non-degenerate perpendicular constraint based on the provided points and associated objects.
+     *
+     * @param t1 the first point identifier.
+     * @param t2 the second point identifier.
+     * @param t3 the third point identifier.
+     * @param t4 the fourth point identifier.
+     * @param o1 the first associated object.
+     * @param o2 the second associated object.
+     * @param o3 the third associated object.
+     * @param o4 the fourth associated object.
+     * @return a Cons object representing the non-degenerate perpendicular constraint.
+     */
     public Cons getNDG_PERP(int t1, int t2, int t3, int t4, Object o1, Object o2, Object o3, Object o4) {
         if (t1 > t2) {
             int t = t1;
@@ -1633,6 +1965,17 @@ public class GTerm {
         return c1;
     }
 
+    /**
+     * Creates a non-degenerate collinearity constraint from the given point identifiers and associated objects.
+     *
+     * @param t1 the first point identifier.
+     * @param t2 the second point identifier.
+     * @param t3 the third point identifier.
+     * @param o1 the first associated object.
+     * @param o2 the second associated object.
+     * @param o3 the third associated object.
+     * @return a Cons object representing the non-degenerate collinearity constraint, or null if any two points are equal.
+     */
     public Cons getNDG_COLL(int t1, int t2, int t3, Object o1, Object o2, Object o3) {
         if (t1 == t2 || t1 == t3 || t2 == t3) return null;
         Cons c1 = new Cons(Gib.NDG_COLL);
@@ -1672,6 +2015,15 @@ public class GTerm {
 
     }
 
+    /**
+     * Creates a non-degenerate non-isotropic constraint from two point identifiers and their associated objects.
+     *
+     * @param t1 the first point identifier.
+     * @param t2 the second point identifier.
+     * @param o1 the first associated object.
+     * @param o2 the second associated object.
+     * @return a Cons object representing the non-degenerate non-isotropic constraint.
+     */
     public Cons getNDG_NON_ISOTROPIC(int t1, int t2, Object o1, Object o2) {
         Cons c1 = new Cons(Gib.NDG_NON_ISOTROPIC);
         if (t1 > t2) {
@@ -1690,6 +2042,15 @@ public class GTerm {
         return c1;
     }
 
+    /**
+     * Creates a non-degenerate inequality constraint based on two point identifiers and associated objects.
+     *
+     * @param t1 the first point identifier.
+     * @param t2 the second point identifier.
+     * @param o1 the first associated object.
+     * @param o2 the second associated object.
+     * @return a Cons object representing the non-degenerate inequality constraint.
+     */
     public Cons getNDG_NEQ(int t1, int t2, Object o1, Object o2) {
         if (t1 > t2) {
             int t = t1;
@@ -1707,6 +2068,13 @@ public class GTerm {
         return c1;
     }
 
+    /**
+     * Adds a non-degenerate constraint to the specified vector.
+     * If a similar constraint exists, it avoids duplication or replaces the existing one.
+     *
+     * @param c the non-degenerate constraint to add.
+     * @param v the vector in which the constraint is to be added.
+     */
     public void addNDG(Cons c, Vector v) {
         if (c == null) return;
 
@@ -1722,6 +2090,13 @@ public class GTerm {
         v.add(c);
     }
 
+    /**
+     * Checks if the first non-degenerate constraint is considered contained within the second.
+     *
+     * @param c the constraint to check for containment.
+     * @param c1 the constraint that may contain the first.
+     * @return true if the first constraint is contained within the second, false otherwise.
+     */
     public boolean NDG_Contains(Cons c, Cons c1) // c < c1
     {
 

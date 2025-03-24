@@ -2,164 +2,75 @@ package gprover;
 
 import wprover.GExpert;
 
+/**
+ * The CST class contains constants and utility methods for managing
+ * geometric constructions and their validations.
+ *
+ * <p>This class provides arrays for construction types, intersection types,
+ * and conclusion types, along with methods to retrieve indices, generate
+ * descriptive strings for geometric constructions, and perform various
+ * validations and conversions.
+ *
+ * <p>The static method {@link #charCons(int, Cons, Cons, Object[])} constructs a new
+ * construction by combining two given constructions, performing necessary
+ * validations and point adjustments based on geometric rules.
+ */
 public class CST {
 
-    final public static String[] cst =
-            {
-                    "POINT",
-                    "LINE",
-                    "ON_LINE",
-                    "ON_PLINE",
-                    "ON_TLINE",
-                    "ON_BLINE",
-                    "ON_ALINE",
+    // Array of geometric construction types
+    final public static String[] cst = {
+            "POINT", "LINE", "ON_LINE", "ON_PLINE", "ON_TLINE", "ON_BLINE", "ON_ALINE",
+            "FOOT", "CIRCLE", "ON_CIRCLE", "CIRCUMCENTER", "ON_RCIRCLE",
+            "MIDPOINT", "EQDISTANCE", "EQANGLE", "TRATIO", "PRATIO", "NRATIO", "LRATIO",
+            "INVERSION", "REFLECTION", "SYM", "TRIANGLE", "QUADRANGLE", "PENTAGON",
+            "POLYGON", "ISO_TRIANGLE", "R_TRIANGLE", "EQ_TRIANGLE", "TRAPEZOID",
+            "R_TRAPEZOID", "PARALLELOGRAM", "LOZENGE", "RECTANGLE", "SQUARE",
+            "INCENTER", "ORTHOCENTER", "CENTROID", "CONSTANT", "PSQUARE", "NSQUARE",
+            "S_ANGLE", "ANGLE_BISECTOR", "LC_TANGENT", "RATIO", "CCTANGENT",
+            "ON_SCIRCLE", "ON_BALINE", "ON_DCIRCLE", "EQANGLE3P"
+    };
 
-                    "FOOT",
-                    "CIRCLE",
-                    "ON_CIRCLE",
-                    "CIRCUMCENTER",
-                    "ON_RCIRCLE",
-
-                    "MIDPOINT",
-
-                    "EQDISTANCE", //"ON_RCIRCLE",
-                    "EQANGLE",
-
-                    "TRATIO",
-                    "PRATIO",
-                    "NRATIO",
-                    "LRATIO",
-
-                    "INVERSION",
-                    "REFLECTION",
-                    "SYM",
-
-                    "TRIANGLE",
-                    "QUADRANGLE",
-                    "PENTAGON",
-                    "POLYGON",
-                    "ISO_TRIANGLE",
-                    "R_TRIANGLE",
-                    "EQ_TRIANGLE",
-                    "TRAPEZOID",
-                    "R_TRAPEZOID",
-                    "PARALLELOGRAM",
-                    "LOZENGE",
-                    "RECTANGLE",
-                    "SQUARE",
-
-                    "INCENTER",
-                    "ORTHOCENTER",
-                    "CENTROID",
-
-                    "CONSTANT",
-
-                    "PSQUARE",
-                    "NSQUARE",
-                    "S_ANGLE",
-                    "ANGLE_BISECTOR",
-                    "LC_TANGENT",
-                    "RATIO",
-                    "CCTANGENT",
-                    "ON_SCIRCLE",
-                    "ON_BALINE",
-                    "ON_DCIRCLE",
-                    "EQANGLE3P"
-            };
-
-
+    // Array of intersection types
     final public static String[] inters = {
-            "INTERSECTION_LL",
-            "INTERSECTION_LP",
-            "INTERSECTION_LC",
-            "INTERSECTION_LB",
-            "INTERSECTION_LT",
-            "INTERSECTION_LR",
-            "INTERSECTION_LS",
-            "INTERSECTION_PP",
-            "INTERSECTION_PC",
-            "INTERSECTION_PT",
-            "INTERSECTION_PB",
-            "INTERSECTION_TC",
-            "INTERSECTION_TT",
-            "INTERSECTION_TB",
-            "INTERSECTION_BB",
-            "INTERSECTION_BC",
-            "INTERSECTION_CC",
-            "INTERSECTION_CR",
-            "INTERSECTION_RR",
-            "INTERSECTION_SS",
-            "INTERSECTION_AA",
-
-            "INTERSECTION_LA",
-            "INTERSECTION_PA",
-            "INTERSECTION_PR",
-            "INTERSECTION_TA",
-            "INTERSECTION_TR",
-            "INTERSECTION_BA",
-            "INTERSECTION_BR",
+            "INTERSECTION_LL", "INTERSECTION_LP", "INTERSECTION_LC", "INTERSECTION_LB",
+            "INTERSECTION_LT", "INTERSECTION_LR", "INTERSECTION_LS", "INTERSECTION_PP",
+            "INTERSECTION_PC", "INTERSECTION_PT", "INTERSECTION_PB", "INTERSECTION_TC",
+            "INTERSECTION_TT", "INTERSECTION_TB", "INTERSECTION_BB", "INTERSECTION_BC",
+            "INTERSECTION_CC", "INTERSECTION_CR", "INTERSECTION_RR", "INTERSECTION_SS",
+            "INTERSECTION_AA", "INTERSECTION_LA", "INTERSECTION_PA", "INTERSECTION_PR",
+            "INTERSECTION_TA", "INTERSECTION_TR", "INTERSECTION_BA", "INTERSECTION_BR",
             "PT_EQUAL"
     };
 
+    // Array of conclusion types
     final public static String[] conclusion = {
-            "COLLINEAR",
-            "PARALLEL",
-            "PERPENDICULAR",
-            "MIDPOINT",
-            "CYCLIC",
-            "EQDISTANCE",
-            "EQANGLE",
-            "PERP_BISECT",
-            "TANGENT",
-            "HARMONIC_PAIR",
-            "EQ_TRIANGLE",
-            "SIM_TRIANGLE",
-            "CON_TRIANGLE",
-            "EQ_PRODUCT",
-            "ORTHOCENTER",
-            "INCENTER",
-            "RATIO",
-            "S_ANGLE",
-            "N_ANGLES",
-            "N_SEGMENTS"
-
+            "COLLINEAR", "PARALLEL", "PERPENDICULAR", "MIDPOINT", "CYCLIC",
+            "EQDISTANCE", "EQANGLE", "PERP_BISECT", "TANGENT", "HARMONIC_PAIR",
+            "EQ_TRIANGLE", "SIM_TRIANGLE", "CON_TRIANGLE", "EQ_PRODUCT", "ORTHOCENTER",
+            "INCENTER", "RATIO", "S_ANGLE", "N_ANGLES", "N_SEGMENTS"
     };
 
-    public static String[] s_conc_detail =
-            {
-                    "Collinear",
-                    "Parallel",
-                    "Perpendicular",
-                    "Midpoint",
-                    "Cyclic",
-                    "Equal Distance",
-                    "Equal Angle",
-                    "Bisect",
-                    "Tangent",
-                    "Harmonic Pair",
-                    "Equilateral Triangle",
-                    "Similiar Triangle",
-                    "Congruent Triangle",
-                    "Equal product",
-                    "Orthocenter",
-                    "Incenter",
-                    "Ratio",
-                    "Special angle",
-                    "Angles Equation",
-                    "Segment Equation"
-            };
+    // Array of detailed conclusion descriptions
+    public static String[] s_conc_detail = {
+            "Collinear", "Parallel", "Perpendicular", "Midpoint", "Cyclic",
+            "Equal Distance", "Equal Angle", "Bisect", "Tangent", "Harmonic Pair",
+            "Equilateral Triangle", "Similiar Triangle", "Congruent Triangle",
+            "Equal product", "Orthocenter", "Incenter", "Ratio", "Special angle",
+            "Angles Equation", "Segment Equation"
+    };
 
-    private CST() {
-    }
+    // Private constructor to prevent instantiation
+    private CST() {}
 
-    public static String get_detail_info(int n, Object[] p) {
-        return null;
-    }
-
+    // Constants for index ranges
     final private static int CONC_INDEX = 70;
     final private static int INTER_INDEX = 100;
 
-
+    /**
+     * Gets the index of a conclusion type.
+     * @param s The conclusion type as a string.
+     * @return The index of the conclusion type.
+     */
     public static int getClu(String s) {
         s = s.toUpperCase();
         for (int i = 0; i < conclusion.length; i++)
@@ -173,6 +84,11 @@ public class CST {
         return 0;
     }
 
+    /**
+     * Gets the index of a detailed conclusion description.
+     * @param s The detailed conclusion description as a string.
+     * @return The index of the detailed conclusion description.
+     */
     public static int getClu_D(String s) {
         for (int i = 0; i < s_conc_detail.length; i++)
             if (s.equalsIgnoreCase(s_conc_detail[i]))
@@ -180,8 +96,12 @@ public class CST {
         return 0;
     }
 
+    /**
+     * Gets the conclusion or intersection type as a string.
+     * @param n The index of the type.
+     * @return The type as a string.
+     */
     public static String getClus(int n) {
-
         int i = n - CONC_INDEX;
         if (i >= 0 && i < conclusion.length)
             return conclusion[i];
@@ -196,10 +116,13 @@ public class CST {
         return inters[i];
     }
 
+    /**
+     * Gets the index of a predicate type.
+     * @param s The predicate type as a string.
+     * @return The index of the predicate type.
+     */
     public static int get_pred(String s) {
-
         int n = 0;
-
 
         if (n == 0)
             for (int i = 0; i < cst.length; i++)
@@ -215,13 +138,17 @@ public class CST {
                     break;
                 }
 
-
         if (n == 0)
             n = getClu(s);
 
         return n;
     }
 
+    /**
+     * Gets the predicate type as a string.
+     * @param n The index of the type.
+     * @return The type as a string.
+     */
     public static String get_preds(int n) {
         if (n >= 1 && n <= cst.length)
             return cst[n - 1];
@@ -233,10 +160,23 @@ public class CST {
         return getClus(n);
     }
 
+    /**
+     * Gets a descriptive string for a given type and parameters.
+     * @param pss The parameters.
+     * @param t The type.
+     * @return The descriptive string.
+     */
     public static String getDString(Object[] pss, int t) {
         return getDString(pss, t, true);
     }
 
+    /**
+     * Gets a descriptive string for a given type and parameters.
+     * @param pss The parameters.
+     * @param t The type.
+     * @param d Whether to include detailed descriptions.
+     * @return The descriptive string.
+     */
     public static String getDString(Object[] pss, int t, boolean d) {
 
         switch (t) {
@@ -615,7 +555,14 @@ public class CST {
 
         }
     }
-
+    /**
+     * Generates a concatenated String of the non-null elements in the specified subarray.
+     *
+     * @param m the starting index (inclusive)
+     * @param n the ending index (inclusive)
+     * @param ps the array of Objects
+     * @return a String containing the concatenation of each non-null element's String representation
+     */
     public static String vprint(int m, int n, Object[] ps) {
         String s = "";
         for (int i = m; i <= n; i++)
@@ -624,6 +571,19 @@ public class CST {
         return s;
     }
 
+    /**
+     * Constructs a new construction by combining two given construction objects.
+     *
+     * <p>This method performs the necessary validations and adjustments of point indices
+     * according to geometric rules. If the primary construction (c1) is null, the method
+     * uses the secondary construction (c2) as the basis for constructing the new Cons object.
+     *
+     * @param pt the reference point index used for adjustments
+     * @param c1 the primary Cons object; may be null
+     * @param c2 the secondary Cons object to use if c1 is null
+     * @param pss the array of point information associated with the construction
+     * @return the resulting Cons object after combining and validating the constructions
+     */
     public static Cons charCons(int pt, Cons c1, Cons c2, Object[] pss) {
         if (c1 == null) {
             c1 = c2;
@@ -850,6 +810,15 @@ public class CST {
     }
 
 
+    /**
+     * Adjusts the specification fields of the given construction based on the reference point.
+     *
+     * <p>This method analyzes and modifies the type and point indices of the provided
+     * construction (c) according to geometric rules and validations.
+     *
+     * @param pt the reference point index used for adjustments
+     * @param c the construction object to be adjusted; may be {@code null}
+     */
     public static void spec(int pt, Cons c) {
         if (c == null) return;
 
@@ -922,6 +891,15 @@ public class CST {
         }
     }
 
+    /**
+     * Adds additional point specification data to the given construction.
+     *
+     * <p>This method processes the provided array of point specification data and updates the
+     * corresponding fields in the construction object accordingly.</p>
+     *
+     * @param c   the construction object to update
+     * @param pss the array of additional point specification data
+     */
     public static void addPss(Cons c, Object[] pss) {
         int[] p = c.ps;
         int i = 0;
@@ -936,6 +914,17 @@ public class CST {
         c.no = i - 1;
     }
 
+    /**
+     * Revalidates the provided array of point indices based on the reference point and count.
+     * <p>
+     * This method applies revalidation rules to adjust the point indices in the array
+     * so that they are consistent with the given reference point.
+     * </p>
+     *
+     * @param pt the reference point used for revalidation
+     * @param p  the array of point indices to validate
+     * @param n  the number of valid entries in the point indices array
+     */
     public static void reval(int pt, int[] p, int n) {
         int n1 = n / 2;
         boolean c = false;
@@ -964,6 +953,14 @@ public class CST {
             reval(pt, p, n1);
     }
 
+    /**
+     * Adjusts the type code for a line-to-foot construction.
+     * Applies foot-specific rules and validations on the provided type and point array.
+     *
+     * @param t the original type code
+     * @param p the array of point indices associated with the construction
+     * @return the adjusted type code after applying the foot-specific rules
+     */
     public static int ge_lt_foot(int t, int[] p) {
         if (p[1] == p[4] && p[2] == p[5] || p[1] == p[5] && p[2] == p[4]) {
             p[4] = p[5] = 0;
@@ -976,6 +973,18 @@ public class CST {
         return t;
     }
 
+    /**
+     * Validates and adjusts the type code for a construction based on the reference point and its associated point indices.
+     *
+     * <p>This method checks the provided point index array and the initial type code, applying specific geometric rules
+     * to ensure the correctness of the construction. It returns an adjusted type code reflecting any validations applied,
+     * or 0 if the validation fails.
+     *
+     * @param pt the reference point index used during validation
+     * @param t1 the initial type code of the construction
+     * @param p1 an array of point indices associated with the construction (may be modified during validation)
+     * @return the validated (and possibly adjusted) type code, or 0 if validation fails
+     */
     public static int validate_all(int pt, int t1, int[] p1) {
 
         if (t1 == Gib.C_EQDISTANCE || t1 == Gib.CO_CONG) {
@@ -991,6 +1000,17 @@ public class CST {
         return t1;
     }
 
+    /**
+     * Validates and adjusts the construction type for an angle-related scenario.
+     *
+     * <p>This method checks and modifies the provided point indices array for angle-related constructions,
+     * applying specific geometric validations. It returns an adjusted type code if the validation is successful,
+     * or 0 if validation fails.</p>
+     *
+     * @param pt the reference point index used for validation
+     * @param ps an array of point indices related to the construction
+     * @return the validated (and possibly adjusted) type code, or 0 if validation fails
+     */
     public static int validate_ea(int pt, int[] ps) {
         int t1 = Gib.C_O_A;
         int i = 0;
@@ -1034,6 +1054,17 @@ public class CST {
         return t1;
     }
 
+    /**
+     * Validates and adjusts the construction type for a collinearity scenario.
+     *
+     * <p>This method examines the provided array of point indices and determines if they satisfy
+     * the conditions for defining a collinear construction. It returns the validated type code
+     * if successful, or 0 if validation fails.</p>
+     *
+     * @param pt the reference point index used for validation
+     * @param ps the array of point indices to validate
+     * @return the validated type code for the collinear construction, or 0 if validation fails
+     */
     public static int validate_coll(int pt, int[] ps) {
         if (ps[0] < ps[1])
             exchange(0, 1, ps);
@@ -1044,6 +1075,17 @@ public class CST {
         return Gib.C_O_L;
     }
 
+    /**
+     * Validates and adjusts the construction type for a parallel scenario.
+     *
+     * <p>This method examines the array of point indices and validates them according to
+     * the rules for parallel constructions. It returns the validated type code if the
+     * validation is successful, or 0 if validation fails.
+     *
+     * @param pt the reference point index used during validation
+     * @param ps the array of point indices associated with the parallel construction
+     * @return the validated construction type code for a parallel configuration, or 0 if invalid
+     */
     public static int validate_p(int pt, int[] ps) {
         if (ps[0] < ps[1])
             exchange(0, 1, ps);
@@ -1056,6 +1098,19 @@ public class CST {
         return Gib.C_O_P;
     }
 
+    /**
+     * Validates and adjusts the construction type for a perpendicular construction.
+     *
+     * <p>This method examines the provided array of point indices and applies
+     * perpendicular-specific validation rules. It may reorder or adjust the point indices
+     * to ensure consistency with the geometric definition of a perpendicular construction.
+     * If the validation is successful, the method returns the adjusted construction type;
+     * otherwise, it returns 0.</p>
+     *
+     * @param pt the reference point index used during validation
+     * @param ps the array of point indices associated with the construction
+     * @return the validated (and possibly adjusted) construction type code, or 0 if validation fails
+     */
     public static int validate_t(int pt, int[] ps) {
         if (ps[0] < ps[1])
             exchange(0, 1, ps);
@@ -1068,6 +1123,18 @@ public class CST {
         return Gib.C_O_T;
     }
 
+    /**
+     * Validates and adjusts the construction type for a congruence of distances construction.
+     *
+     * <p>This method examines the provided array of point indices associated
+     * with a congruence construction (e.g., verifying segment congruence) and applies
+     * specific validations. It returns an adjusted type code reflecting the outcome of the
+     * validation, or 0 if validation fails.</p>
+     *
+     * @param pt the reference point index used for validation
+     * @param ps the array of point indices associated with the congruence construction
+     * @return the validated construction type code, or 0 if validation fails
+     */
     public static int validate_cg(int pt, int[] ps) {
         if (ps[0] < ps[1])
             exchange(0, 1, ps);
@@ -1086,12 +1153,28 @@ public class CST {
         return Gib.C_O_R;
     }
 
+
+    /**
+     * Exchanges the elements at indices i and j in the given array.
+     *
+     * @param i the index of the first element to exchange
+     * @param j the index of the second element to exchange
+     * @param ps the array in which the elements will be swapped
+     */
     public static void exchange(int i, int j, int[] ps) {
         int t = ps[i];
         ps[i] = ps[j];
         ps[j] = t;
     }
 
+
+    /**
+     * Creates a copy of the given integer array.
+     * This method returns a new array containing the same elements as the input array.
+     *
+     * @param p the array to copy
+     * @return a new array that is a copy of p
+     */
     public static int[] pcopy(int[] p) {
         if (p == null)
             return null;

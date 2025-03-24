@@ -1,31 +1,39 @@
 package gprover;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-5-4
- * Time: 11:32:44
- * To change this template use File | Settings | File Templates.
+ * The DTerm class represents a term in a polynomial with a specific degree.
+ * It includes properties for the degree, the term itself, the next term in the list,
+ * and a string representation of the term.
  */
+public class DTerm {
+    /** The degree of the term. */
+    public int deg;
 
-public class DTerm
-{
-      public int deg;          //degree
-      public XTerm p;         //A term
-      public DTerm nx;       // All next terms.
+    /** The term itself. */
+    public XTerm p;
 
-      public String text;
+    /** The next term in the list. */
+    public DTerm nx;
 
-      public DTerm()
-      {
-            deg = 0;
-            p = null;
-            nx = null;
-            text = null;
-      }
+    /** The string representation of the term. */
+    public String text;
 
-      public String toString()
-      {
-            return text;
-      }
+    /**
+     * Constructs a DTerm object with default values.
+     */
+    public DTerm() {
+        deg = 0;
+        p = null;
+        nx = null;
+        text = null;
+    }
+
+    /**
+     * Returns the string representation of the term.
+     *
+     * @return the string representation of the term
+     */
+    public String toString() {
+        return text;
+    }
 }

@@ -1,12 +1,5 @@
 package gprover;
 
-/**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-4-14
- * Time: 13:31:19
- * To change this template use File | Settings | File Templates.
- */
 public class Var {
     int nm;
     char[] p = new char[9];
@@ -15,10 +8,20 @@ public class Var {
 
     String sd = null;
 
-    public Var() {
+    /**
+     * Constructs a Var object with default values.
+     */
+    public Var() {    }
 
-    }
-
+    /**
+     * Constructs a Var object with specified values.
+     *
+     * @param n the name of the variable
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param p4 the fourth point
+     */
     public Var(int n, int p1, int p2, int p3, int p4) {
         nm = n;
         pt[0] = p1;
@@ -27,28 +30,19 @@ public class Var {
         pt[3] = p4;
     }
 
-    public void revert() {
-        int k = pt[0];
-        pt[0] = pt[2];
-        pt[2] = k;
-
-        k = pt[1];
-        pt[1] = pt[3];
-        pt[3] = k;
-    }
-
-    public Var(Var v) {
-        nm = v.nm;
-        pt[0] = v.p[0];
-        pt[1] = v.p[1];
-        pt[2] = v.p[2];
-        pt[3] = v.p[3];
-    }
-
+    /**
+     * Returns the string representation of the variable.
+     *
+     * @return the string representation of the variable
+     */
+    @Override
     public String toString() {
         return sd;
     }
 
+    /**
+     * Constructs a TLine object with default values.
+     */
     public void setString(String s) {
         sd = s;
     }

@@ -1,12 +1,8 @@
-/**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2006-2-14
- * Time: 21:33:19
- * To change this template use File | Settings | File Templates.
- */
 package gprover;
 
+/**
+ * Constructs a Mnde object with default values.
+ */
 public class PLine extends CClass {
     int lemma;
     Cond co;
@@ -15,6 +11,12 @@ public class PLine extends CClass {
 
     PLine nx;
 
+    /**
+     * Constructs a PLine object with two lines.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     */
     public PLine(LLine l1, LLine l2) {
         this();
         ln[0] = l1;
@@ -22,6 +24,9 @@ public class PLine extends CClass {
         no = 1;
     }
 
+    /**
+     * Constructs a PLine object with default values.
+     */
     public PLine() {
         type = lemma = no = 0;
         co = null;

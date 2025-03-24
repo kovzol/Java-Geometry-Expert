@@ -1,30 +1,48 @@
 package gprover;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-1-20
- * Time: 19:02:14
- * To change this template use File | Settings | File Templates.
+ * The CNdg class represents a geometric non-degenerate condition.
+ * It includes properties for dependent constructions, equivalent conditions,
+ * existence flag, type, number, points, and a string description.
  */
 public class CNdg {
+    /** The maximum number of geometric objects. */
     final public static int MAX_GEO = 16;
 
-    public Object dep; // dependent construction
-    public Object equ; // equivalent conditions
+    /** The dependent construction. */
+    public Object dep;
+
+    /** The equivalent conditions. */
+    public Object equ;
+
+    /** The existence flag. */
     public boolean exists = false;
 
+    /** The type of the geometric condition. */
     public int type;
+
+    /** The number of points. */
     public int no = -1;
+
+    /** The array of points. */
     public int[] p = new int[MAX_GEO];
 
+    /** The string description of the geometric condition. */
     String sd;
 
+    /**
+     * Constructs a CNdg object with default values.
+     */
     public CNdg() {
         dep = equ = sd = null;
         type = 0;
     }
 
+    /**
+     * Gets the maximum integer value from the points array.
+     *
+     * @return the maximum integer value from the points array
+     */
     public int getMaxInt() {
         int n = 0;
         for (int i = 0; i <= no; i++) {
@@ -34,6 +52,11 @@ public class CNdg {
         return n;
     }
 
+    /**
+     * Constructs a CNdg object by copying another CNdg object.
+     *
+     * @param c1 the CNdg object to copy
+     */
     public CNdg(CNdg c1) {
         dep = c1.dep;
         equ = c1.equ;
@@ -45,17 +68,35 @@ public class CNdg {
             p[i] = c1.p[i];
     }
 
+    /**
+     * Returns a string representation of the geometric condition.
+     *
+     * @return the string description of the geometric condition
+     */
     public String toString() {
         return sd;
     }
 
-    public boolean contain2(int a, int b) {  // 01, or 23
+    /**
+     * Checks if the condition contains the specified points.
+     *
+     * @param a the first point
+     * @param b the second point
+     * @return true if the condition contains the specified points, false otherwise
+     */
+    public boolean contain2(int a, int b) {
         if (a == 0 && b == 0)
             return true;
         return p[0] == a && p[1] == b || p[0] == b && p[1] == a
                 || p[2] == a && p[3] == b || p[2] == b && p[3] == a;
     }
 
+    /**
+     * Checks if the condition contains the specified point.
+     *
+     * @param pt the point to check
+     * @return true if the condition contains the specified point, false otherwise
+     */
     public boolean contain(int pt) {
         if (pt == 0)
             return true;
@@ -67,6 +108,11 @@ public class CNdg {
         return false;
     }
 
+    /**
+     * Checks if there are redundant points in the condition.
+     *
+     * @return true if there are redundant points, false otherwise
+     */
     public boolean redundentPt() {
         for (int i = 0; i <= no; i++) {
             for (int j = i + 1; j <= no; j++)
@@ -76,10 +122,20 @@ public class CNdg {
         return false;
     }
 
+    /**
+     * Adds a point to the condition.
+     *
+     * @param pt the point to add
+     */
     public void addAPt(int pt) {
         p[++no] = pt;
     }
 
+    /**
+     * Adds all points from the specified array to the condition.
+     *
+     * @param p1 the array of points to add
+     */
     public void addAllPt(int[] p1) {
         for (int i = 0; i < p.length; i++)
             p[i] = 0;
@@ -95,6 +151,11 @@ public class CNdg {
         no = i;
     }
 
+    /**
+     * Gets the redundant point in the condition.
+     *
+     * @return the redundant point, or 0 if there are no redundant points
+     */
     public int getRedundentPt() {
         for (int i = 0; i <= no; i++) {
             for (int j = i + 1; j <= no; j++)
@@ -103,5 +164,4 @@ public class CNdg {
         }
         return 0;
     }
-
 }

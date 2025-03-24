@@ -1,12 +1,14 @@
-/**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2006-2-15
- * Time: 14:18:38
- * To change this template use File | Settings | File Templates.
- */
 package gprover;
 
+/**
+ * Represents a point used in geometric constructions.
+ * <p>
+ * This class stores geometric properties including coordinates,
+ * auxiliary data, and arrays that represent point states.
+ * It provides methods for setting point attributes and retrieving
+ * coordinate information.
+ * </p>
+ */
 public class ProPoint {
     final public static int MAX_GEO = 30;
 
@@ -28,10 +30,6 @@ public class ProPoint {
     public ProPoint(int t) {
         this();
         type = t;
-    }
-
-    public int getAux() {
-        return aux;
     }
 
     void setPS(int value, int index) {
@@ -58,30 +56,6 @@ public class ProPoint {
             type = t;
         else
             type1 = t;
-    }
-
-    void set(int Type, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
-        if (type == 0) {
-            type = Type;
-            ps[0] = p1;
-            ps[1] = p2;
-            ps[2] = p3;
-            ps[3] = p4;
-            ps[4] = p5;
-            ps[5] = p6;
-            ps[6] = p7;
-            ps[7] = p8;
-        } else {
-            type1 = Type;
-            ps[0] = p1;
-            ps[1] = p2;
-            ps[2] = p3;
-            ps[3] = p4;
-            ps[4] = p5;
-            ps[5] = p6;
-            ps[6] = p7;
-            ps[7] = p8;
-        }
     }
 
     public ProPoint(int t, String s) {
@@ -147,15 +121,9 @@ public class ProPoint {
         return name;
     }
 
+    @Override
     public String toString() {
         return name;
-    }
-
-    public void add_nd(Cond c) {
-        if (co == null)
-            co = c;
-        c.nx = co;
-        co = c;
     }
 
     public String getText() {

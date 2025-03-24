@@ -1,17 +1,17 @@
 package gprover;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: Jan 10, 2007
- * Time: 2:27:35 PM
- * To change this template use File | Settings | File Templates.
+ * GDDAux extends GDD to provide auxiliary processing methods for geometric constructions.
  */
 public class GDDAux extends GDD {
 
 /* main entry */
     static long time;
-
+    /**
+     * Initiates auxiliary processing steps.
+     *
+     * @return true if the auxiliary processing is successfully initiated.
+     */
     boolean add_aux() {
         gno = cons_no;
         ax_backward();
@@ -28,13 +28,23 @@ public class GDDAux extends GDD {
         return true;
     }
 
-
+    /**
+     * Adds an auxiliary point if it does not already exist.
+     *
+     * @param ax the auxiliary point to add.
+     */
     public void add_aux(AuxPt ax) {
         if (aux_exists(ax))
             return;
         vauxpts.add(ax);
     }
 
+    /**
+     * Checks if the given auxiliary point already exists in the list.
+     *
+     * @param ax the auxiliary point to check.
+     * @return true if the auxiliary point exists, false otherwise.
+     */
     private boolean aux_exists(AuxPt ax) {
         int n = ax.getPtsNo();
         if (n > 1) return false;
@@ -49,6 +59,13 @@ public class GDDAux extends GDD {
         return false;
     }
 
+    /**
+     * Determines if the auxiliary point contains the specified point.
+     *
+     * @param ax the auxiliary point.
+     * @param pt the point to check.
+     * @return true if the point is contained within the auxiliary point, false otherwise.
+     */
     private boolean isaux_contpt(AuxPt ax, ProPoint pt) {
         int n = ax.getPtsNo();
         for (int i = 0; i < n; i++) {
@@ -59,33 +76,56 @@ public class GDDAux extends GDD {
         return false;
     }
 
+    /**
+     * Compares two points to determine if they are the same.
+     *
+     * @param p1 the first point.
+     * @param p2 the second point.
+     * @return true if the points are considered the same, false otherwise.
+     */
     private boolean isSamePt(ProPoint p1, ProPoint p2) {
         if (p1.type != p2.type) return false;
         return Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2) < ZERO * ZERO;
 
     }
 
-
+    /**
+     * Checks if the elapsed time since start exceeds the defined limit.
+     *
+     * @return true if the time is over the limit, false otherwise.
+     */
     public boolean time_over() {
         long t = System.currentTimeMillis() - time;
         if (t > 200000) return true;
         return false;
     }
 
-
+    /**
+     * Records the current system time as the start time for timing.
+     */
     public void time_start() {
         time = System.currentTimeMillis();
     }
 
+    /**
+     * Creates a new auxiliary point of the specified type.
+     *
+     * @param aux the auxiliary identifier.
+     * @param type the type of the point.
+     * @return the created auxiliary point.
+     */
     ProPoint aux_pt(int aux, int type) {
         ProPoint p = new ProPoint(type);
         p.aux = aux;
         return p;
     }
 
-
-    //******************************************************************
-
+    /**
+     * Adds the given point as an auxiliary point after generating its descriptive string.
+     *
+     * @param t the auxiliary identifier.
+     * @param pt the point to be added.
+     */
     private void add_as_aux(int t, ProPoint pt) {
         if (pt == null)
             return;
@@ -97,6 +137,15 @@ public class GDDAux extends GDD {
         return;
     }
 
+    /**
+     * Creates an auxiliary point based on a tangent line configuration.
+     *
+     * @param aux the auxiliary identifier.
+     * @param p1 the first defining point.
+     * @param p2 the second defining point.
+     * @param p3 the third defining point.
+     * @return the created auxiliary point for the tangent line.
+     */
     ProPoint aux_tline(int aux, int p1, int p2, int p3) {
         ProPoint pt = aux_pt(aux, C_O_T);
         pt.ps[0] = 0;
@@ -107,6 +156,15 @@ public class GDDAux extends GDD {
         return (pt);
     }
 
+    /**
+     * Creates an auxiliary tangent line point and adds it to the auxiliary list.
+     *
+     * @param aux the auxiliary identifier.
+     * @param p1 the first defining point.
+     * @param p2 the second defining point.
+     * @param p3 the third defining point.
+     * @return the created auxiliary tangent line point.
+     */
     ProPoint auxpt_tline(int aux, int p1, int p2, int p3) {
         ProPoint pt = aux_tline(aux, p1, p2, p3);
         if (pt != null)
@@ -114,6 +172,14 @@ public class GDDAux extends GDD {
         return pt;
     }
 
+    /**
+     * Creates an auxiliary midpoint between two points.
+     *
+     * @param aux the auxiliary identifier.
+     * @param p1 the first point.
+     * @param p2 the second point.
+     * @return the created auxiliary midpoint.
+     */
     ProPoint aux_mid(int aux, int p1, int p2) {
         ProPoint pt = aux_pt(aux, C_MIDPOINT);
         pt.ps[0] = cons_no;
@@ -123,6 +189,14 @@ public class GDDAux extends GDD {
         return (pt);
     }
 
+    /**
+     * Creates an auxiliary midpoint and adds it to the auxiliary list.
+     *
+     * @param aux the auxiliary identifier.
+     * @param p1 the first point.
+     * @param p2 the second point.
+     * @return the created auxiliary midpoint after adding it.
+     */
     ProPoint auxpt_mid(int aux, int p1, int p2) {
         ProPoint pt = aux_mid(aux, p1, p2);
         if (pt != null)
@@ -130,7 +204,17 @@ public class GDDAux extends GDD {
         return pt;
     }
 
-
+    /**
+     * Creates an intersection point for two lines using the provided points.
+     * The point is computed and validated by cal_ax_ill.
+     *
+     * @param aux auxiliary identifier.
+     * @param p1 first point identifier.
+     * @param p2 second point identifier.
+     * @param p3 third point identifier.
+     * @param p4 fourth point identifier.
+     * @return the constructed intersection point if valid; otherwise, null.
+     */
     ProPoint aux_ill(int aux, int p1, int p2, int p3, int p4) {
         ProPoint pt = aux_pt(aux, C_I_LL);
         pt.ps[0] = cons_no;
@@ -143,6 +227,17 @@ public class GDDAux extends GDD {
         return null;
     }
 
+    /**
+     * Creates and adds an intersection point for two lines.
+     * Computes the point using aux_ill and adds it if valid.
+     *
+     * @param aux auxiliary identifier.
+     * @param p1 first point identifier.
+     * @param p2 second point identifier.
+     * @param p3 third point identifier.
+     * @param p4 fourth point identifier.
+     * @return the added intersection point if valid; otherwise, null.
+     */
     ProPoint auxpt_ill(int aux, int p1, int p2, int p3, int p4) {
         ProPoint pt = aux_ill(aux, p1, p2, p3, p4);
         if (pt != null)
@@ -150,6 +245,18 @@ public class GDDAux extends GDD {
         return pt;
     }
 
+    /**
+     * Creates an intersection point for a line configuration using five points.
+     * The point is computed and validated by cal_ax_ilp.
+     *
+     * @param aux auxiliary identifier.
+     * @param p1 first point identifier.
+     * @param p2 second point identifier.
+     * @param p3 third point identifier.
+     * @param p4 fourth point identifier.
+     * @param p5 fifth point identifier.
+     * @return the constructed intersection point if valid; otherwise, null.
+     */
     ProPoint aux_ilp(int aux, int p1, int p2, int p3, int p4, int p5) {
         ProPoint pt = aux_pt(aux, C_I_LP);
         pt.ps[0] = cons_no;
@@ -163,6 +270,18 @@ public class GDDAux extends GDD {
         return null;
     }
 
+    /**
+     * Creates and adds an intersection point for a line configuration.
+     * Computes the point using aux_ilp and adds it if valid.
+     *
+     * @param aux auxiliary identifier.
+     * @param p1 first point identifier.
+     * @param p2 second point identifier.
+     * @param p3 third point identifier.
+     * @param p4 fourth point identifier.
+     * @param p5 fifth point identifier.
+     * @return the added intersection point if valid; otherwise, null.
+     */
     ProPoint auxpt_ilp(int aux, int p1, int p2, int p3, int p4, int p5) {
         ProPoint pt = aux_ilp(aux, p1, p2, p3, p4, p5);
         if (pt != null)
@@ -170,26 +289,16 @@ public class GDDAux extends GDD {
         return pt;
     }
 
-    ProPoint aux_ilt(int aux, int p1, int p2, int p3, int p4, int p5) {
-        ProPoint pt = aux_pt(aux, C_I_LT);
-        pt.ps[0] = cons_no;
-        pt.ps[1] = p1;
-        pt.ps[2] = p2;
-        pt.ps[3] = p3;
-        pt.ps[4] = p4;
-        pt.ps[5] = p5;
-        cal_ax_ilt(pt, p1, p2, p3, p4, p5);
-
-        return (pt);
-    }
-
-    ProPoint auxpt_ilt(int aux, int p1, int p2, int p3, int p4, int p5) {
-        ProPoint pt = aux_ilt(aux, p1, p2, p3, p4, p5);
-        if (pt != null)
-            add_as_aux(aux, pt);
-        return pt;
-    }
-
+    /**
+     * Calculates the foot of the perpendicular from a point onto a line.
+     * The foot is computed using points p1, p2, and p3 via cal_ax_foot.
+     *
+     * @param aux auxiliary identifier.
+     * @param p1 the point from which the perpendicular is drawn.
+     * @param p2 the first point defining the line.
+     * @param p3 the second point defining the line.
+     * @return the point representing the foot of the perpendicular.
+     */
     ProPoint aux_foot(int aux, int p1, int p2, int p3) {
         ProPoint pt = aux_pt(aux, C_FOOT);
         pt.ps[0] = cons_no;
@@ -200,6 +309,16 @@ public class GDDAux extends GDD {
         return (pt);
     }
 
+    /**
+     * Creates and adds the foot of the perpendicular from a point onto a line.
+     * Computes the foot using aux_foot and adds it if valid.
+     *
+     * @param aux auxiliary identifier.
+     * @param p1 the point from which the perpendicular is drawn.
+     * @param p2 the first point defining the line.
+     * @param p3 the second point defining the line.
+     * @return the added perpendicular foot point.
+     */
     ProPoint auxpt_foot(int aux, int p1, int p2, int p3) {
         ProPoint pt = aux_foot(aux, p1, p2, p3);
         if (pt != null)
@@ -207,6 +326,16 @@ public class GDDAux extends GDD {
         return pt;
     }
 
+    /**
+     * Creates an intersection point between a line and a circle.
+     * Uses points p1 and p2 along with the circle's center and first point to compute the intersection.
+     *
+     * @param aux auxiliary identifier.
+     * @param p1 first point identifier.
+     * @param p2 second point identifier.
+     * @param cr the circle used for the intersection.
+     * @return the intersection point if successfully computed; otherwise, null.
+     */
     ProPoint aux_ilc(int aux, int p1, int p2, ACir cr) {
         ProPoint p = aux_pt(aux, C_I_LC);
         p.ps[0] = cons_no;
@@ -220,6 +349,16 @@ public class GDDAux extends GDD {
             return null;
     }
 
+    /**
+     * Creates and adds an intersection point between a line and a circle.
+     * Computes the point using aux_ilc and adds it if valid.
+     *
+     * @param aux auxiliary identifier.
+     * @param p1 first point identifier.
+     * @param p2 second point identifier.
+     * @param cr the circle used for the intersection.
+     * @return the added intersection point if valid; otherwise, null.
+     */
     ProPoint auxpt_ilc(int aux, int p1, int p2, ACir cr) {
         ProPoint pt = aux_ilc(aux, p1, p2, cr);
         if (pt != null)
@@ -227,6 +366,17 @@ public class GDDAux extends GDD {
         return pt;
     }
 
+    /**
+     * Calculates the intersection point between a line and a circle using a translation approach.
+     * The point is computed using p1, p2, and p3 along with the circle’s properties via cal_ax_ipc.
+     *
+     * @param aux auxiliary identifier.
+     * @param p1 first point identifier.
+     * @param p2 second point identifier.
+     * @param p3 third point identifier.
+     * @param cr the circle used for the intersection.
+     * @return the calculated intersection point if successful; otherwise, null.
+     */
     ProPoint aux_ipc(int aux, int p1, int p2, int p3, ACir cr) {
         ProPoint pt = aux_pt(aux, C_I_PC);
         pt.ps[0] = cons_no;
@@ -240,6 +390,17 @@ public class GDDAux extends GDD {
         return (null);
     }
 
+    /**
+     * Creates and adds an intersection point between a line and a circle.
+     * Computes the point using aux_ipc and adds it if valid.
+     *
+     * @param aux auxiliary identifier.
+     * @param p1 first point identifier.
+     * @param p2 second point identifier.
+     * @param p3 third point identifier.
+     * @param cr the circle used for the intersection.
+     * @return the added intersection point if valid; otherwise, null.
+     */
     ProPoint auxpt_ipc(int aux, int p1, int p2, int p3, ACir cr) {
         ProPoint pt = aux_ipc(aux, p1, p2, p3, cr);
         if (pt != null)
@@ -247,6 +408,14 @@ public class GDDAux extends GDD {
         return pt;
     }
 
+    /**
+     * Computes the circumcenter point of a circle.
+     * The circumcenter is calculated from the circle's defining points via cal_ax_co.
+     *
+     * @param aux auxiliary identifier.
+     * @param cr the circle for which the circumcenter is computed.
+     * @return the computed circumcenter point.
+     */
     ProPoint aux_co(int aux, ACir cr) {
         ProPoint pt = aux_pt(aux, C_CIRCUM); //62
         pt.ps[0] = 0;
@@ -257,6 +426,14 @@ public class GDDAux extends GDD {
         return (pt);
     }
 
+    /**
+     * Creates and adds the circumcenter point of a circle.
+     * Computes the point using aux_co and adds it if valid.
+     *
+     * @param aux auxiliary identifier.
+     * @param cr the circle for which the circumcenter is computed.
+     * @return the added circumcenter point.
+     */
     ProPoint auxpt_co(int aux, ACir cr) {
         ProPoint pt = aux_co(aux, cr);
         if (pt != null)
@@ -264,34 +441,18 @@ public class GDDAux extends GDD {
         return pt;
     }
 
-
-    void ax_predicate() {
-        int[] p = conc.p;
-        switch (conc.pred) {
-            case 0:
-                return;
-            case CO_PERP:
-                {
-                    LLine l1 = fd_ln(p[0], p[1]);
-                    LLine l2 = fd_ln(p[2], p[3]);
-                    if (l1 != null && l2 != null && inter_lls(l1, l2) == 0) {
-                        ProPoint pt = auxpt_ill(1, p[0], p[1], p[2], p[3]);
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
+    /**
+     * Initiates the processing of auxiliary rules.
+     * This method serves as a placeholder for additional auxiliary rule implementations.
+     */
     void aux_rules() {
 
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * Iterates through all midpoint structures and processes them by checking for common line conditions
+     * and applying appropriate auxiliary transformations.
+     */
     void ax_md() {
         MidPt md = all_md.nx;
         while (md != null) {
@@ -311,6 +472,12 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes point network intersections for the given midpoint.
+     * It finds relevant lines forming the point network structure and calls further processing methods.
+     *
+     * @param md the midpoint structure to process
+     */
     void ax_mdpn(MidPt md) {
         PLine pn = all_pn.nx;
         while (pn != null) {
@@ -338,6 +505,18 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Examines global lines and determines if auxiliary intersections should be created based on the
+     * provided network lines.
+     *
+     * @param pn  the point network segment being examined
+     * @param p1  the first reference point
+     * @param p2  the second reference point
+     * @param p3  the third reference point
+     * @param ln1 the first line corresponding to p1
+     * @param ln2 the second line corresponding to p2
+     * @param ln3 the third line corresponding to p3
+     */
     void ax_p3m(PLine pn, int p1, int p2, int p3, LLine ln1, LLine ln2, LLine ln3) {
         int m1, m2, m3;
         LLine ln;
@@ -358,6 +537,15 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes overlapping midpoint configurations between two midpoint structures.
+     * It identifies a common point from the first structure and iterates over global lines to trigger
+     * auxiliary midpoint creation when needed.
+     *
+     * @param md  the first midpoint structure
+     * @param md1 the second midpoint structure for comparison
+     * @param l1  the line determined by the current configuration
+     */
     void ax_mml(MidPt md, MidPt md1, LLine l1) {
         int p1, p2;
 
@@ -382,6 +570,13 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Handles mismatched midpoint configurations by evaluating parallel conditions and generating
+     * auxiliary intersections when specific criteria are met.
+     *
+     * @param md  the first midpoint structure
+     * @param md1 the second midpoint structure
+     */
     void ax_mm(MidPt md, MidPt md1) {
         int m1, m2, p1, p2, p3, p4;
         p1 = md.a;
@@ -423,7 +618,10 @@ public class GDDAux extends GDD {
         }
     }
 
-
+    /**
+     * Iterates through all tangent lines and applies orthogonal transformations
+     * by processing each non-zero type tangent line.
+     */
     void ax_orth() {
 
         TLine tn = all_tn.nx;
@@ -437,6 +635,14 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes orthogonal configurations for a given tangent line and its associated lines.
+     * If the lines meet the required intersection conditions, auxiliary intersection points are generated.
+     *
+     * @param tn1 the primary tangent line to process
+     * @param ln1 the first line associated with the tangent
+     * @param ln2 the second line associated with the tangent
+     */
     void ax_orth1(TLine tn1, LLine ln1, LLine ln2) {
         int a, b, c, h;
 
@@ -468,7 +674,11 @@ public class GDDAux extends GDD {
         }
     }
 
-
+    /**
+     * Processes all TLine elements in the list and applies geometric constructions
+     * including circle intersections, angle adjustments, midpoint validations,
+     * and constructing auxiliary points based on line intersections.
+     */
     void ax_tn() {
         TLine tn = all_tn.nx;
         while (tn != null) {
@@ -488,7 +698,13 @@ public class GDDAux extends GDD {
         }
     }
 
-
+    /**
+     * Processes circle intersections for the given TLine.
+     * Evaluates intersections between the circles and the two lines of the TLine,
+     * and constructs auxiliary points if the intersection conditions are met.
+     *
+     * @param tn the TLine whose circle intersections are to be processed
+     */
     void ax_tn_cr(TLine tn) {
         int p2, p3, m;
         LLine ln;
@@ -543,7 +759,13 @@ public class GDDAux extends GDD {
         }
     }
 
-
+    /**
+     * Processes angle-related transformations for the given TLine.
+     * Iterates over angle configuration objects and, based on the positional
+     * relationships of the TLine's segments, constructs auxiliary intersection points.
+     *
+     * @param tn the TLine for which angle transformations are evaluated
+     */
     void ax_tn_as(TLine tn) {
         int p1, p2, p3;
         LLine ln, n1, n2, l1, l2, l3, l4;
@@ -600,6 +822,13 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes midpoint constructions associated with the given TLine.
+     * Searches through midpoint objects and, if the conditions are met,
+     * constructs an auxiliary foot point.
+     *
+     * @param tn the TLine used for evaluating midpoint intersections
+     */
     void ax_tn_md(TLine tn) {
         int p1, p2;
 
@@ -641,7 +870,10 @@ public class GDDAux extends GDD {
         }
     }
 
-
+    /**
+     * Processes all TLine elements to construct perpendicular line intersections.
+     * Delegates to ax_tn_ln for each TLine's pair of lines.
+     */
     void ax_tn_1() {
         TLine tn = all_tn.nx;
         while (tn != null) {
@@ -654,6 +886,14 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Evaluates intersections and geometric relationships between two lines.
+     * Constructs auxiliary foot points if the specified conditions and
+     * intersection criteria are satisfied.
+     *
+     * @param ln1 the first line used in the intersection check
+     * @param ln2 the second line used in the intersection check
+     */
     void ax_tn_ln(LLine ln1, LLine ln2) {
         int p1, p2, p3;
 
@@ -696,6 +936,15 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes candidate intersections between lines within a TLine context.
+     * Iterates through candidate line groups to construct auxiliary points based
+     * on midpoint validations and line intersections.
+     *
+     * @param tn the TLine context for the operation
+     * @param ln1 the first line segment involved in the intersection check
+     * @param ln2 the second line segment involved in the intersection check
+     */
     void ax_tn_21(TLine tn, LLine ln1, LLine ln2) {
         int p2, p3, p4, p5;
         int p1 = inter_ll(ln1, ln2);
@@ -738,6 +987,11 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes all angle transformation objects.
+     * Iterates through the list of angles and delegates processing
+     * to specific configuration methods based on the angle type.
+     */
     void ax_as() {
         Angles as1;
         LLine l1, l2, l3, l4;
@@ -760,6 +1014,16 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Evaluates the angle transformation for a specific configuration.
+     * Constructs auxiliary points by verifying intersection points and circle
+     * conditions for the configuration defined by the provided lines.
+     *
+     * @param as  the angle transformation object to process
+     * @param l1  the first line defining the angle
+     * @param l2  the second line defining the angle
+     * @param l3  the auxiliary line used for comparative intersection analysis
+     */
     void ax_as_1(Angles as, LLine l1, LLine l2, LLine l3) {
         int p1, p2, p3, p4;
 
@@ -817,8 +1081,18 @@ public class GDDAux extends GDD {
 
     }
 
-/* [op1,l2]=[l2,op3] */
-
+    /**
+     * Processes angle transformations by iterating through candidate points on the given line.
+     * If the line between p1 and p3 intersects l2, no transformation is applied.
+     * Otherwise, for each point p2 on l2 (excluding o and midpoints between p1 and p3),
+     * an auxiliary intersection is recorded.
+     *
+     * @param as the current Angles instance
+     * @param o the reference point to exclude from processing
+     * @param p1 the first defining point of the line segment
+     * @param p3 the second defining point of the line segment
+     * @param l2 the line containing candidate points
+     */
     void ax_at(Angles as, int o, int p1, int p3, LLine l2) {
         if (inter_ll(l2, fd_ln(p1, p3)) != 0) return;
 
@@ -830,6 +1104,17 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes paired angle structures by determining intersections between two pairs of lines.
+     * If valid intersection points exist between l1/l2 and l3/l4 respectively, this method
+     * initiates further angle processing using ax_as_21.
+     *
+     * @param as the current Angles instance
+     * @param l1 the first line of the first pair
+     * @param l2 the second line of the first pair
+     * @param l3 the first line of the second pair
+     * @param l4 the second line of the second pair
+     */
     void ax_as_2(Angles as, LLine l1, LLine l2, LLine l3, LLine l4) {
         int p1, p2;
         if (((p1 = inter_ll(l1, l2)) == 0) || ((p2 = inter_ll(l3, l4)) == 0)) return;
@@ -838,6 +1123,20 @@ public class GDDAux extends GDD {
         ax_as_21(as, p2, p1, l3, l4, l1, l2);
     }
 
+    /**
+     * Processes detailed angle transformations based on intersections and circle conditions.
+     * This method evaluates intersections between l1 and l3 (or l2 and l4) along with additional
+     * geometric constraints. If the conditions are met and no conflicting line exists, an auxiliary
+     * intersection is recorded.
+     *
+     * @param as the current Angles instance
+     * @param p1 the intersection point from the first pair of lines
+     * @param p2 the intersection point from the second pair of lines
+     * @param l1 the first line of the first pair
+     * @param l2 the second line of the first pair
+     * @param l3 the first line of the second pair
+     * @param l4 the second line of the second pair
+     */
     void ax_as_21(Angles as, int p1, int p2, LLine l1, LLine l2, LLine l3, LLine l4) {
         int p3, p4, m;
 
@@ -867,6 +1166,12 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Iterates over all circles and applies various circle-related transformations.
+     * For each circle that is active (non-zero type), this method triggers a sequence of
+     * operations including center determination, chord and arc processing, tangent and
+     * diameter handling.
+     */
     void ax_cr() {
         ACir cr = all_cir.nx;
         while (cr != null) {
@@ -882,6 +1187,13 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes the diameter of a circle by evaluating candidate lines from the circle's center
+     * to its boundary points. If a candidate line exists and does not yield an intersection via
+     * circle-line logic, an auxiliary intersection is registered.
+     *
+     * @param cr the circle to be processed
+     */
     void ax_diameter(ACir cr) {
         for (int i = 0; i <= cr.no; i++) {
             LLine ln = fd_ln(cr.o, cr.pt[i]);
@@ -891,6 +1203,14 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes tangent line generation for a circle.
+     * If the circle's center is valid and the circle contains concave points,
+     * the method iterates over the circle's points to determine if a tangent line is missing.
+     * When a point qualifies, a tangent is created.
+     *
+     * @param cr1 the circle to be processed for tangency
+     */
     void ax_tan(ACir cr1) {
         int i;
         if (cr1.o == 0 || cr1.no <= 1) return;
@@ -902,6 +1222,12 @@ public class GDDAux extends GDD {
             }
     }
 
+    /**
+     * Checks if a given point is part of a predefined concave point set.
+     *
+     * @param p the point to check
+     * @return true if the point is in the concave set, false otherwise
+     */
     boolean in_conc(int p) {
         for (int i = 0; i <= 7; i++) if (conc.p[i] == p) return (true);
         return (false);
@@ -937,6 +1263,14 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes detailed intersection actions between two circles at specified points.
+     *
+     * @param cr1 the first circle involved in the intersection
+     * @param cr2 the second circle involved in the intersection
+     * @param p1 the first intersection point from circle calculations
+     * @param p2 the second intersection point from circle calculations
+     */
     void ax_cr_cr1(ACir cr1, ACir cr2, int p1, int p2) {
         int p3, p4, p5, p6;
         ProPoint pt1, pt2, pt3, pt4;
@@ -969,6 +1303,11 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Processes circle intersections by evaluating tangent constructions and auxiliary points.
+     *
+     * @param cr the circle for which intersections are processed
+     */
     void ax_cr1(ACir cr) {
         int p1, p2, p3, p4;
         LLine l1;
@@ -997,6 +1336,11 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Verifies and processes tangent intersections for the provided circle.
+     *
+     * @param cr the circle used for tangent intersection checking
+     */
     void ax_cr2(ACir cr) {
         LLine l1;
         int o = cr.o;
@@ -1012,6 +1356,11 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Determines and processes the center of a circle based on intersecting lines and points.
+     *
+     * @param cr the circle for which the center is being determined
+     */
     void ax_center(ACir cr) {
         LLine l1, l2;
         PLine pn;
@@ -1059,7 +1408,9 @@ public class GDDAux extends GDD {
         }
     }
 
-
+    /**
+     * Processes point network intersections and applies auxiliary transformations.
+     */
     void ax_pn() {
         int p1, p2, p3, p4;
 
@@ -1116,20 +1467,9 @@ public class GDDAux extends GDD {
         }
     }
 
-    public void add_ax_t1() {
-        CongSeg cg = all_cg.nx;
-        while (cg != null) {
-            if (cg.p1 != cg.p3 && cg.p1 != cg.p4 && cg.p2 != cg.p3 && cg.p2 != cg.p4) {
-                if (!xpara(cg.p1, cg.p2, cg.p3, cg.p4) && !xcong(cg.p1, cg.p3, cg.p2, cg.p4)
-                        && !xcong(cg.p1, cg.p4, cg.p2, cg.p3)) {
-//   auxpt_ill(0,)
-
-                }
-            }
-            cg = cg.nx;
-        }
-    }
-
+    /**
+     * Processes congruence segments within the point network.
+     */
     public void ax_cg() {
         CongSeg cg = all_cg.nx;
         while (cg != null) {
@@ -1137,11 +1477,9 @@ public class GDDAux extends GDD {
         }
     }
 
-
-
-    //////////////////////////////////////////////////////////////////////
-    //backward;
-
+    /**
+     * Initiates the backward process based on current configuration in the point network.
+     */
     public void ax_backward() {
         int[] p = conc.p;
 
@@ -1164,7 +1502,13 @@ public class GDDAux extends GDD {
         }
     }
 
-
+    /**
+     * Processes backward midpoint transformations for the given points.
+     *
+     * @param m the midpoint involved in the transformation
+     * @param p1 the first point component of the midpoint
+     * @param p2 the second point component of the midpoint
+     */
     public void ax_bk_mid(int m, int p1, int p2) {
         //1: rotat.
 
@@ -1175,7 +1519,15 @@ public class GDDAux extends GDD {
 
 
 
-////////////////////////////////////////////////////////////////
+    /**
+     * Calculates the Y coordinate on the tangent line for point p1 using p2 and p3.
+     * Sets the point pt with an X coordinate of 0 and the computed Y coordinate.
+     *
+     * @param pt the point to update with the computed coordinate
+     * @param p1 the reference point for the tangent calculation
+     * @param p2 the second point used in the calculation
+     * @param p3 the third point used in the calculation
+     */
     public void cal_ax_tn(ProPoint pt, int p1, int p2, int p3) {
         double x1 = VPTX(p1);
         double y1 = VPTY(p1);
@@ -1188,6 +1540,14 @@ public class GDDAux extends GDD {
         pt.setXY(0, y);
     }
 
+    /**
+     * Calculates the midpoint of points p1 and p2.
+     * Updates pt with the computed midpoint coordinates.
+     *
+     * @param pt the point to update with the midpoint coordinates
+     * @param p1 the first point
+     * @param p2 the second point
+     */
     public void cal_ax_md(ProPoint pt, int p1, int p2) {
         double x1 = VPTX(p1);
         double y1 = VPTY(p1);
@@ -1196,6 +1556,17 @@ public class GDDAux extends GDD {
         pt.setXY((x1 + x2) / 2, (y1 + y2) / 2);
     }
 
+    /**
+     * Calculates the intersection point between the lines defined by (p1, p2) and (p3, p4).
+     * Updates pt with the computed intersection coordinates if valid.
+     *
+     * @param pt the point to update with the intersection coordinates
+     * @param p1 the first point of the first line
+     * @param p2 the second point of the first line
+     * @param p3 the first point of the second line
+     * @param p4 the second point of the second line
+     * @return true if an intersection point is successfully computed, false otherwise
+     */
     public boolean cal_ax_ill(ProPoint pt, int p1, int p2, int p3, int p4) {
         double x1 = VPTX(p1);
         double y1 = VPTY(p1);
@@ -1225,6 +1596,15 @@ public class GDDAux extends GDD {
         return true;
     }
 
+    /**
+     * Calculates the foot of the perpendicular from point p1 to the line defined by p2 and p3.
+     * Updates pt with the computed foot coordinates.
+     *
+     * @param pt the point to update with the foot coordinates
+     * @param p1 the point from which the perpendicular is drawn
+     * @param p2 the first point defining the line
+     * @param p3 the second point defining the line
+     */
     public void cal_ax_foot(ProPoint pt, int p1, int p2, int p3) {
         double x1 = VPTX(p1);
         double y1 = VPTY(p1);
@@ -1240,6 +1620,18 @@ public class GDDAux extends GDD {
         pt.setXY(x, y);
     }
 
+    /**
+     * Calculates the intersection point for a line configuration using points p1, p2, p3, p4, and p5.
+     * Updates pt with the computed intersection coordinates.
+     *
+     * @param pt the point to update with the intersection coordinates
+     * @param p1 the first reference point
+     * @param p2 the second reference point
+     * @param p3 the third reference point
+     * @param p4 the fourth reference point
+     * @param p5 the fifth reference point
+     * @return true if the intersection is successfully computed, false otherwise
+     */
     public boolean cal_ax_ilp(ProPoint pt, int p1, int p2, int p3, int p4, int p5) {
         double x1 = VPTX(p1);
         double y1 = VPTY(p1);
@@ -1271,33 +1663,15 @@ public class GDDAux extends GDD {
         return true;
     }
 
-    public void cal_ax_ilt(ProPoint pt, int p1, int p2, int p3, int p4, int p5) {
-        double x1 = VPTX(p1);
-        double y1 = VPTY(p1);
-        double x2 = VPTX(p2);
-        double y2 = VPTY(p2);
-        double x3 = VPTX(p3);
-        double y3 = VPTY(p3);
-        double x4 = VPTX(p4);
-        double y4 = VPTY(p4);
-        double x5 = VPTX(p5);
-        double y5 = VPTY(p5);
-
-        double xt1 = x2 - x1;
-        double xt2 = -(y5 - y4);
-        double yt1 = y2 - y1;
-        double yt2 = x5 - x4;
-        if (Math.abs(xt1) > ZERO) {
-            double x = (xt1 * xt2 * (y3 - y1) + yt1 * x1 * xt2 - yt2 * x3 * xt1) / (yt1 * xt2 - yt2 * xt1);
-            double y = y1 + (x - x1) * yt1 / xt1;
-            pt.setXY(x, y);
-        } else {
-            double x = x1;
-            double y = y3 + yt2 * (x - x3) / xt2;
-            pt.setXY(x, y);
-        }
-    }
-
+    /**
+     * Calculates the center based on the configuration of points p1, p2, and p3.
+     * Updates pt with the computed center coordinates.
+     *
+     * @param pt the point to update with the center coordinates
+     * @param p1 the first reference point
+     * @param p2 the second reference point
+     * @param p3 the third reference point
+     */
     public void cal_ax_co(ProPoint pt, int p1, int p2, int p3) {
         double x_1 = VPTX(p1);
         double x_2 = VPTY(p1);
@@ -1318,6 +1692,19 @@ public class GDDAux extends GDD {
         pt.setXY(x, y);
     }
 
+    /**
+     * Calculates the intersection point between a translated line and a circle.
+     * The translation is based on the vector from p1 to p2 applied to p3.
+     * Updates pt with the computed intersection coordinates.
+     *
+     * @param pt the point to update with the intersection coordinates
+     * @param p1 the first reference point for the translation vector
+     * @param p2 the second reference point for the translation vector
+     * @param p3 the base point for translation
+     * @param p4 the first point defining the circle
+     * @param p5 the second point defining the circle
+     * @return true if the intersection is successfully computed, false otherwise
+     */
     public boolean cal_ax_ipc(ProPoint pt, int p1, int p2, int p3, int p4, int p5) {
         double x1 = VPTX(p1);
         double y1 = VPTY(p1);
@@ -1342,6 +1729,18 @@ public class GDDAux extends GDD {
         return true;
     }
 
+    /**
+     * Calculates the intersection point between the line defined by p1 and p2
+     * and the circle defined by p3 and p4.
+     * Updates pt with the computed intersection coordinates.
+     *
+     * @param pt the point to update with the intersection coordinates
+     * @param p1 the first point defining the line
+     * @param p2 the second point defining the line
+     * @param p3 the first point defining the circle
+     * @param p4 the second point defining the circle
+     * @return true if an intersection point is successfully computed, false otherwise
+     */
     public boolean cal_ax_ilc(ProPoint pt, int p1, int p2, int p3, int p4) {
         double x1 = VPTX(p1);
         double y1 = VPTY(p1);
@@ -1360,6 +1759,21 @@ public class GDDAux extends GDD {
         return true;
     }
 
+    /**
+     * Computes the intersection points between the line defined by (x1, y1) and (x2, y2)
+     * and the circle defined by center (x3, y3) with a radius derived from (x4, y4).
+     * Returns an array containing two intersection points formatted as [t1, m1, t2, m2].
+     *
+     * @param x1 the x-coordinate of the first point on the line
+     * @param y1 the y-coordinate of the first point on the line
+     * @param x2 the x-coordinate of the second point on the line
+     * @param y2 the y-coordinate of the second point on the line
+     * @param x3 the x-coordinate used as a reference for the circle
+     * @param y3 the y-coordinate used as a reference for the circle
+     * @param x4 the x-coordinate used to derive the circle's radius
+     * @param y4 the y-coordinate used to derive the circle's radius
+     * @return an array containing the intersection points [t1, m1, t2, m2], or an empty array if there are none
+     */
     double[] cal_inter_lc(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
 
         double r2 = (y4 - y3) * (y4 - y3) + (x4 - x3) * (x4 - x3);
@@ -1399,6 +1813,12 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Generates a descriptive string for the given point based on its type.
+     * Updates the text attribute of pt with the generated description.
+     *
+     * @param pt the point for which the description is generated
+     */
     void auxpt_string(ProPoint pt) {
         String s = pt.toString();
         if (s == null || s.length() == 0) {
@@ -1432,6 +1852,12 @@ public class GDDAux extends GDD {
         }
     }
 
+    /**
+     * Generates and returns an auxiliary name for a new point.
+     * The name is determined based on existing constraint names.
+     *
+     * @return the generated auxiliary name
+     */
     protected String fd_aux_name() {
         char c[] = new char[1];//= new char[3];
         int len = 1;

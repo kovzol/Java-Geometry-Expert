@@ -1,11 +1,6 @@
 package gprover;
-
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: Oct 23, 2006
- * Time: 10:45:54 AM
- * To change this template use File | Settings | File Templates.
+ * Constructs a SimTri object with default values.
  */
 public class STris extends CClass {
     static int MAX_TRI = 300;
@@ -18,6 +13,9 @@ public class STris extends CClass {
 
     STris nx;
 
+    /**
+     * Constructs an STris object with default values.
+     */
     public STris() {
         type = 0;
         dr = new int[300];
