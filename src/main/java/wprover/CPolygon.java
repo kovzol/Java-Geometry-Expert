@@ -8,11 +8,8 @@ import java.io.DataInputStream;
 import java.io.FileOutputStream;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-1-25
- * Time: 20:24:52
- * To change this template use File | Settings | File Templates.
+ * CPolygon class represents a polygon or circle shape.
+ * It extends the CClass class and provides methods for drawing, manipulating, and checking properties of the shape.
  */
 public class CPolygon extends CClass {
     int ftype = 0; // 0: polygon, 1:circle.
@@ -29,6 +26,19 @@ public class CPolygon extends CClass {
     private double area;
 
 
+/**
+     * Draws the polygon on the given graphics context with various options.
+     *
+     * @param g2 the graphics context
+     * @param selected true if the polygon is selected, false otherwise
+     * @param overlap true if the polygon should be drawn with overlap, false otherwise
+     * @param dx the x-offset for drawing
+     * @param dy the y-offset for drawing
+     * @param rotate true if the polygon should be rotated, false otherwise
+     * @param x the x-coordinate for rotation
+     * @param y the y-coordinate for rotation
+     * @param ang the angle of rotation in radians
+     */
     public void draw(Graphics2D g2, boolean selected, boolean overlap, double dx, double dy,
                      boolean rotate, double x, double y, double ang) {
         if (!isdraw()) return;
@@ -74,7 +84,6 @@ public class CPolygon extends CClass {
         }
 
         this.setDraw(g2);
-
 
         Composite ac = null;
         if (overlap) {
@@ -125,16 +134,32 @@ public class CPolygon extends CClass {
             g2.setComposite(ac);
     }
 
+    /**
+     * Retrieves the element at the specified index in the point list.
+     *
+     * @param n the index of the element
+     * @return the element at the specified index, or null if the index is out of bounds
+     */
     public CClass getElement(int n) {
         if (n < 0 || n >= pointlist.size())
             return null;
         return (CClass) pointlist.get(n);
     }
 
+    /**
+     * Retrieves the area of the polygon.
+     *
+     * @return the area of the polygon
+     */
     public double getArea() {
         return area;
     }
 
+    /**
+     * Checks if all points in the polygon are free points.
+     *
+     * @return true if all points are free points, false otherwise
+     */
     public boolean isAllPointsFree() {
         for (int i = 0; i < pointlist.size(); i++) {
             CPoint pt = (CPoint) pointlist.get(i);
@@ -144,10 +169,28 @@ public class CPolygon extends CClass {
         return true;
     }
 
+    /**
+     * Calculates the signed area of a triangle given its vertex coordinates.
+     *
+     * @param x1 the x-coordinate of the first vertex
+     * @param y1 the y-coordinate of the first vertex
+     * @param x2 the x-coordinate of the second vertex
+     * @param y2 the y-coordinate of the second vertex
+     * @param x3 the x-coordinate of the third vertex
+     * @return the signed area of the triangle
+     */
     public static double signArea(int x1, int y1, int x2, int y2, int x3, int y3) {
         return ((x2 - x1) * (y3 - y2) - (y2 - y1) * (x3 - x2)) / 2;
     }
 
+    /**
+     * Calculates the area of a polygon given its vertex coordinates.
+     *
+     * @param xPoints the x-coordinates of the vertices
+     * @param yPoints the y-coordinates of the vertices
+     * @param nPoints the number of vertices
+     * @return the area of the polygon
+     */
     public static double area(int xPoints[], int yPoints[], int nPoints) {
         if (nPoints < 4) return 0.0;
 
@@ -158,6 +201,12 @@ public class CPolygon extends CClass {
         return r;
     }
 
+    /**
+     * Checks if this polygon is equal to the given circle.
+     *
+     * @param c the circle to compare with
+     * @return true if the polygon is equal to the circle, false otherwise
+     */
     public boolean isEqual(Circle c) {
         if (c == null) return false;
         if (ftype != 1) return false;
@@ -168,55 +217,62 @@ public class CPolygon extends CClass {
         return c.o == pointlist.get(0) &&
                 ((pp[0] == pointlist.get(1) && pp[1] == pointlist.get(2))
                         || (pp[0] == pointlist.get(2) && pp[1] == pointlist.get(1)));
-
-
     }
 
-    public void drawAreaText(Graphics2D g2, int xPoints[], int yPoints[], int nPoints) {
-        if (nPoints < 4) return;
-        double r = area(xPoints, yPoints, nPoints);
-        r = Math.abs(r);
-
-        int x, y;
-        x = y = 0;
-
-        for (int i = 0; i <= nPoints - 2; i++) {
-            x += xPoints[i];
-            y += yPoints[i];
-        }
-        x = x / (nPoints - 1);
-        y = y / (nPoints - 1);
-        g2.drawString("Area = " + r, x, y);
-    }
-
-    public void setShowArea(boolean r) {
-        showArea = r;
-    }
-
-
+    /**
+     * Draws the polygon on the given graphics context with the selected option.
+     *
+     * @param g2 the graphics context
+     * @param selected true if the polygon is selected, false otherwise
+     */
     public void draw(Graphics2D g2, boolean selected) {
         draw(g2, selected, true, 0, 0, false, 0, 0, 0);
     }
 
+    /**
+     * Draws the polygon on the given graphics context.
+     *
+     * @param g2 the graphics context
+     */
     public void draw(Graphics2D g2) {
         this.draw(g2, false);
     }
 
+    /**
+     * Retrieves the number of points in the polygon.
+     *
+     * @return the number of points in the polygon
+     */
     public int getPtn() {
         return pointlist.size();
     }
 
+    /**
+     * Retrieves the point at the specified index in the point list.
+     *
+     * @param n the index of the point
+     * @return the point at the specified index
+     */
     public CPoint getPoint(int n) {
         return (CPoint) pointlist.get(n);
     }
 
+    /**
+     * Default constructor for the CPolygon class.
+     * Initializes the polygon with default values.
+     */
     public CPolygon() {
         super(CClass.POLYGON);
         pt1 = pt2 = null;
         pdx = pdy = 0;
-        //m_color =drawData.
     }
 
+    /**
+     * Constructor for the CPolygon class with a specified circle.
+     * Initializes the polygon as a circle with the given circle's properties.
+     *
+     * @param c the circle to initialize the polygon with
+     */
     public CPolygon(Circle c) {
         this();
         this.ftype = 1;
@@ -227,6 +283,14 @@ public class CPolygon extends CClass {
         pointlist.add(c.o);
     }
 
+/**
+     * Sets the dragged points and their offsets.
+     *
+     * @param p1 the first dragged point
+     * @param p2 the second dragged point
+     * @param x the x-offset
+     * @param y the y-offset
+     */
     public void setDraggedPoints(CPoint p1, CPoint p2, double x, double y) {
         pt1 = p1;
         pt2 = p2;
@@ -234,6 +298,9 @@ public class CPolygon extends CClass {
         pdy = y;
     }
 
+    /**
+     * Resets the dragged points and their offsets to null and clears the vector list.
+     */
     public void setDraggedPointsNull() {
         pt1 = null;
         pt2 = null;
@@ -242,6 +309,11 @@ public class CPolygon extends CClass {
         vtrlist.clear();
     }
 
+    /**
+     * Copies the properties of the given polygon to this polygon.
+     *
+     * @param c the polygon to copy from
+     */
     public void copy(CPolygon c) {
         super.copy(c);
         grid = c.grid;
@@ -249,19 +321,40 @@ public class CPolygon extends CClass {
         this.type = c.type;
     }
 
+    /**
+     * Adds a pair of dragged points to the vector list.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     */
     public void addDraggedPoints(CPoint p1, CPoint p2) {
         vtrlist.add(p1);
         vtrlist.add(p2);
     }
 
+    /**
+     * Checks if all points have been dragged.
+     *
+     * @return true if all points have been dragged, false otherwise
+     */
     public boolean allDragged() {
         return vtrlist.size() == (pointlist.size() - 1) * 2;
     }
 
+    /**
+     * Retrieves the vector list of dragged points.
+     *
+     * @return the vector list of dragged points
+     */
     public Vector getDraggedPoints() {
         return vtrlist;
     }
 
+    /**
+     * Retrieves the transformed points based on the dragged points.
+     *
+     * @return the vector list of transformed points
+     */
     public Vector getTransformedPoints() {
         Vector vlist = new Vector();
 
@@ -283,6 +376,12 @@ public class CPolygon extends CClass {
         return vlist;
     }
 
+    /**
+     * Retrieves the polygon type as a string.
+     *
+     * @return the polygon type string
+     * @deprecated Use {@link #getPolygonTypeString(String)} instead.
+     */
     @Deprecated
     public String getPolygonTypeString() {
         String ds;
@@ -303,9 +402,14 @@ public class CPolygon extends CClass {
         } else {
             return Language.getLs("Circle");
         }
-
     }
 
+    /**
+     * Retrieves the polygon type as a string with a specified format.
+     *
+     * @param s the format string
+     * @return the formatted polygon type string
+     */
     public String getPolygonTypeString(String s) {
         String ds;
 
@@ -325,23 +429,36 @@ public class CPolygon extends CClass {
         } else {
             return GExpert.getTranslationViaGettext("Circle {0}", s);
         }
-
     }
 
+    /**
+     * Retrieves the polygon type as a string.
+     *
+     * @return the polygon type string
+     * @deprecated Use {@link #getPolygonTypeString(String)} instead.
+     */
     @Deprecated
     public String TypeString() {
         return getPolygonTypeString();
     }
 
+    /**
+     * Retrieves the polygon type as a string with a specified format.
+     *
+     * @param s the format string
+     * @return the formatted polygon type string
+     */
     public String TypeString(String s) {
         return getPolygonTypeString(s);
     }
 
-    public boolean containPnt(CPoint p) {
-        return pointlist.contains(p);
-    }
-
-    public boolean check_rdeq(Vector v) {  // n --- n-1;
+    /**
+     * Checks if the polygon is equal to another polygon by comparing their points in a rotated manner.
+     *
+     * @param v the vector of points to compare with
+     * @return true if the polygons are equal, false otherwise
+     */
+    public boolean check_rdeq(Vector v) {
         if (!visible) return false;
 
         int n = pointlist.size();
@@ -369,21 +486,15 @@ public class CPolygon extends CClass {
         return false;
     }
 
+    /**
+     * Checks if the polygon is equal to another polygon by comparing their points.
+     *
+     * @param v the vector of points to compare with
+     * @return true if the polygons are equal, false otherwise
+     */
     public boolean check_eq(Vector v) {
         int n = pointlist.size();
         if (n != v.size()) return false;
-        /*
-        n--;
-        int i, j;
-
-        for (i = 0; i < n; i++) {
-            for (j = 0; j < n; j++) {
-                if (pointlist.get(i) != v.get((j + i) % n))
-                    break;
-            }
-            if (j == n)
-                return true;
-        } */
 
         for (int i = 0; i < n; i++) {
             if (pointlist.get(i) != v.get(i))
@@ -391,173 +502,209 @@ public class CPolygon extends CClass {
         }
         return true;
     }
-////////////////////////////////////////////////////////////
 
-    void setType(int type) {
-        this.type = type;
-    }
+/**
+ * Sets the type of the polygon.
+ *
+ * @param type the type of the polygon
+ */
+void setType(int type) {
+    this.type = type;
+}
 
+/**
+ * Gets the type of the polygon.
+ *
+ * @return the type of the polygon
+ */
+int getType() {
+    return type;
+}
 
-    int getType() {
-        return type;
-    }
+/**
+ * Sets the grid size for the polygon.
+ *
+ * @param grid the grid size
+ */
+void setGrid(int grid) {
+    this.grid = grid;
+}
 
-    void setGrid(int grid) {
-        this.grid = grid;
-    }
+/**
+ * Sets the slope for the polygon.
+ *
+ * @param s the slope value
+ */
+void setSlope(int s) {
+    this.slope = s;
+}
 
-    void setSlope(int s) {
-        this.slope = s;
-    }
+/**
+ * Sets the points of the polygon.
+ *
+ * @param v the vector containing the points
+ */
+public void setPoints(Vector v) {
+    pointlist.clear();
+    pointlist.addAll(v);
+    return;
+}
 
-
-    public void setPoints(Vector v) {
-        pointlist.clear();
-        pointlist.addAll(v);
-        return;
-    }
-
-    public boolean addAPoint(CPoint p) {
-        if (p == null) return false;
-        if (pointlist.size() > 1 && p == pointlist.get(0)) {
-            pointlist.add(p);
-            return true;
-        } else if (pointlist.contains(p))
-            return false;
-        else
-            pointlist.add(p);
+/**
+ * Adds a point to the polygon.
+ *
+ * @param p the point to add
+ * @return true if the point was added, false if the point was already in the list or null
+ */
+public boolean addAPoint(CPoint p) {
+    if (p == null) return false;
+    if (pointlist.size() > 1 && p == pointlist.get(0)) {
+        pointlist.add(p);
+        return true;
+    } else if (pointlist.contains(p))
         return false;
-    }
+    else
+        pointlist.add(p);
+    return false;
+}
 
+/**
+ * Selects the polygon if the given coordinates are within its bounds.
+ *
+ * @param x the x-coordinate to check
+ * @param y the y-coordinate to check
+ * @return true if the polygon is selected, false otherwise
+ */
+public boolean select(double x, double y) {
+    if (visible == false) return false;
 
-    public boolean select(double x, double y) {
-        if (visible == false) return false;
-
-        if (ftype == 0) {
-            Polygon poly = new Polygon();
-
-            for (int i = 0; i < pointlist.size(); i++) {
-                CPoint pt = (CPoint) pointlist.get(i);
-                poly.addPoint((int) pt.getx(), (int) pt.gety());
-            }
-
-            return poly.contains(x, y);
-        } else {
-            CPoint p1 = (CPoint) pointlist.get(0);
-            CPoint p2 = (CPoint) pointlist.get(1);
-            CPoint p3 = (CPoint) pointlist.get(2);
-            double r = (Math.pow(p2.getx() - p3.getx(), 2) + Math.pow(p2.gety() - p3.gety(), 2));
-
-            return Math.pow(x - p1.getx(), 2) + Math.pow(y - p1.gety(), 2) < r;
-        }
-    }
-
-
-    public CPoint getPreviousePoint(CPoint p) {
-        for (int i = 0; i < pointlist.size() - 1; i++) {
-            if (p == pointlist.get(i + 1))
-                return (CPoint) pointlist.get(i);
-        }
-        return null;
-    }
-
-    public CPoint getNextPoint(CPoint p) {
-        for (int i = 1; i < pointlist.size(); i++) {
-            if (p == pointlist.get(i - 1))
-                return (CPoint) pointlist.get(i);
-        }
-        return null;
-    }
-
-    public void draw(Graphics2D g2, CPoint p) {
-        if (visible == false) return;
-
-        if (pointlist.size() == 0) return;
-
-        int n = pointlist.size() + 2;
-        int[] xpoints = new int[n];
-        int[] ypoints = new int[n];
+    if (ftype == 0) {
+        Polygon poly = new Polygon();
 
         for (int i = 0; i < pointlist.size(); i++) {
             CPoint pt = (CPoint) pointlist.get(i);
-            xpoints[i] = (int) pt.getx();
-            ypoints[i] = (int) pt.gety();
+            poly.addPoint((int) pt.getx(), (int) pt.gety());
         }
-        xpoints[n - 2] = (int) p.getx();
-        ypoints[n - 2] = (int) p.gety();
 
-        CPoint pt = (CPoint) pointlist.get(0);
-        xpoints[n - 1] = (int) pt.getx();
-        ypoints[n - 1] = (int) pt.gety();
+        return poly.contains(x, y);
+    } else {
+        CPoint p1 = (CPoint) pointlist.get(0);
+        CPoint p2 = (CPoint) pointlist.get(1);
+        CPoint p3 = (CPoint) pointlist.get(2);
+        double r = (Math.pow(p2.getx() - p3.getx(), 2) + Math.pow(p2.gety() - p3.gety(), 2));
 
-        this.setDraw(g2);
-
-
-        if (type == 0)
-            g2.fillPolygon(xpoints, ypoints, n);
-        else
-            drawGrid(g2, xpoints, ypoints, n, 0, type);
-
-        g2.setColor(super.getColor().darker().darker());
-
-
-        g2.drawPolygon(xpoints, ypoints, n);
-
-        g2.drawLine(xpoints[0], ypoints[0], (int) p.getx(), (int) p.gety());
-        g2.drawLine(xpoints[n - 1], ypoints[n - 1], (int) p.getx(), (int) p.gety());
-
-
+        return Math.pow(x - p1.getx(), 2) + Math.pow(y - p1.gety(), 2) < r;
     }
+}
 
-    public double getCentroidX() {
-        Vector v = pointlist;
-
-        double dx1 = 0;
-        int n = v.size();
-        for (int i = 0; i < n; i++) {
-            CPoint pt = (CPoint) v.get(i);
-            dx1 += pt.getx();
-        }
-        dx1 /= n;
-        return dx1;
+/**
+ * Gets the previous point in the polygon.
+ *
+ * @param p the current point
+ * @return the previous point, or null if not found
+ */
+public CPoint getPreviousePoint(CPoint p) {
+    for (int i = 0; i < pointlist.size() - 1; i++) {
+        if (p == pointlist.get(i + 1))
+            return (CPoint) pointlist.get(i);
     }
+    return null;
+}
 
-    public double getCentroidY() {
-        Vector v = pointlist;
-        double dy1 = 0;
-        int n = v.size();
-        for (int i = 0; i < n; i++) {
-            CPoint pt = (CPoint) v.get(i);
-            dy1 += pt.gety();
-        }
-        dy1 /= n;
-        return dy1;
+/**
+ * Gets the next point in the polygon.
+ *
+ * @param p the current point
+ * @return the next point, or null if not found
+ */
+public CPoint getNextPoint(CPoint p) {
+    for (int i = 1; i < pointlist.size(); i++) {
+        if (p == pointlist.get(i - 1))
+            return (CPoint) pointlist.get(i);
     }
+    return null;
+}
 
-    public String getDescription() {
-        String s = new String();
-        if (pointlist.size() < 4) return "";
+/**
+ * Draws the polygon with an additional point on the given graphics context.
+ *
+ * @param g2 the graphics context
+ * @param p the additional point to draw
+ */
+public void draw(Graphics2D g2, CPoint p) {
+    if (visible == false) return;
 
-        int size = pointlist.size() - 1;
+    if (pointlist.size() == 0) return;
 
-        for (int i = 0; i < size; i++) {
-            CClass cc = (CClass) pointlist.get(i);
-            s += cc.m_name;
-        }
-        if (ftype == 0)
-            return TypeString(s);
-        else return TypeString("(" + s + ")");
+    int n = pointlist.size() + 2;
+    int[] xpoints = new int[n];
+    int[] ypoints = new int[n];
+
+    for (int i = 0; i < pointlist.size(); i++) {
+        CPoint pt = (CPoint) pointlist.get(i);
+        xpoints[i] = (int) pt.getx();
+        ypoints[i] = (int) pt.gety();
     }
+    xpoints[n - 2] = (int) p.getx();
+    ypoints[n - 2] = (int) p.gety();
+
+    CPoint pt = (CPoint) pointlist.get(0);
+    xpoints[n - 1] = (int) pt.getx();
+    ypoints[n - 1] = (int) pt.gety();
+
+    this.setDraw(g2);
+
+    if (type == 0)
+        g2.fillPolygon(xpoints, ypoints, n);
+    else
+        drawGrid(g2, xpoints, ypoints, n, 0, type);
+
+    g2.setColor(super.getColor().darker().darker());
+
+    g2.drawPolygon(xpoints, ypoints, n);
+
+    g2.drawLine(xpoints[0], ypoints[0], (int) p.getx(), (int) p.gety());
+    g2.drawLine(xpoints[n - 1], ypoints[n - 1], (int) p.getx(), (int) p.gety());
+}
+
+/**
+ * Gets the description of the polygon.
+ *
+ * @return the description of the polygon
+ */
+public String getDescription() {
+    String s = new String();
+    if (pointlist.size() < 4) return "";
+
+    int size = pointlist.size() - 1;
+
+    for (int i = 0; i < size; i++) {
+        CClass cc = (CClass) pointlist.get(i);
+        s += cc.m_name;
+    }
+    if (ftype == 0)
+        return TypeString(s);
+    else return TypeString("(" + s + ")");
+}
 
 
-    public Vector drawGrid(Graphics2D g2, int[] xpoints, int[] ypoints, int n, int dtype, int gtype) // type 0: draw ; 1: print ps
-    {
+/**
+     * Draws a grid pattern on the given graphics context based on the specified points and grid type.
+     *
+     * @param g2 the graphics context
+     * @param xpoints the x-coordinates of the points
+     * @param ypoints the y-coordinates of the points
+     * @param n the number of points
+     * @param dtype the draw type (0: draw, 1: print ps)
+     * @param gtype the grid type (1: vertical, 2: horizontal, 3: both)
+     * @return a vector of points if dtype is 1, otherwise null
+     */
+    public Vector drawGrid(Graphics2D g2, int[] xpoints, int[] ypoints, int n, int dtype, int gtype) {
         Vector vpl = null;
         if (dtype == 1)
             vpl = new Vector();
 
         if (n <= 3) return vpl;
-
 
         double k = Math.tan(slope * Math.PI / 180);
         int step = this.grid;
@@ -707,6 +854,14 @@ public class CPolygon extends CClass {
         return vpl;
     }
 
+    /**
+     * Adds a value to a sorted array and returns the new size of the array.
+     *
+     * @param a the value to add
+     * @param b the array to add the value to
+     * @param n the current size of the array
+     * @return the new size of the array
+     */
     private int add_sort(double a, double[] b, int n) {
         for (int i = 0; i < n; i++) {
             if (a < b[i]) {
@@ -718,9 +873,15 @@ public class CPolygon extends CClass {
         }
         b[n] = a;
         return n + 1;
-
     }
 
+    /**
+     * Saves the polygon as a PostScript file.
+     *
+     * @param fp the file output stream
+     * @param stype the save type
+     * @throws IOException if an I/O error occurs
+     */
     public void SavePS(FileOutputStream fp, int stype) throws IOException {
         if (visible == false) return;
 
@@ -739,9 +900,7 @@ public class CPolygon extends CClass {
             ypoints[i] = (int) pt.gety();
         }
 
-
         String s = "";
-
 
         if (type == 0) {
             for (int i = 0; i < pointlist.size() - 1; i++) {
@@ -782,10 +941,14 @@ public class CPolygon extends CClass {
             fp.write(st.getBytes());
             this.saveSuper(fp);
         }
-
     }
 
-
+    /**
+     * Saves the polygon data to a data output stream.
+     *
+     * @param out the data output stream
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
         super.Save(out);
         out.writeBoolean(showArea);
@@ -801,6 +964,13 @@ public class CPolygon extends CClass {
         }
     }
 
+    /**
+     * Loads the polygon data from a data input stream.
+     *
+     * @param in the data input stream
+     * @param dp the draw process
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         if (CMisc.version_load_now < 0.010) {
             m_id = in.readInt();
@@ -838,9 +1008,6 @@ public class CPolygon extends CClass {
                 int d = in.readInt();
                 pointlist.add(dp.getPointById(d));
             }
-
-
         }
     }
-
 }

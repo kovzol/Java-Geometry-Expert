@@ -7,14 +7,9 @@ import java.io.DataInputStream;
 import java.io.FileOutputStream;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2005-7-8
- * Time: 16:00:08
- * To change this template use File | Settings | File Templates.
- * This class serves as the base class for all geometry items.
+ * CClass is an abstract class representing a geometric object with various properties and methods.
+ * It serves as a base class for different types of geometric objects.
  */
-// class as the baseclass for all the geometry item.
 
 abstract public class CClass {
 
@@ -318,19 +313,6 @@ abstract public class CClass {
     }
 
     /**
-     * Sets the drawing style for a selected geometry item with a specified width.
-     *
-     * @param g2 the Graphics2D object
-     * @param w the width
-     */
-    void setDrawSelect(Graphics2D g2, int w) {
-//        float w = (float) drawData.getWidth(m_width);
-        g2.setStroke(new BasicStroke(w + 5));
-        Color c = CMisc.SelectObjectColor;
-        g2.setColor(c);
-    }
-
-    /**
      * Sets the drawing style for the geometry item.
      *
      * @param g2 the Graphics2D object
@@ -356,63 +338,6 @@ abstract public class CClass {
             g2.setPaint(cc);
         } else
             g2.setPaint(c);
-    }
-
-    /**
-     * Writes a string to the data output stream.
-     *
-     * @param out the data output stream
-     * @param s the string to write
-     * @throws IOException if an I/O error occurs
-     */
-    public static void WriteString(DataOutputStream out, String s) throws IOException {
-        out.writeInt(s.length());
-        out.writeChars(s);
-    }
-
-    /**
-     * Writes the font to the data output stream.
-     *
-     * @param out the data output stream
-     * @param f the font to write
-     * @throws IOException if an I/O error occurs
-     */
-    public void WriteFont(DataOutputStream out, Font f) throws IOException {
-        String s = f.getName();
-        WriteString(out, s);
-        out.writeInt(f.getStyle());
-        out.writeInt(f.getSize());
-    }
-
-    /**
-     * Reads a string from the data input stream.
-     *
-     * @param in the data input stream
-     * @return the string read from the input stream
-     * @throws IOException if an I/O error occurs
-     */
-    public static String ReadString(DataInputStream in) throws IOException {
-        int size = in.readInt();
-        if (size == 0) return new String("");
-        String s = new String();
-        for (int i = 0; i < size; i++)
-            s += in.readChar();
-        return s;
-    }
-
-    /**
-     * Reads a font from the data input stream.
-     *
-     * @param in the data input stream
-     * @return the font read from the input stream
-     * @throws IOException if an I/O error occurs
-     */
-    public Font ReadFont(DataInputStream in) throws IOException {
-        String name = ReadString(in);
-        int stye = in.readInt();
-        int size = in.readInt();
-
-        return new Font(name, stye, size);
     }
 
     /**

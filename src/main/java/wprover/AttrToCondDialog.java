@@ -10,11 +10,9 @@ import java.awt.event.ItemEvent;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: Nov 26, 2006
- * Time: 5:52:40 PM
- * To change this template use File | Settings | File Templates.
+ * AttrToCondDialog is a dialog class that allows users to select geometric attributes
+ * and convert them into conditions for geometric proofs.
+ * It provides a graphical interface for selecting points, lines, angles, and triangles.
  */
 public class AttrToCondDialog extends JBaseDialog {
     final private static int ROW = 5;
@@ -149,6 +147,11 @@ public class AttrToCondDialog extends JBaseDialog {
         addComp();
     }
 
+    /**
+     * Constructor for creating an AttrToCondDialog for parallel lines.
+     * @param gx GExpert instance
+     * @param pn PLine instance
+     */
     public AttrToCondDialog(GExpert gx, PLine pn) {
         this(gx, "Please select two lines");
 
@@ -162,6 +165,9 @@ public class AttrToCondDialog extends JBaseDialog {
         addComp();
     }
 
+    /**
+     * Adds components to the content pane and sets the dialog properties.
+     */
     public void addComp() {
         Window gx = this.getOwner();
         contentPane.add(topPane);

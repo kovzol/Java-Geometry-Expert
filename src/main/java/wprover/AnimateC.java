@@ -3,15 +3,6 @@ package wprover;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-1-14
- * Time: 13:37:42
- * To change this template use File | Settings | File Templates.
- */
-
 /**
  * The `AnimateC` class represents the animation control for a geometric object in the GExpert application.
  * It provides methods to animate a point along a line, circle, or trace path.
@@ -255,12 +246,6 @@ public class AnimateC {
         return (int) gap;
     }
 
-    public void valueChanged(int v) {
-        if (onType == 1 || onType == 2) {
-            gap = v + delta;
-        }
-    }
-
     AnimateC(CPoint p, Object obj, double width, double height) {
         pA = p;
         onObj = obj;
@@ -430,12 +415,6 @@ public class AnimateC {
         y = pA.gety();
 
         return r;
-    }
-
-    public void onFailed() {
-        if (onType == 2) {
-            sia = -sia;
-        }
     }
 
     /**

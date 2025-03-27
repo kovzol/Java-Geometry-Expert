@@ -12,7 +12,11 @@ import maths.TPoly;
 import maths.Param;
 import maths.TMono;
 
-
+/**
+ * The Constraint class represents a geometric constraint in a geometric construction.
+ * It contains methods to generate and manipulate constraints, as well as to calculate
+ * polynomial representations of the constraints.
+ */
 public class Constraint {
     final public static int NULLTYPE = 0;
     final public static int PONLINE = 11;  // collinear
@@ -114,6 +118,11 @@ public class Constraint {
     Cons csd = null;
     Cons csd1 = null;
 
+    /**
+     * Retrieves the polynomial list and sets it to null.
+     *
+     * @return the current polynomial list
+     */
     public static TPoly getPolyListAndSetNull() {
         TPoly pl = polylist;
         polylist = null;
@@ -125,10 +134,21 @@ public class Constraint {
         return pl;
     }
 
+    /**
+     * Gets the type of the constraint.
+     *
+     * @return the type of the constraint
+     */
     public int GetConstraintType() {
         return this.ConstraintType;
     }
 
+    /**
+     * Retrieves an element from the element list at the specified index.
+     *
+     * @param i the index of the element to retrieve
+     * @return the element at the specified index, or null if the index is out of bounds
+     */
     public Object getelement(int i) {
         if (i >= 0 && i < elementlist.size())
             return elementlist.get(i);
@@ -136,35 +156,45 @@ public class Constraint {
             return null;
     }
 
-    public CPoint getLPoints2(CPoint p1, CPoint p2) {
-        for (int i = 0; i < elementlist.size(); i++) {
-            CPoint p = (CPoint) elementlist.get(i);
-            if (p != p1 && p != p2)
-                return p;
-        }
-        return null;
-    }
-
-    public boolean cotainPoints(CPoint p1, CPoint p2) {
-        return elementlist.contains(p1) && elementlist.contains(p2);
-    }
-
+    /**
+     * Retrieves all elements in the element list.
+     *
+     * @return a vector containing all elements in the element list
+     */
     public Vector getAllElements() {
         Vector v = new Vector();
         v.addAll(elementlist);
         return v;
     }
 
+    /**
+     * Constructs a Constraint with the specified ID.
+     *
+     * @param id the ID of the constraint
+     */
     public Constraint(int id) {
         this.id = id;
     }
 
+    /**
+     * Calculates the polynomial representation using the given parameters.
+     *
+     * @param para an array of parameters to use for the calculation
+     */
     public void calculate(Param[] para) {
         if (polylist == null) return;
         poly.calculv(polylist.getPoly(), para);
         is_poly_genereate = false;
     }
 
+/**
+ * Constructs a Constraint with two elements and optionally generates the polynomial.
+ *
+ * @param type the type of the constraint
+ * @param obj1 the first element
+ * @param obj2 the second element
+ * @param gpoly true if the polynomial should be generated, false otherwise
+ */
     public Constraint(int type, Object obj1, Object obj2, boolean gpoly) {
         this.ConstraintType = type;
         elementlist.add(obj1);
@@ -175,19 +205,37 @@ public class Constraint {
         }
     }
 
+    /**
+     * Constructs a Constraint with a list of elements and generates the polynomial.
+     *
+     * @param type the type of the constraint
+     * @param olist a vector containing the elements
+     */
     public Constraint(int type, Vector olist) {
         this.ConstraintType = type;
         elementlist.addAll(olist);
         PolyGenerate();
     }
 
+    /**
+     * Constructs a Constraint with a single element.
+     *
+     * @param type the type of the constraint
+     * @param obj the element
+     */
     public Constraint(int type, Object obj) {
         this.ConstraintType = type;
         elementlist.add(obj);
     }
 
-    public Constraint(int type, Object obj1, Object obj2)//
-    {
+    /**
+     * Constructs a Constraint with two elements and generates the polynomial if required.
+     *
+     * @param type the type of the constraint
+     * @param obj1 the first element
+     * @param obj2 the second element
+     */
+    public Constraint(int type, Object obj1, Object obj2) {
         this.ConstraintType = type;
         elementlist.add(obj1);
         elementlist.add(obj2);
@@ -203,6 +251,15 @@ public class Constraint {
         }
     }
 
+    /**
+     * Constructs a Constraint with three elements and a proportion, and generates the polynomial if required.
+     *
+     * @param type the type of the constraint
+     * @param obj1 the first element
+     * @param obj2 the second element
+     * @param obj3 the third element
+     * @param prop the proportion
+     */
     public Constraint(int type, Object obj1, Object obj2, Object obj3, int prop) {
         this.ConstraintType = type;
         elementlist.add(obj1);
@@ -211,18 +268,33 @@ public class Constraint {
         this.proportion = prop;
         if (is_poly_genereate)
             PolyGenerate();
-
     }
 
+    /**
+     * Constructs a Constraint with a single element and a proportion, and generates the polynomial if required.
+     *
+     * @param type the type of the constraint
+     * @param obj1 the element
+     * @param prop the proportion
+     */
     public Constraint(int type, Object obj1, int prop) {
         this.ConstraintType = type;
         elementlist.add(obj1);
         this.proportion = prop;
         if (is_poly_genereate)
             PolyGenerate();
-
     }
 
+    /**
+     * Constructs a Constraint with four elements and a proportion, and generates the polynomial if required.
+     *
+     * @param type the type of the constraint
+     * @param obj1 the first element
+     * @param obj2 the second element
+     * @param obj3 the third element
+     * @param obj4 the fourth element
+     * @param prop the proportion
+     */
     public Constraint(int type, Object obj1, Object obj2, Object obj3, Object obj4, int prop) {
         this.ConstraintType = type;
         elementlist.add(obj1);
@@ -234,6 +306,16 @@ public class Constraint {
             PolyGenerate();
     }
 
+    /**
+     * Constructs a Constraint with five elements and generates the polynomial if required.
+     *
+     * @param type the type of the constraint
+     * @param obj1 the first element
+     * @param obj2 the second element
+     * @param obj3 the third element
+     * @param obj4 the fourth element
+     * @param obj5 the fifth element
+     */
     public Constraint(int type, Object obj1, Object obj2, Object obj3, Object obj4, Object obj5) {
         this.ConstraintType = type;
         addelement(obj1);
@@ -245,8 +327,15 @@ public class Constraint {
             PolyGenerate();
     }
 
-    public Constraint(int type, Object obj1, Object obj2, Object obj3)//
-    {
+    /**
+     * Constructs a Constraint with three elements and generates the polynomial if required.
+     *
+     * @param type the type of the constraint
+     * @param obj1 the first element
+     * @param obj2 the second element
+     * @param obj3 the third element
+     */
+    public Constraint(int type, Object obj1, Object obj2, Object obj3) {
         this.ConstraintType = type;
         addelement(obj1);
         addelement(obj2);
@@ -255,13 +344,26 @@ public class Constraint {
             PolyGenerate();
     }
 
+    /**
+     * Adds an element to the element list if it is not null.
+     *
+     * @param obj the element to be added
+     */
     public void addelement(Object obj) {
         if (obj != null)
             elementlist.add(obj);
     }
 
-    public Constraint(int type, Object obj1, Object obj2, Object obj3, Object obj4)//
-    {
+    /**
+     * Constructs a Constraint with four elements and generates the polynomial if required.
+     *
+     * @param type the type of the constraint
+     * @param obj1 the first element
+     * @param obj2 the second element
+     * @param obj3 the third element
+     * @param obj4 the fourth element
+     */
+    public Constraint(int type, Object obj1, Object obj2, Object obj3, Object obj4) {
         this.ConstraintType = type;
         addelement(obj1);
         addelement(obj2);
@@ -271,8 +373,18 @@ public class Constraint {
             PolyGenerate();
     }
 
-    public Constraint(int type, Object obj1, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6)//
-    {
+    /**
+     * Constructs a Constraint with six elements and generates the polynomial if required.
+     *
+     * @param type the type of the constraint
+     * @param obj1 the first element
+     * @param obj2 the second element
+     * @param obj3 the third element
+     * @param obj4 the fourth element
+     * @param obj5 the fifth element
+     * @param obj6 the sixth element
+     */
+    public Constraint(int type, Object obj1, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6) {
         this.ConstraintType = type;
         addelement(obj1);
         addelement(obj2);
@@ -284,19 +396,38 @@ public class Constraint {
             PolyGenerate();
     }
 
-
+    /**
+     * Sets whether the polynomial should be generated.
+     *
+     * @param r true if the polynomial should be generated, false otherwise
+     */
     public void setPolyGenerate(boolean r) {
         is_poly_genereate = r;
     }
 
+    /**
+     * Adds an element to the element list.
+     *
+     * @param obj the element to be added
+     */
     public void addElement(Object obj) {
         elementlist.add(obj);
     }
 
+    /**
+     * Returns the message representation of the constraint.
+     *
+     * @return the message representation of the constraint
+     */
     String getMessage() {
         return toString();
     }
 
+    /**
+     * Returns the string representation of the constraint.
+     *
+     * @return the string representation of the constraint
+     */
     public String toString() {
         if (csd != null)
             return csd.toDString();
@@ -352,7 +483,6 @@ public class Constraint {
             case PERPBISECT:
                 return e1.TypeString() + " is on the perpendicular bisector of " + e2.m_name + " " + e3.TypeString();
             case MIRROR:
-
             case PRATIO:
                 return "o(" + e1.m_name + e2.m_name + ") / " + "o(" + e3.m_name + e4.m_name + ") = 1 : " + this.proportion;
             case LRATIO:
@@ -368,24 +498,31 @@ public class Constraint {
                 return "set " + e1.TypeString() + e2.TypeString() + " a horizonal line";
             case VERTICAL:
                 return "set " + e1.TypeString() + e2.TypeString() + " a vertical line";
-
         }
 
         return new String();
     }
 
+    /**
+     * Clears all constraints by setting the constraint descriptors to null.
+     */
     public void clear_all_cons() {
         csd = null;
         csd1 = null;
     }
 
+    /**
+     * Generates the polynomial representation based on the constraint type.
+     *
+     * @return a TPoly object representing the generated polynomial list
+     */
     TPoly PolyGenerate() {
         TMono tm = null;
         TPoly tp = null;
 
         switch (this.ConstraintType) {
             case LINE:
-//                this.add_des(gib.C_LINE, elementlist);
+                // this.add_des(gib.C_LINE, elementlist);
                 break;
             case CIRCLE:
                 this.add_des(Gib.C_CIRCLE, elementlist);
@@ -423,7 +560,7 @@ public class Constraint {
             case PONLINE:  // p_o_L
                 tm = this.PolyOnLine();
                 break;
-            case PONCIRCLE:        // p_o_C
+            case PONCIRCLE:  // p_o_C
                 tm = this.PolyOnCircle();
                 break;
             case INTER_LL:
@@ -435,43 +572,42 @@ public class Constraint {
             case INTER_CC:
                 tp = PolyIntersection_CC();
                 break;
-            case PARALLEL: // P_O_P
+            case PARALLEL:  // P_O_P
                 tm = this.PolyParel();
                 break;
-            case PERPENDICULAR:    // p_o_T
+            case PERPENDICULAR:  // p_o_T
                 tm = this.PolyPerp();
                 break;
-            case PFOOT:   // LT
+            case PFOOT:  // LT
                 tp = this.PolyPfoot();
                 break;
-            case MIDPOINT:     // MID
+            case MIDPOINT:  // MID
                 tp = this.PolyMidPoint();
                 break;
-            case EQDISTANCE:         //
+            case EQDISTANCE:
                 tm = this.PolyEqidstance();
                 break;
-            case EQANGLE:              // P_O_A
+            case EQANGLE:  // P_O_A
                 tm = this.PolyEqAngle();
                 break;
-            case COLLINEAR:         // P_O_L
+            case COLLINEAR:  // P_O_L
                 tm = this.collinear();
                 break;
             case CCTANGENT:
                 tm = this.PolyCCTangent();
                 break;
-            case CCLine: {
-            }
-            break;
+            case CCLine:
+                break;
             case TRATIO:
                 tp = this.PolyTRatio();
                 break;
-            case PERPBISECT: // p_O_B
+            case PERPBISECT:  // p_O_B
                 tm = this.PolyPerpBisect();
                 break;
             case ISO_TRIANGLE:
                 tm = PolyISOTriangle();
                 break;
-            case MIRROR:      // P_REF
+            case MIRROR:  // P_REF
                 tp = this.PolyMirror();
                 break;
             case PRATIO:
@@ -480,7 +616,7 @@ public class Constraint {
             case LRATIO:
                 tp = this.PolyPropPoint();
                 break;
-            case CIRCUMCENTER:        // P_CIR
+            case CIRCUMCENTER:  // P_CIR
                 tp = this.PolyCircumCenter();
                 break;
             case BARYCENTER:
@@ -581,7 +717,6 @@ public class Constraint {
             case CONSTANT:
                 tm = PolyConstant();
                 break;
-
         }
 
         if (tm != null) {
@@ -594,6 +729,11 @@ public class Constraint {
         return polylist;
     }
 
+    /**
+     * Adds a polynomial to the polynomial list.
+     *
+     * @param tp the polynomial to be added
+     */
     public void addPoly(TPoly tp) {
         TPoly t = tp;
         while (t.getNext() != null)
@@ -602,20 +742,11 @@ public class Constraint {
         polylist = tp;
     }
 
-    public boolean optimizePolygon(TPoly p) {
-        boolean a = false;
-        while (p != null) {
-            TMono m = p.getPoly();
-            if (m != null && poly.plength(m) == 1) {
-                boolean d = poly.addZeroN(m.x);
-                if (d)
-                    a = true;
-            }
-            p = p.getNext();
-        }
-        return a;
-    }
-
+    /**
+     * Computes the polynomial representation of a constant.
+     *
+     * @return a TMono object representing the constant
+     */
     TMono PolyConstant() {
         String t1 = elementlist.get(0).toString();
         String t2 = elementlist.get(1).toString();
@@ -624,6 +755,11 @@ public class Constraint {
         return parseTMonoString(t1, t2, p1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of points on a line.
+     *
+     * @return a TMono object representing the points on a line
+     */
     TMono PolyONALine() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -646,6 +782,11 @@ public class Constraint {
         }
     }
 
+    /**
+     * Computes the polynomial representation of points on a circle.
+     *
+     * @return a TMono object representing the points on a circle
+     */
     TMono PolyONRCircle() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -656,6 +797,11 @@ public class Constraint {
                 p4.x1.xindex, p4.y1.xindex, p3.x1.xindex, p3.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of points on a perpendicular circle.
+     *
+     * @return a TMono object representing the points on a perpendicular circle
+     */
     TMono PolyONDCircle() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -665,6 +811,11 @@ public class Constraint {
                 p1.x1.xindex, p1.y1.xindex, p3.x1.xindex, p3.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of points on an AB line.
+     *
+     * @return a TMono object representing the points on an AB line
+     */
     TMono PolyONABLine() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -676,6 +827,11 @@ public class Constraint {
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of points on a cyclic circle.
+     *
+     * @return a TMono object representing the points on a cyclic circle
+     */
     TMono PolyONSCircle() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -686,6 +842,11 @@ public class Constraint {
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of a tangent line to two circles.
+     *
+     * @return a TPoly object representing the tangent line to two circles
+     */
     TPoly PolyCCTangentLine() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -704,9 +865,13 @@ public class Constraint {
         TPoly poly2 = this.NewTPoly(m3, m4);
         poly1.getNext().setNext(poly2);
         return poly1;
-
     }
 
+    /**
+     * Computes the polynomial representation of a ratio.
+     *
+     * @return a TMono object representing the ratio
+     */
     TMono PolyRatio() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -723,6 +888,11 @@ public class Constraint {
                 p7.x1.xindex, p7.y1.xindex, p8.x1.xindex, p8.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of a bisected line.
+     *
+     * @return a TMono object representing the bisected line
+     */
     TMono PolyBLine() {
         CPoint p1 = (CPoint) elementlist.get(1);
         CPoint p2 = (CPoint) elementlist.get(2);
@@ -734,9 +904,13 @@ public class Constraint {
             add_des(Gib.C_O_B, p, p1, p2);
             return poly.bisect1(p.x1.xindex, p.y1.xindex, p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
         }
-
     }
 
+    /**
+     * Computes the polynomial representation of a tangent line to a circle.
+     *
+     * @return a TMono object representing the tangent line to a circle
+     */
     TMono PolyTCLine() {
         Circle c = (Circle) elementlist.get(0);
         CLine ln = (CLine) elementlist.get(1);
@@ -755,9 +929,13 @@ public class Constraint {
             return poly.perpendicular(p.x1.xindex, p.y1.xindex, p1.x1.xindex, p1.y1.xindex,
                     p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
         }
-
     }
 
+    /**
+     * Computes the polynomial representation of a circle passing through three points.
+     *
+     * @return a TPoly object representing the circle passing through three points
+     */
     TPoly PolyCircle3P() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -769,6 +947,11 @@ public class Constraint {
                 p4.x1.xindex, p4.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of an angle bisector.
+     *
+     * @return a TMono object representing the angle bisector
+     */
     TMono PolyAngleBisector() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -784,8 +967,12 @@ public class Constraint {
         return null;
     }
 
-    TPoly PolyPsym()  // p1 is the mirror of p2 through p3
-    {
+    /**
+     * Computes the polynomial representation of a symmetric point.
+     *
+     * @return a TPoly object representing the symmetric point
+     */
+    TPoly PolyPsym() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
@@ -795,23 +982,11 @@ public class Constraint {
         return this.NewTPoly(m1, m2);
     }
 
-    TPoly PolySquare() {
-        CPoint p1 = (CPoint) elementlist.get(0);
-        CPoint p2 = (CPoint) elementlist.get(1);
-        CPoint p3 = (CPoint) elementlist.get(2);
-        CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(Gib.C_SQUARE, p1, p2, p3, p4);
-        TPoly t1 = poly.squarept1(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
-                p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, this.proportion);
-        TPoly t2 = poly.squarept2(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
-                p1.x1.xindex, p1.y1.xindex, p4.x1.xindex, p4.y1.xindex, this.proportion);
-        TPoly t = t2;
-        while (t2.getNext() != null)
-            t2 = t2.getNext();
-        t2.setNext(t1);
-        return t1;
-    }
-
+    /**
+     * Computes the polynomial representation of an equilateral triangle.
+     *
+     * @return a TPoly object representing the equilateral triangle
+     */
     TPoly PolyPeTriangle() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -820,6 +995,11 @@ public class Constraint {
         return poly.pn_eq_triangle(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, true);
     }
 
+    /**
+     * Computes the polynomial representation of points on a line.
+     *
+     * @return a TMono object representing the points on a line
+     */
     TMono polyPonALine() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -832,6 +1012,11 @@ public class Constraint {
                 p4.x1.xindex, p4.y1.xindex, p5.x1.xindex, p5.y1.xindex, p6.x1.xindex, p6.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of an incenter.
+     *
+     * @return a TPoly object representing the incenter
+     */
     TPoly PolyInCenter() {
         CPoint p = (CPoint) elementlist.get(0);
         CPoint p1 = (CPoint) elementlist.get(1);
@@ -849,6 +1034,11 @@ public class Constraint {
         return this.NewTPoly(m1, m2);
     }
 
+    /**
+     * Computes the polynomial representation of an orthocenter.
+     *
+     * @return a TPoly object representing the orthocenter
+     */
     TPoly PolyOrthoCenter() {
         CPoint p = (CPoint) elementlist.get(0);
         CPoint p1 = (CPoint) elementlist.get(1);
@@ -862,9 +1052,13 @@ public class Constraint {
         add_des(Gib.C_ORTH, p, p1, p2, p3);
 
         return this.NewTPoly(m1, m2);
-
     }
 
+    /**
+     * Computes the polynomial representation of a symmetric point.
+     *
+     * @return a TPoly object representing the symmetric point
+     */
     TPoly PolySymPoint() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint po = (CPoint) elementlist.get(1);
@@ -876,6 +1070,11 @@ public class Constraint {
         return this.NewTPoly(m1, m2);
     }
 
+    /**
+     * Computes the polynomial representation of a multiple side ratio.
+     *
+     * @return a TMono object representing the multiple side ratio
+     */
     TMono polyMulside() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -885,23 +1084,35 @@ public class Constraint {
         Integer i2 = (Integer) elementlist.get(5);
         add_des(Gib.C_NRATIO, p1, p2, p3, p4, i1, i2);
         return poly.p_p_mulside(p1, p2, p3, p4, i1.intValue(), i2.intValue());
-
-
     }
 
+    /**
+     * Computes the polynomial representation of a horizontal line.
+     *
+     * @return a TMono object representing the horizontal line
+     */
     TMono PolyHorizonal() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
         return poly.p_p_horizonal(p1, p2);
     }
 
+    /**
+     * Computes the polynomial representation of a vertical line.
+     *
+     * @return a TMono object representing the vertical line
+     */
     TMono PolyVertical() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
         return poly.p_p_vertical(p1, p2);
     }
 
-
+    /**
+     * Computes the polynomial representation of a line-circle tangent.
+     *
+     * @return a TPoly object representing the line-circle tangent
+     */
     TPoly PolyLCTangent() {
         CLine line1;
         Circle c;
@@ -926,6 +1137,11 @@ public class Constraint {
         return tp;
     }
 
+    /**
+     * Computes the polynomial representation of a circumcenter.
+     *
+     * @return a TPoly object representing the circumcenter
+     */
     TPoly PolyCircumCenter() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -938,6 +1154,11 @@ public class Constraint {
                 p4.x1.xindex, p4.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of a barycenter.
+     *
+     * @return a TPoly object representing the barycenter
+     */
     TPoly PolyBaryCenter() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -948,7 +1169,11 @@ public class Constraint {
                 p4.x1.xindex, p4.y1.xindex);
     }
 
-
+    /**
+     * Computes the polynomial representation of a proportional point.
+     *
+     * @return a TPoly object representing the proportional point
+     */
     TPoly PolyPropPoint() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -961,7 +1186,12 @@ public class Constraint {
         return poly.prop_point(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, i1.intValue(), i2.intValue());
     }
 
-    TPoly PolyPratio() {  // p1   is p2 + /p3p4/
+    /**
+     * Computes the polynomial representation of a point ratio.
+     *
+     * @return a TPoly object representing the point ratio
+     */
+    TPoly PolyPratio() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
@@ -981,6 +1211,11 @@ public class Constraint {
                 p4.x1.xindex, p4.y1.xindex, r1, r2);
     }
 
+    /**
+     * Computes the polynomial representation of the intersection of two circles.
+     *
+     * @return a TPoly object representing the intersection of the circles
+     */
     TPoly PolyInterCC() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -988,16 +1223,18 @@ public class Constraint {
         Circle c2 = (Circle) elementlist.get(3);
         CPoint p3 = c1.o;
         CPoint p4 = c2.o;
-//        add_des(gib.C_O_C, p1, p3, p2);
-//        add_des(gib.C_O_C, p1, p4, p2);
         add_des(Gib.C_I_CC, p1, p3, p2, p4, p2);
 
         return poly.mirrorPL(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                 p4.x1.xindex, p4.y1.xindex);
     }
 
-    TPoly PolyMirror()  // p1 to p2 through obj
-    {
+    /**
+     * Computes the polynomial representation of a mirror point.
+     *
+     * @return a TPoly object representing the mirror point
+     */
+    TPoly PolyMirror() {
         Object obj = elementlist.get(2);
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -1020,9 +1257,13 @@ public class Constraint {
             return poly.mirrorPL(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
                     p4.x1.xindex, p4.y1.xindex);
         }
-
     }
 
+    /**
+     * Computes the polynomial representation of an isosceles triangle.
+     *
+     * @return a TMono object representing the isosceles triangle
+     */
     TMono PolyISOTriangle() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -1033,16 +1274,25 @@ public class Constraint {
         return poly.bisect(p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, p1.x1.xindex, p1.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of a perpendicular bisector.
+     *
+     * @return a TMono object representing the perpendicular bisector
+     */
     TMono PolyPerpBisect() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = (CPoint) elementlist.get(2);
         add_des(Gib.C_O_B, p1, p2, p3);
 
-
         return poly.bisect(p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, p1.x1.xindex, p1.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of a trapezoid.
+     *
+     * @return a TPoly object representing the trapezoid
+     */
     TPoly PolyTRatio() {
         int n = elementlist.size();
         CPoint p1 = (CPoint) elementlist.get(0);
@@ -1062,19 +1312,13 @@ public class Constraint {
         int t2 = I1.intValue();
 
         return poly.Tratio(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex, t1, t2);
-
     }
 
-    TPoly PolyNTSegment() {
-        CPoint p1 = (CPoint) elementlist.get(0);
-        CPoint p2 = (CPoint) elementlist.get(1);
-        CPoint p3 = (CPoint) elementlist.get(2);
-        CPoint p4 = (CPoint) elementlist.get(3);
-        //des = new Act(Act.QSQUAR, p1, p2, p3, p4);
-        return poly.squarept2(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex, this.proportion);
-
-    }
-
+    /**
+     * Computes the polynomial representation of an angle.
+     *
+     * @return a TMono object representing the angle
+     */
     TMono PolyNTAngle() {
         CLine ln1 = (CLine) elementlist.get(0);
         CLine ln2 = (CLine) elementlist.get(1);
@@ -1093,6 +1337,11 @@ public class Constraint {
                 c.x1.xindex, c.y1.xindex, pt.x1.xindex, pt.y1.xindex);
     }
 
+    /**
+     * Computes the polynomial representation of a square.
+     *
+     * @return a TPoly object representing the square
+     */
     TPoly PolyPsquare() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -1100,32 +1349,26 @@ public class Constraint {
         CPoint p4 = (CPoint) elementlist.get(2);
 
         return poly.squarept1(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex, this.proportion);
-
     }
 
+    /**
+     * Computes the polynomial representation of a square.
+     *
+     * @return a TPoly object representing the square
+     */
     TPoly PolyQsquare() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
         CPoint p3 = p2;
         CPoint p4 = (CPoint) elementlist.get(2);
         return poly.squarept2(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex, this.proportion);
-
     }
 
-    TMono PolyCCLine() {
-        CPoint p = (CPoint) this.getelement(0);
-        Circle c1 = (Circle) this.getelement(1);
-        Circle c2 = (Circle) this.getelement(2);
-        CPoint po1 = c1.o;
-        CPoint po2 = c2.o;
-        CPoint pc1 = c1.getSidePoint();
-        CPoint pc2 = c2.getSidePoint();
-
-        return poly.ccline(p.x1.xindex, p.y1.xindex, po1.x1.xindex, po1.y1.xindex, pc1.x1.xindex, pc1.y1.xindex,
-                po2.x1.xindex, po2.y1.xindex, pc2.x1.xindex, pc2.y1.xindex);
-
-    }
-
+    /**
+     * Computes the polynomial representation of a specific angle.
+     *
+     * @return a TMono object representing the specific angle
+     */
     TMono PolySAngle() {
         CLine ln1 = (CLine) elementlist.get(0);
         CLine ln2 = (CLine) elementlist.get(1);
@@ -1141,6 +1384,11 @@ public class Constraint {
             return null;
     }
 
+    /**
+     * Computes the polynomial representation of an angle.
+     *
+     * @return a TMono object representing the angle
+     */
     TMono PolyALine() {
         CLine ln1 = (CLine) elementlist.get(0);
         CLine ln2 = (CLine) elementlist.get(1);
@@ -1182,6 +1430,11 @@ public class Constraint {
         return null;
     }
 
+    /**
+     * Computes the polynomial representation of equal angles.
+     *
+     * @return a TMono object representing the equal angles
+     */
     TMono PolyEqAngle() {
         if (elementlist.size() == 2) {
             CAngle ag1 = (CAngle) elementlist.get(0);
@@ -1235,10 +1488,14 @@ public class Constraint {
                     lp2[0].x1.xindex, lp2[0].y1.xindex, lp2[1].x1.xindex, lp2[1].y1.xindex,
                     lp3[0].x1.xindex, lp3[0].y1.xindex, lp3[1].x1.xindex, lp3[1].y1.xindex,
                     lp4[0].x1.xindex, lp4[0].y1.xindex, lp4[1].x1.xindex, lp4[1].y1.xindex);
-
         }
     }
 
+    /**
+     * Computes the polynomial representation of equal angles with three points.
+     *
+     * @return a TMono object representing the equal angles with three points
+     */
     TMono PolyEqAngle3P() {
         CAngle ag1 = (CAngle) elementlist.get(0);
         CAngle ag2 = (CAngle) elementlist.get(1);
@@ -1261,14 +1518,23 @@ public class Constraint {
                 p4.x1.xindex, p4.y1.xindex, p5.x1.xindex, p5.y1.xindex, p6.x1.xindex, p6.y1.xindex,
                 p7.x1.xindex, p7.y1.xindex, p8.x1.xindex, p8.y1.xindex, p9.x1.xindex, p9.y1.xindex,
                 pm.xindex);
-
     }
 
+    /**
+     * Computes the polynomial representation of a specific angle.
+     *
+     * @return a TMono object representing the specific angle
+     */
     TMono PolySpecifiAngle() {
         Param pm = (Param) elementlist.get(0);
         return poly.specificangle(pm.xindex, this.proportion);
     }
 
+    /**
+     * Computes the polynomial representation of equal distances.
+     *
+     * @return a TMono object representing the equal distances
+     */
     TMono PolyEqidstance() {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -1278,9 +1544,13 @@ public class Constraint {
         add_des(Gib.C_EQDISTANCE, p1, p2, p3, p4);
         return poly.eqdistance(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
                 p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
-
     }
 
+    /**
+     * Computes the polynomial representation of a midpoint.
+     *
+     * @return a TPoly object representing the midpoint
+     */
     TPoly PolyMidPoint() {
         CPoint po = (CPoint) elementlist.get(0);
         CPoint p1 = (CPoint) elementlist.get(1);
@@ -1297,282 +1567,334 @@ public class Constraint {
         poly2.setPoly(m2);
         poly2.setNext(poly);
         return poly2;
-
     }
 
 
-    TPoly PolyRectangle() {
-        CPoint p1 = (CPoint) elementlist.get(0);
-        CPoint p2 = (CPoint) elementlist.get(1);
-        CPoint p3 = (CPoint) elementlist.get(2);
-        CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(Gib.C_RECTANGLE, p1, p2, p3, p4);
+    /**
+         * Computes the polynomial representation of a rectangle.
+         *
+         * @return a TPoly object representing the rectangle
+         */
+        TPoly PolyRectangle() {
+            CPoint p1 = (CPoint) elementlist.get(0);
+            CPoint p2 = (CPoint) elementlist.get(1);
+            CPoint p3 = (CPoint) elementlist.get(2);
+            CPoint p4 = (CPoint) elementlist.get(3);
+            add_des(Gib.C_RECTANGLE, p1, p2, p3, p4);
 
-        TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
-                p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
-        TMono m2 = poly.perpendicular(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
-                p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex);
-        TMono m3 = poly.perpendicular(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
-                p1.x1.xindex, p1.y1.xindex, p4.x1.xindex, p4.y1.xindex);
-        TPoly p = NewTPoly(m1, m2);
-        TPoly pp = new TPoly();
-        pp.setPoly(m3);
-        pp.setNext(p);
-        return pp;
-    }
-
-    TMono PolyTrapezoid() {
-        CPoint p1 = (CPoint) elementlist.get(0);
-        CPoint p2 = (CPoint) elementlist.get(1);
-        CPoint p3 = (CPoint) elementlist.get(2);
-        CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(Gib.C_TRAPEZOID, p1, p2, p3, p4);
-        TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
-                p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
-        return m1;
-    }
-
-    TPoly PolyParallelogram() {
-        CPoint p1 = (CPoint) elementlist.get(0);
-        CPoint p2 = (CPoint) elementlist.get(1);
-        CPoint p3 = (CPoint) elementlist.get(2);
-        CPoint p4 = (CPoint) elementlist.get(3);
-
-        int n = p4.x1.xindex;
-        if (n > p1.x1.xindex && n > p2.x1.xindex) {
-            CPoint pt = p4;
-            p4 = p1;
-            p1 = pt;
-            pt = p3;
-            p3 = p2;
-            p2 = pt;
-        }
-        add_des(Gib.C_PARALLELOGRAM, p1, p2, p3, p4);
-        TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
-                p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
-        TMono m2 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p4.x1.xindex, p4.y1.xindex,
-                p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex);
-        return this.NewTPoly(m1, m2);
-
-    }
-
-    TPoly PolyRTrapezoid() {
-        CPoint p1 = (CPoint) elementlist.get(0);
-        CPoint p2 = (CPoint) elementlist.get(1);
-        CPoint p3 = (CPoint) elementlist.get(2);
-        CPoint p4 = (CPoint) elementlist.get(3);
-        add_des(Gib.C_R_TRAPEZOID, p1, p2, p3, p4);
-        TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
-                p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
-        TMono m2 = poly.perpendicular(p1.x1.xindex, p1.y1.xindex, p4.x1.xindex, p4.y1.xindex,
-                p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
-        return this.NewTPoly(m1, m2);
-
-    }
-
-    TMono PolyRightTriangle() {
-        CPoint po = (CPoint) elementlist.get(0);
-        CPoint p1 = (CPoint) elementlist.get(1);
-        CPoint p2 = (CPoint) elementlist.get(2);
-        add_des(Gib.C_R_TRI, po, p1, p2);
-        return poly.perpendicular(po.x1.xindex, po.y1.xindex, p1.x1.xindex, p1.y1.xindex,
-                po.x1.xindex, po.y1.xindex, p2.x1.xindex, p2.y1.xindex);
-    }
-
-    TMono PolyOnLine() {
-        CPoint p = (CPoint) this.getelement(0);
-        CLine line = (CLine) this.getelement(1);
-        int x, y;
-        x = p.x1.xindex;
-        y = p.y1.xindex;
-
-        if (line.type == CLine.CCLine) {
-            Constraint cs = line.getcons(0);
-
-            Circle c1 = (Circle) cs.getelement(1);
-            Circle c2 = (Circle) cs.getelement(2);
-            CPoint po1 = c1.o;
-            CPoint po2 = c2.o;
-            CPoint pc1 = c1.getSidePoint();
-            CPoint pc2 = c2.getSidePoint();
-            //?????
-            return poly.ccline(p.x1.xindex, p.y1.xindex, po1.x1.xindex, po1.y1.xindex, pc1.x1.xindex, pc1.y1.xindex,
-                    po2.x1.xindex, po2.y1.xindex, pc2.x1.xindex, pc2.y1.xindex);
-
-
-        } else {
-            CPoint[] plist = line.getTowSideOfLine();
-            if (plist == null) return null;
-            CPoint p1, p2;
-            p1 = plist[0];
-            p2 = plist[1];
-            add_des(Gib.C_O_L, p, p1, p2);
-            return poly.collinear(x, y, p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
-        }
-    }
-
-    TPoly PolyIntersection_CC() {
-        CPoint p1 = (CPoint) elementlist.get(0);
-        Circle c1 = (Circle) elementlist.get(1);
-        Circle c2 = (Circle) elementlist.get(2);
-        Vector v = Circle.CommonPoints(c1, c2);
-        TPoly tp = null;
-        int n = v.size();
-        CPoint p2 = null;
-
-        if (n == 2) {
-            CPoint t1 = (CPoint) v.get(0);
-            CPoint t2 = (CPoint) v.get(1);
-            if (p1 == t1)
-                p2 = t2;
-            else
-                p2 = t1;
-        } else if (n == 1 && v.get(0) != p1)
-            p2 = (CPoint) v.get(0);
-
-
-        if (p2 != null && p2.x1.xindex < p1.x1.xindex) {
-            CPoint p3 = c1.o;
-            CPoint p4 = c2.o;
-            this.add_des(Gib.C_I_CC, p1, p3, p2, p4, p2);
-            return poly.mirrorPL(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
-                    p4.x1.xindex, p4.y1.xindex);
+            TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
+                    p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
+            TMono m2 = poly.perpendicular(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
+                    p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex);
+            TMono m3 = poly.perpendicular(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
+                    p1.x1.xindex, p1.y1.xindex, p4.x1.xindex, p4.y1.xindex);
+            TPoly p = NewTPoly(m1, m2);
+            TPoly pp = new TPoly();
+            pp.setPoly(m3);
+            pp.setNext(p);
+            return pp;
         }
 
-        p2 = c1.getSidePoint();
-        CPoint p3 = c2.getSidePoint();
-        if (p2 != null && p3 != null) {
-            this.add_des(Gib.C_I_CC, p1, c1.o, p2, c2.o, p3);
-            TMono m1 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c1.o.x1.xindex, c1.o.y1.xindex,
-                    p2.x1.xindex, p2.y1.xindex, c1.o.x1.xindex, c1.o.y1.xindex);
-            TMono m2 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c2.o.x1.xindex, c2.o.y1.xindex,
-                    p3.x1.xindex, p3.y1.xindex, c2.o.x1.xindex, c2.o.y1.xindex);
-            return this.NewTPoly(m1, m2);
-        } else {
-            CPoint[] l1 = c1.getRadiusPoint();
-            CPoint[] l2 = c2.getRadiusPoint();
-            this.add_des(Gib.C_I_RR, p1, c1.o, l1[0], l1[1], c2.o, l2[0], l2[1]);
-
-            TMono m1 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c1.o.x1.xindex, c1.o.y1.xindex,
-                    l1[0].x1.xindex, l1[0].y1.xindex, l1[1].x1.xindex, l1[1].y1.xindex);
-            TMono m2 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c2.o.x1.xindex, c2.o.y1.xindex,
-                    l2[0].x1.xindex, l2[0].y1.xindex, l2[1].x1.xindex, l2[1].y1.xindex);
-            return this.NewTPoly(m1, m2);
-        }
-    }
-
-    TPoly PolyIntersection_ll() {
-        CPoint p1 = (CPoint) elementlist.get(0);
-        CLine ln1 = (CLine) elementlist.get(1);
-        CLine ln2 = (CLine) elementlist.get(2);
-        if (compareLN(ln1, ln2)) {
-            CLine ln = ln1;
-            ln1 = ln2;
-            ln2 = ln;
+        /**
+         * Computes the polynomial representation of a trapezoid.
+         *
+         * @return a TMono object representing the trapezoid
+         */
+        TMono PolyTrapezoid() {
+            CPoint p1 = (CPoint) elementlist.get(0);
+            CPoint p2 = (CPoint) elementlist.get(1);
+            CPoint p3 = (CPoint) elementlist.get(2);
+            CPoint p4 = (CPoint) elementlist.get(3);
+            add_des(Gib.C_TRAPEZOID, p1, p2, p3, p4);
+            TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
+                    p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
+            return m1;
         }
 
-        CPoint[] ps1 = ln1.getTowSideOfLine();
-        if (ps1 == null) return null;
-        CPoint[] ps2 = ln2.getTowSideOfLine();
-        if (ps2 == null) return null;
-        add_des(Gib.C_I_LL, p1, ps1[0], ps1[1], ps2[0], ps2[1]);
-        TMono m1 = poly.collinear(p1.x1.xindex, p1.y1.xindex, ps1[0].x1.xindex, ps1[0].y1.xindex, ps1[1].x1.xindex, ps1[1].y1.xindex);
-        addZeron(m1);
-        TMono m2 = poly.collinear(p1.x1.xindex, p1.y1.xindex, ps2[0].x1.xindex, ps2[0].y1.xindex, ps2[1].x1.xindex, ps2[1].y1.xindex);
-        return this.NewTPoly(m1, m2);
-    }
+        /**
+         * Computes the polynomial representation of a parallelogram.
+         *
+         * @return a TPoly object representing the parallelogram
+         */
+        TPoly PolyParallelogram() {
+            CPoint p1 = (CPoint) elementlist.get(0);
+            CPoint p2 = (CPoint) elementlist.get(1);
+            CPoint p3 = (CPoint) elementlist.get(2);
+            CPoint p4 = (CPoint) elementlist.get(3);
 
-    TPoly PolyIntersection_lc() {
-        CPoint p1 = (CPoint) elementlist.get(0);
-        CLine ln = (CLine) elementlist.get(1);
-        Circle c = (Circle) elementlist.get(2);
-        CPoint[] ls = CLine.commonPoint(ln, c);
-        CPoint[] np = ln.getTowSideOfLine();
-        CPoint o = c.o;
-
-        CPoint p2;
-
-        if (ls.length == 2) {
-            if (p1 == ls[0])
-                p2 = ls[1];
-            else
-                p2 = ls[0];
-        } else if (ls.length == 1 && ls[0] != p1)
-            p2 = ls[0];
-        else
-            p2 = null;
-
-        if (p2 != null && p1.x1.xindex > p2.x1.xindex) {
-            add_des(Gib.C_I_LC, p1, np[0], np[1], c.o, c.getSidePoint());
-            CPoint pl = ln.getSecondPoint(p2);
-            return poly.LCMeet(o.x1.xindex, o.y1.xindex, p2.x1.xindex,
-                    p2.y1.xindex, pl.x1.xindex, pl.y1.xindex, p1.x1.xindex, p1.y1.xindex);
-        }
-
-        CPoint pl = c.getSidePoint();
-        if (pl != null) {
-            add_des(Gib.C_I_LC, p1, np[0], np[1], c.o, c.getSidePoint());
-            TMono m1 = poly.collinear(p1.x1.xindex, p1.y1.xindex, np[0].x1.xindex, np[0].y1.xindex, np[1].x1.xindex, np[1].y1.xindex);
-            addZeron(m1);
-            TMono m2 = poly.eqdistance(o.x1.xindex, o.y1.xindex, p1.x1.xindex, p1.y1.xindex, o.x1.xindex, o.y1.xindex, pl.x1.xindex, pl.y1.xindex);
-            return this.NewTPoly(m1, m2);
-        } else {
-            CPoint[] ll = c.getRadiusPoint();
-            add_des(Gib.C_I_LR, p1, np[0], np[1], c.o, ll[0], ll[1]);
-            TMono m1 = poly.collinear(p1.x1.xindex, p1.y1.xindex, np[0].x1.xindex, np[0].y1.xindex, np[1].x1.xindex, np[1].y1.xindex);
-            addZeron(m1);
-            TMono m2 = poly.eqdistance(o.x1.xindex, o.y1.xindex, p1.x1.xindex, p1.y1.xindex, ll[0].x1.xindex, ll[0].y1.xindex, ll[1].x1.xindex, ll[1].x1.xindex);
-            return this.NewTPoly(m1, m2);
-        }
-
-    }
-
-    TMono collinear() {
-        CPoint p1, p2, p3;
-        p1 = p2 = p3 = null;
-
-        for (int i = 0; i < this.elementlist.size(); i++) {
-            CPoint p = (CPoint) this.getelement(i);
-            if (p == null) continue;
-
-            if (p1 == null)
-                p1 = p;
-            else if (p1.x1.xindex < p.x1.xindex) {
-                if (p2 == null)
-                    p2 = p1;
-                else
-                    p3 = p1;
-                p1 = p;
-
-            } else if (p2 == null)
-                p2 = p;
-            else
-                p3 = p;
-        }
-
-        add_des(Gib.C_O_L, p1, p2, p3);
-        return poly.collinear(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex);
-    }
-
-    TPoly PolyLCMeet() {
-
-        CPoint pl = null;
-        CPoint p = (CPoint) this.getelement(0);
-        CPoint pc = (CPoint) this.getelement(1);
-        CLine ln = (CLine) this.getelement(2);
-        Circle c = (Circle) this.getelement(3);
-        CPoint o = c.o;
-        Vector pts = ln.points;
-        for (int i = 0; i < pts.size(); i++)
-            if (pts.get(i) != pc) {
-                pl = (CPoint) pts.get(i);
-                break;
+            int n = p4.x1.xindex;
+            if (n > p1.x1.xindex && n > p2.x1.xindex) {
+                CPoint pt = p4;
+                p4 = p1;
+                p1 = pt;
+                pt = p3;
+                p3 = p2;
+                p2 = pt;
             }
-        if (pl == null) return null;
-        add_des(Gib.C_I_LC, p, pc, pl, o, pc);
-        return poly.LCMeet(o.x1.xindex, o.y1.xindex, pc.x1.xindex, pc.y1.xindex, pl.x1.xindex, pl.y1.xindex, p.x1.xindex, p.y1.xindex);
-    }
+            add_des(Gib.C_PARALLELOGRAM, p1, p2, p3, p4);
+            TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
+                    p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
+            TMono m2 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p4.x1.xindex, p4.y1.xindex,
+                    p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex);
+            return this.NewTPoly(m1, m2);
+        }
 
+        /**
+         * Computes the polynomial representation of a right trapezoid.
+         *
+         * @return a TPoly object representing the right trapezoid
+         */
+        TPoly PolyRTrapezoid() {
+            CPoint p1 = (CPoint) elementlist.get(0);
+            CPoint p2 = (CPoint) elementlist.get(1);
+            CPoint p3 = (CPoint) elementlist.get(2);
+            CPoint p4 = (CPoint) elementlist.get(3);
+            add_des(Gib.C_R_TRAPEZOID, p1, p2, p3, p4);
+            TMono m1 = poly.parallel(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex,
+                    p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
+            TMono m2 = poly.perpendicular(p1.x1.xindex, p1.y1.xindex, p4.x1.xindex, p4.y1.xindex,
+                    p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
+            return this.NewTPoly(m1, m2);
+        }
+
+        /**
+         * Computes the polynomial representation of a right triangle.
+         *
+         * @return a TMono object representing the right triangle
+         */
+        TMono PolyRightTriangle() {
+            CPoint po = (CPoint) elementlist.get(0);
+            CPoint p1 = (CPoint) elementlist.get(1);
+            CPoint p2 = (CPoint) elementlist.get(2);
+            add_des(Gib.C_R_TRI, po, p1, p2);
+            return poly.perpendicular(po.x1.xindex, po.y1.xindex, p1.x1.xindex, p1.y1.xindex,
+                    po.x1.xindex, po.y1.xindex, p2.x1.xindex, p2.y1.xindex);
+        }
+
+        /**
+         * Computes the polynomial representation of a point on a line.
+         *
+         * @return a TMono object representing the point on the line
+         */
+        TMono PolyOnLine() {
+            CPoint p = (CPoint) this.getelement(0);
+            CLine line = (CLine) this.getelement(1);
+            int x, y;
+            x = p.x1.xindex;
+            y = p.y1.xindex;
+
+            if (line.type == CLine.CCLine) {
+                Constraint cs = line.getcons(0);
+
+                Circle c1 = (Circle) cs.getelement(1);
+                Circle c2 = (Circle) cs.getelement(2);
+                CPoint po1 = c1.o;
+                CPoint po2 = c2.o;
+                CPoint pc1 = c1.getSidePoint();
+                CPoint pc2 = c2.getSidePoint();
+                //?????
+                return poly.ccline(p.x1.xindex, p.y1.xindex, po1.x1.xindex, po1.y1.xindex, pc1.x1.xindex, pc1.y1.xindex,
+                        po2.x1.xindex, po2.y1.xindex, pc2.x1.xindex, pc2.y1.xindex);
+            } else {
+                CPoint[] plist = line.getTowSideOfLine();
+                if (plist == null) return null;
+                CPoint p1, p2;
+                p1 = plist[0];
+                p2 = plist[1];
+                add_des(Gib.C_O_L, p, p1, p2);
+                return poly.collinear(x, y, p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
+            }
+        }
+
+        /**
+         * Computes the polynomial representation of the intersection of two circles.
+         *
+         * @return a TPoly object representing the intersection of the circles
+         */
+        TPoly PolyIntersection_CC() {
+            CPoint p1 = (CPoint) elementlist.get(0);
+            Circle c1 = (Circle) elementlist.get(1);
+            Circle c2 = (Circle) elementlist.get(2);
+            Vector v = Circle.CommonPoints(c1, c2);
+            TPoly tp = null;
+            int n = v.size();
+            CPoint p2 = null;
+
+            if (n == 2) {
+                CPoint t1 = (CPoint) v.get(0);
+                CPoint t2 = (CPoint) v.get(1);
+                if (p1 == t1)
+                    p2 = t2;
+                else
+                    p2 = t1;
+            } else if (n == 1 && v.get(0) != p1)
+                p2 = (CPoint) v.get(0);
+
+            if (p2 != null && p2.x1.xindex < p1.x1.xindex) {
+                CPoint p3 = c1.o;
+                CPoint p4 = c2.o;
+                this.add_des(Gib.C_I_CC, p1, p3, p2, p4, p2);
+                return poly.mirrorPL(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex,
+                        p4.x1.xindex, p4.y1.xindex);
+            }
+
+            p2 = c1.getSidePoint();
+            CPoint p3 = c2.getSidePoint();
+            if (p2 != null && p3 != null) {
+                this.add_des(Gib.C_I_CC, p1, c1.o, p2, c2.o, p3);
+                TMono m1 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c1.o.x1.xindex, c1.o.y1.xindex,
+                        p2.x1.xindex, p2.y1.xindex, c1.o.x1.xindex, c1.o.y1.xindex);
+                TMono m2 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c2.o.x1.xindex, c2.o.y1.xindex,
+                        p3.x1.xindex, p3.y1.xindex, c2.o.x1.xindex, c2.o.y1.xindex);
+                return this.NewTPoly(m1, m2);
+            } else {
+                CPoint[] l1 = c1.getRadiusPoint();
+                CPoint[] l2 = c2.getRadiusPoint();
+                this.add_des(Gib.C_I_RR, p1, c1.o, l1[0], l1[1], c2.o, l2[0], l2[1]);
+
+                TMono m1 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c1.o.x1.xindex, c1.o.y1.xindex,
+                        l1[0].x1.xindex, l1[0].y1.xindex, l1[1].x1.xindex, l1[1].y1.xindex);
+                TMono m2 = poly.eqdistance(p1.x1.xindex, p1.y1.xindex, c2.o.x1.xindex, c2.o.y1.xindex,
+                        l2[0].x1.xindex, l2[0].y1.xindex, l2[1].x1.xindex, l2[1].y1.xindex);
+                return this.NewTPoly(m1, m2);
+            }
+        }
+
+        /**
+         * Computes the polynomial representation of the intersection of two lines.
+         *
+         * @return a TPoly object representing the intersection of the lines
+         */
+        TPoly PolyIntersection_ll() {
+            CPoint p1 = (CPoint) elementlist.get(0);
+            CLine ln1 = (CLine) elementlist.get(1);
+            CLine ln2 = (CLine) elementlist.get(2);
+            if (compareLN(ln1, ln2)) {
+                CLine ln = ln1;
+                ln1 = ln2;
+                ln2 = ln;
+            }
+
+            CPoint[] ps1 = ln1.getTowSideOfLine();
+            if (ps1 == null) return null;
+            CPoint[] ps2 = ln2.getTowSideOfLine();
+            if (ps2 == null) return null;
+            add_des(Gib.C_I_LL, p1, ps1[0], ps1[1], ps2[0], ps2[1]);
+            TMono m1 = poly.collinear(p1.x1.xindex, p1.y1.xindex, ps1[0].x1.xindex, ps1[0].y1.xindex, ps1[1].x1.xindex, ps1[1].y1.xindex);
+            addZeron(m1);
+            TMono m2 = poly.collinear(p1.x1.xindex, p1.y1.xindex, ps2[0].x1.xindex, ps2[0].y1.xindex, ps2[1].x1.xindex, ps2[1].y1.xindex);
+            return this.NewTPoly(m1, m2);
+        }
+
+        /**
+         * Computes the polynomial representation of the intersection of a line and a circle.
+         *
+         * @return a TPoly object representing the intersection of the line and the circle
+         */
+        TPoly PolyIntersection_lc() {
+            CPoint p1 = (CPoint) elementlist.get(0);
+            CLine ln = (CLine) elementlist.get(1);
+            Circle c = (Circle) elementlist.get(2);
+            CPoint[] ls = CLine.commonPoint(ln, c);
+            CPoint[] np = ln.getTowSideOfLine();
+            CPoint o = c.o;
+
+            CPoint p2;
+
+            if (ls.length == 2) {
+                if (p1 == ls[0])
+                    p2 = ls[1];
+                else
+                    p2 = ls[0];
+            } else if (ls.length == 1 && ls[0] != p1)
+                p2 = ls[0];
+            else
+                p2 = null;
+
+            if (p2 != null && p1.x1.xindex > p2.x1.xindex) {
+                add_des(Gib.C_I_LC, p1, np[0], np[1], c.o, c.getSidePoint());
+                CPoint pl = ln.getSecondPoint(p2);
+                return poly.LCMeet(o.x1.xindex, o.y1.xindex, p2.x1.xindex,
+                        p2.y1.xindex, pl.x1.xindex, pl.y1.xindex, p1.x1.xindex, p1.y1.xindex);
+            }
+
+            CPoint pl = c.getSidePoint();
+            if (pl != null) {
+                add_des(Gib.C_I_LC, p1, np[0], np[1], c.o, c.getSidePoint());
+                TMono m1 = poly.collinear(p1.x1.xindex, p1.y1.xindex, np[0].x1.xindex, np[0].y1.xindex, np[1].x1.xindex, np[1].y1.xindex);
+                addZeron(m1);
+                TMono m2 = poly.eqdistance(o.x1.xindex, o.y1.xindex, p1.x1.xindex, p1.y1.xindex, o.x1.xindex, o.y1.xindex, pl.x1.xindex, pl.y1.xindex);
+                return this.NewTPoly(m1, m2);
+            } else {
+                CPoint[] ll = c.getRadiusPoint();
+                add_des(Gib.C_I_LR, p1, np[0], np[1], c.o, ll[0], ll[1]);
+                TMono m1 = poly.collinear(p1.x1.xindex, p1.y1.xindex, np[0].x1.xindex, np[0].y1.xindex, np[1].x1.xindex, np[1].y1.xindex);
+                addZeron(m1);
+                TMono m2 = poly.eqdistance(o.x1.xindex, o.y1.xindex, p1.x1.xindex, p1.y1.xindex, ll[0].x1.xindex, ll[0].y1.xindex, ll[1].x1.xindex, ll[1].x1.xindex);
+                return this.NewTPoly(m1, m2);
+            }
+        }
+
+        /**
+         * Computes the polynomial representation of collinear points.
+         *
+         * @return a TMono object representing the collinear points
+         */
+        TMono collinear() {
+            CPoint p1, p2, p3;
+            p1 = p2 = p3 = null;
+
+            for (int i = 0; i < this.elementlist.size(); i++) {
+                CPoint p = (CPoint) this.getelement(i);
+                if (p == null) continue;
+
+                if (p1 == null)
+                    p1 = p;
+                else if (p1.x1.xindex < p.x1.xindex) {
+                    if (p2 == null)
+                        p2 = p1;
+                    else
+                        p3 = p1;
+                    p1 = p;
+
+                } else if (p2 == null)
+                    p2 = p;
+                else
+                    p3 = p;
+            }
+
+            add_des(Gib.C_O_L, p1, p2, p3);
+            return poly.collinear(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex);
+        }
+
+        /**
+         * Computes the polynomial representation of the intersection of a line and a circle.
+         *
+         * @return a TPoly object representing the intersection of the line and the circle
+         */
+        TPoly PolyLCMeet() {
+            CPoint pl = null;
+            CPoint p = (CPoint) this.getelement(0);
+            CPoint pc = (CPoint) this.getelement(1);
+            CLine ln = (CLine) this.getelement(2);
+            Circle c = (Circle) this.getelement(3);
+            CPoint o = c.o;
+            Vector pts = ln.points;
+            for (int i = 0; i < pts.size(); i++)
+                if (pts.get(i) != pc) {
+                    pl = (CPoint) pts.get(i);
+                    break;
+                }
+            if (pl == null) return null;
+            add_des(Gib.C_I_LC, p, pc, pl, o, pc);
+            return poly.LCMeet(o.x1.xindex, o.y1.xindex, pc.x1.xindex, pc.y1.xindex, pl.x1.xindex, pl.y1.xindex, p.x1.xindex, p.y1.xindex);
+        }
+
+    /**
+     * Checks if a point lies on a circle.
+     *
+     * @return a TMono object representing the constraint
+     */
     TMono PolyOnCircle() {
         CPoint p = (CPoint) this.getelement(0);
         Circle c = (Circle) this.getelement(1);
@@ -1594,8 +1916,7 @@ public class Constraint {
             add_des(Gib.C_O_R, p, o, p1, p2);
 
             return poly.eqdistance(o.x1.xindex, o.y1.xindex, p.x1.xindex, p.y1.xindex, p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex);
-        } else if (c.points.size() != 0)//|| c.type == Circle.PCircle || c.type == Circle.SCircle)
-        {
+        } else if (c.points.size() != 0) {
             CPoint pt = c.getSidePoint();
             if (pt == null)
                 return null;
@@ -1610,6 +1931,11 @@ public class Constraint {
         return null;
     }
 
+    /**
+     * Checks if two lines or four points are perpendicular.
+     *
+     * @return a TMono object representing the perpendicularity constraint
+     */
     TMono PolyPerp() {
         if (elementlist.size() == 2) {
             CLine line1 = (CLine) this.getelement(0);
@@ -1645,9 +1971,13 @@ public class Constraint {
             return poly.perpendicular(x1, y1, x2, y2, x3, y3, x4, y4);
         }
         return null;
-
     }
 
+    /**
+     * Computes the foot of a perpendicular from a point to a line.
+     *
+     * @return a TPoly object representing the foot of the perpendicular
+     */
     TPoly PolyPfoot() {
         CPoint p1 = (CPoint) this.getelement(0);
         CPoint p2 = (CPoint) this.getelement(1);
@@ -1659,10 +1989,13 @@ public class Constraint {
         TMono m2 = poly.perpendicular(p1.x1.xindex, p1.y1.xindex,
                 p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
         return mpoly(m1, m2);
-
-
     }
 
+    /**
+     * Checks if two lines are parallel.
+     *
+     * @return a TMono object representing the parallelism constraint
+     */
     TMono PolyParel() {
         CLine line1 = (CLine) this.getelement(0);
         CLine line2 = (CLine) this.getelement(1);
@@ -1681,6 +2014,11 @@ public class Constraint {
                 pl2[0].x1.xindex, pl2[0].y1.xindex, pl2[1].x1.xindex, pl2[1].y1.xindex);
     }
 
+    /**
+     * Computes the tangent between two circles.
+     *
+     * @return a TMono object representing the tangent constraint
+     */
     TMono PolyCCTangent() {
         Circle c1 = (Circle) this.getelement(0);
         Circle c2 = (Circle) this.getelement(1);
@@ -1692,60 +2030,13 @@ public class Constraint {
         return poly.c_c_tangent(pl1[0], pl1[1], c1.o, pl2[0], pl2[1], c2.o);
     }
 
-    public static boolean PolyConstraint(int type, CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
-        int x1, y1, x2, y2, x3, y3, x4, y4;
-        x1 = p1.x1.xindex;
-        y1 = p1.y1.xindex;
-        x2 = p2.x1.xindex;
-        y2 = p2.y1.xindex;
-        x3 = p3.x1.xindex;
-        y3 = p3.y1.xindex;
-        TMono mpoly = null;
-        TMono mpoly1 = null;
-        switch (type) {
-            case Constraint.COLLINEAR: // 3 obj
-                mpoly = poly.collinear(x1, y1, x2, y2, x3, y3);
-                break;
-            case Constraint.PARALLEL: // 4 obj
-                x4 = p4.x1.xindex;
-                y4 = p4.y1.xindex;
-                mpoly = poly.parallel(x1, y1, x2, y2, x3, y3, x4, y4);
-                break;
-            case Constraint.PERPENDICULAR:    //4
-                x4 = p4.x1.xindex;
-                y4 = p4.y1.xindex;
-                mpoly = poly.perpendicular(x1, y1, x2, y2, x3, y3, x4, y4);
-                break;
-            case Constraint.EQDISTANCE:       //4
-                x4 = p4.x1.xindex;
-                y4 = p4.y1.xindex;
-                mpoly = poly.eqdistance(x1, y1, x2, y2, x3, y3, x4, y4);
-                break;
-            case Constraint.BISECT:
-                mpoly = poly.bisect(x1, y1, x2, y2, x3, y3);
-                break;
-            case Constraint.MIDPOINT:
-                mpoly = poly.midpoint(x1, x2, x3);
-                mpoly1 = poly.midpoint(y1, y2, y3);
-            default:
-                break;
-        }
-
-        if (mpoly == null)
-            return false;
-        TPoly tp = new TPoly();
-        tp.setPoly(mpoly);
-        tp.setNext(polylist);
-        polylist = tp;
-        if (type == Constraint.MIDPOINT) {
-            tp = new TPoly();
-            tp.setPoly(mpoly1);
-            tp.setNext(polylist);
-            polylist = tp;
-        }
-        return true;
-    }
-
+    /**
+     * Creates a new TPoly object from two TMono objects.
+     *
+     * @param m1 the first TMono object
+     * @param m2 the second TMono object
+     * @return the created TPoly object
+     */
     public TPoly NewTPoly(TMono m1, TMono m2) {
         TPoly poly = new TPoly();
         poly.setPoly(m1);
@@ -1755,6 +2046,12 @@ public class Constraint {
         return poly2;
     }
 
+    /**
+     * Saves the constraint data to a DataOutputStream.
+     *
+     * @param out the DataOutputStream to write to
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
 
         out.writeInt(id);
@@ -1806,10 +2103,13 @@ public class Constraint {
         }
         out.writeInt(proportion);
         out.writeBoolean(this.is_poly_genereate);
-
-
     }
 
+    /**
+     * Adds a constraint description to the list of constraints.
+     *
+     * @param s the Cons object representing the constraint description
+     */
     private void add_des(Cons s) {
         if (this.csd == null)
             this.csd = s;
@@ -1817,7 +2117,15 @@ public class Constraint {
             this.csd1 = s;
     }
 
-
+    /**
+     * Adds a constraint description with three points and an additional object to the list of constraints.
+     *
+     * @param t the type of the constraint
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param obj the additional object
+     */
     public void add_des(int t, CPoint p1, CPoint p2, CPoint p3, Object obj) {
 
         Cons csd = new Cons(t);
@@ -1829,6 +2137,14 @@ public class Constraint {
         add_des(csd);
     }
 
+    /**
+     * Adds a constraint description with three points to the list of constraints.
+     *
+     * @param t the type of the constraint
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     */
     public void add_des(int t, CPoint p1, CPoint p2, CPoint p3) {
 
         Cons csd = new Cons(t);
@@ -1839,6 +2155,12 @@ public class Constraint {
         add_des(csd);
     }
 
+    /**
+     * Adds a constraint description with a vector of points to the list of constraints.
+     *
+     * @param t the type of the constraint
+     * @param v the vector of points
+     */
     public void add_des(int t, Vector v) {
         Cons csd = new Cons(t);
         csd.setId(id);
@@ -1847,11 +2169,27 @@ public class Constraint {
         add_des(csd);
     }
 
+    /**
+     * Compares two points based on their x-index.
+     *
+     * @param a the first point
+     * @param b the second point
+     * @return true if the x-index of the first point is less than the x-index of the second point, false otherwise
+     */
     public boolean less(CPoint a, CPoint b) {
         return a.x1.xindex < b.x1.xindex;
     }
 
-    public void add_desx1(int t, CPoint p1, CPoint p2, CPoint p3, CPoint p4) {   //parallel ,perpendicular
+    /**
+     * Adds a constraint description with four points to the list of constraints, ensuring the points are ordered by their x-index.
+     *
+     * @param t the type of the constraint
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param p4 the fourth point
+     */
+    public void add_desx1(int t, CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         if (less(p1, p2)) {
             CPoint a = p1;
             p1 = p2;
@@ -1873,8 +2211,16 @@ public class Constraint {
         add_des(t, p1, p2, p3, p4);
     }
 
+     /**
+     * Adds a constraint description with four points to the list of constraints.
+     *
+     * @param t the type of the constraint
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param p4 the fourth point
+     */
     public void add_des(int t, CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
-
         Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
@@ -1884,6 +2230,16 @@ public class Constraint {
         add_des(csd);
     }
 
+    /**
+     * Adds a constraint description with five objects to the list of constraints.
+     *
+     * @param t the type of the constraint
+     * @param p1 the first object
+     * @param p2 the second object
+     * @param p3 the third object
+     * @param p4 the fourth object
+     * @param p5 the fifth object
+     */
     public void add_des(int t, Object p1, Object p2, Object p3, Object p4, Object p5) {
         Cons csd = new Cons(t);
         csd.setId(id);
@@ -1895,6 +2251,17 @@ public class Constraint {
         add_des(csd);
     }
 
+    /**
+     * Adds a constraint description with six objects to the list of constraints.
+     *
+     * @param t the type of the constraint
+     * @param p1 the first object
+     * @param p2 the second object
+     * @param p3 the third object
+     * @param p4 the fourth object
+     * @param p5 the fifth object
+     * @param p6 the sixth object
+     */
     public void add_des(int t, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6) {
         Cons csd = new Cons(t);
         csd.setId(id);
@@ -1907,8 +2274,20 @@ public class Constraint {
         add_des(csd);
     }
 
-    public void add_des(int t, Object p1, Object p2, Object p3,
-                        Object p4, Object p5, Object p6, Object p7, Object p8) {
+    /**
+     * Adds a constraint description with eight objects to the list of constraints.
+     *
+     * @param t the type of the constraint
+     * @param p1 the first object
+     * @param p2 the second object
+     * @param p3 the third object
+     * @param p4 the fourth object
+     * @param p5 the fifth object
+     * @param p6 the sixth object
+     * @param p7 the seventh object
+     * @param p8 the eighth object
+     */
+    public void add_des(int t, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6, Object p7, Object p8) {
         Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
@@ -1922,8 +2301,22 @@ public class Constraint {
         add_des(csd);
     }
 
-    public void add_des(int t, Object p1, Object p2, Object p3,
-                        Object p4, Object p5, Object p6, Object p7, Object p8, Object p9, Object p10) {
+    /**
+     * Adds a constraint description with ten objects to the list of constraints.
+     *
+     * @param t the type of the constraint
+     * @param p1 the first object
+     * @param p2 the second object
+     * @param p3 the third object
+     * @param p4 the fourth object
+     * @param p5 the fifth object
+     * @param p6 the sixth object
+     * @param p7 the seventh object
+     * @param p8 the eighth object
+     * @param p9 the ninth object
+     * @param p10 the tenth object
+     */
+    public void add_des(int t, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6, Object p7, Object p8, Object p9, Object p10) {
         Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
@@ -1939,8 +2332,19 @@ public class Constraint {
         add_des(csd);
     }
 
-    public void add_des(int t, Object p1, Object p2, Object p3,
-                        Object p4, Object p5, Object p6, Object p7) {
+    /**
+     * Adds a constraint description with seven objects to the list of constraints.
+     *
+     * @param t the type of the constraint
+     * @param p1 the first object
+     * @param p2 the second object
+     * @param p3 the third object
+     * @param p4 the fourth object
+     * @param p5 the fifth object
+     * @param p6 the sixth object
+     * @param p7 the seventh object
+     */
+    public void add_des(int t, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6, Object p7) {
         Cons csd = new Cons(t);
         csd.setId(id);
         csd.add_pt(p1);
@@ -1953,7 +2357,13 @@ public class Constraint {
         add_des(csd);
     }
 
-
+    /**
+     * Loads the constraint data from a DataInputStream.
+     *
+     * @param in the DataInputStream to read from
+     * @param dp the DrawProcess instance to use for retrieving elements
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         id = in.readInt();
         ConstraintType = in.readInt();
@@ -2001,18 +2411,16 @@ public class Constraint {
                 this.ConstraintType = NSQUARE;
                 elementlist.remove(1);
             }
-
         }
     }
 
-    int pidx(CPoint p) {
-        return p.x1.xindex;
-    }
-
-    int pidy(CPoint p) {
-        return p.y1.xindex;
-    }
-
+    /**
+     * Creates a new TPoly object from two TMono objects.
+     *
+     * @param m1 the first TMono object
+     * @param m2 the second TMono object
+     * @return the created TPoly object
+     */
     TPoly mpoly(TMono m1, TMono m2) {
         TPoly p1 = new TPoly();
         p1.setPoly(m1);
@@ -2022,6 +2430,12 @@ public class Constraint {
         return p2;
     }
 
+    /**
+     * Returns the special angle value for the given angle in degrees.
+     *
+     * @param v the angle in degrees
+     * @return the special angle value
+     */
     public static double get_sp_ag_value(int v) {
         double val = 0;
         if (v == 90)
@@ -2032,10 +2446,13 @@ public class Constraint {
         return val;
     }
 
-    public double get_sangle_v() {
-        return get_sp_ag_value(proportion);
-    }
-
+    /**
+     * Checks if the constraint is satisfied for the given coordinates.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if the constraint is satisfied, false otherwise
+     */
     public boolean check_constraint(double x, double y) {
         switch (ConstraintType) {
             case ANGLE_BISECTOR:
@@ -2047,6 +2464,13 @@ public class Constraint {
         }
     }
 
+    /**
+     * Checks if the incenter constraint is satisfied for the given coordinates.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if the incenter constraint is satisfied, false otherwise
+     */
     public boolean check_incenter(double x, double y) {
         CPoint p1 = (CPoint) elementlist.get(1);
         CPoint p2 = (CPoint) elementlist.get(2);
@@ -2066,6 +2490,13 @@ public class Constraint {
         return r1 * r2 > 0 && r3 * r4 > 0;
     }
 
+    /**
+     * Checks if the angle bisector constraint is satisfied for the given coordinates.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if the angle bisector constraint is satisfied, false otherwise
+     */
     public boolean check_agbisector(double x, double y) {
         CPoint p1 = (CPoint) elementlist.get(0);
         CPoint p2 = (CPoint) elementlist.get(1);
@@ -2083,26 +2514,65 @@ public class Constraint {
         return r1 * r2 > 0;
     }
 
+    /**
+     * Calculates the determinant of the given points.
+     *
+     * @param x1 the x-coordinate of the first point
+     * @param y1 the y-coordinate of the first point
+     * @param x2 the x-coordinate of the second point
+     * @param y2 the y-coordinate of the second point
+     * @param x the x-coordinate of the third point
+     * @param y the y-coordinate of the third point
+     * @return the determinant value
+     */
     public double dr_pr(double x1, double y1, double x2, double y2, double x, double y) {
         return (y2 - y1) * (x - x2) - (y - y2) * (x2 - x1);
-
     }
 
+    /**
+     * Creates a TMono object representing the equality of distances between two pairs of points.
+     *
+     * @param p1 the first point of the first pair
+     * @param p2 the second point of the first pair
+     * @param p3 the first point of the second pair
+     * @param p4 the second point of the second pair
+     * @return the created TMono object
+     */
     public TMono eqdistance(CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         return poly.eqdistance(p1.x1.xindex, p1.y1.xindex, p2.x1.xindex, p2.y1.xindex, p3.x1.xindex, p3.y1.xindex, p4.x1.xindex, p4.y1.xindex);
     }
 
+    /**
+     * Compares two lines based on the ID of their first points.
+     *
+     * @param ln1 the first line
+     * @param ln2 the second line
+     * @return true if the first point of the first line has a greater ID than the first point of the second line, false otherwise
+     */
     public boolean compareLN(CLine ln1, CLine ln2) {
-        return
-                (ln1.getfirstPoint().m_id > ln2.getfirstPoint().m_id);
+        return (ln1.getfirstPoint().m_id > ln2.getfirstPoint().m_id);
     }
 
+    /**
+     * Parses a TMono object from a string representation.
+     *
+     * @param name the name of the TMono object
+     * @param func the function string
+     * @param x the x-coordinate
+     * @return the parsed TMono object
+     */
     public TMono parseTMonoString(String name, String func, int x) {
         Parser p = new Parser(name, func, x);
         TMono m = p.parse();
         return m;
     }
 
+    /**
+     * Adds a zero coefficient to the TMono object if its length is 1.
+     *
+     * @param m1 the TMono object
+     * @return true if a zero coefficient was added, false otherwise
+     */
     public boolean addZeron(TMono m1) {
         if (m1 != null && poly.plength(m1) == 1)
             return poly.addZeroN(m1.x);

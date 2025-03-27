@@ -36,6 +36,11 @@ import java.util.*;
 
 import org.apache.commons.cli.*;
 
+/**
+ * GExpert is the main class for the GEXPERT application.
+ * It initializes the application, sets up the GUI, and handles user interactions.
+ * It also manages the language settings and file operations.
+ */
 public class GExpert extends JFrame implements ActionListener, KeyListener, DropTargetListener, WindowListener {    // APPLET ONLY.
 
     private JLabel label;
@@ -195,7 +200,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         language = new Language();
         String user_directory = getUserDir();
         Language.setLanguage(language);
-        System.out.println("Language loaded: "+CMisc.lan);
+        System.out.println("Language loaded: " + CMisc.lan);
         lan = CMisc.lan; //setting lan to current language so RuleList can read it.
 
         // Set gettext based internationalization:
@@ -303,9 +308,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     public void loadCursor() {
     }
 
-    public void createCursor(Toolkit kit, String file, String name) {
-    }
-
     public Cursor getDefinedCursor(String name) {
         return null;
     }
@@ -323,10 +325,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 //            Dimension dm = contentPane.getMinimumSize();
 //            contentPane.setSize(dm);
 //        }
-    }
-
-    public JSplitPane getSplitContentPane() {
-        return contentPane;
     }
 
     public void showRulePanel(String s, int x, int y) {
@@ -353,10 +351,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             aframe = new AnimatePanel(this, d, dp);
         }
         return aframe;
-    }
-
-    public boolean isAframeShown() {
-        return afpane.isVisible() && aframe != null && aframe.isVisible();
     }
 
     public void showAnimatePane() {
@@ -521,10 +515,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     public void addButtonToDrawGroup(JToggleButton b) {
         group.add(b);
-    }
-
-    public CProveBarPanel getPProveBar() {
-        return provePanelbar;
     }
 
     public void switchProveBarVisibility(boolean r) {
@@ -930,9 +920,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         JMenu sub2 = new JMenu(getLanguage(getLanguage("Ratio Distance")));
 
         // addRadioButtonMenuItem(sub2, "1 : 1", "Set two segments to have ratio: 1 : 1", this, "ra_side");
-        addRadioButtonMenuItem(sub2, "1 : 1", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}",  "1 : 1"), this, "ra_side");
-        addRadioButtonMenuItem(sub2, "1 : 2", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}",  "1 : 2"), this, "ra_side");
-        addRadioButtonMenuItem(sub2, "1 : 3", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}",  "1 : 3"), this, "ra_side");
+        addRadioButtonMenuItem(sub2, "1 : 1", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}", "1 : 1"), this, "ra_side");
+        addRadioButtonMenuItem(sub2, "1 : 2", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}", "1 : 2"), this, "ra_side");
+        addRadioButtonMenuItem(sub2, "1 : 3", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}", "1 : 3"), this, "ra_side");
         addRadioButtonMenuItem(sub2, "Other...", "Set two segments to have specified ratio", this, "ra_side");
         menu.add(sub2);
         addRadioButtonMenuItem(menu, "CCtangent", "Set two circles to be tangent", this);
@@ -1173,7 +1163,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             }
             if (gettextTranslation != null && !gettextTranslation.equals(""))
                 return gettextTranslation;
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.err.println("Caught exception " + ex);
         }
         System.err.println("Missing translation: " + s + ", " + p);
@@ -1302,14 +1292,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     dp.setFile((File) src);
                 }
                 this.saveAFile(false);
-            }
-            else this.saveAFile(true);
+            } else this.saveAFile(true);
 
         } else if (command.equalsIgnoreCase("Save GDD Proof as GraphViz File")) {
             this.saveGDDProofAsGraphViz(src);
-        }
-
-        else if (command.equals("Save as Text")) {
+        } else if (command.equals("Save as Text")) {
             if (!need_save())
                 return;
 
@@ -1350,7 +1337,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
             if (src instanceof File) {
                 openAFile((File) src);
-                } else {
+            } else {
 
                 JFileChooser chooser = getFileChooser(false);
                 int result = chooser.showOpenDialog(this);
@@ -1794,7 +1781,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     dp.setFile(f);
                     DataInputStream in = dp.openInputFile(f.getPath());
                     //r = dp.LoadGGB(in,f.getPath());
-                    r = dp.LoadGGB2(in,f.getPath());
+                    r = dp.LoadGGB2(in, f.getPath());
                     // pprove.LoadProve(in); // TODO:
                     in.close();
                     // dp.stopUndoFlash(); // TODO:
@@ -1974,10 +1961,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     public void setDrawCursor(int t) {
         d.setCursor(Cursor.getPredefinedCursor(t));
-    }
-
-    public void setDrawCursor(String s) {
-        d.setCursor(this.getDefinedCursor(s));
     }
 
     public void reloadLP() {
@@ -2755,10 +2738,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         this.setTextLabel2(text);
     }
 
-    public void Animate(int type) {
-        d.onAnimate(type);
-    }
-
 
     public void dragEnter(DropTargetDragEvent dtde) {
         // System.out.println("Drag Enter");
@@ -2850,10 +2829,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     public void windowDeactivated(WindowEvent e) {
 
     }
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////
 
 
     class JPopButtonsPanel extends JPopupMenu implements ActionListener, MouseListener, ItemListener, PopupMenuListener {
@@ -3013,7 +2988,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
      * so we cannot wait for their finish her and cannot continue with the remaining requests. Instead,
      * we will continue performing the requests later, when the asynchronous command finishes.
      *
-     * @param exp a GExpert instance
+     * @param exp          a GExpert instance
      * @param breakOnProve if the "Prove" command should be assumed as an asynchronous call
      */
     public static void performCommandLineRequests(GExpert exp, boolean breakOnProve) {
@@ -3049,6 +3024,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     public static ArrayList<String> commandlineCommand = new ArrayList<>();
     public static ArrayList<Object> commandlineSrc = new ArrayList<>();
     public static int commandLineRequestsPerformed = 0;
+
     private static void processCommandLineOptions(String[] args) {
         Options options = new Options();
 
@@ -3100,10 +3076,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             // Process first argument as a file:
             String filename = cmd.getArgList().get(0);
             if (filename.endsWith(".gex")) {
-                commandlineCommand.add("Open");}
-            else {
+                commandlineCommand.add("Open");
+            } else {
                 commandlineCommand.add("Import");
-                }
+            }
             commandlineSrc.add(new File(filename));
 
             if (cmd.hasOption("p")) {
@@ -3134,8 +3110,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
+    // TODO START CONVERTING HERE, this is the main method
     public static void main(String[] args) {
-        System.out.println("Java " +  Version.getNameAndVersion());
+        System.out.println("Java " + Version.getNameAndVersion());
         processCommandLineOptions(args);
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -3214,7 +3191,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             }
             if (file.exists()) {
                 int n2 = JOptionPane.showConfirmDialog(this,
-                                getTranslationViaGettext("{0} already exists, do you want to overwrite it?", file.getName()),
+                        getTranslationViaGettext("{0} already exists, do you want to overwrite it?", file.getName()),
                         "File Exists", JOptionPane.YES_NO_CANCEL_OPTION);
                 if (n2 != JOptionPane.YES_OPTION) {
                     return;
@@ -3268,19 +3245,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
-//    public void addDependentDialog(JDialog dlg) {
-//        if (dlg != null && !depdlglist.contains(dlg))
-//            depdlglist.add(dlg);
-//    }
-
-//    private void removeAllDependentDialogs() {
-//        for (int i = 0; i < depdlglist.size(); i++) {
-//            JDialog dlg = (JDialog) depdlglist.get(i);
-//            dlg.setVisible(false);
-//        }
-//        depdlglist.clear();
-//    }
-
     public static void setUIFont(javax.swing.plaf.FontUIResource f) {
 
         java.util.Enumeration keys = UIManager.getDefaults().keys();
@@ -3296,9 +3260,6 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     }
 
     public void stop() {
-    }
-
-    public void destroy() {
     }
 
 
@@ -3495,11 +3456,14 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
 }
 
-////////////////////////////////////////////////
-////// End of GExpert.java.
-///////////////////////////////////////////////
+/// /////////////////////////////////////////////
+/// /// End of GExpert.java.
+/// ////////////////////////////////////////////
 
-
+/**
+ * This class is used to create a button with two icons, one for the selected state and one for the unselected state.
+ * It is used in the GExpert application to create buttons with different icons depending on their state.
+ */
 class DActionButton extends ActionButton {
     private Icon ico1, ico2;
 
@@ -3507,11 +3471,22 @@ class DActionButton extends ActionButton {
         super(co);
     }
 
+    /**
+     * Sets the icons for the two status states of the button.
+     *
+     * @param ico1 the icon for the unselected state
+     * @param ico2 the icon for the selected state
+     */
     public void set2StatusIcons(Icon ico1, Icon ico2) {
         this.ico1 = ico1;
         this.ico2 = ico2;
     }
 
+    /**
+     * Sets the selected state of the button and updates the icon accordingly.
+     *
+     * @param b true if the button is selected, false otherwise
+     */
     public void setSelected(boolean b) {
         super.setSelected(b);
         if (b) {
@@ -3519,9 +3494,13 @@ class DActionButton extends ActionButton {
         } else {
             this.setIcon(ico1);
         }
-
     }
 
+    /**
+     * Enables or disables the button and sets the icon to the unselected state.
+     *
+     * @param b true to enable the button, false to disable it
+     */
     public void setEnabled(boolean b) {
         super.setEnabled(b);
         this.setIcon(ico1);
@@ -3529,7 +3508,10 @@ class DActionButton extends ActionButton {
     }
 }
 
-
+/**
+ * This class is used to create a button with a custom UI. It is used in the GExpert application to create buttons
+ * with a specific look and feel.
+ */
 class ActionButton extends JToggleButton {
 
     private static EntityButtonUI ui = new EntityButtonUI();
@@ -3543,10 +3525,6 @@ class ActionButton extends JToggleButton {
         dm = new Dimension(32, 28);
     }
 
-    public void setButtonSize(int x, int y) {
-        dm.setSize(x, y);
-    }
-
     public Dimension getPreferredSize() {
         return dm;
     }
@@ -3554,12 +3532,12 @@ class ActionButton extends JToggleButton {
     public Dimension getMaximumSize() {
         return dm;
     }
-
-    //////////////////////////////////////////////////////////////////////
-
-
 }
 
+/**
+ * This class is used to create a button with two states (selected and unselected) and two icons. It is used in the
+ * GExpert application to create buttons with different icons depending on their state.
+ */
 class TStateButton extends JToggleButton {
     ImageIcon icon1, icon2;
 

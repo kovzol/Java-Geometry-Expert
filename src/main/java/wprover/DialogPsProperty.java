@@ -3,12 +3,21 @@ package wprover;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+/**
+ * Dialog for setting PostScript (PS) properties.
+ * Extends JBaseDialog and implements ActionListener.
+ */
 public class DialogPsProperty extends JBaseDialog implements ActionListener {
     private int type = -1;
     private JCheckBox pfill;
     private GExpert gxInstance;
 
+        /**
+         * Retrieves the localized language string for the given key.
+         *
+         * @param s the key for the language string
+         * @return the localized language string, or the key if no localization is found
+         */
     public String getLanguage(String s) {
         String s1 = "";
         if (gxInstance != null)
@@ -18,13 +27,18 @@ public class DialogPsProperty extends JBaseDialog implements ActionListener {
         return s;
     }
 
+    /**
+     * Constructor for the DialogPsProperty class.
+     * Initializes the dialog with the specified GExpert owner.
+     *
+     * @param owner the GExpert instance that owns this dialog
+     */
     public DialogPsProperty(GExpert owner) {
         super(owner.getFrame(), true);
 
         gxInstance = owner;
 
         this.setTitle(getLanguage("Save as PS"));
-//        this.setSize(350, 120);
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         JToggleButton button1 = new JToggleButton(gxInstance.getLanguage("Color"));
@@ -54,14 +68,16 @@ public class DialogPsProperty extends JBaseDialog implements ActionListener {
         JPanel ppanel = new JPanel();
         ppanel.setLayout(new BoxLayout(ppanel, BoxLayout.Y_AXIS));
         pfill = new JCheckBox(gxInstance.getLanguage("Point filled with background color"));
-//        ptext = new JCheckBox(gxInstance.getLanguage(1014, "Proof text"));
-//        ptext.setSelected(true);
         ppanel.add(pfill);
-//        ppanel.add(ptext);
         this.getContentPane().add(ppanel, "South");
         this.pack();
     }
 
+    /**
+     * Handles action events for the dialog's buttons.
+     *
+     * @param e the ActionEvent triggered by a button click
+     */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.compareTo("Color") == 0)
@@ -75,15 +91,21 @@ public class DialogPsProperty extends JBaseDialog implements ActionListener {
         this.setVisible(false);
     }
 
+    /**
+     * Retrieves the selected save type for PostScript.
+     *
+     * @return the save type (0: Color, 1: Gray, 2: Black and White, 3: Cancel)
+     */
     int getSavePsType() {
         return type;
     }
 
+    /**
+     * Checks if the point fill option is selected.
+     *
+     * @return true if the point fill option is selected, false otherwise
+     */
     boolean getPointfilled() {
         return pfill.isSelected();
     }
-
-//    boolean getisProveTextSaved() {
-//        return ptext.isSelected();
-//    }
 }

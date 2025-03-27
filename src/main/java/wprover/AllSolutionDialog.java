@@ -10,15 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Vector;
-
-/**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-8-3
- * Time: 18:30:46
- * To change this template use File | Settings | File Templates.
- */
-
 /**
  * The `AllSolutionDialog` class provides a dialog for displaying and interacting with
  * all possible solutions of a given problem within the GExpert application.
@@ -297,27 +288,60 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
         gxInstance.d.repaint();
     }
 
+    /**
+     * Invoked when a window has been opened.
+     *
+     * @param e the event to be processed
+     */
     public void windowOpened(WindowEvent e) {
     }
 
+    /**
+     * Invoked when the user attempts to close the window from the window's system menu.
+     *
+     * @param e the event to be processed
+     */
     public void windowClosing(WindowEvent e) {
     }
 
+    /**
+     * Invoked when a window has been closed.
+     *
+     * @param e the event to be processed
+     */
     public void windowClosed(WindowEvent e) {
 
     }
 
+    /**
+     * Invoked when a window is changed from a normal to a minimized state.
+     *
+     * @param e the event to be processed
+     */
     public void windowIconified(WindowEvent e) {
     }
 
+    /**
+     * Invoked when a window is changed from a minimized to a normal state.
+     *
+     * @param e the event to be processed
+     */
     public void windowDeiconified(WindowEvent e) {
     }
 
+    /**
+     * Invoked when a window is activated.
+     *
+     * @param e the event to be processed
+     */
     public void windowActivated(WindowEvent e) {
     }
 
+    /**
+     * Invoked when a window is deactivated.
+     *
+     * @param e the event to be processed
+     */
     public void windowDeactivated(WindowEvent e) {
     }
 }
-
-

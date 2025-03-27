@@ -1,11 +1,8 @@
 package wprover;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2005-9-20
- * Time: 11:16:25
- * To change this template use File | Settings | File Templates.
+ * Represents a boolean value that can be modified.
+ * This class is used to encapsulate a boolean value and provide methods to get and set its value.
  */
 public class CBoolean
 {

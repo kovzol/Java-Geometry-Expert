@@ -10,11 +10,8 @@ import java.io.DataInputStream;
 import java.io.FileOutputStream;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-1-26
- * Time: 15:29:29
- * To change this template use File | Settings | File Templates.
+ * CText is a class that represents a text object in a graphical application.
+ * It extends the CClass class and provides methods to manipulate and display text.
  */
 public class CText extends CClass {
 
@@ -39,10 +36,20 @@ public class CText extends CClass {
     private double posX, posY;
 
 
+/**
+     * Retrieves the font of this CText object.
+     *
+     * @return the font
+     */
     public Font getFont() {
         return font;
     }
 
+    /**
+     * Sets the text type and parses the text value.
+     *
+     * @param t the text type to set
+     */
     public void setTextType(int t) {
         type = t;
         tvalue = CTextValue.parseString(str);
@@ -53,49 +60,79 @@ public class CText extends CClass {
         m_color = 16;
     }
 
-    public boolean fontsizeChange(int n) {
-        int size = font.getSize() + n;
-        if (size <= 5)
-            return false;
-
-        font = new Font(font.getName(), font.getStyle(), size);
-        return true;
-    }
-
+    /**
+     * Retrieves the font size of this CText object.
+     *
+     * @return the font size
+     */
     public int getFontSize() {
         return font.getSize();
     }
 
+    /**
+     * Sets the font to bold.
+     */
     public void setBold() {
         if (!font.isBold())
             font = new Font(font.getName(), Font.BOLD, font.getSize());
     }
 
+    /**
+     * Sets the font to plain.
+     */
     public void setPlain() {
         if (!font.isPlain())
             font = new Font(font.getName(), Font.PLAIN, font.getSize());
     }
 
+    /**
+     * Sets the font of this CText object.
+     *
+     * @param f the font to set
+     */
     public void setFont(Font f) {
         font = f;
     }
 
+    /**
+     * Sets the font size of this CText object.
+     *
+     * @param n the font size to set
+     */
     public void setFontSize(int n) {
         if (n != font.getSize())
             font = new Font(font.getName(), font.getStyle(), n);
     }
 
+    /**
+     * Default constructor for the CText class.
+     * Initializes the text object with default values.
+     */
     public CText() {
         super(CClass.TEXT);
         str = new String();
-
     }
 
+    /**
+     * Sets the x and y coordinates of this CText object.
+     *
+     * @param x the x-coordinate to set
+     * @param y the y-coordinate to set
+     */
     public void setXY(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * Constructor for the CText class.
+     * Initializes the text object with the specified parent, coordinates, and type.
+     *
+     * @param f the parent CClass object
+     * @param dx the x-coordinate offset
+     * @param dy the y-coordinate offset
+     * @param type the type of the text
+     */
     public CText(CClass f, double dx, double dy, int type) {
         super(CClass.TEXT);
         str = new String();
@@ -107,15 +144,26 @@ public class CText extends CClass {
         father = f;
     }
 
+    /**
+     * Moves the text object by the specified offsets.
+     *
+     * @param dx the x-offset to move by
+     * @param dy the y-offset to move by
+     */
     public void move(double dx, double dy) {
         super.move(dx, dy);
         if (type == NORMAL_TEXT || type == VALUE_TEXT) {
             x += dx;
             y += dy;
         }
-
     }
 
+    /**
+     * Checks if this CText object is equal to another object.
+     *
+     * @param obj the object to compare with
+     * @return true if the objects are equal, false otherwise
+     */
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (!(obj instanceof CText)) return false;
@@ -137,6 +185,14 @@ public class CText extends CClass {
 //        font = new Font("Dialog", Font.PLAIN, 14);
 //    }
 
+    /**
+     * Constructor for the CText class.
+     * Initializes the text object with the specified coordinates and string.
+     *
+     * @param x the x-coordinate of the text
+     * @param y the y-coordinate of the text
+     * @param s the string content of the text
+     */
     public CText(int x, int y, String s) {
         super(CClass.TEXT);
         str = s;
@@ -145,7 +201,11 @@ public class CText extends CClass {
         this.y = y;
     }
 
-
+    /**
+     * Retrieves the text content of this CText object.
+     *
+     * @return the text content
+     */
     public String getText() {
         if (type == NORMAL_TEXT)
             return str;
@@ -157,15 +217,23 @@ public class CText extends CClass {
             return str;
 
         return null;
-
     }
 
+    /**
+     * Sets the text content of this CText object.
+     *
+     * @param s the text content to set
+     */
     public void setText1(String s) {
         str = s;
     }
 
+    /**
+     * Sets the text content of this CText object based on its type.
+     *
+     * @param s the text content to set
+     */
     public void setText(String s) {
-
         if (type == NORMAL_TEXT)
             str = s;
         else if (type == NAME_TEXT)
@@ -183,42 +251,67 @@ public class CText extends CClass {
         }
     }
 
+    /**
+     * Retrieves the string content of this CText object.
+     *
+     * @return the string content
+     */
     public String getString() {
         return str;
     }
 
+    /**
+     * Retrieves the dimensions of the text as a Dimension object.
+     *
+     * @return the dimensions of the text
+     */
     public Dimension getTextDimension() {
         return new Dimension((int) w, (int) height);
     }
 
+    /**
+     * Retrieves the x-coordinate of the text.
+     *
+     * @return the x-coordinate
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Retrieves the y-coordinate of the text.
+     *
+     * @return the y-coordinate
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Retrieves the location of the text as a Point object.
+     *
+     * @return the location of the text
+     */
     public Point getLocation() {
         return new Point(x, y);
     }
 
+    /**
+     * Retrieves the type of this CText object.
+     *
+     * @return the type of the text
+     */
     public int getType() {
         return this.type;
     }
 
-
-    public int vlength() {
-        if (str == null) return 0;
-        return str.length();
-    }
-
-    public void setSvalue(String s) {
-        svalue = s;
-    }
-
     public boolean nameTextShown = CMisc.nameTextShown;
 
+    /**
+     * Checks if the text should be drawn based on its visibility and the visibility of its parent.
+     *
+     * @return true if the text should be drawn, false otherwise
+     */
     public boolean isdraw() {
         if (!super.isdraw())
             return false;
@@ -230,14 +323,18 @@ public class CText extends CClass {
                 return CMisc.nameTextShown;
         } else {
             if (type == NAME_TEXT)
-                return nameTextShown;          //APPLET ONLY
+                return nameTextShown; // APPLET ONLY
         }
         return true;
     }
 
+    /**
+     * Retrieves the x-coordinate for drawing the text.
+     *
+     * @return the x-coordinate for drawing
+     */
     public int getSX() {
-        double lx;
-        lx = 0;
+        double lx = 0;
         if (type == NORMAL_TEXT) {
             lx = x;
         } else if (type == NAME_TEXT) {
@@ -250,25 +347,31 @@ public class CText extends CClass {
         return (int) lx;
     }
 
+    /**
+     * Retrieves the y-coordinate for drawing the text.
+     *
+     * @return the y-coordinate for drawing
+     */
     public int getSY() {
-        double ly;
-        ly = 0;
+        double ly = 0;
         if (type == NORMAL_TEXT) {
-//            lx = x;
             ly = y;
         } else if (type == NAME_TEXT) {
             CPoint p = (CPoint) father;
-//            lx = p.getx() + x;
             ly = p.gety() + y;
         } else if (type == CNAME_TEXT && CMisc.show_angle_text) {
             CAngle ag = (CAngle) father;
-//            lx = ag.getxForString() + x;
             ly = ag.getyForString() + y;
         }
         return (int) ly;
     }
 
 
+    /**
+     * Retrieves the value text of this CText object.
+     *
+     * @return the value text
+     */
     public String getValueText() {
         double r = tvalue.dvalue; //CTextValue.calvalue(tvalue, null);
         String shead = "";
@@ -295,6 +398,11 @@ public class CText extends CClass {
         return shead + " = " + r;
     }
 
+    /**
+     * Draws the text object using the provided Graphics2D context.
+     *
+     * @param g2 the Graphics2D context
+     */
     public void draw(Graphics2D g2) {
         if (!isdraw()) return;
 
@@ -330,12 +438,9 @@ public class CText extends CClass {
                 ly = r[1] + y + dy - height / 2;
                 posX = lx;
                 posY = ly;
-                //lx = ag.getxForString() + x - w / 2;
-                //ly = ag.getyForString() + y - height / 2;
             }
 
         } else if (type == VALUE_TEXT) {
-
             tstring = getValueText();
             lx = x;
             ly = y;
@@ -343,10 +448,8 @@ public class CText extends CClass {
             posY = ly;
         }
 
-
         if (tstring == null) return;
         if (tstring.length() == 0) return;
-
 
         String[] sl = tstring.split("\n");
         g2.setFont(font);
@@ -364,9 +467,14 @@ public class CText extends CClass {
                 w = r2.getWidth();
             g2.drawString(sl[i], (float) lx, (float) (ly + (i + 1) * h));
         }
-
     }
 
+    /**
+     * Draws the text object with a selection highlight using the provided Graphics2D context.
+     *
+     * @param g2 the Graphics2D context
+     * @param select true if the text object is selected, false otherwise
+     */
     public void draw(Graphics2D g2, boolean select) {
         if (visible == false) return;
 
@@ -404,6 +512,11 @@ public class CText extends CClass {
         g2.draw(rc);
     }
 
+    /**
+     * Retrieves a string representation of the type of this text object.
+     *
+     * @return the type string
+     */
     public String TypeString() {
         if (str == null)
             return "";
@@ -434,10 +547,24 @@ public class CText extends CClass {
         return null;
     }
 
+    /**
+     * Retrieves a description of this text object.
+     *
+     * @return the description
+     */
     public String getDescription() {
         return this.TypeString();
     }
 
+    /**
+     * Checks if the given rectangle defined by (x0, y0) and (x1, y1) intersects with this text object.
+     *
+     * @param x0 the x-coordinate of the first corner of the rectangle
+     * @param y0 the y-coordinate of the first corner of the rectangle
+     * @param x1 the x-coordinate of the opposite corner of the rectangle
+     * @param y1 the y-coordinate of the opposite corner of the rectangle
+     * @return true if the rectangle intersects with this text object, false otherwise
+     */
     public boolean inRect(double x0, double y0, double x1, double y1) {
         if (x0 > x1) {
             double r = x0;
@@ -449,11 +576,17 @@ public class CText extends CClass {
             double r = y0;
             y0 = y1;
             y1 = r;
-
         }
         return x0 < x && y0 < y && x1 > x + w && y1 > y + height;
     }
 
+    /**
+     * Checks if the given point (x1, y1) is within the bounds of this text object.
+     *
+     * @param x1 the x-coordinate of the point
+     * @param y1 the y-coordinate of the point
+     * @return true if the point is within the bounds, false otherwise
+     */
     public boolean select(double x1, double y1) {
         if (visible == false) return false;
 
@@ -486,6 +619,12 @@ public class CText extends CClass {
         return false;
     }
 
+    /**
+     * Drags the text object by the given offsets (dx, dy).
+     *
+     * @param dx the x-offset to drag by
+     * @param dy the y-offset to drag by
+     */
     public void drag(double dx, double dy) {
         x += dx;
         y += dy;
@@ -509,10 +648,17 @@ public class CText extends CClass {
                 x -= dx + x1;
                 y -= dy + y1;
             }
-
         }
     }
 
+    /**
+     * Drags the text object from the given starting point (x0, y0) by the given offsets (dx, dy).
+     *
+     * @param x0 the starting x-coordinate
+     * @param y0 the starting y-coordinate
+     * @param dx the x-offset to drag by
+     * @param dy the y-offset to drag by
+     */
     public void drag(double x0, double y0, double dx, double dy) {
         if (type == NORMAL_TEXT || type == VALUE_TEXT)
             drag(dx, dy);
@@ -529,7 +675,6 @@ public class CText extends CClass {
             if (len > CMisc.rlength) {
                 this.x = (int) (xp * CMisc.rlength / len);
                 this.y = (int) (yp * CMisc.rlength / len);
-
             } else {
                 this.x += dx;
                 this.y += dy;
@@ -547,20 +692,23 @@ public class CText extends CClass {
             if (len > CMisc.rlength) {
                 this.x = (int) (xp * CMisc.rlength / len);
                 this.y = (int) (yp * CMisc.rlength / len);
-
             } else {
                 this.x += dx;
                 this.y += dy;
             }
         }
-
-
     }
 
+    /**
+     * Saves the text object as a PostScript file.
+     *
+     * @param fp the file output stream to write to
+     * @param stype the style type (0 for color, 1 for gray, 2 for black & white)
+     * @throws IOException if an I/O error occurs
+     */
     public void SavePS(FileOutputStream fp, int stype) throws IOException {
         if (!isdraw()) return;
         if (father != null && !father.isdraw()) return;
-
 
         String tstring = null;
 
@@ -611,11 +759,15 @@ public class CText extends CClass {
         } else {
             fp.write(("mf " + (int) lx + " " + (int) (-ly - 15) + " moveto (" + tstring + ") " + "show\n").getBytes());
         }
-
     }
 
+    /**
+     * Saves the text object to the specified data output stream.
+     *
+     * @param out the data output stream to write to
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
-
         super.Save(out);
 
         out.writeInt(type);
@@ -642,7 +794,6 @@ public class CText extends CClass {
             out.writeInt(s.length);
             out.write(s, 0, s.length);
             out.writeInt(father.m_id);
-
         } else if (type == VALUE_TEXT) {
             s = str.getBytes();
             out.writeInt(s.length);
@@ -651,12 +802,16 @@ public class CText extends CClass {
                 out.writeInt(-1);
             else out.writeInt(father.m_id);
         }
-
-
     }
 
+    /**
+     * Loads the text object from the specified data input stream.
+     *
+     * @param in the data input stream to read from
+     * @param dp the draw process
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
-
         if (CMisc.version_load_now < 0.010) {
             m_id = in.readInt();
             x = in.readInt();
@@ -707,7 +862,6 @@ public class CText extends CClass {
         } else {
             super.Load(in, dp);
 
-
             type = in.readInt();
             x = in.readInt();
             y = in.readInt();
@@ -754,10 +908,6 @@ public class CText extends CClass {
                     father = dp.getOjbectById(id);
                 }
             }
-
-
         }
-
     }
-
 }
