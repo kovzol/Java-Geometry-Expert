@@ -9,14 +9,6 @@ import java.io.FileOutputStream;
 import gprover.Cm;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-1-15
- * Time: 11:22:15
- * To change this template use File | Settings | File Templates.
- */
-
-/**
  * Class representing an angle in a geometric construction.
  */
 public class CAngle extends CClass {
@@ -118,19 +110,6 @@ public class CAngle extends CClass {
 
         if (lstart.pointOnLine(p3) && lstart.pointOnLine(p4) && lend.pointOnLine(p1) && lend.pointOnLine(p2))
             return true;
-        return false;
-    }
-
-    /**
-     * Checks if two sets of points are the same.
-     *
-     * @param p1 The first point of the first set.
-     * @param p2 The second point of the first set.
-     * @param p3 The first point of the second set.
-     * @param p4 The second point of the second set.
-     * @return {@code true} if the two sets of points are the same, {@code false} otherwise.
-     */
-    public boolean isSame_m(CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         return false;
     }
 
@@ -312,16 +291,6 @@ public class CAngle extends CClass {
     }
 
     /**
-     * Sets the name of the angle.
-     *
-     * @param s the name of the angle
-     */
-    public void setAngleName(String s) {
-        if (ptext != null)
-            ptext.setText(s);
-    }
-
-    /**
      * Gets the text associated with the angle.
      *
      * @return the CText object representing the text
@@ -358,15 +327,6 @@ public class CAngle extends CClass {
         return m_name;
     }
 
-    /**
-     * Gets the common intersection point of the two lines forming the angle.
-     *
-     * @return the intersection point
-     */
-    public CPoint CrossPoint() {
-        return CLine.commonPoint(this.lstart, this.lend);
-    }
-
 
     /**
      * Gets the description of the angle.
@@ -389,19 +349,6 @@ public class CAngle extends CClass {
      */
     public CPoint getVertex() {
         return CLine.commonPoint(this.lstart, this.lend);
-    }
-
-    /**
-     * Gets the common line between two angles if they share a common line.
-     *
-     * @param g1 the first angle
-     * @param g2 the second angle
-     * @return the common line, or null if there is none
-     */
-    public static CLine getCrossLine(CAngle g1, CAngle g2) {
-        if (g1.lstart == g2.lstart || g1.lstart == g2.lend) return g1.lstart;
-        if (g1.lend == g2.lstart || g1.lend == g2.lend) return g1.lend;
-        return null;
     }
 
     /**

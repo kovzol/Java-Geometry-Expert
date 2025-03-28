@@ -3,6 +3,9 @@ package gprover;
 import java.util.Vector;
 
 
+/**
+ * Implements full angle proof processes and geometric elimination.
+ */
 public class Full extends Elim {
 
     int max_term;
@@ -14,11 +17,16 @@ public class Full extends Elim {
     XTerm conc_p1, conc_p2;
     boolean print_conc = false;
 
-
+    /**
+     * Constructs a new Full object.
+     */
     public Full() {
         P_STATUS = 0;
     }
 
+    /**
+     * Proves the geometric configuration using full elimination logic.
+     */
     void prove_full() {
         GrTerm gr1;
         DTerm ps1;
@@ -35,7 +43,7 @@ public class Full extends Elim {
         dbase();
         fconc();
         if (qerror) return;
-        boolean first = true;        
+        boolean first = true;
 
         do {
             co_db.nx = null;
@@ -99,6 +107,9 @@ public class Full extends Elim {
         print_fend();
     }
 
+    /**
+     * Initializes the geometric database by searching for midpoints, lines, circles, and angles.
+     */
     void dbase() {
         MidPt md;
         PLine pn;
@@ -127,15 +138,27 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Checks if the provided term is non-polynomial.
+     *
+     * @param p the term to check.
+     * @return true if the term has no associated variable; false otherwise.
+     */
     boolean npoly(XTerm p) {
         return (p.var == null);
     }
 
+    /**
+     * Prints terminal details based on the print_conc flag.
+     */
     void print_t() {
         if (print_conc)
             gprint(Cm.s2300);
     }
 
+    /**
+     * Prints the final conclusion of the proof.
+     */
     void print_fend() {
         DTerm ps1;
         XTerm p1;
@@ -148,6 +171,14 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Constructs and links a new geometric term in the proof chain.
+     *
+     * @param c1 the first constant.
+     * @param p1 the first term.
+     * @param c2 the second constant.
+     * @param p2 the second term.
+     */
     void conc_gr(long c1, XTerm p1, long c2, XTerm p2) {
         if (p1 != null && p1.getPV() < 0)
             p1 = this.neg_poly(p1);
@@ -158,10 +189,18 @@ public class Full extends Elim {
         last_pr = gr;
     }
 
+    /**
+     * Executes the default full angle concatenation process.
+     */
     void fconc() {
         fconc(conc);
     }
 
+    /**
+     * Executes the full angle concatenation based on the provided condition.
+     *
+     * @param conc the condition with the predicate and associated parameters.
+     */
     void fconc(Cond conc) {
         switch (conc.pred) {
             case CO_COLL:
@@ -199,13 +238,11 @@ public class Full extends Elim {
                 /* constants8 */
                 conc_gr(1L, pminus(conc_p1, conc_p2), 0L, null);
                 break;
-
             case CO_PBISECT:
                 conc_gr(1L, pminus(trim_f(conc.p[0], conc.p[1], conc.p[1], conc.p[2]),
-                        trim_f(conc.p[1], conc.p[2], conc.p[2], conc.p[0])),
+                                trim_f(conc.p[1], conc.p[2], conc.p[2], conc.p[0])),
                         0L, null);
                 break;
-
             case CO_CONG:
                 fconc_cong(conc.p[0], conc.p[1], conc.p[2], conc.p[3]);
                 break;
@@ -218,10 +255,22 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Returns the error type encountered during proof processing.
+     *
+     * @return the error type code.
+     */
     public int getErrorType() {
         return ertype;
     }
 
+    /**
+     * Processes the collinearity condition for full angle concatenation.
+     *
+     * @param a first geometric parameter.
+     * @param b second geometric parameter.
+     * @param c third geometric parameter.
+     */
     public void fconc_coll(int a, int b, int c) {
         if (a < b) {
             int k = a;
@@ -236,6 +285,15 @@ public class Full extends Elim {
         conc_gr(1L, trim_f(a, b, a, c), 0L, null);
     }
 
+    /**
+     * Processes the congruence condition for full angle concatenation.
+     *
+     * @param a first geometric parameter.
+     * @param b second geometric parameter.
+     * @param c third geometric parameter.
+     * @param d fourth geometric parameter.
+     * @return true if the congruence condition was successfully processed; false otherwise.
+     */
     public boolean fconc_cong(int a, int b, int c, int d) {
         int l, m, n;
         if (a == c) {
@@ -258,13 +316,19 @@ public class Full extends Elim {
             conc_gr(1L, null, 1L, null);
             return false;
         }
-
         conc_gr(1L, pminus(trim_f(l, m, m, n), trim_f(m, n, n, l)), 0L, null);
         return true;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+ * Constructs an elimination term using a variable and two XTerm operands.
+ * Reorders the variable if necessary and computes the metric.
+ *
+ * @param v   the variable
+ * @param p1  the first XTerm operand
+ * @param p2  the second XTerm operand
+ * @return the constructed elimination term
+ */
     ElTerm mk_felim(Var v, XTerm p1, XTerm p2) {
         ElTerm e1 = new ElTerm();
         if (this.var_reOrder(v)) {
@@ -279,6 +343,17 @@ public class Full extends Elim {
         return (e1);
     }
 
+    /**
+     * Constructs an elimination term using a variable and two XTerm operands,
+     * and scales the resulting term by a factor if necessary.
+     *
+     * @param v   the variable
+     * @param p1  the first XTerm operand
+     * @param p2  the second XTerm operand
+     * @param n   the scaling factor; if not 1, the term is multiplied by this factor
+     * @param t   the elimination type
+     * @return the scaled elimination term
+     */
     ElTerm mk_felim(Var v, XTerm p1, XTerm p2, int n, int t) {
         ElTerm e = mk_felim(v, p1, p2, t);
         if (n != 1)
@@ -286,54 +361,30 @@ public class Full extends Elim {
         return e;
     }
 
-
+    /**
+     * Constructs an elimination term using a variable and two XTerm operands,
+     * and sets its elimination type.
+     *
+     * @param v   the variable
+     * @param p1  the first XTerm operand
+     * @param p2  the second XTerm operand
+     * @param t   the elimination type to set
+     * @return the elimination term with the specified type
+     */
     ElTerm mk_felim(Var v, XTerm p1, XTerm p2, int t) {
         ElTerm el = mk_felim(v, p1, p2);
         el.etype = t;
         return el;
     }
 
-    ElTerm mk_feliminator(Var v, XTerm p1, XTerm p2, int t) {
-        ElTerm e1 = new ElTerm();
-        e1.etype = t;
-        e1.v = v;
-        e1.p1 = p1;
-        e1.p2 = p2;
-        e1.p = get_m(v);
-        e1.co = co_db.nx;
-        return (e1);
-    }
-
-    ElTerm elim_qcs(XTerm p) {                           // NO USAGE.
-        Var v1 = p.var;
-        LLine ln1 = fadd_ln(v1.pt[0], v1.pt[1]);
-        LLine ln2 = fadd_ln(v1.pt[2], v1.pt[3]);
-
-        co_db.nx = null;
-        int p1, p2, p3, p4;
-        p1 = v1.pt[0];
-        p2 = v1.pt[1];
-        p3 = v1.pt[2];
-        p4 = v1.pt[3];
-        boolean t = false;
-        if (ln1.pt[0] < v1.pt[0] && ln1.pt[1] < v1.pt[0]) {
-            add_codb(CO_COLL, ln1.pt[0], ln1.pt[1], v1.pt[0], v1.pt[1], 0, 0, 0, 0);
-            p1 = ln1.pt[0];
-            p2 = ln1.pt[1];
-            t = true;
-        }
-        if (ln2.pt[0] < v1.pt[2] && ln2.pt[1] < v1.pt[2]) {
-            add_codb(CO_COLL, ln2.pt[0], ln2.pt[1], v1.pt[2], v1.pt[3], 0, 0, 0, 0);
-            p3 = ln2.pt[0];
-            p4 = ln2.pt[1];
-            t = true;
-        }
-        if (t)
-            return mk_felim(p.var, trim_f(p1, p2, p3, p4), get_n(1), 1);
-
-        return null;
-    }
-
+    /**
+     * Attempts the elimination procedure (query type 7) on the provided XTerm.
+     * Iterates through subterms to identify a valid elimination candidate based on
+     * geometric relationships.
+     *
+     * @param p the XTerm to process
+     * @return the resulting elimination term if a valid candidate is found; null otherwise
+     */
     ElTerm elim_q7(XTerm p) {
         LLine ln1, ln2, ln3, ln4;
         XTerm p1 = p;
@@ -352,7 +403,8 @@ public class Full extends Elim {
 
             while (ps2 != null) {
                 XTerm p2 = ps2.p;
-                if (npoly(p2)) break;//goto l2;
+                if (npoly(p2))
+                    break;
                 Var v2 = p2.var;
                 ln3 = fadd_ln(v2.pt[0], v2.pt[1]);
                 ln4 = fadd_ln(v2.pt[2], v2.pt[3]);
@@ -382,7 +434,6 @@ public class Full extends Elim {
                         add_codb(CO_COLL, v1.pt[2], v1.pt[3], v2.pt[2], v2.pt[3], 0, 0, 0, 0);
                         return (mk_felim(p1.var, get_m(p2.var), get_n(1L), 1));
                     }
-
                     if (ln2 == ln4 && ln_less(ln3, ln2)) {
                         co_db.nx = null;
                         add_codb(CO_COLL, v1.pt[2], v1.pt[3], v2.pt[2], v2.pt[3], 0, 0, 0, 0);
@@ -392,7 +443,6 @@ public class Full extends Elim {
                             r = 1;
                         return (mk_felim(p1.var, pplus(get_m(p2.var), xt), get_n(1L), r));
                     }
-
                     if (ln1 == ln3) {
                         co_db.nx = null;
                         add_codb(CO_COLL, v1.pt[0], v1.pt[1], v2.pt[0], v2.pt[1], 0, 0, 0, 0);
@@ -401,7 +451,6 @@ public class Full extends Elim {
                         if (pzerop(xt))
                             r = 1;
                         return (mk_felim(p1.var, pplus(get_m(p2.var), xt), get_n(1L), r));
-
                     }
                 }
                 ps2 = p2.ps;
@@ -409,35 +458,54 @@ public class Full extends Elim {
             }
             ps1 = p1.ps;
             ps1 = ps1.nx;
-            if (ps1 == null) return (null);
+            if (ps1 == null)
+                return (null);
             p1 = ps1.p;
         }
     }
 
+    /**
+     * Attempts the elimination procedure (query type 8) on the provided XTerm.
+     * Verifies collinearity of the term's sub-elements before processing.
+     *
+     * @param p1 the XTerm to process
+     * @return the resulting elimination term if successful; null otherwise
+     */
     ElTerm elim_q8(XTerm p1) {
         DTerm ps1;
         XTerm p2;
         Var v1, v2;
         LLine ln1, ln2;
 
-        if (p1 == null || npoly(p1)) return (null);
+        if (p1 == null || npoly(p1))
+            return (null);
         v1 = p1.var;
         ln1 = fadd_ln(v1.pt[0], v1.pt[1]);
         ps1 = p1.ps;
         ps1 = ps1.nx;
-        if (ps1 == null) return (null);
+        if (ps1 == null)
+            return (null);
         p2 = ps1.p;
-        if (npoly(p2)) return (null);
+        if (npoly(p2))
+            return (null);
         v2 = p2.var;
         ln2 = fadd_ln(v2.pt[0], v2.pt[1]);
-        if (ln1 != ln2) return (null);
+        if (ln1 != ln2)
+            return (null);
         {
             co_db.nx = null;
             add_codb(CO_COLL, v1.pt[0], v1.pt[1], v2.pt[0], v2.pt[1], 0, 0, 0, 0);
-            return (mk_felim(p1.var, pplus(get_m(p2.var), trim_f(v2.pt[2], v2.pt[3], v1.pt[2], v1.pt[3])), get_n(1L), RF_ADDITION));  //addition.
+            return (mk_felim(p1.var, pplus(get_m(p2.var), trim_f(v2.pt[2], v2.pt[3], v1.pt[2], v1.pt[3])), get_n(1L), RF_ADDITION));
         }
     }
 
+    /**
+     * Processes an XTerm by applying modulus to its coefficient.
+     * Traverses subterms until a non-polynomial term is encountered and applies the modulus.
+     *
+     * @param p the XTerm to process
+     * @return the processed XTerm with its coefficient modified
+     */
     XTerm fpoly(XTerm p) {
         DTerm ps1, ps2;
         XTerm p1, p2;
@@ -450,7 +518,8 @@ public class Full extends Elim {
         while (true) {
             ps1 = p1.ps;
             ps2 = ps1.nx;
-            if (ps2 == null) return (p);
+            if (ps2 == null)
+                return (p);
             p2 = ps2.p;
             if (!npoly(p2))
                 p1 = p2;
@@ -467,60 +536,74 @@ public class Full extends Elim {
         return (p);
     }
 
-    ElTerm mk_felim11(Var v, int a, int b, int c, int d, int o, int p1, int p2, int o1) { // <[ab, cd] = <[o1p1,o1,p2]
-//        co_db.nx = null;
-//
-//        cond c1 = add_codb(CO_COLL, o, p1, a, b, 0, 0, 0, 0);
-//        cond c2 = add_codb(CO_COLL, o, p2, c, d, 0, 0, 0, 0);
-//        el_term e1 = null;
-//        if (c1.pred != 0 || c2.pred != 0) {
-//            e1 = mk_felim(v, trim_f(o, p1, o, p2), get_n(1L), 0);
-//            co_db.nx = null;
-//            add_codb(CO_CYCLIC, 0, o, o1, p1, p2, 0, 0, 0);
-//            el_term e2 = mk_felim(new var(10, o, p1, o, p2), trim_f(o1, p1, o1, p2), get_n(1), 9);
-//            e1.nx = e2;
-//            co_db.nx = null;
-//        } else {
-//            add_codb(CO_CYCLIC, 0, o, o1, p1, p2, 0, 0, 0);
-//        }
-//        el_term el = (mk_felim(v, trim_f(o1, p1, o1, p2), get_n(1L), 9));
-//        el.et = e1;
-//        return el;
+    /**
+     * Constructs an elimination term for cyclic configurations.
+     * Sets up conditions based on collinearity and cyclic properties.
+     *
+     * @param v   the variable associated with the term
+     * @param a   first parameter for collinearity
+     * @param b   second parameter for collinearity
+     * @param c   third parameter for collinearity
+     * @param d   fourth parameter for collinearity
+     * @param o   origin or reference parameter
+     * @param p1  first point parameter
+     * @param p2  second point parameter
+     * @param o1  additional reference parameter
+     * @return the elimination term constructed for the cyclic case
+     */
+    ElTerm mk_felim11(Var v, int a, int b, int c, int d, int o, int p1, int p2, int o1) {
         co_db.nx = null;
 
         add_codb(CO_CYCLIC, 0, o, o1, p1, p2, 0, 0, 0);
         Cond c1 = add_codb(CO_COLL, o, p1, a, b, 0, 0, 0, 0);
         Cond c2 = add_codb(CO_COLL, o, p2, c, d, 0, 0, 0, 0);
 
-//        el_term e1 = null;
-//        if (c1.pred != 0 || c2.pred != 0) {
-//            e1 = mk_felim(v, trim_f(o, p1, o, p2), get_n(1L), 0);
-//            co_db.nx = null;
-//            el_term e2 = mk_felim(new var(10, o, p1, o, p2), trim_f(o1, p1, o1, p2), get_n(1), 9);
-//            e1.nx = e2;
-//            co_db.nx = null;
-//        } else {
-//            add_codb(CO_CYCLIC, 0, o, o1, p1, p2, 0, 0, 0);
-//        }
         ElTerm el = (mk_felim(v, trim_f(o1, p1, o1, p2), get_n(1L), RF_INSCRIBE));
         co_db.nx = null;
 
         return el;
     }
 
-    ElTerm mk_felim6(Var v, int a, int b, int c, int d) { // para
+    /**
+     * Constructs an elimination term for parallel configurations.
+     * Registers the parallel condition before creating the elimination term.
+     *
+     * @param v   the variable associated with the term
+     * @param a   first parameter for the parallel condition
+     * @param b   second parameter for the parallel condition
+     * @param c   third parameter for the parallel condition
+     * @param d   fourth parameter for the parallel condition
+     * @return the elimination term representing the parallel condition
+     */
+    ElTerm mk_felim6(Var v, int a, int b, int c, int d) {
         co_db.nx = null;
         add_codb(CO_PARA, a, b, c, d, 0, 0, 0, 0);
         ElTerm e1 = mk_felim(v, get_n(0L), get_n(1L), 3);
         return e1;
     }
 
+    /**
+     * Constructs an elimination term for a perpendicular configuration.
+     *
+     * @param v the variable associated with the term
+     * @param a first parameter for the perpendicular configuration
+     * @param b second parameter for the perpendicular configuration
+     * @param c third parameter for the perpendicular configuration
+     * @param d fourth parameter for the perpendicular configuration
+     * @return the elimination term constructed for the perpendicular configuration
+     */
     ElTerm mk_felim7(Var v, int a, int b, int c, int d) {
         co_db.nx = null;
         add_codb(CO_PERP, a, b, c, d, 0, 0, 0, 0);
         return mk_felim(v, get_n(1L), get_n(1L), 4);
     }
 
+    /**
+     * Attempts to eliminate a geometric term using various strategies.
+     *
+     * @param v the variable associated with the term
+     * @return the resulting elimination term if a strategy succeeds; otherwise, null
+     */
     ElTerm elim_f(Var v) {
         ElTerm e1 = null;
         int a, b, c, d;
@@ -561,8 +644,17 @@ public class Full extends Elim {
         return (e1);
     }
 
+    /**
+     * Processes an elimination based on a line configuration.
+     *
+     * @param v the variable associated with the term
+     * @param a first geometric parameter
+     * @param b second geometric parameter
+     * @param c third geometric parameter
+     * @param d fourth geometric parameter
+     * @return the elimination term constructed from the line configuration; null if not applicable
+     */
     ElTerm elim_f_ln(Var v, int a, int b, int c, int d) {
-
         LLine ln1 = fd_ln(a, b);
         if (ln1 != null && a > ln1.pt[1]) {
             co_db.nx = null;
@@ -572,8 +664,17 @@ public class Full extends Elim {
         return (null);
     }
 
+    /**
+     * Performs elimination based on a parallel line configuration.
+     *
+     * @param v the variable associated with the term
+     * @param a first geometric parameter
+     * @param b second geometric parameter
+     * @param c third geometric parameter
+     * @param d fourth geometric parameter
+     * @return the elimination term constructed from the parallel line configuration; null if not found
+     */
     ElTerm elim_f_pn(Var v, int a, int b, int c, int d) {
-
         LLine ln1 = fd_ln(a, b);
         PLine pn1 = fd_pn(a, b);
         if (pn1 == null) return (null);
@@ -593,13 +694,21 @@ public class Full extends Elim {
         return (null);
     }
 
-
-    ElTerm elim_f_tn(Var v, int a, int b, int c, int d)    // could be more tn lines.
-    {
+    /**
+     * Performs elimination based on a tn-line configuration.
+     *
+     * @param v the variable associated with the term
+     * @param a first geometric parameter
+     * @param b second geometric parameter
+     * @param c third geometric parameter
+     * @param d fourth geometric parameter
+     * @return the elimination term constructed from the tn-line configuration; null if not applicable
+     */
+    ElTerm elim_f_tn(Var v, int a, int b, int c, int d) {
         LLine ln2;
         LLine ln1 = fd_ln(a, b);
         TLine tn1 = fd_tn(ln1);
-//        if (tn1 == null) return (null);
+        //        if (tn1 == null) return (null);
         if (tn1 != null) {
             if (tn1.l1 == ln1)
                 ln2 = tn1.l2;
@@ -643,7 +752,16 @@ public class Full extends Elim {
         return (null);
     }
 
-
+    /**
+     * Processes the cyclic configuration for elimination.
+     *
+     * @param v the variable associated with the term
+     * @param a first geometric parameter
+     * @param b second geometric parameter
+     * @param c third geometric parameter
+     * @param d fourth geometric parameter
+     * @return the elimination term constructed from the cyclic configuration; null if not applicable
+     */
     ElTerm elim_f_cir1(Var v, int a, int b, int c, int d) {
         int o, p1, p2, p3, p4;
         LLine ln3, ln4, ln5, ln6;
@@ -748,13 +866,23 @@ public class Full extends Elim {
                         }
                     }
                 }
-            if (rel != null) return rel;
-            l1:
-            cr = cr.nx;
+                if (rel != null) return rel;
+                l1:
+                cr = cr.nx;
+            }
+            return (null);
         }
-        return (null);
-    }
 
+    /**
+     * Processes the cyclic configuration (version 2) for elimination.
+     *
+     * @param v the variable associated with the term
+     * @param a first geometric parameter
+     * @param b second geometric parameter
+     * @param c third geometric parameter
+     * @param d fourth geometric parameter
+     * @return the elimination term constructed from the second cyclic configuration; null if not applicable
+     */
     ElTerm elim_f_cir2(Var v, int a, int b, int c, int d) {
         ACir cr1, cr2;
         int p1, p2, p3, p4;
@@ -820,6 +948,19 @@ public class Full extends Elim {
         return (null);
     }
 
+    /**
+     * Performs elimination based on a cyclic circle configuration (variant 3).
+     *
+     * This method searches through cyclic configurations in the circle list and
+     * attempts to form an elimination term based on inter-line relationships.
+     *
+     * @param v the variable associated with the elimination term
+     * @param a the first geometric parameter
+     * @param b the second geometric parameter
+     * @param c the third geometric parameter
+     * @param d the fourth geometric parameter
+     * @return the elimination term constructed from the cyclic configuration or null if not applicable
+     */
     ElTerm elim_f_cir3(Var v, int a, int b, int c, int d) {
         ACir cr1;
         int o, p1, p2, p3, p4;
@@ -889,6 +1030,19 @@ public class Full extends Elim {
         return (null);
     }
 
+    /**
+     * Performs elimination based on a cyclic circle configuration (variant 4).
+     *
+     * This method searches through cyclic configurations in the circle list and
+     * attempts to form an elimination term using midpoint and line intersection strategies.
+     *
+     * @param v the variable associated with the elimination term
+     * @param a the first geometric parameter
+     * @param b the second geometric parameter
+     * @param c the third geometric parameter
+     * @param d the fourth geometric parameter
+     * @return the elimination term constructed from the cyclic configuration or null if not applicable
+     */
     ElTerm elim_f_cir4(Var v, int a, int b, int c, int d) {
         ACir cr1;
         int o, p1, p2, p3, p4;
@@ -940,7 +1094,7 @@ public class Full extends Elim {
                             ln_less((fadd_ln(p2, p3)), ln1)) {
                         co_db.nx = null;
                         add_codb(CO_CYCLIC, o, p1, p2, p3, 0, 0, 0, 0);      //r33
-                        return (mk_felim(v, pplus3(trim_f(p1, o, p1, p3), trim_f(p2, p3, c, d), get_n(1L)), //r28
+                        return (mk_felim(v, pplus3(trim_f(p1, o, p1, p3), trim_f(p2, p3, c, d), get_n(1L)),
                                 get_n(1L), RF_18));
                     }
                     if (ln_less((fadd_ln(p3, o)), ln1) &&
@@ -958,6 +1112,19 @@ public class Full extends Elim {
         return (null);
     }
 
+    /**
+     * Performs elimination based on center configurations.
+     *
+     * This method iterates through line points and configuration constraints to
+     * determine centers (such as orthocenters or incenters) for constructing an elimination term.
+     *
+     * @param v the variable associated with the elimination term
+     * @param a the first geometric parameter
+     * @param b the second geometric parameter
+     * @param c the third geometric parameter
+     * @param d the fourth geometric parameter
+     * @return the elimination term constructed from center-based elimination or null if not applicable
+     */
     ElTerm elim_f_center(Var v, int a, int b, int c, int d) {
         LLine ln1, ln2;
         int p1, p2;
@@ -975,7 +1142,7 @@ public class Full extends Elim {
 
                 for (k = 1; k <= cons_no; k++)
                     for (l = 1; l <= cons_no; l++) {
-                        //orthocenter k p1 p2 l  /
+                        // orthocenter k p1 p2 l
                         if (k < l && p1 < p2 && k != p1 && k != p2 && l != p1 && l != p2 &&
                                 xperp(p1, k, p2, l) && xperp(p2, k, p1, l) &&
                                 ln_less((fadd_ln(k, l)), ln1)) {
@@ -984,8 +1151,8 @@ public class Full extends Elim {
                             return (mk_felim(v, pplus(trim_f(k, l, c, d), get_n(1L)), get_n(1L), RF_ORTH));
                         }
 
-                        /*    incenter (p1) p2 k l */
-                        /*gprint("cen1: %s %s %s %s\r\n",ANAME(p1),ANAME(p2),ANAME(k),ANAME(l)); */
+                        /* incenter (p1) p2 k l */
+                        /* gprint("cen1: %s %s %s %s\r\n",ANAME(p1),ANAME(p2),ANAME(k),ANAME(l)); */
                         if (k < l && k != p1 && k != p2 && l != p1 && l != p2 &&
                                 xacong(k, l, p1, p1, l, p2) && xacong(l, k, p1, p1, k, p2) &&
                                 ln_less((fadd_ln(k, p2)), ln1) &&
@@ -1007,6 +1174,18 @@ public class Full extends Elim {
         return (null);
     }
 
+    /**
+     * Performs elimination based on angle configurations.
+     *
+     * This method processes the angle and congruence relationships to form an elimination term.
+     *
+     * @param v the variable associated with the elimination term
+     * @param a the first geometric parameter
+     * @param b the second geometric parameter
+     * @param c the third geometric parameter
+     * @param d the fourth geometric parameter
+     * @return the elimination term constructed from angle-based configurations or null if not applicable
+     */
     ElTerm elim_f_ans(Var v, int a, int b, int c, int d) {
         LLine l1, l2, ln0, ln1, ln2;
         Angles as;
@@ -1077,6 +1256,22 @@ public class Full extends Elim {
         return (null);
     }
 
+    /**
+     * Performs elimination based on combined geometric configurations involving circles and lines.
+     *
+     * <p>
+     * This method takes a variable containing four geometric points and attempts to construct an elimination
+     * term by evaluating a series of geometric constraints. It uses helper methods such as
+     * <code>inter_lc</code>, <code>ln_less</code>, <code>on_ln</code>, <code>on_cir</code>, <code>xperp</code>,
+     * and <code>xpara</code> to verify perpendicular, parallel, and cyclic conditions among lines and circles.
+     * The method iterates through the circle lists and applies different elimination strategies.
+     * When a valid geometric configuration is detected, it creates and returns the corresponding elimination term.
+     * Otherwise, it returns <code>null</code>.
+     * </p>
+     *
+     * @param v the variable containing four geometric points used to derive lines and circles
+     * @return the constructed elimination term if a valid configuration is identified; <code>null</code> otherwise
+     */
     ElTerm elim_d(Var v) {
         LLine ln1, ln2;
         ACir cr, cr1;
@@ -1273,7 +1468,18 @@ public class Full extends Elim {
         return (null);
     }
 
-    ElTerm elim_t(Var v) {
+/**
+ * Performs elimination based on a t-based strategy.
+ *
+ * <p>This method handles elimination cases that require t-based processing.
+ * It applies specific geometric transformations and validations to compute
+ * the corresponding elimination term.</p>
+ *
+ * @param v the variable containing geometric term data
+ * @return the computed elimination term using the t-based strategy, or
+ *         <code>null</code> if no appropriate elimination can be performed
+ */
+ElTerm elim_t(Var v) {
         LLine ln1, ln2;
         ACir cr;
         int p1, p2, p3;
@@ -1308,7 +1514,20 @@ public class Full extends Elim {
         return (null);
     }
 
-    ElTerm elim_tri(Var v) {
+/**
+ * Performs triangle elimination.
+ *
+ * <p>
+ * This method processes elimination based on triangle configurations.
+ * It evaluates the geometric relationships between triangle vertices to
+ * compute the corresponding elimination term.
+ * </p>
+ *
+ * @param v the variable containing triangle points data
+ * @return the elimination term constructed from the triangle configuration,
+ *         or null if no appropriate elimination can be performed
+ */
+ElTerm elim_tri(Var v) {
         int a = v.pt[0];
         int b = v.pt[1];
         int c = v.pt[2];
@@ -1338,7 +1557,20 @@ public class Full extends Elim {
     }
 
     /////froem area
-    XTerm eprem(XTerm p, ElTerm e) {
+/**
+ * Performs pre-elimination computations on an XTerm using the specified elimination term.
+ *
+ * <p>This method applies an elimination strategy by processing the given XTerm
+ * in conjunction with an elimination term. The transformation rules and constraints
+ * applied within the method lead to a modified XTerm that encapsulates specific geometric
+ * relationships or configurations. The exact processing is defined by the elimination
+ * scheme used in the overall geometric computation.</p>
+ *
+ * @param p the original XTerm input for pre-elimination processing
+ * @param e the elimination term that guides the computation
+ * @return the resulting XTerm after processing or null if the computation is not applicable
+ */
+XTerm eprem(XTerm p, ElTerm e) {
         XTerm p1, p2, p3;
         if (e == null) return p;
         p2 = get_n(1L);
@@ -1362,28 +1594,55 @@ public class Full extends Elim {
         return (p1);
     }
 
-    //////////////////////////////////////////////////////////////////////
-    // print
-    boolean pr_elim = true;
+/**
+ * Returns true if a full angle proof is expressed.
+ *
+ * @return true if the full angle proof head exists, false otherwise.
+ */
+public boolean canExpressedAsFullAngle() {
+    return proof.nx != null;
+}
 
-    public boolean canExpressedAsFullAngle() {
-        return proof.nx != null;
-    }
+/**
+ * Determines if the proof has been established as true.
+ *
+ * @return true if last_pr is non-null and equals zero, false otherwise.
+ */
+public boolean isProvedTrue() {
+    if (last_pr != null && last_pr.isZero()) return true;
+    return false;
+}
 
-    public boolean isProvedTrue() {
-        if (last_pr != null && last_pr.isZero()) return true;
-        return false;
-    }
-
-    public GrTerm getFullAngleProofHead() {
-
-        GrTerm gt = proof.nx;
-        if (gt == null) return null;
-        while (gt != null) {
-            if (gt.ps1 != null)
-                myprint_p1(gt.ps1.p, true);
-            ElTerm el = gt.el;
-            if (el != null) {
+/**
+ * Retrieves the head of the full angle proof.
+ *
+ * This method iterates through the proof elements while printing intermediate
+ * proof components. It processes both primary and linked elimination terms.
+ *
+ * @return the first element in the full angle proof chain, or null if none exists.
+ */
+public GrTerm getFullAngleProofHead() {
+    GrTerm gt = proof.nx;
+    if (gt == null) return null;
+    while (gt != null) {
+        if (gt.ps1 != null)
+            myprint_p1(gt.ps1.p, true);
+        ElTerm el = gt.el;
+        if (el != null) {
+            myprint_p1(el.p1, true);
+            myprint_p1(el.p2, true);
+            myprint_p1(el.p, true);
+            Cond co = el.co;
+            while (co != null) {
+                this.show_pred(co);
+                do_pred(co);
+                //forw_pred(co);
+                co = co.nx;
+            }
+        }
+        if (el != null) {
+            el = el.et;
+            while (el != null) {
                 myprint_p1(el.p1, true);
                 myprint_p1(el.p2, true);
                 myprint_p1(el.p, true);
@@ -1391,158 +1650,96 @@ public class Full extends Elim {
                 while (co != null) {
                     this.show_pred(co);
                     do_pred(co);
-                    //forw_pred(co);
+                    // forw_pred(co);
                     co = co.nx;
                 }
+                el = el.nx;
             }
-            if (el != null) {
-                el = el.et;
-                while (el != null) {
-                    myprint_p1(el.p1, true);
-                    myprint_p1(el.p2, true);
-                    myprint_p1(el.p, true);
-                    Cond co = el.co;
-                    while (co != null) {
-                        this.show_pred(co);
-                        do_pred(co);
-                        // forw_pred(co);
-                        co = co.nx;
-                    }
-                    el = el.nx;
-                }
-            }
-
-            gt = gt.nx;
         }
-
-        return proof.nx;
+        gt = gt.nx;
     }
+    return proof.nx;
+}
 
-    public boolean print_prooftext()  // added   MAY 4th 2006
-    {
-        char mk = 0;
-
-        GrTerm gr1 = proof.nx;
-        if (gr1 == null) return false;
-
-        while (gr1 != null) {
-            if (gr1.c == -1) {
-                this.setPrintToString();
-                DTerm dt = gr1.ps;
-                print_ps(dt, mk);
-                dt.text = this.getPrintedString();
-            } else if (gr1.c == -2) {
-            } else if (gr1.c == 0) {
-            } else {
-                ElTerm el = gr1.el;
-                print_elims(el, mk);
-            }
-
-            if (gr1.c == 0) {
-            } else {
-            }
-
+/**
+ * Prints the proof text.
+ *
+ * This method iterates through all proof terms and prints their associated
+ * elimination information. It assembles the printed proof text by processing
+ * both display and elimination terms.
+ *
+ * @return true if proof text printing succeeds, false otherwise.
+ */
+public boolean print_prooftext()  // added   MAY 4th 2006
+{
+    char mk = 0;
+    GrTerm gr1 = proof.nx;
+    if (gr1 == null) return false;
+    while (gr1 != null) {
+        if (gr1.c == -1) {
             this.setPrintToString();
-            print_gr(gr1, mk);
-            gr1.text = this.getPrintedString();
-            gr1 = gr1.nx;
+            DTerm dt = gr1.ps;
+            print_ps(dt, mk);
+            dt.text = this.getPrintedString();
+        } else if (gr1.c == -2) {
+        } else if (gr1.c == 0) {
+        } else {
+            ElTerm el = gr1.el;
+            print_elims(el, mk);
         }
-        return true;
+        if (gr1.c == 0) {
+        } else {
+        }
+        this.setPrintToString();
+        print_gr(gr1, mk);
+        gr1.text = this.getPrintedString();
+        gr1 = gr1.nx;
     }
+    return true;
+}
 
-    void print_proof(char mk) {
-        GrTerm gr1 = proof.nx;
-
-        if (gr1 == null) {
-            gprint(Cm.s2220);
-            return;
-        }
-        gprint(Cm.s2221);
-        //docc(3);
-        gprint(Cm.s2222);
-        gprint("  ");
-        { // print the gr as an equation
-            //for area, vector, and full-angle
-            if (num_zop(gr1.c1)) {
-                gprint("0");
-            } else if (gr1.ps1 == null) {
-                //sprintf(txt, "%ld", gr1.c1);
-                gprint("" + gr1.c1);
-            } else if (num_unit(gr1.c1))
-                print_ps(gr1.ps1, mk);
-            else {
-                num_show(gr1.c1);
-                print_ps(gr1.ps1, mk);
-            }
-            gprint(" = ");
-            if (num_zop(gr1.c2)) {
-                gprint("0");
-            } else if (gr1.ps2 == null) {
-                //sprintf(txt, "%ld", gr1.c2);
-                gprint("" + gr1.c2);
-            } else if (num_unit(gr1.c2))
-                print_ps(gr1.ps2, mk);
-            else {
-                num_show(gr1.c2);
-                print_ps(gr1.ps2, mk);
-            }
-        }
-
-        gprint(Cm.s2072);
-        gprint("\r\n\r\n");
-
-        gprint("\r\n");
-        while (gr1 != null) {
-            if (pr_elim) {
-                if (gr1.c == -1) {
-                    gprint(Cm.s2223);
-                    print_ps(gr1.ps, mk);
-                    gprint("\r\n\r\n");
-                } else if (gr1.c == -2) {
-                } else if (gr1.c == 0) {
-                } else {
-                    print_elims(gr1.el, mk);
-                    gprint("\r\n");
-                }
-            }
-            if (gr1.c == 0) {
-            } else {
-                gprint(" = ");
-            }
-
-            print_gr(gr1, mk);
-            gprint("\r\n");
-            gr1 = gr1.nx;
-        }
-        gprint("\r\n");
-    }
-
-
-    void print_elims(ElTerm el, char mk) {
+/**
+ * Recursively prints elimination terms.
+ *
+ * This method prints the elimination term provided and then recursively processes
+ * any linked elimination terms. It sets the printed text for each elimination element.
+ *
+ * @param el the elimination term to print
+ * @param mk a marker character used during the printing process
+ */
+void print_elims(ElTerm el, char mk) {
 //        gprint(Cm.s2224);
-        if (el == null)
-            return;
-
+    if (el == null)
+        return;
+    this.setPrintToString();
+    print_elim(el, mk);
+    el.setText(this.getPrintedString());
+    print_elims(el.et, mk);
+//        gprint("\r\n");
+    for (el = el.nx; el != null; el = el.nx) {
         this.setPrintToString();
         print_elim(el, mk);
         el.setText(this.getPrintedString());
-
         print_elims(el.et, mk);
-
-//        gprint("\r\n");
-        for (el = el.nx; el != null; el = el.nx) {
-            this.setPrintToString();
-            print_elim(el, mk);
-            el.setText(this.getPrintedString());
-            print_elims(el.et, mk);
-        }
     }
+}
 
 
     static GrTerm el_gr = new GrTerm();
     static DTerm el_d1 = new DTerm();
     static DTerm el_d2 = new DTerm();
 
+    /**
+     * Prints the elimination term information.
+     * <p>
+     * If the elimination term is null or its associated variable has a negative index,
+     * the method returns without printing. Depending on whether the elimination term has
+     * a first polynomial (p1) or not, the method prints the appropriate representation.
+     * </p>
+     *
+     * @param e  the elimination term to be printed
+     * @param mk the marker character used during printing
+     */
     void print_elim(ElTerm e, char mk) {
         XTerm p1, p2;
         Var v;
@@ -1578,7 +1775,7 @@ public class Full extends Elim {
             p1 = e.p1;
             p2 = e.p2;
             //  pprint(p1);
-            // pprint(p2);
+            //  pprint(p2);
             if (p1.var == null) {
                 el_gr.c1 = p1.c;
                 el_gr.ps1 = null;
@@ -1608,22 +1805,27 @@ public class Full extends Elim {
         }
     }
 
-    void print_all_vars() {
-        Var e1;
-
-        gprint(Cm.s2225);
-        e1 = all_var.nx;
-        while (e1 != null) {
-            print_var(e1, 0);
-            gprint("\r\n");
-            e1 = e1.nx;
-        }
-    }
-
+    /**
+     * Recursively checks whether a geometric term's polynomial parts are regular.
+     *
+     * @param gr the geometric term to check
+     * @return true if both polynomial parts (ps1 and ps2) are regular, false otherwise
+     */
     boolean rgr(GrTerm gr) {
         return (rps(gr.ps1) && rps(gr.ps2));
     }
 
+    /**
+     * Recursively checks whether the given polynomial term is regular.
+     * <p>
+     * A regular term requires that each associated variable has an index of 1, that
+     * its subsequent term (ps) contains only one element, and that this recursively
+     * holds for all subsequent terms.
+     * </p>
+     *
+     * @param ps1 the polynomial term to check
+     * @return true if the term is regular, false otherwise
+     */
     boolean rps(DTerm ps1) {
         DTerm ps2;
         XTerm p1;
@@ -1642,7 +1844,17 @@ public class Full extends Elim {
         return (true);
     }
 
-
+    /**
+     * Prints a geometric term.
+     * <p>
+     * The method prints the term based on its coefficients and polynomial parts.
+     * Depending on whether the term represents a fraction, an integer, or a combination,
+     * it formats the output accordingly.
+     * </p>
+     *
+     * @param gr the geometric term to print
+     * @param mk a marker character used during printing
+     */
     void print_gr(GrTerm gr, char mk) {
         boolean rg;
         long n;
@@ -1710,12 +1922,33 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Displays a numeric fraction.
+     * <p>
+     * The numerator and denominator are shown separated by a forward slash.
+     * </p>
+     *
+     * @param c1 the numerator value
+     * @param c2 the denominator value
+     * @param mk a marker character used during printing
+     */
     void show_num2(long c1, long c2, char mk) {
         num_show(c1);
         gprint("/");
         num_show(c2);
     }
 
+    /**
+     * Prints a polynomial expression represented by a DTerm.
+     * <p>
+     * If the term has a degree of 1, it is printed normally or with parentheses if the
+     * expression requires grouping. For higher degree terms, the term is printed with
+     * an exponent notation.
+     * </p>
+     *
+     * @param dp1 the polynomial term to print
+     * @param mk  a marker character used during printing
+     */
     void print_ps(DTerm dp1, char mk) {
         if (dp1 == null)
             gprint("");
@@ -1737,7 +1970,6 @@ public class Full extends Elim {
                 } else {
                     gprint("(");
                     print_p(dp1.p, mk);
-                    //sprintf(txt, ")^{%d}", dp1.deg);
                     gprint(")^{" + dp1.deg + "}");
                 }
                 dp1 = dp1.nx;
@@ -1745,28 +1977,17 @@ public class Full extends Elim {
         }
     }
 
-    boolean chord_p(XTerm p) {
-        Var v;
-        if (npoly(p)) return (true);
-        v = p.var;
-        return (v.nm == 5);
-    }
-
-
-    ///////////////////////////////////
-    Vector getAllterms(XTerm p1) {
-
-        Vector list = new Vector();
-        if (p1 == null)
-            return list;
-        if (p1.var == null) return list;
-        list.add(p1);
-        return list;
-    }
-
-
+    /**
+     * Prints an XTerm (mathematical expression) with its variable and coefficient.
+     * <p>
+     * Constant terms without an associated variable are printed in an angle-signed format.
+     * For non-constant terms, the method processes the polynomial parts recursively.
+     * </p>
+     *
+     * @param p1    the XTerm to be printed
+     * @param first true if this is the first term (affects sign formatting), false otherwise
+     */
     public void myprint_p1(XTerm p1, boolean first) {
-
         this.setPrintToString();
         DTerm dp1, dp2;
         XTerm xp1;
@@ -1809,19 +2030,11 @@ public class Full extends Elim {
             myprint_p1(dp2.p, false);
     }
 
-    GrTerm mk_el_gr(ElTerm el) {
-//        gr_term gr1 = mk_gr(mk_num(1L), get_dt(1, p1, null), mk_num(0L), null, 99, null);
-//
-//        el_term e1 = el.et;
-//        while (e1 != null) {
-//            xterm p1 = get_m(el.v);
-//            p1 = eprem(cp_poly(p1), e1);
-//            fpoly(p1);
-//        }
-//        return gr;
-        return null;
-    }
-
+    /**
+     * Counts the number of variable instances.
+     *
+     * @return the total number of variables in the linked list starting at all_var.nx
+     */
     int getvarNum() {
         Var v = all_var.nx;
         int t = 0;
@@ -1832,6 +2045,11 @@ public class Full extends Elim {
         return t;
     }
 
+    /**
+     * Counts the number of line instances.
+     *
+     * @return the total number of lines in the linked list starting at all_ln.nx
+     */
     int getlnNum() {
         LLine ln = all_ln.nx;
         int t = 0;
@@ -1842,6 +2060,16 @@ public class Full extends Elim {
         return t;
     }
 
+    /**
+     * Reorders the points in the given variable.
+     *
+     * <p>If the first point is less than the second, they are swapped.
+     * Similarly, if the third point is less than the fourth, they are swapped.
+     * Additional reordering is performed if necessary, and the method returns a flag indicating if any reordering took place.</p>
+     *
+     * @param v the variable whose points are to be reordered
+     * @return true if reordering occurred; false otherwise
+     */
     boolean var_reOrder(Var v) {
         int p1, p2, p3, p4, p;
         boolean sr = false;
@@ -1883,6 +2111,19 @@ public class Full extends Elim {
         return sr;
     }
 
+    /**
+     * Trims the line segments based on the intersection of two lines.
+     *
+     * <p>This method retrieves two lines from two pairs of points and checks whether they intersect.
+     * If an intersection is found, the endpoints are adjusted accordingly.
+     * Finally, an XTerm is generated using the trimmed endpoints.</p>
+     *
+     * @param p1 the first coordinate of the first point
+     * @param p2 the second coordinate of the first point
+     * @param p3 the first coordinate of the second point
+     * @param p4 the second coordinate of the second point
+     * @return the XTerm representing the trimmed line segments
+     */
     XTerm trim_full(int p1, int p2, int p3, int p4) {
         int t = 0;
 
@@ -1894,29 +2135,46 @@ public class Full extends Elim {
             if (p3 != t && p4 != t)
                 p4 = t;
         } else if (ln1 == null && ln2 != null) {
-
+            // When ln1 is absent and ln2 is present, no adjustment is performed.
         }
         return trim_f(p1, p2, p3, p4);
     }
 
+    /**
+     * Sets the flag to show details.
+     *
+     * <p>This static method controls whether detailed information should be displayed.</p>
+     *
+     * @param d the boolean value to set for showing details
+     */
     public static void set_showdetai(boolean d) {
         show_detail = d;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////
-    //////////////NDGS
     /**
-     * **********************************************
+     * Determines if a given type represents a valid construction.
+     *
+     * <p>The type is considered valid if it falls within specific ranges and does not require freeCS.</p>
+     *
+     * @param type the construction type to check
+     * @return true if the type is a construction type; false otherwise
      */
-    // V1.      Constructions.
-    // V2.      Initial NDGS
-    // V3.      Simplified.
-    // V4       Final NDGS.
     public boolean isConstructionType(int type) {
         return (type > 0 && type < 50 || type > 100 && type < 150)
                 && !freeCS(type);
     }
 
+    /**
+     * Populates the provided vectors with non-degenerate geometry constraints (NDGs) from constructions.
+     *
+     * <p>This method iterates through constructions, adds valid constructions to the first vector,
+     * initializes and filters NDGs, deduces additional constraints, and finally updates the provided vectors.</p>
+     *
+     * @param v1 a vector for constructions used as NDG constraints
+     * @param v2 a vector for initial NDGs
+     * @param v3 a vector for filtered NDGs
+     * @param v4 a vector for deduced NDGs
+     */
     public void get_ndgs(Vector v1, Vector v2, Vector v3, Vector v4) { // cndg
 
         int n = cns_no;
@@ -1927,8 +2185,8 @@ public class Full extends Elim {
         }
 
         vndgs.clear();
-        init_ndgs(v2);          // Init NDGS.
-        filter_ndg(v2, v3);     // Remove rudundent NDGS.
+        init_ndgs(v2);          // Init NDGs.
+        filter_ndg(v2, v3);     // Remove redundant NDGs.
         ndg_deduction(v3, v4);
         filter_ndg(v4);
         filter_ndg(vndgs);
@@ -1938,7 +2196,17 @@ public class Full extends Elim {
         v4.addAll(vndgs);
     }
 
-
+    /**
+     * Creates and adds a non-isotropic NDG constraint based on two points.
+     *
+     * <p>This method checks that the points are different and valid.
+     * It creates a new CNdg for non-isotropic constraints and adds it to the provided vector.</p>
+     *
+     * @param a the first point
+     * @param b the second point
+     * @param v1 the vector to which the NDG is added
+     * @return the created CNdg object, or null if the points are identical or invalid
+     */
     protected CNdg add_n_isotropic(int a, int b, Vector v1) {
         if (a == b)
             return null;
@@ -1960,6 +2228,20 @@ public class Full extends Elim {
         return n;
     }
 
+    /**
+     * Creates and adds an NDG constraint representing parallelism or perpendicularity.
+     *
+     * <p>This method reorders four points if needed and creates a corresponding NDG
+     * depending on the specified type. The resulting constraint is then added to the vector.</p>
+     *
+     * @param type the type of NDG (e.g. NDG_PARA for parallel or NDG_PERP for perpendicular)
+     * @param a the first point of the first line
+     * @param b the second point of the first line
+     * @param c the first point of the second line
+     * @param d the second point of the second line
+     * @param v1 the vector to which the NDG is added
+     * @return the created CNdg object
+     */
     protected CNdg add_n_pt(int type, int a, int b, int c, int d, Vector v1) {
         if (a > b) {
             int t = a;
@@ -2001,6 +2283,18 @@ public class Full extends Elim {
         return n;
     }
 
+    /**
+     * Creates and adds a collinearity NDG constraint based on three points.
+     *
+     * <p>This method reorders the three points to ensure a proper order for establishing collinearity,
+     * then creates a new CNdg representing the collinearity constraint and adds it to the given vector.</p>
+     *
+     * @param a the first point
+     * @param b the second point
+     * @param c the third point
+     * @param v1 the vector to which the NDG is added
+     * @return the created CNdg object
+     */
     protected CNdg add_n_coll(int a, int b, int c, Vector v1) {
         if (a > b) {
             int t = a;
@@ -2030,6 +2324,14 @@ public class Full extends Elim {
         return n;
     }
 
+    /**
+     * Initializes non-degenerate geometry constraints (NDGs) from existing constructions.
+     *
+     * <p>This method iterates through all constructions, creates appropriate NDG constraints based on
+     * the type of each construction, and associates dependencies with the NDGs when modifications occur.</p>
+     *
+     * @param v1 the vector to be populated with NDG constraints
+     */
     public void init_ndgs(Vector v1) {
         CNdg nd;
 
@@ -2057,7 +2359,6 @@ public class Full extends Elim {
                 case C_I_PP:
                     add_n_pt(NDG_PARA, c.ps[2], c.ps[3], c.ps[5], c.ps[6], v1);
                     break;
-
                 case C_I_TT:
                     add_n_pt(NDG_PARA, c.ps[2], c.ps[3], c.ps[5], c.ps[6], v1);
                     break;
@@ -2069,7 +2370,7 @@ public class Full extends Elim {
                 case C_O_C:
                     break;
                 case C_CIRCLE:
-                    add_n_coll(c.ps[1], c.ps[2], c.ps[3], v1); ///...../...????
+                    add_n_coll(c.ps[1], c.ps[2], c.ps[3], v1);
                     break;
                 case C_PARALLELOGRAM:
                     add_coll_para(c, v1);
@@ -2083,19 +2384,16 @@ public class Full extends Elim {
                     nd = add_ndg_neq(c.ps[1], c.ps[2]);
                     this.add_ndgs(nd, v1);
                     break;
-
-                    /////Special for aline.
-
                 case C_I_PA: {
                     CNdg dx = add_n_pt(NDG_PARA, c.ps[2], c.ps[3], c.ps[4], c.ps[5], v1);
                     if (dx != null)
                         dx.exists = true;
 
-
                     add_n_neq(c.ps[4], c.ps[5], vndgs);
                     add_n_neq(c.ps[6], c.ps[7], vndgs);
                     add_n_neq(c.ps[8], c.ps[9], vndgs);
-                    XTerm xt = pplus(trim_f(c.ps[2], c.ps[3], c.ps[4], c.ps[5]), trim_f(c.ps[6], c.ps[7], c.ps[7], c.ps[8]));
+                    XTerm xt = pplus(trim_f(c.ps[2], c.ps[3], c.ps[4], c.ps[5]),
+                                      trim_f(c.ps[6], c.ps[7], c.ps[7], c.ps[8]));
                     xt = add_deduction(xt);
                     addxtermndg(xt, vndgs);
                 }
@@ -2108,7 +2406,8 @@ public class Full extends Elim {
                     add_n_neq(c.ps[3], c.ps[4], vndgs);
                     add_n_neq(c.ps[5], c.ps[6], vndgs);
                     add_n_neq(c.ps[6], c.ps[7], vndgs);
-                    XTerm xt = pplus(trim_f(c.ps[1], c.ps[2], c.ps[3], c.ps[4]), trim_f(c.ps[7], c.ps[6], c.ps[6], c.ps[5]));
+                    XTerm xt = pplus(trim_f(c.ps[1], c.ps[2], c.ps[3], c.ps[4]),
+                                      trim_f(c.ps[7], c.ps[6], c.ps[6], c.ps[5]));
                     xt = add_deduction(xt);
                     addxtermndg(xt, vndgs);
                 }
@@ -2124,7 +2423,8 @@ public class Full extends Elim {
                     add_n_neq(c.ps[6], c.ps[7], vndgs);
                     add_n_neq(c.ps[8], c.ps[9], vndgs);
                     add_n_neq(c.ps[9], c.ps[10], vndgs);
-                    XTerm xt = pplus(trim_f(c.ps[3], c.ps[4], c.ps[4], c.ps[5]), trim_f(c.ps[1], c.ps[2], c.ps[6], c.ps[7]));
+                    XTerm xt = pplus(trim_f(c.ps[3], c.ps[4], c.ps[4], c.ps[5]),
+                                      trim_f(c.ps[1], c.ps[2], c.ps[6], c.ps[7]));
                     xt = pplus(xt, trim_f(c.ps[10], c.ps[9], c.ps[9], c.ps[8]));
                     xt = add_deduction(xt);
                     addxtermndg(xt, vndgs);
@@ -2141,11 +2441,30 @@ public class Full extends Elim {
     }
 
 
+    /**
+     * Adds a non-equality NDG constraint for the given points.
+     *
+     * <p>This method creates an NDG constraint of type NDG_NEQ (or equivalent) for points a and b,
+     * then adds it to the provided vector.</p>
+     *
+     * @param a the first point index
+     * @param b the second point index
+     * @param v1 the vector to add the NDG constraint
+     */
     public void add_n_neq(int a, int b, Vector v1) {
         CNdg nd = add_ndg_neq(a, b);
         this.add_ndgs(nd, v1);
     }
 
+    /**
+     * Creates and adds a collinearity constraint in parallel form based on a construction.
+     *
+     * <p>This method determines the highest point value from the construction's point array, then
+     * selects the three remaining points to build a collinearity NDG constraint and adds it to vector v1.</p>
+     *
+     * @param cs the construction containing the points
+     * @param v1 the vector to add the NDG constraint
+     */
     public void add_coll_para(Cons cs, Vector v1) {
         int a, b;
 
@@ -2173,6 +2492,16 @@ public class Full extends Elim {
         add_n_coll(c1, c2, c3, v1);
     }
 
+    /**
+     * Deduces angle-based NDG constraints and processes them.
+     *
+     * <p>This method handles a given CNdg constraint by checking if all associated points are free.
+     * If so, it directly duplicates the constraint into vector v4; otherwise, it computes an XTerm deduction
+     * based on the NDG type and adds related non-equality constraints.</p>
+     *
+     * @param c  the CNdg constraint to analyze
+     * @param v4 the vector in which the deduced NDG constraints are stored
+     */
     public void angle_deduction(CNdg c, Vector v4) {
         if (c == null)
             return;
@@ -2217,18 +2546,16 @@ public class Full extends Elim {
         }
     }
 
-
-    protected void add_deduction(int a, int b, int c, int d, Vector v4) {
-        XTerm x = trim_f(a, b, c, d);
-        XTerm x1 = add_deduction(x);
-        if (pzerop(pminus(cp_poly(x), cp_poly(x1)))) {
-
-        } else {
-
-        }
-
-    }
-
+    /**
+     * Checks and adds a non-equality constraint between two points if not already present.
+     *
+     * <p>This method iterates over the vector v4 to determine if an equivalent NDG constraint exists.
+     * If none is found, a new NDG constraint (NDG_NEQ) for the pair of points is created and added.</p>
+     *
+     * @param a  the first point index
+     * @param b  the second point index
+     * @param v4 the vector containing NDG constraints
+     */
     protected void add_neqTo(int a, int b, Vector v4) {
         for (int i = 0; i < v4.size(); i++) {
             CNdg d = (CNdg) v4.get(i);
@@ -2252,6 +2579,15 @@ public class Full extends Elim {
         add_ndgs(d, v4);
     }
 
+    /**
+     * Checks whether all points in the given CNdg constraint are free.
+     *
+     * <p>This method iterates over the points associated with the constraint and calls freeCSP
+     * for each one. It returns false as soon as any point is not free.</p>
+     *
+     * @param d the CNdg constraint to check
+     * @return true if all points are free; false otherwise
+     */
     protected boolean ck_allFree(CNdg d) {
         if (d == null)
             return true;
@@ -2262,8 +2598,16 @@ public class Full extends Elim {
         return true;
     }
 
+    /**
+     * Performs angle deduction on the given XTerm.
+     *
+     * <p>If the XTerm has an associated variable, angle-based deduction is applied followed by
+     * a final deduction adjustment.</p>
+     *
+     * @param x the XTerm to deduct
+     * @return the resulting XTerm after deduction
+     */
     protected XTerm add_deduction(XTerm x) {
-
         if (x.var == null)
             return x;
 
@@ -2272,6 +2616,14 @@ public class Full extends Elim {
         return xt;
     }
 
+    /**
+     * Applies a final deduction adjustment to an XTerm.
+     *
+     * <p>If the factor computed by fcc is negative, the XTerm is multiplied by -1.</p>
+     *
+     * @param p1 the XTerm to adjust
+     * @return the adjusted XTerm
+     */
     protected XTerm final_deduction(XTerm p1) {
         if (p1 == null)
             return p1;
@@ -2282,8 +2634,15 @@ public class Full extends Elim {
         return p1;
     }
 
+    /**
+     * Filters out redundant NDG constraints in the given vector.
+     *
+     * <p>This method compares each NDG constraint in the vector with the others and removes any
+     * that are equal or less significant than another constraint.</p>
+     *
+     * @param v4 the vector containing NDG constraints to filter
+     */
     protected void filter_ndg(Vector v4) {
-
         for (int i = 0; i < v4.size(); i++) {
             CNdg d = (CNdg) v4.get(i);
             for (int j = i + 1; j < v4.size(); j++) {
@@ -2301,11 +2660,18 @@ public class Full extends Elim {
                 }
             }
         }
-
     }
 
+    /**
+     * Filters and merges NDG constraints from vector v2 into vector v3.
+     *
+     * <p>This method iterates over the constraints in v2 and checks against those in v3.
+     * If an equivalent or less significant constraint exists, it merges or sets an equivalence link.</p>
+     *
+     * @param v2 the source vector of NDG constraints
+     * @param v3 the target vector for filtered NDG constraints
+     */
     protected void filter_ndg(Vector v2, Vector v3) {
-
         for (int i = 0; i < v2.size(); i++) {
             CNdg d = (CNdg) v2.get(i);
             boolean added = false;
@@ -2333,16 +2699,33 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Adds an NDG constraint to the specified vector.
+     *
+     * <p>This helper method ensures the NDG constraint is valid (non-null), initializes its string
+     * representation by calling get_ndgstr, and then adds it to the vector.</p>
+     *
+     * @param d     the NDG constraint to add
+     * @param vlist the vector where the NDG constraint is stored
+     */
     protected void add_ndgs(CNdg d, Vector vlist) {
         if (d == null)
             return;
 
         get_ndgstr(d);
-
-
         vlist.add(d);
     }
 
+    /**
+     * Compares two NDG constraints to determine if the first is less significant than the second.
+     *
+     * <p>For non-equality NDGs, if the second constraint is of type NDG_COLL and contains both points
+     * of the first constraint, the first is considered less significant.</p>
+     *
+     * @param n1 the first NDG constraint
+     * @param n2 the second NDG constraint
+     * @return true if n1 is less significant than n2; false otherwise
+     */
     protected boolean ndg_less(CNdg n1, CNdg n2) {
         if (n1.type == NDG_NEQ || n1.type == NDG_NON_ISOTROPIC) {
             if (n2.type == NDG_COLL) {
@@ -2353,6 +2736,16 @@ public class Full extends Elim {
         return false;
     }
 
+    /**
+     * Checks whether two NDG constraints are equal.
+     *
+     * <p>This method first compares their types (allowing for NDG_NEQ and NDG_NON_ISOTROPIC to be equivalent),
+     * then verifies that the number of points and the point values are identical.</p>
+     *
+     * @param n1 the first NDG constraint
+     * @param n2 the second NDG constraint
+     * @return true if the two constraints are equal; false otherwise
+     */
     protected boolean ndg_eq(CNdg n1, CNdg n2) {
         if (n1.type != n2.type) {
             if ((n1.type == NDG_NEQ || n1.type == NDG_NON_ISOTROPIC)
@@ -2371,6 +2764,15 @@ public class Full extends Elim {
         return true;
     }
 
+    /**
+     * Converts an XTerm into an NDG constraint and adds its printed representation.
+     *
+     * <p>This method first converts the XTerm into a corresponding NDG constraint via xterm2ndg,
+     * then updates its string representation using the printing methods.</p>
+     *
+     * @param x  the XTerm to convert and add
+     * @param v4 the vector where the NDG information is stored
+     */
     protected void addxtermndg(XTerm x, Vector v4) {
         if (x == null)
             return;
@@ -2382,6 +2784,16 @@ public class Full extends Elim {
     }
 
 
+    /**
+     * Converts an XTerm into NDG constraints and adds them to the provided list.
+     * <p>
+     * Depending on the term number of the XTerm, the method delegates to a helper method
+     * to generate the appropriate NDG constraints.
+     * </p>
+     *
+     * @param x the XTerm to convert
+     * @param vlist the vector where the generated NDG constraints will be added
+     */
     protected void xterm2ndg(XTerm x, Vector vlist) {
         if (x == null || x.var == null)
             return;
@@ -2392,9 +2804,18 @@ public class Full extends Elim {
             xterm_1term(x, vlist);
         else if (n == 1)
             xterm_2term(x, vlist);
-
     }
 
+    /**
+     * Processes an XTerm with one term to generate NDG constraints.
+     * <p>
+     * The method examines the factor computed by {@code fcc(x)} and based on its value,
+     * creates and adds NDG constraints using parallel, perpendicular, or triple PI rules.
+     * </p>
+     *
+     * @param x the XTerm to process
+     * @param vlist the vector where the generated NDG constraints will be added
+     */
     protected void xterm_1term(XTerm x, Vector vlist) {
         long n = fcc(x);
 
@@ -2422,6 +2843,16 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Creates a Triple PI NDG constraint from the specified variable.
+     * <p>
+     * It initializes the NDG using the points from the variable and reorders them,
+     * setting the number of points to 3.
+     * </p>
+     *
+     * @param v the variable containing the points for the NDG constraint
+     * @return the constructed Triple PI NDG constraint
+     */
     protected CNdg add_ndg_triplePI(Var v) {
         CNdg n = new CNdg();
         n.type = NDG_TRIPLEPI;
@@ -2436,7 +2867,16 @@ public class Full extends Elim {
         return n;
     }
 
-
+    /**
+     * Processes an XTerm with two terms to generate NDG constraints.
+     * <p>
+     * The method examines the second term of the XTerm and creates congruency or collinearity NDGs
+     * based on the sign of the factor computed by {@code fcc} for the second term.
+     * </p>
+     *
+     * @param x the XTerm to process
+     * @param vlist the vector where the generated NDG constraints will be added
+     */
     protected void xterm_2term(XTerm x, Vector vlist) {
         long n = fcc(x);
         if (x.ps != null) {
@@ -2448,7 +2888,7 @@ public class Full extends Elim {
                 Var v1 = x.var;
                 Var v2 = x1.var;
 
-                if (v2 != null) {  // v2 != null   <A + <B = 0.
+                if (v2 != null) {  // v2 is available
                     if (n1 < 0) {
                         if (v1.pt[2] == v2.pt[0] && v1.pt[3] == v2.pt[1]) {
                             CNdg d = add_ndg_cong(v1.pt[0], v1.pt[1], v2.pt[2], v2.pt[3]);
@@ -2461,8 +2901,6 @@ public class Full extends Elim {
                                 d.dep = x;
                                 add_ndgs(d, vlist);
                             }
-
-
                         }
                     } else if (n1 > 0) {
                         if (v1.pt[2] == v2.pt[2] && v1.pt[3] == v2.pt[3]) {
@@ -2478,8 +2916,7 @@ public class Full extends Elim {
                             }
                         }
                     }
-                } else  // <A + <1 = 0.
-                {
+                } else {  // v2 is not available
                     if (x1.var == null & x1.c == 1) {
                         CNdg d = add_ndg_perp(v1);
                         if (d != null)
@@ -2487,26 +2924,17 @@ public class Full extends Elim {
                         add_ndgs(d, vlist);
                     }
                 }
-
-
             }
         }
-
-
     }
 
-
-    protected void reorder2(CNdg n) {
-        if (n.p[0] > n.p[1]) {
-            int d = n.p[0];
-            n.p[0] = n.p[1];
-            n.p[1] = d;
-        }
-    }
-
+    /**
+     * Reorders the points in an NDG constraint (with three points) into ascending order.
+     *
+     * @param n the NDG constraint whose points are to be reordered
+     */
     protected void reorder3(CNdg n) {
         for (int i = 0; i < 2; i++) {
-
             int d = n.p[i];
             if (d > n.p[i + 1]) {
                 n.p[i] = n.p[i + 1];
@@ -2516,6 +2944,14 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Reorders two pairs of points in an NDG constraint so that each pair is in ascending order.
+     * <p>
+     * In addition, it ensures that the first pair is sorted relative to the second pair.
+     * </p>
+     *
+     * @param n the NDG constraint whose points are to be reordered
+     */
     protected void reorder22(CNdg n) {
         if (n.p[0] > n.p[1]) {
             int d = n.p[0];
@@ -2539,6 +2975,16 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Creates a non-equality NDG constraint for two points.
+     * <p>
+     * Returns null if both points are identical.
+     * </p>
+     *
+     * @param a the first point index
+     * @param b the second point index
+     * @return the NDG non-equality constraint, or null if the points are identical
+     */
     protected CNdg add_ndg_neq(int a, int b) {
         if (a == b)
             return null;
@@ -2557,113 +3003,15 @@ public class Full extends Elim {
         return n;
     }
 
-    protected void parse_ndg_neq(int a, int b, Vector v4) {
-        if (a == b)
-            return;
-
-        if (a > b) {
-            int c = a;
-            a = b;
-            b = c;
-        }
-
-        if (APT(a) == null && APT(b) == null) return;
-
-        if (freeCSP(a) && freeCSP(b)) {
-            CNdg n = new CNdg();
-            n.type = NDG_NON_ISOTROPIC;
-            n.p[0] = a;
-            n.p[1] = b;
-            n.no = 1;
-            add_ndgs(n, v4);
-        } else {
-            XTerm x = parseNEQ(a, b, v4);
-            if (x != null)
-                addxtermndg(x, v4);
-        }
-    }
-
-    private XTerm parseNEQ(int a, int b, Vector v2) {
-
-        for (int i = 0; i < v2.size(); i++) {
-            CNdg n = (CNdg) v2.get(i);
-            if (n.type == NDG_NEQ || n.type == NDG_NON_ISOTROPIC) {
-                {
-                    XTerm x1 = parseNEQ(a, b, n.p[0], n.p[1], v2);
-                    if (x1 != null)
-                        return x1;
-                }
-            } else if (n.type == NDG_COLL) {
-                {
-                    XTerm x1 = parseNEQ(a, b, n.p[0], n.p[1], v2);
-                    if (x1 != null)
-                        return x1;
-                    x1 = parseNEQ(a, b, n.p[0], n.p[2], v2);
-                    if (x1 != null)
-                        return x1;
-                    x1 = parseNEQ(a, b, n.p[1], n.p[2], v2);
-                    if (x1 != null)
-                        return x1;
-                }
-            }
-        }
-        return null;
-    }
-
-
-    private XTerm parseNEQ(int a, int b, int a1, int b1, Vector v2) {
-        if (a == a1 || a == b1) return null;
-        if (b == a1 || b == b1) return null;
-        if (!freeCSP(a1) || !freeCSP(b1))
-            return null;
-        if (check_coll(a1, b1, a) || check_coll(a1, b1, b))
-            return null;
-
-        XTerm x1 = pminus(trim_f(a, a1, a1, b1), trim_f(b, a1, a1, b1));
-        XTerm x2 = pminus(trim_f(a, b1, a1, b1), trim_f(b, b1, a1, b1));
-        this.setPrintToScreen();
-
-        this.pprint(x1);
-        this.pprint(x2);
-
-        x1 = angle_deduction(x1);
-        x2 = angle_deduction(x2);
-        if (eq_poly(x1, x2)) return x1;
-        x2 = this.neg_poly(x2);
-        if (eq_poly(x1, x2)) return x1;
-        this.pprint(x1);
-        this.pprint(x2);
-        return null;
-    }
-
-    private void addPairsToList(Object o, Object o1, Vector v) {
-        int n = v.size() / 2;
-        for (int i = 0; i < n; i++) {
-            if (o == v.get(2 * i) && o1 == v.get(2 * i + 1))
-                return;
-            if (o1 == v.get(2 * i) && o == v.get(2 * i + 1))
-                return;
-        }
-        v.add(o);
-        v.add(o1);
-    }
-
-    public int getFreeSemiFix(int index) {
-        ProPoint pt = APT(index);
-        if (pt == null)
-            return 0;
-
-        int n = 0;
-        for (int i = 1; i <= cns_no; i++) {
-            Cons c = allcns[i];
-            if (c.ps[0] == index && !freeCS(c.type)) {
-                n++;
-            }
-        }
-
-        return n;
-    }
-
+    /**
+     * Checks whether the point at the given index is free from constraints.
+     * <p>
+     * It retrieves the associated point object and checks its construction type.
+     * </p>
+     *
+     * @param index the index of the point to check
+     * @return true if the point is free; false otherwise
+     */
     public boolean freeCSP(int index) {
         ProPoint pt = APT(index);
         if (pt == null)
@@ -2681,11 +3029,31 @@ public class Full extends Elim {
         return freeCS(type);
     }
 
+    /**
+     * Determines if the given construction type represents a free state.
+     * <p>
+     * A type is considered free if it matches one of the basic construction types.
+     * </p>
+     *
+     * @param t the construction type to check
+     * @return true if the type is free; false otherwise
+     */
     public boolean freeCS(int t) {
         return t == 0 || t == C_POINT || t == C_LINE || t == C_TRIANGLE ||
                 t == C_QUADRANGLE || t == C_PENTAGON || t == C_POLYGON || t == C_CIRCLE;
     }
 
+    /**
+     * Creates a collinearity NDG constraint from three points.
+     * <p>
+     * The points are reordered to ensure proper ordering. If redundant, then null is returned.
+     * </p>
+     *
+     * @param a the first point index
+     * @param b the second point index
+     * @param c the third point index
+     * @return the NDG collinearity constraint, or null if the points are redundant
+     */
     protected CNdg add_ndg_coll(int a, int b, int c) {
         CNdg n = new CNdg();
         n.type = NDG_COLL;
@@ -2700,6 +3068,18 @@ public class Full extends Elim {
         else return n;
     }
 
+    /**
+     * Creates a congruency NDG constraint based on four points.
+     * <p>
+     * The points are reordered; if the set of points is redundant, null is returned.
+     * </p>
+     *
+     * @param a the first point index of the first segment
+     * @param b the second point index of the first segment
+     * @param c the first point index of the second segment
+     * @param d the second point index of the second segment
+     * @return the NDG congruency constraint, or null if the points are redundant
+     */
     protected CNdg add_ndg_cong(int a, int b, int c, int d) {
         CNdg n = new CNdg();
         n.type = NDG_CONG;
@@ -2715,11 +3095,29 @@ public class Full extends Elim {
         else return null;
     }
 
-
+    /**
+     * Creates a parallel NDG constraint using the points of a given variable.
+     *
+     * @param v the variable containing the points for the constraint
+     * @return the NDG parallel constraint
+     */
     protected CNdg add_ndg_para(Var v) {
         return add_ndg_para(v.pt[0], v.pt[1], v.pt[2], v.pt[3]);
     }
 
+    /**
+     * Creates a parallel NDG constraint based on four point indices.
+     * <p>
+     * The points are reordered to ascending order; if the set is redundant,
+     * an alternative collinearity constraint is constructed instead.
+     * </p>
+     *
+     * @param a the first point index of the first segment
+     * @param b the second point index of the first segment
+     * @param c the first point index of the second segment
+     * @param d the second point index of the second segment
+     * @return the NDG parallel constraint, or an alternative NDG constraint if redundant
+     */
     protected CNdg add_ndg_para(int a, int b, int c, int d) {
         CNdg n = new CNdg();
         n.type = NDG_PARA;
@@ -2748,10 +3146,28 @@ public class Full extends Elim {
         return n;
     }
 
+    /**
+     * Creates a perpendicular NDG constraint using the points of a given variable.
+     *
+     * @param v the variable containing the points for the constraint
+     * @return the NDG perpendicular constraint
+     */
     protected CNdg add_ndg_perp(Var v) {
         return add_ndg_perp(v.pt[0], v.pt[1], v.pt[2], v.pt[3]);
     }
 
+    /**
+     * Creates a perpendicular NDG constraint based on four point indices.
+     * <p>
+     * If the two segments are identical, a non-isotropic NDG constraint is created instead.
+     * </p>
+     *
+     * @param a the first point index of the first segment
+     * @param b the second point index of the first segment
+     * @param c the first point index of the second segment
+     * @param d the second point index of the second segment
+     * @return the NDG perpendicular constraint, or a non-isotropic constraint when applicable
+     */
     protected CNdg add_ndg_perp(int a, int b, int c, int d) {
         CNdg n = new CNdg();
         n.type = NDG_PERP;
@@ -2771,6 +3187,12 @@ public class Full extends Elim {
     }
 
 
+    /**
+     * Sets the string representation (sd) of the given NDG constraint (d) based on its type
+     * and associated points. Depending on the type, constructs a descriptive message.
+     *
+     * @param d the NDG constraint for which the string representation is set
+     */
     protected void get_ndgstr(CNdg d) {
         String sd = "";
         switch (d.type) {
@@ -2804,10 +3226,12 @@ public class Full extends Elim {
                     int a, b;
                     if (d.p[0] == n)
                         a = d.p[1];
-                    else a = d.p[0];
+                    else
+                        a = d.p[0];
                     if (d.p[2] == n)
                         b = d.p[3];
-                    else b = d.p[2];
+                    else
+                        b = d.p[2];
 
                     sd = Cm.ANGLE_SIGN + "[" + ANAME(a) + ANAME(n) + ANAME(b)
                             + "] != (n*PI) / 3 (n = 0, 1, 2, 3 ..)";
@@ -2818,8 +3242,15 @@ public class Full extends Elim {
         d.sd = sd;
     }
 
+    /**
+     * Performs angle deduction on the given XTerm. This method initializes necessary properties
+     * and iteratively attempts to eliminate terms using various elimination methods. At the end,
+     * it optimizes the term based on triangle configurations.
+     *
+     * @param p1 the XTerm on which angle deduction is performed
+     * @return the resulting XTerm after angle deduction
+     */
     protected XTerm angle_deduction(XTerm p1) {
-
         ertype = 0;
         pro_type = PRO_FULL;
         max_term = 0;
@@ -2827,11 +3258,11 @@ public class Full extends Elim {
         qerror = false;
         last_pr = proof = new GrTerm();
         dbase();
-        if (qerror) return null;
+        if (qerror)
+            return null;
         ElTerm e1 = null;
 
         do {
-
             if (npoly(p1)) {
                 return p1;
             }
@@ -2857,12 +3288,18 @@ public class Full extends Elim {
             }
         } while (e1 != null);
 
-
         p1 = opt_tri(p1);
         return p1;
     }
 
-
+    /**
+     * Optimizes the given XTerm by detecting and processing triangle configurations.
+     * It compares factors from the current term and its subterm to determine if any adjustment
+     * such as scaling or subtraction should be applied.
+     *
+     * @param x the XTerm to be optimized
+     * @return the optimized XTerm
+     */
     public XTerm opt_tri(XTerm x) {
         long n = fcc(x);
         if (x.ps != null) {
@@ -2880,7 +3317,6 @@ public class Full extends Elim {
                             p1 = ptimes(this.get_n(n), p1);
                             return pminus(x, p1);
                         }
-
                     } else if (v1.pt[0] == v2.pt[2] && v1.pt[1] == v2.pt[3]) {
                         XTerm p1 = pplus(get_m(v1), get_m(v2));
                         p1 = pminus(p1, trim_f(v2.pt[0], v2.pt[1], v1.pt[2], v1.pt[3]));
@@ -2911,25 +3347,39 @@ public class Full extends Elim {
         return x;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //ndg deduction.
+    /**
+     * Performs NDG (non-degeneracy) deduction on a set of NDG constraints.
+     * For each constraint in the source vector v3, if the constraint is marked as existing
+     * or if all its points are free, it is directly added or duplicated into the target vector v4.
+     * Otherwise, angle deduction is applied.
+     *
+     * @param v3 the source vector of NDG constraints
+     * @param v4 the target vector to store the deduced NDG constraints
+     */
     public void ndg_deduction(Vector v3, Vector v4) {
-
         for (int i = 0; i < v3.size(); i++) {
             CNdg d = (CNdg) v3.get(i);
             if (d.exists) {
+                // Existing NDG constraints are skipped.
             } else if (ck_allFree(d)) {
                 CNdg d1 = new CNdg(d);
                 v4.add(d1);
-            } else
+            } else {
                 angle_deduction(d, v4);
+            }
         }
     }
 
-
+    /**
+     * Compares two NDG constraints based on their maximum integer values.
+     *
+     * @param d1 the first NDG constraint
+     * @param d2 the second NDG constraint
+     * @return a positive value if d1 &gt; d2, a negative value if d1 &lt; d2, or zero if they are equal
+     */
     public int compare(CNdg d1, CNdg d2) {
-        if (d1 == d2) return 0;
-
+        if (d1 == d2)
+            return 0;
         int n1 = d1.getMaxInt();
         int n2 = d2.getMaxInt();
         if (n1 > n2)
@@ -2939,6 +3389,12 @@ public class Full extends Elim {
         return 0;
     }
 
+    /**
+     * Sorts a vector of NDG constraints in ascending order based on their significance.
+     * It uses the compare method to insert each constraint into its correct position in the vector.
+     *
+     * @param v4 the vector containing NDG constraints to be sorted
+     */
     public void sortVector(Vector v4) {
         for (int i = 1; i < v4.size(); i++) {
             CNdg d = (CNdg) v4.get(i);
@@ -2954,6 +3410,17 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Parses non-equality and non-isotropic NDG constraints from the given vector.
+     * <p>
+     * This method sorts the input vector of NDG constraints, filters out those
+     * constraints that are non-equality (NDG_NEQ) or non-isotropic (NDG_NON_ISOTROPIC)
+     * and have both points free, and then processes the remaining constraints.
+     * The remaining constraints are added to a global NDG list after being updated.
+     * </p>
+     *
+     * @param v4 the vector containing NDG constraints to be parsed
+     */
     public void parse_neq(Vector v4) {
 
         sortVector(v4);
@@ -2971,7 +3438,7 @@ public class Full extends Elim {
             i--;
         }
 
-//        vndgs.clear();
+        // vndgs.clear();
         vndgs.addAll(v4);
 
         for (int i = 0; i < v5.size(); i++) {
@@ -2987,6 +3454,15 @@ public class Full extends Elim {
         return;
     }
 
+    /**
+     * Recursively updates the string documentation (SD) for the provided NDG constraint structure.
+     * <p>
+     * For each constraint in the structure, the method updates its point string array and resets its text.
+     * The method also recurses into any child constraint sets.
+     * </p>
+     *
+     * @param dd the NDG constraint structure to update
+     */
     private void updateSD(NdgCs dd) {
         if (dd == null)
             return;
@@ -3003,7 +3479,18 @@ public class Full extends Elim {
                 updateSD(dd.child[i]);
     }
 
-    public NdgCs getCS(CNdg d) {// d : type of neq.
+    /**
+     * Constructs and returns an NDG constraint set (NdgCs) associated with the given inequality constraint.
+     * <p>
+     * The method iterates through existing constraints and gathers those related to
+     * the points of the provided constraint. The collected constraints are then added
+     * to a new NdgCs structure and updated.
+     * </p>
+     *
+     * @param d the NDG inequality constraint used as a basis for gathering related constraints
+     * @return the constructed NDG constraint set (NdgCs)
+     */
+    public NdgCs getCS(CNdg d) {
         int n = d.getMaxInt();
 
         NdgCs c = new NdgCs();
@@ -3038,6 +3525,11 @@ public class Full extends Elim {
         return dd;
     }
 
+    /**
+     * Updates the point string array (pss) of the specified constraint using the global points array.
+     *
+     * @param c the constraint whose point string array is to be updated
+     */
     private void updatePSS(Cons c) {
         if (c == null)
             return;
@@ -3047,6 +3539,15 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Recursively adds all constraints related to the constraint at index nx into the provided NDG constraint set.
+     * <p>
+     * For each point within the constraint, the method checks previous constraints for related ones and adds them.
+     * </p>
+     *
+     * @param nx the index of the current constraint in the global constraints array
+     * @param d the NDG constraint set (NdgCs) where related constraints are added
+     */
     private void add_RelatedCnsToDg(int nx, NdgCs d) {
 
         Cons c = allcns[nx];
@@ -3070,6 +3571,15 @@ public class Full extends Elim {
         d.add(nx, c);
     }
 
+    /**
+     * Adds the provided constraint to the given NDG constraint set.
+     * <p>
+     * Based on the type of the constraint, it may clone the constraint or generate additional constraints.
+     * </p>
+     *
+     * @param c the constraint to be added
+     * @param d the NDG constraint set (NdgCs) that will include the constraint
+     */
     public void addConsToNdgcs(Cons c, NdgCs d) {
         if (c == null)
             return;
@@ -3124,6 +3634,19 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Creates a new constraint with 7 points and adds it to the specified NDG constraint set.
+     *
+     * @param type the type of the new constraint
+     * @param a the first point index
+     * @param b the second point index
+     * @param c the third point index
+     * @param d the fourth point index
+     * @param e the fifth point index
+     * @param f the sixth point index
+     * @param g the seventh point index
+     * @param d1 the NDG constraint set (NdgCs) where the new constraint will be added
+     */
     public void add_cons(int type, int a, int b, int c, int d, int e, int f, int g, NdgCs d1) {
         Cons c1 = new Cons(type);
         c1.add_pt(a);
@@ -3137,6 +3660,16 @@ public class Full extends Elim {
         d1.add(c1);
     }
 
+    /**
+     * Creates a new constraint with 4 points and adds it to the specified NDG constraint set.
+     *
+     * @param type the type of the new constraint
+     * @param a the first point index
+     * @param b the second point index
+     * @param c the third point index
+     * @param d the fourth point index
+     * @param d1 the NDG constraint set (NdgCs) where the new constraint will be added
+     */
     public void add_cons(int type, int a, int b, int c, int d, NdgCs d1) {
         Cons c1 = new Cons(type);
         c1.add_pt(a);
@@ -3147,6 +3680,17 @@ public class Full extends Elim {
         d1.add(c1);
     }
 
+    /**
+     * Checks whether the specified constraint is recursively valid with respect to the given NDG type.
+     * <p>
+     * Depending on the type of the constraint, it recursively checks if related NDG constraints already exist.
+     * </p>
+     *
+     * @param c the constraint to check
+     * @param cs the NDG constraint set (NdgCs) in which the check is performed
+     * @param type the NDG type against which the constraint is validated
+     * @return true if the constraint is valid; false otherwise
+     */
     public boolean ck_right(Cons c, NdgCs cs, int type) {
         if (c == null || cs == null)
             return true;
@@ -3164,10 +3708,18 @@ public class Full extends Elim {
         return true;
     }
 
+    /**
+     * Removes NDG constraint set nodes that have no constraints from the provided NDG structure.
+     * <p>
+     * This method recursively traverses the child NDG constraint sets and nullifies any reference that
+     * does not contain constraints.
+     * </p>
+     *
+     * @param c the NDG constraint set (NdgCs) from which null nodes will be removed
+     */
     private void rm_null_ndgcs(NdgCs c) {
         if (c == null)
             return;
-
 
         int n = c.getCSindex();
         for (int i = 0; i <= n; i++) {
@@ -3190,6 +3742,15 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Removes extraneous constraints from the given NDG constraint set.
+     * <p>
+     * At a leaf node, this method nullifies any constraints that are marked as extraneous.
+     * For non-leaf nodes, the method recurses through each child NDG constraint set.
+     * </p>
+     *
+     * @param c the NDG constraint set (NdgCs) from which extraneous constraints will be removed
+     */
     private void rm_excons(NdgCs c) {
         if (c == null)
             return;
@@ -3211,6 +3772,14 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Checks if the constraint at the given index in the NDG constraint set is extraneous
+     * by comparing it with the corresponding constraint at the root of the constraint set.
+     *
+     * @param cs the NDG constraint set
+     * @param index the index of the constraint to check
+     * @return true if the constraint is considered extraneous; false otherwise
+     */
     private boolean cons_ex(NdgCs cs, int index) {
         Cons c = cs.allcns[index];
 
@@ -3225,6 +3794,15 @@ public class Full extends Elim {
         return c1.isEqual(c);
     }
 
+    /**
+     * Recursively checks constraints in an NDG constraint set for consistency.
+     * For leaf nodes, it verifies each constraint against its expected conditions;
+     * for non-leaf nodes, it cleans up inconsistent child sets.
+     *
+     * @param c the NDG constraint set to check
+     * @param type the type identifier for the check; usage depends on the context
+     * @return true if the constraint set is consistent; false otherwise
+     */
     public boolean ck_right(NdgCs c, int type) {
         if (c == null)
             return true;
@@ -3232,7 +3810,6 @@ public class Full extends Elim {
         NdgCs[] css = c.child;
         int a = c.getCSindex();
         if (a < 0) {            // leaf node.
-
             for (int i = 0; i <= c.no; i++) {
                 if (c.allcns[i] == null)
                     continue;
@@ -3255,6 +3832,13 @@ public class Full extends Elim {
         return true;
     }
 
+    /**
+     * Parses non-equality and non-isotropic NDG constraints by replacing point indices,
+     * reordering constraints, and invoking further parsing, cleanup, and optimization steps.
+     *
+     * @param nd the NDG constraint to be parsed
+     * @return the updated NDG constraint set after parsing
+     */
     public NdgCs parse_neq(CNdg nd) {
         NdgCs c = getCS(nd);
         NdgCs cx = new NdgCs(c);
@@ -3277,9 +3861,9 @@ public class Full extends Elim {
         }
         parseStep(cx);
         ck_leaf(c);
-        rm_excons(c);               // remove exists cons
-        rm_null_ndgcs(c);           // remove ndgcs without child.
-        ck_right(c, 1);             // remove cons which is contradict with its parents.
+        rm_excons(c);               // remove existing constraints
+        rm_null_ndgcs(c);           // remove NDG sets without children
+        ck_right(c, 1);             // remove constraints contradicting with parents
         int n1 = c.getCSindex();
         ck_right(c, 0);
         if (n1 >= 0 && c.getCSindex() < 0)
@@ -3289,9 +3873,13 @@ public class Full extends Elim {
         return c;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * Compares two constraints based on their last point and type.
+     *
+     * @param c1 the first constraint
+     * @param c2 the second constraint
+     * @return a positive integer if c1 &gt; c2, a negative integer if c1 &lt; c2, or 0 if they are equal
+     */
     private int compare(Cons c1, Cons c2) {
         if (c1 == null) {
             if (c2 == null)
@@ -3314,6 +3902,13 @@ public class Full extends Elim {
         return 0;
     }
 
+    /**
+     * Reorders constraints within an NDG constraint set.
+     * For leaf nodes, it sorts the constraints in ascending order;
+     * for non-leaf nodes, it recursively reorders each child set.
+     *
+     * @param c the NDG constraint set to reorder
+     */
     private void cons_reorder(NdgCs c) {
         if (c == null)
             return;
@@ -3325,7 +3920,6 @@ public class Full extends Elim {
                             c.allcns[i] = c.allcns[j];
                             c.allcns[j] = null;
                         }
-
                     } else {
                         if (c.allcns[j] != null) {
                             if (compare(c.allcns[i], c.allcns[j]) > 0) {
@@ -3345,6 +3939,12 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Checks whether an NDG constraint set is a leaf node.
+     * A node is considered a leaf if it has no child NDG constraint sets.
+     *
+     * @param c the NDG constraint set to check
+     */
     private void ck_leaf(NdgCs c) {
         if (c == null)
             return;
@@ -3357,8 +3957,12 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Recursively removes non-leaf NDG constraint set nodes that are not required.
+     *
+     * @param c the NDG constraint set from which non-leaf nodes will be removed
+     */
     private void rm_nleaf(NdgCs c) {
-
         if (c == null || c.leaf)
             return;
 
@@ -3375,23 +3979,28 @@ public class Full extends Elim {
             for (int i = 0; i <= n; i++) {
                 rm_nleaf(c.child[i]);
             }
-
         }
     }
 
-    private boolean parseStep(NdgCs c) {     //  Main Process of Parsing.
+    /**
+     * Main process for parsing constraints within the NDG constraint set.
+     * This method performs optimization, redundant constraint removal, and processes
+     * constraints based on their maximum index.
+     *
+     * @param c the NDG constraint set to parse
+     * @return true if parsing completes successfully; otherwise, false
+     */
+    private boolean parseStep(NdgCs c) {
         if (c == null)
             return true;
 
-
-        opt_cons(c); // reorder. P to L
+        opt_cons(c); // reorder constraints (P to L)
         rm_redundent(c);
 
         if (c.getNotNullNum() <= 1)
             return true;
 
         int max = c.getMaxCnsInt();
-
         int n = c.no;
         for (int i = 0; i <= n; i++) {
             Cons c1 = c.allcns[i];
@@ -3402,7 +4011,6 @@ public class Full extends Elim {
 
             for (int j = i + 1; j <= n; j++) {
                 Cons c2 = c.allcns[j];
-
                 if (c2 == null)
                     continue;
                 if (c2.getLastPt() != max)
@@ -3432,20 +4040,28 @@ public class Full extends Elim {
                                 break;
                         }
                         break;
-
-                    case C_CIRCUM: {
+                    case C_CIRCUM:
                         switch (c2.type) {
                             case C_CIRCUM:
                                 parse_ndg_circums(c, c1, c2);
                                 break;
                         }
-                    }
+                        break;
                 }
             }
         }
         return true;
     }
 
+    /**
+     * Processes cyclic NDG constraints by identifying collinear points among
+     * the constraints and generating additional equality constraints as needed.
+     *
+     * @param c the NDG constraint set containing the constraints
+     * @param c1 the first constraint to compare
+     * @param c2 the second constraint to compare
+     * @return false after processing is complete
+     */
     private boolean parse_ndg_circums(NdgCs c, Cons c1, Cons c2) {
         int o = c1.ps[0];
 
@@ -3475,9 +4091,8 @@ public class Full extends Elim {
                             switch (cx.type) {
                                 case C_O_L:
                                     if (xcoll(pp[i], pp[j], pp[k])) {
-
                                         if (!ck_recursive_ndg(1, c, NDG_NEQ, pp[i], pp[j], 0, 0)) {
-                                            NdgCs nc1 = new NdgCs(c);                 // ! Collinear A, B, C
+                                            NdgCs nc1 = new NdgCs(c); // ! Collinear A, B, C
                                             nc1.parent = c;
                                             c.addChild(nc1);
                                             Cons cc = new Cons(C_I_EQ);
@@ -3487,9 +4102,8 @@ public class Full extends Elim {
                                             ndg_pteq_added(cc, nc1);
                                             parseStep(nc1);
                                         }
-
                                         if (!ck_recursive_ndg(1, c, NDG_NEQ, pp[i], pp[k], 0, 0)) {
-                                            NdgCs nc1 = new NdgCs(c);                 // ! Collinear A, B, C
+                                            NdgCs nc1 = new NdgCs(c); // ! Collinear A, B, C
                                             nc1.parent = c;
                                             c.addChild(nc1);
                                             Cons cc = new Cons(C_I_EQ);
@@ -3499,9 +4113,8 @@ public class Full extends Elim {
                                             ndg_pteq_added(cc, nc1);
                                             parseStep(nc1);
                                         }
-
                                         if (!ck_recursive_ndg(1, c, NDG_NEQ, pp[i], pp[j], 0, 0)) {
-                                            NdgCs nc1 = new NdgCs(c);                 // ! Collinear A, B, C
+                                            NdgCs nc1 = new NdgCs(c); // ! Collinear A, B, C
                                             nc1.parent = c;
                                             c.addChild(nc1);
                                             Cons cc = new Cons(C_I_EQ);
@@ -3519,14 +4132,16 @@ public class Full extends Elim {
                 }
             }
         }
-
         return false;
     }
 
-    private boolean onOneCons(int a, int b, Cons c1) {
-        return c1.contains(a) && c1.contains(b);
-    }
-
+    /**
+     * Adds point p to the array pp if it is not already present.
+     * The method fills the first available zero slot.
+     *
+     * @param p the point index to add
+     * @param pp the array of point indices
+     */
     private void addPtNoRedunent(int p, int[] pp) {
         for (int i = 0; i < pp.length; i++) {
             if (pp[i] == p)
@@ -3538,6 +4153,15 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Parses NDG constraints of type LL by comparing two constraints and creating new NDG constraint sets.
+     * It creates new equality or collinearity constraints based on the matched point indices.
+     *
+     * @param c the NDG constraint set
+     * @param c1 the first constraint to compare
+     * @param c2 the second constraint to compare
+     * @return true if parsing takes place; false otherwise
+     */
     private boolean parse_ndg_ll(NdgCs c, Cons c1, Cons c2) {
 
         int n1 = c1.getLastPt();
@@ -3566,9 +4190,8 @@ public class Full extends Elim {
         } else
             return false;
 
-        //if (ck_recursive_ndg(c, NDG_COLL, m, a, b, 0))
         {
-            NdgCs nc1 = new NdgCs(c);                 // ! Collinear A, B, C
+            NdgCs nc1 = new NdgCs(c); // Collinear A, B, C
             nc1.parent = c;
             c.addChild(nc1);
             Cons cc = new Cons(C_I_EQ);
@@ -3581,7 +4204,7 @@ public class Full extends Elim {
         }
 
         if (!ck_recursive_ndg(1, c, NDG_COLL, m, a, b, 0)) {
-            NdgCs nc2 = new NdgCs(c);               // Collinear M A B; A != B
+            NdgCs nc2 = new NdgCs(c); // Collinear M A B; A != B
             nc2.parent = c;
             c.addChild(nc2);
             Cons cc = new Cons(C_O_L);
@@ -3593,9 +4216,8 @@ public class Full extends Elim {
             parseStep(nc2);
         }
 
-
         if (!ck_recursive_ndg(1, c, NDG_NEQ, a, b, 0, 0)) {
-            NdgCs nc3 = new NdgCs(c);                 // A = B.
+            NdgCs nc3 = new NdgCs(c); // A = B.
             nc3.parent = c;
             c.addChild(nc3);
             Cons cc = new Cons(C_I_EQ);
@@ -3610,7 +4232,20 @@ public class Full extends Elim {
         return true;
     }
 
-
+    /**
+     * Recursively checks for an NDG constraint that meets the specified parameters.
+     * In global mode (type 0) the search is performed in the global NDG list,
+     * while in recursive mode (type 1) the search goes through the current constraint set's parent chain.
+     *
+     * @param type the check mode (0 for global, 1 for recursive search)
+     * @param cs the NDG constraint set to check within
+     * @param t the NDG type to check (e.g. NDG_COLL, NDG_NEQ)
+     * @param a the first point index involved in the constraint
+     * @param b the second point index involved in the constraint
+     * @param c the third point index, or 0 if not used
+     * @param d the fourth point index, or 0 if not used
+     * @return true if a matching NDG constraint is found; false otherwise
+     */
     private boolean ck_recursive_ndg(int type, NdgCs cs, int t, int a, int b, int c, int d) {
 
         if (type == 0) {
@@ -3630,7 +4265,6 @@ public class Full extends Elim {
             if (dd == null)
                 return false;
 
-
             while (cs != null) {
                 if (cs.nd != null && ck_ndg(t, a, b, c, d, cs.nd))
                     return true;
@@ -3640,6 +4274,19 @@ public class Full extends Elim {
         return false;
     }
 
+    /**
+     * Checks if the provided NDG constraint (dd) satisfies the condition for the given NDG type.
+     * For collinearity (NDG_COLL), it checks if the constraint contains the three specified points.
+     * For inequality types (NDG_NEQ or NDG_NON_ISOTROPIC), it checks if the constraint contains the two specified points.
+     *
+     * @param t the NDG type to evaluate (e.g. NDG_COLL, NDG_NEQ)
+     * @param a the first point index
+     * @param b the second point index
+     * @param c the third point index, or 0 if not applicable
+     * @param d the fourth point index, or 0 if not applicable
+     * @param dd the NDG constraint to check
+     * @return true if the NDG constraint meets the criteria; false otherwise
+     */
     private boolean ck_ndg(int t, int a, int b, int c, int d, CNdg dd) {
         boolean r = false;
 
@@ -3648,28 +4295,29 @@ public class Full extends Elim {
                 if (dd.type == NDG_COLL) {
                     r = dd.contain(a) && dd.contain(b) && dd.contain(c);
                 } else if (dd.type == NDG_NEQ || dd.type == NDG_NON_ISOTROPIC) {
-//                    int n = 0;
-//                    if (dd.contain(a))
-//                        n++;
-//                    if (dd.contain(b))
-//                        n++;
-//                    if (dd.contain(c))
-//                        n++;
-//                    r = n >= 2;
+                    // Condition for NDG_NEQ or NDG_NON_ISOTROPIC is omitted.
                 }
                 break;
             case NDG_NEQ:
             case NDG_NON_ISOTROPIC:
                 if (dd.type == NDG_COLL)
                     r = dd.contain(a) && dd.contain(b);
-                else if (dd.type == NDG_NEQ || dd.type == NDG_NON_ISOTROPIC) {
+                else if (dd.type == NDG_NEQ || dd.type == NDG_NON_ISOTROPIC)
                     r = dd.contain(a) && dd.contain(b);
-                }
                 break;
         }
         return r;
     }
 
+    /**
+     * Parses NDG constraints of type LT by comparing two constraints and creating new constraint sets.
+     * This method adjusts point orders and generates equality constraints when necessary.
+     *
+     * @param c the NDG constraint set
+     * @param c1 the first constraint to compare
+     * @param c2 the second constraint to compare
+     * @return true if parsing proceeded; false otherwise
+     */
     private boolean parse_ndg_lt(NdgCs c, Cons c1, Cons c2) {
 
         int n1 = c1.getLastPt();
@@ -3711,11 +4359,10 @@ public class Full extends Elim {
             int x = a;
             a = b;
             b = x;
-        }  // b = n1;
-
+        }
 
         {
-            NdgCs nc2 = new NdgCs(c);                // OtherWise.
+            NdgCs nc2 = new NdgCs(c); // Otherwise.
             nc2.parent = c;
             c.addChild(nc2);
             Cons cc2 = new Cons(C_I_EQ);
@@ -3728,7 +4375,7 @@ public class Full extends Elim {
         }
 
         if (!ck_recursive_ndg(1, c, NDG_NEQ, m, b, 0, 0)) {
-            NdgCs nc2 = new NdgCs(c);                // OtherWise.
+            NdgCs nc2 = new NdgCs(c); // Otherwise.
             nc2.parent = c;
             c.addChild(nc2);
             Cons cc2 = new Cons(C_I_EQ);
@@ -3738,11 +4385,17 @@ public class Full extends Elim {
             ndg_pteq_added(cc2, nc2);
             nc2.nd = null;
             parseStep(nc2);
-
         }
         return true;
     }
 
+    /**
+     * Updates the NDG constraint set by replacing occurrences of one point with another in all constraints.
+     * This method is used when a new equality constraint is added.
+     *
+     * @param c the newly added equality constraint
+     * @param d the NDG constraint set to update
+     */
     private void ndg_pteq_added(Cons c, NdgCs d) {
         int m = c.ps[0];
         int a = c.ps[1];
@@ -3755,6 +4408,13 @@ public class Full extends Elim {
         d.add(c);
     }
 
+    /**
+     * Incorporates a collinearity NDG constraint into the provided NDG constraint set.
+     * This method updates related constraints by replacing point indices when necessary.
+     *
+     * @param c the collinearity constraint to add
+     * @param d the NDG constraint set to update
+     */
     private void ndg_coll_added(Cons c, NdgCs d) {
         int m = c.ps[0];
         int a = c.ps[1];
@@ -3776,7 +4436,7 @@ public class Full extends Elim {
                     }
                     break;
                 case C_O_T:
-                case C_O_P: {
+                case C_O_P:
                     if (c2.ps[0] == m) {
                         if (c2.ps[1] == a)
                             c2.ps[0] = b;
@@ -3798,150 +4458,23 @@ public class Full extends Elim {
                         else if (c2.ps[2] == b)
                             c2.ps[3] = a;
                     }
-                }
-                break;
+                    break;
             }
             c2.reorder();
-
         }
         d.add(c);
     }
 
-//    private boolean parseStep(ndgcs c, int i, int j) {
-//        cons c1 = c.allcns[i];
-//        cons c2 = c.allcns[j];
-//
-//        if (c1 == null || c2 == null) {
-//            return false;
-//        }
-//
-//        int n1 = c1.getLastPt();
-//        int n2 = c2.getLastPt();
-//
-//        switch (c1.type) {
-//            case C_O_L: {
-//                switch (c2.type) {
-//                    case C_O_L:
-//                        if (n1 == n2) {
-//                            int m, a, b;
-//                            if (c1.ps[1] == c2.ps[1]) {
-//                                m = c1.ps[1];
-//                                a = c1.ps[2];
-//                                b = c2.ps[2];
-//                            } else if (c1.ps[1] == c2.ps[2]) {
-//                                m = c1.ps[1];
-//                                a = c1.ps[2];
-//                                b = c2.ps[1];
-//                            } else if (c1.ps[2] == c2.ps[1]) {
-//                                m = c1.ps[1];
-//                                a = c1.ps[1];
-//                                b = c2.ps[2];
-//                            } else if (c1.ps[2] == c2.ps[2]) {
-//                                m = c1.ps[2];
-//                                a = c1.ps[1];
-//                                b = c2.ps[1];
-//                            } else
-//                                break;
-//
-//                            parse_rpt_ndgs(n1, m, c);
-//
-//                            if (!ck_diff(a, b)) {
-//                                ndgcs nc1 = new ndgcs(c);
-//                                cndg d = new cndg();
-//                                d.type = NDG_NEQ;
-//                                d.no = 1;
-//                                d.p[0] = a;
-//                                d.p[1] = b;
-//                                nc1.nd = d;
-//                                c.addChild(nc1);
-//                                parse_neq1(nc1);
-//                            }
-//                            return true;
-//                        }
-//
-//                    case C_O_T:
-//                        int m, a, b;
-//                        if (c2.ps[0] == c2.ps[2]) {
-//                            m = c2.ps[0];
-//                            a = c2.ps[1];
-//                            b = c2.ps[3];
-//                        } else if (c2.ps[1] == c2.ps[2]) {
-//                            m = c2.ps[1];
-//                            a = c2.ps[0];
-//                            b = c2.ps[3];
-//                        } else if (c2.ps[1] == c2.ps[3]) {
-//                            m = c2.ps[1];
-//                            a = c2.ps[0];
-//                            b = c2.ps[2];
-//                        } else if (c2.ps[0] == c2.ps[3]) {
-//                            m = c2.ps[0];
-//                            a = c2.ps[1];
-//                            b = c2.ps[2];
-//                        } else
-//                            break;
-//                        if (!(c1.contains(m) && c1.contains(a) && c1.contains(b)))
-//                            break;
-//                        int x = a;
-//                        if (x < b)
-//                            x = b;
-//                        if (x < m) {
-//                            int t = x;
-//                            x = m;
-//                            m = t;
-//                        }
-//                        parse_rpt_ndgs(x, m, c);
-//                        break;
-//                }
-//                break;
-//            }
-//        }
-//        return false;
-//    }
-
-    public void parse_rpt_ndgs(int m, int a, NdgCs c) {
-        if (m == a)
-            return;
-        if (m < a) {
-            int t = m;
-            m = a;
-            a = t;
-        }
-
-        NdgCs nc1 = new NdgCs(c);
-        nc1.parent = c;
-        c.addChild(nc1);
-        nc1.replace(m, a);
-        opt_cons(nc1);
-        rm_redundent(nc1);
-        nc1.rm_common();
-        parseStep(nc1);
-    }
-
-
-    private boolean ck_diff(int a, int b) {
-        for (int i = 0; i < vndgs.size(); i++) {
-            CNdg d = (CNdg) vndgs.get(i);
-            switch (d.type) {
-                case NDG_COLL:
-                    if (d.contain(a) && d.contain(b))
-                        return true;
-                    break;
-                case NDG_NEQ:
-                case NDG_NON_ISOTROPIC:
-                    if (d.contain(a) && d.contain(b))
-                        return true;
-                case NDG_PARA:
-                case NDG_PERP:
-                    if (d.contain2(a, b))
-                        return true;
-                    break;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Optimizes constraints within the provided NDG constraint set.
+     * <p>
+     * This method iterates over each constraint, attempts to optimize it using the
+     * overloaded opt_cons method, and applies equality replacements if modifications occur.
+     * </p>
+     *
+     * @param c the NDG constraint set to optimize
+     */
     private void opt_cons(NdgCs c) {
-
         while (true) {
             boolean r = true;
 
@@ -3974,7 +4507,18 @@ public class Full extends Elim {
         }
     }
 
-
+    /**
+     * Attempts to optimize a single constraint within the given NDG constraint set.
+     * <p>
+     * The method simplifies or converts the constraint based on its type.
+     * For instance, certain conditions on C_O_P may result in converting it to C_O_L,
+     * while a C_O_T constraint may be simplified to an equality constraint.
+     * </p>
+     *
+     * @param cs the NDG constraint set containing the constraint
+     * @param c the constraint to optimize
+     * @return true if the constraint was modified; false otherwise
+     */
     private boolean opt_cons(NdgCs cs, Cons c) {
         if (c == null)
             return false;
@@ -4043,6 +4587,18 @@ public class Full extends Elim {
         return false;
     }
 
+    /**
+     * Adds an equality constraint between two points into the specified NDG constraint set.
+     * <p>
+     * If no existing equality constraint is found for the given non-zero points,
+     * this method creates a new equality constraint (C_I_EQ) relating the two points.
+     * </p>
+     *
+     * @param a the first point index
+     * @param b the second point index
+     * @param c the NDG constraint set where the equality constraint will be added
+     * @return true if a new equality constraint was added; false otherwise
+     */
     private boolean add_eq(int a, int b, NdgCs c) {
         if (a == b)
             return false;
@@ -4072,6 +4628,15 @@ public class Full extends Elim {
         return true;
     }
 
+    /**
+     * Removes redundant constraints from the provided NDG constraint set.
+     * <p>
+     * This method first removes constraints flagged as redundant based on internal criteria,
+     * and then eliminates duplicate constraints by comparing existing constraints.
+     * </p>
+     *
+     * @param c the NDG constraint set from which redundant constraints will be removed
+     */
     private void rm_redundent(NdgCs c) {
         for (int i = 0; i <= c.no; i++) {
             Cons c1 = c.allcns[i];
@@ -4093,6 +4658,16 @@ public class Full extends Elim {
         }
     }
 
+    /**
+     * Checks if a given constraint is redundant.
+     * <p>
+     * The redundancy is determined based on the type of the constraint and comparisons
+     * of its point indices, such as duplicated points in a collinearity or perpendicular constraint.
+     * </p>
+     *
+     * @param c the constraint to evaluate
+     * @return true if the constraint is considered redundant; false otherwise
+     */
     private boolean cons_redundent(Cons c) {
         switch (c.type) {
             case C_O_L:
@@ -4108,6 +4683,16 @@ public class Full extends Elim {
         return false;
     }
 
+    /**
+     * Determines whether a constraint type is considered related to construction operations.
+     * <p>
+     * The method returns false for fundamental geometric element types (e.g., point, triangle, etc.)
+     * and for types within a specific range, indicating that additional construction steps are not required.
+     * </p>
+     *
+     * @param t the constraint type identifier
+     * @return true if the constraint type is construction-related; false otherwise
+     */
     public boolean construct_related(int t) {
         if (t == C_POINT || t == C_TRIANGLE || t == C_POLYGON || t == C_QUADRANGLE
                 || t == C_PENTAGON || t == C_LINE || t == C_CIRCLE)
@@ -4117,9 +4702,18 @@ public class Full extends Elim {
         return true;
     }
 
-
+    /**
+     * Recursively adds NDG constraints from the provided NDG constraint set.
+     * <p>
+     * For non-leaf nodes, the method traverses each child NDG set to add constraints.
+     * For leaf nodes, it attempts to add an NDG constraint based on the first non-null constraint encountered.
+     * </p>
+     *
+     * @param d the NDG constraint set to process
+     * @param no the iteration limit based on the number of constraints in the set
+     * @return true if any NDG constraint was successfully added; false otherwise
+     */
     private boolean addNdg(NdgCs d, int no) {
-
         boolean r = false;
         int n = d.getCSindex();
 
@@ -4138,15 +4732,35 @@ public class Full extends Elim {
         for (int i = 0; i <= d.no; i++) {
             Cons c1 = d.allcns[i];
             if (c1 != null) {
-                if (addNdg(c1)) {
+                if (addNdg(c1))
                     added = true;
-                }
                 break;
             }
         }
         return added;
     }
 
+    /**
+     * Adds NDG constraint(s) for the specified geometric constraint.
+     *
+     * <p>
+     * This method inspects the type of the provided constraint and adds the corresponding
+     * NDG constraint as follows:
+     * </p>
+     * <ul>
+     *   <li><code>C_O_L</code>: Invokes <code>add_n_coll</code> to add a collinearity NDG constraint.</li>
+     *   <li><code>C_O_P</code>: Invokes <code>add_ndg_para</code> to add a parallelism NDG constraint and
+     *       then registers it with <code>add_ndgs</code>.</li>
+     *   <li><code>C_O_T</code>: Invokes <code>add_ndg_perp</code> to add a perpendicularity NDG constraint and
+     *       then registers it with <code>add_ndgs</code>.</li>
+     *   <li><code>C_I_EQ</code>: Invokes <code>add_ndg_neq</code> to add an equality NDG constraint and
+     *       then registers it with <code>add_ndgs</code>.</li>
+     *   <li>For any other constraint type, the method returns <code>false</code> without modification.</li>
+     * </ul>
+     *
+     * @param c the constraint to process for adding the corresponding NDG constraints
+     * @return <code>true</code> if the constraint was processed for NDG addition; <code>false</code> otherwise
+     */
     private boolean addNdg(Cons c) {
         switch (c.type) {
             case C_O_L:
@@ -4174,6 +4788,4 @@ public class Full extends Elim {
     }
 
     private Vector vndgs = new Vector();
-
-
 }

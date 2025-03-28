@@ -12,13 +12,7 @@ import java.util.Vector;
 import java.io.File;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-3-4
- * Time: 14:25:06
- * To change this template use File | Settings | File Templates.
- *
- * This class represents a dialog for proving geometric statements.
+ * This class represents a dialog for proving geometric terms.
  */
 public class CDialogProve extends JBaseDialog {
     ProvePane m_cp;
@@ -36,31 +30,12 @@ public class CDialogProve extends JBaseDialog {
     }
 
     /**
-     * Shows the dialog with the given CProveText.
-     *
-     * @param cp the CProveText to display in the dialog
-     */
-    void showDialog(CProveText cp) {
-        m_cp.setValue(cp);
-        this.setVisible(true);
-    }
-
-    /**
      * Sets the selected items in the dialog.
      *
      * @param v the vector of selected items
      */
     public void setSelect(Vector v) {
         m_cp.setSelect(v);
-    }
-
-    /**
-     * Sets the CProveField in the dialog.
-     *
-     * @param cpv the CProveField to set
-     */
-    public void setProveField(CProveField cpv) {
-        m_cp.setProveField(cpv);
     }
 }
 
@@ -118,15 +93,6 @@ class ProvePane extends JPanel
 
         add(leftHalf);
         add(createAddressDisplay());
-    }
-
-    /**
-     * Sets the CProveField for this panel.
-     *
-     * @param cpv the CProveField to set
-     */
-    public void setProveField(CProveField cpv) {
-        Cpv = cpv;
     }
 
     /**

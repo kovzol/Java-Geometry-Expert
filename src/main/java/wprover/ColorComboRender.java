@@ -21,6 +21,13 @@ class ColorComboRender extends JPanel
     int index = 0;
     boolean select = false;
 
+    /**
+     * Constructs a ColorComboRender with specified type and dimensions.
+     *
+     * @param type the type of the renderer (0 for color, 1 for line width, 2 for line type)
+     * @param w    the width of the renderer
+     * @param h    the height of the renderer
+     */
     public ColorComboRender(int type, int w, int h) {
         setOpaque(true);
         this.type = type;
@@ -29,6 +36,16 @@ class ColorComboRender extends JPanel
         height = h;
     }
 
+    /**
+     * Returns the component used for drawing the cell in the list.
+     *
+     * @param list the JList we're painting
+     * @param value the value returned by list.getModel().getElementAt(index)
+     * @param index the cell's index
+     * @param isSelected true if the specified cell was selected
+     * @param cellHasFocus true if the specified cell has the focus
+     * @return the component that the renderer uses to draw the value
+     */
     public Component getListCellRendererComponent(JList list,
                                                   Object value,
                                                   int index,
@@ -50,7 +67,11 @@ class ColorComboRender extends JPanel
         this.index = selectedIndex;
         return this;
     }
-
+    /**
+     * Paints the component.
+     *
+     * @param g the Graphics object to protect
+     */
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         if (select)
@@ -116,12 +137,21 @@ class ColorComboRender extends JPanel
 
     }
 
+    /**
+     * Returns the component used for drawing the cell in the table.
+     *
+     * @param table the JTable we're painting
+     * @param value the value returned by table.getValueAt(row, column)
+     * @param isSelected true if the specified cell was selected
+     * @param hasFocus true if the specified cell has the focus
+     * @param row the row of the cell to render
+     * @param column the column of the cell to render
+     * @return the component that the renderer uses to draw the value
+     */
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus,
                                                    int row, int column) {
         select = isSelected;
         return this;
     }
-
-
 }

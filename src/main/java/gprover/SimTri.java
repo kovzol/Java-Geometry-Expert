@@ -1,12 +1,11 @@
-/**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2006-2-14
- * Time: 21:35:25
- * To change this template use File | Settings | File Templates.
- */
 package gprover;
 
+/**
+ * Rules class holds the translated geometric rules and full angle definitions.
+ * The arrays defined in this class provide language-specific translations for
+ * geometric construction rules and full angle definitions. These translations are
+ * integrated with a gettext-based internationalization system.
+ */
 public class SimTri extends CClass {
     int lemma;
     Cond co;
@@ -18,6 +17,9 @@ public class SimTri extends CClass {
 
     SimTri nx;
 
+    /**
+     * Constructs a SimTri object with default values.
+     */
     public SimTri() {
         type = lemma = 0;
         co = null;

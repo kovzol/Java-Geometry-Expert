@@ -10,22 +10,14 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2005-8-27
- * Time: 13:25:17
- * To change this template use File | Settings | File Templates.
+ * CProveBarPanel is a custom panel that contains a toolbar for controlling the proof process.
+ * It includes buttons for stepping through the proof, playing the animation, and adjusting the speed.
  */
-
 public class CProveBarPanel extends FloatableToolBar {
     ProveBar bar;
 
     public CProveBarPanel(GExpert gx) {
         this.add(bar = new ProveBar(gx));
-    }
-
-    public void Enable(boolean r) {
-        bar.Enable(r);
     }
 
     public void setValue(int n) {
@@ -58,6 +50,10 @@ public class CProveBarPanel extends FloatableToolBar {
     }
 }
 
+/**
+ * ProveBar is a custom toolbar that provides controls for stepping through a proof process.
+ * It includes buttons for stepping, playing, pausing, and stopping the proof animation.
+ */
 class ProveBar extends JToolBar implements ActionListener, ChangeListener {
 
     private GExpert gxInstance;
@@ -81,26 +77,8 @@ class ProveBar extends JToolBar implements ActionListener, ChangeListener {
         init();
     }
 
-    public ProveBar(GExpert gex, DPanel dd, DrawTextProcess dp, PanelProve pproof) {
-        super();
-        gxInstance = gex;
-        this.dpane = dd;
-        this.dp = dp;
-        this.pproof = pproof;
-        init();
-    }
-
     public boolean isRunning() {
         return timer != null && timer.isRunning();
-    }
-
-    public void Enable(boolean r) {
-        bx1.setEnabled(r);
-        bx2.setEnabled(r);
-        bx3.setEnabled(r);
-        bx4.setEnabled(r);
-        bx5.setEnabled(r);
-        slider.setEnabled(r);
     }
 
     public void stop() {
@@ -328,10 +306,6 @@ class ProveBar extends JToolBar implements ActionListener, ChangeListener {
         CMisc.setFlashInterval(v);
         dp.updateFlashDelay();
         dp.setTimerDelay(v);
-    }
-
-    public int getTimeDelay() {
-        return this.getInterval();
     }
 
     public int getInterval() {

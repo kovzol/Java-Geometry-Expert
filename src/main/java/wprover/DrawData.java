@@ -8,17 +8,28 @@ import java.io.DataInputStream;
 import java.io.FileOutputStream;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-3-2
- * Time: 20:40:39
- * To change this template use File | Settings | File Templates.
+ * DrawData is a utility class that manages color, dash, and width configurations for drawing operations.
+ * It provides methods to add colors, retrieve color and dash values, and save/load configurations.
  */
 public class DrawData {
     public static int RED = 3;
     public static int DASH8 = 15;
     public static int WIDTH2 = 2;
     public static int LIGHTCOLOR = 18;
+
+    public static int cindex = 0;
+    public static int dindex = 0;
+    public static int windex = 2;
+
+    final public static int pointcolor = 3;
+    final public static int pointcolor_half_decided = 5;
+    final public static int pointcolor_decided = 14;
+
+    public static int polygoncolor = 17;
+    public static int anglecolor = 3;
+    public static int anglewidth = 2;
+    public static int angledash = 0;
+    public static int tractcolor = 3;
 
     private static DrawData dd = new DrawData();
     private static int cnum;
@@ -29,7 +40,9 @@ public class DrawData {
 
     int default_color_num;
 
-
+    /**
+     * Constructs a new DrawData instance and initializes default color, dash, and width lists.
+     */
     private DrawData() {
         Color[] color = {
             Color.blue,
@@ -85,14 +98,21 @@ public class DrawData {
         }
     }
 
-    public static int getDefaultColorCount() {
-        return dd.default_color_num;
-    }
-
+    /**
+     * Returns the number of available widths.
+     *
+     * @return the total width count
+     */
     public static int getWidthCounter() {
         return dd.widthlist.size();
     }
 
+    /**
+     * Returns the width value at the specified index.
+     *
+     * @param index the index of the width value to retrieve
+     * @return the width value as a double
+     */
     public static double getWidth(int index) {
         double d;
         try {
@@ -103,10 +123,21 @@ public class DrawData {
         return d;
     }
 
+    /**
+     * Returns the number of available dash configurations.
+     *
+     * @return the total dash count
+     */
     public static int getDashCounter() {
         return dd.dashlist.size();
     }
 
+    /**
+     * Returns the dash value at the specified index.
+     *
+     * @param index the index of the dash value to retrieve
+     * @return the dash value as a double
+     */
     public static double getDash(int index) {
         double d;
         try {
@@ -117,30 +148,43 @@ public class DrawData {
         return d;
     }
 
-
+    /**
+     * Returns the number of available colors.
+     *
+     * @return the total color count
+     */
     public static int getColorCounter() {
         return dd.colorlist.size();
     }
 
-    public static int getNextColor(int n) {
-        return n % getColorCounter();
-    }
-
+    /**
+     * Returns a color offset from the default angle color.
+     *
+     * @param n the offset from the angle color index
+     * @return the calculated Color object
+     */
     public static Color getColorSinceRed(int n) {
         return getColor(anglecolor + n);
     }
 
+    /**
+     * Returns the color corresponding to the given index. The index wraps around the color list.
+     *
+     * @param index the index of the color to retrieve
+     * @return the Color object, or null if index is negative
+     */
     public static Color getColor(int index) {
         int n = dd.colorlist.size();
         if (index < 0 ) return null;
         return (Color) (dd.colorlist.get(index % n));
     }
 
-    public static Color getCtColor(int index) {
-        Color c = (Color) (dd.colorlist.get(index));
-        return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
-    }
-
+    /**
+     * Adds a new color to the color list if it is not already present.
+     *
+     * @param co the Color to add
+     * @return the new total count of colors, or the existing index plus one if already present
+     */
     public static int addColor(Color co) {
         for (int i = 0; i < dd.colorlist.size(); i++) {
             Color c = (Color) dd.colorlist.get(i);
@@ -152,30 +196,18 @@ public class DrawData {
         return dd.colorlist.size();
     }
 
-    ////////////////////////////////////////////////////////////////////////
-
-
-
-    public static int cindex = 0;
-    public static int dindex = 0;
-    public static int windex = 2;
-
-    final public static int pointcolor = 3;
-    final public static int pointcolor_half_decided = 5;
-    final public static int pointcolor_decided = 14;
-
-    public static int polygoncolor = 17;
-    public static int anglecolor = 3;
-    public static int anglewidth = 2;
-    public static int angledash = 0;
-    public static int tractcolor = 3;
-
+    /**
+     * Resets the color, dash, and width indices to the default status.
+     */
     public static void setDefaultStatus() {
         cindex = 0;
         dindex = 0;
         windex = 2;
     }
 
+    /**
+     * Sets the color, dash, and width indices to the prove status.
+     */
     public static void setProveStatus() {
         cindex = 3;
         dindex = 9;
@@ -183,17 +215,21 @@ public class DrawData {
 
     }
 
+    /**
+     * Sets the color, dash, and width indices to the auxiliary status.
+     */
     public static void setAuxStatus() {
         cindex = RED;
         dindex = DASH8;
         windex = 2;
     }
 
-    public static void setDefaultColor(int id) {
-        if (id < 0) return;
-        cindex = id;
-    }
-
+    /**
+     * Returns the index of the specified color in the color list.
+     *
+     * @param color the Color to search for
+     * @return the index of the color, or -1 if not found
+     */
     public static int getColorIndex(Color color) {
         for (int i = 0; i < dd.colorlist.size(); i++) {
             Color c = (Color) dd.colorlist.get(i);
@@ -203,23 +239,32 @@ public class DrawData {
         return -1;
     }
 
+    /**
+     * Returns the current color based on the current color index.
+     *
+     * @return the current Color object
+     */
     public static Color getCurrentColor() {
         return getColor(cindex);
     }
 
-    public static void setDefaultPolygonColor(int index) {
-        polygoncolor = index;
-    }
-
+    /**
+     * Resets the DrawData instance by reinitializing it to default values.
+     */
     public static void reset() {
         dd = new DrawData();
     }
 
-
-    
-    /////////////////////////////////////////////////////////////////////
-
-
+    /**
+     * Saves the color, dash, and width configuration to the specified PostScript file.
+     *
+     * @param vc the vector containing color indices
+     * @param vd the vector containing dash indices
+     * @param vw the vector containing width indices
+     * @param fp the file output stream to write to
+     * @param stype the style type (0 for color, 1 for gray, 2 for black &amp; white)
+     * @throws IOException if an I/O error occurs while writing
+     */
     public static void SavePS(Vector vc, Vector vd, Vector vw, FileOutputStream fp, int stype) throws IOException {
 
         fp.write("%-----define color, dash and width\n".getBytes());
@@ -277,7 +322,12 @@ public class DrawData {
         }
     }
 
-
+    /**
+     * Saves additional color configurations to the specified data output stream.
+     *
+     * @param out the data output stream to write to
+     * @throws IOException if an I/O error occurs while writing
+     */
     public static void Save(DataOutputStream out) throws IOException {
         int size = dd.colorlist.size();
         out.writeInt(size);
@@ -290,6 +340,13 @@ public class DrawData {
         }
     }
 
+    /**
+     * Loads color configurations from the specified data input stream.
+     *
+     * @param in the data input stream to read from
+     * @param dp the DrawProcess instance used for object mapping
+     * @throws IOException if an I/O error occurs while reading
+     */
     public static void Load(DataInputStream in, DrawProcess dp) throws IOException {
         if (CMisc.version_load_now < 0.01) {
             int size = in.readInt();
@@ -329,7 +386,6 @@ public class DrawData {
             }
         }
     }
-
 }
 
 

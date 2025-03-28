@@ -8,7 +8,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
-
+/**
+ * FactFinderDialog is a dialog that allows users to search for geometric facts based on selected points and types.
+ * It extends JBaseDialog and implements ActionListener and ItemListener interfaces.
+ */
 public class FactFinderDialog extends JBaseDialog implements ActionListener, ItemListener {
 
     final private static String[] S =
@@ -24,6 +27,13 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
     private JList list;
 
 
+    /**
+     * Constructs a FactFinderDialog with the specified owner, type, and title.
+     *
+     * @param owner the GExpert instance that owns this dialog
+     * @param type  the type of fact to find
+     * @param title the title of the dialog
+     */
     public FactFinderDialog(GExpert owner, int type, String title) {
         super(owner.getFrame(), title);
         gxInstance = owner;
@@ -98,6 +108,11 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
         this.setSize(300, 400);
     }
 
+    /**
+     * Sets the points in the combo boxes.
+     *
+     * @param v the vector of points to set
+     */
     public void setPoints(Vector v) {
         b1.removeAllItems();
         b2.removeAllItems();
@@ -110,12 +125,18 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
         }
     }
 
+    /**
+     * Shows the dialog.
+     */
     public void showDialog() {
         reselect();
         bs.setSelectedIndex(-1);
         this.setVisible(true);
     }
 
+    /**
+     * Reselects the combo boxes based on the find type.
+     */
     private void reselect() {
         if (find_type == 0 || find_type == 3 || find_type == 4 || find_type == 6)
             b3.setEnabled(false);
@@ -129,6 +150,11 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
         b3.setSelectedIndex(-1);
     }
 
+    /**
+     * Handles action events for the buttons.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if (src == bcancel) {
@@ -166,6 +192,11 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
         }
     }
 
+    /**
+     * Selects a point in the combo boxes.
+     *
+     * @param b the point to select
+     */
     public void selectAPoint(Object b) {
         if (b1.getSelectedIndex() == -1)
             b1.setSelectedItem(b);
@@ -175,6 +206,11 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
             b3.setSelectedItem(b);
     }
 
+    /**
+     * Handles item state changes for the combo boxes.
+     *
+     * @param e the item event
+     */
     public void itemStateChanged(ItemEvent e) {
         JComboBox bx = (JComboBox) e.getSource();
         if (bx == bs) {

@@ -1,22 +1,30 @@
 package gprover;
 
-/**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: Oct 23, 2006
- * Time: 5:17:01 PM
- * To change this template use File | Settings | File Templates.
- */
-public class CSegs extends CClass {
-    public int no;
-    public int[] p1;
-    public int[] p2;
-    CSegs nx;
+        /**
+         * The CSegs class represents a collection of geometric segments in a proof.
+         * It includes properties for the number of segments, arrays of points defining the segments,
+         * and a reference to the next segment in the list.
+         */
+        public class CSegs extends CClass {
+            /** The number of segments. */
+            public int no;
 
-    public CSegs() {
-        type = no = 0;
-        p1 = new int[MAX_GEO * 2];
-        p2 = new int[MAX_GEO * 2];
-        nx = null;
-    }
-}
+            /** The array of starting points of the segments. */
+            public int[] p1;
+
+            /** The array of ending points of the segments. */
+            public int[] p2;
+
+            /** The next segment in the list. */
+            CSegs nx;
+
+            /**
+             * Constructs a CSegs object with default values.
+             */
+            public CSegs() {
+                type = no = 0;
+                p1 = new int[MAX_GEO * 2];
+                p2 = new int[MAX_GEO * 2];
+                nx = null;
+            }
+        }

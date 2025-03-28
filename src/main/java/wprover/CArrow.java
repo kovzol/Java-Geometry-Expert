@@ -7,11 +7,8 @@ import java.io.DataOutputStream;
 import java.io.DataInputStream;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2009-12-13
- * Time: 13:43:52
- * To change this template use File | Settings | File Templates.
+ * Represents an arrow in a geometric drawing.
+ * The arrow is defined by its starting and ending points, angle, and length.
  */
 public class CArrow extends CClass {
     public static int ANGLE = 30;

@@ -9,11 +9,9 @@ import java.io.*;
 import java.net.URL;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-1-8
- * Time: 18:57:22
- * To change this template use File | Settings | File Templates.
+ * This class contains configuration and utility methods for the application.
+ * It manages properties such as screen size, background color, font settings,
+ * and other application-specific settings.
  */
 public class CMisc {
     final public static double version = 0.053;

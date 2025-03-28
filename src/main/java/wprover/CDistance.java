@@ -7,13 +7,8 @@ import java.io.DataInputStream;
 import java.io.FileOutputStream;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-1-19
- * Time: 10:16:32
- * To change this template use File | Settings | File Templates.
- *
- * This class represents a geometric distance between two points.
+ * Represents a distance measurement between two points in a geometric context.
+ * This class extends CClass and provides methods for drawing, saving, and loading distance measurements.
  */
 public class CDistance extends CClass {
 

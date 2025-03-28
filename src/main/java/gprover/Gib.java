@@ -6,6 +6,15 @@ import wprover.GExpert;
 import java.util.Vector;
 
 
+/**
+ * The Gib class provides functionality for geometric computations,
+ * including operations on angles, lines, circles, triangles, and other
+ * geometric constructions.
+ *
+ * <p>This class is a central component within the geometric prover system,
+ * facilitating the creation, manipulation, and evaluation of various geometric
+ * entities and their relationships.</p>
+ */
 public class Gib {
 
     //********************pred types*************************
@@ -339,11 +348,7 @@ public class Gib {
 
     protected Cond conc = new Cond();
     protected int cons_no = 0;
-    //***************************end of inputs******************
 
-
-    protected final static int PFULL = 0;
-    protected final static int PTRADITION = 1;
 
     //*****************************othres***********************
     final protected static ACir test_c = new ACir();
@@ -366,8 +371,10 @@ public class Gib {
     protected StringBuffer sout = null;
     protected boolean DEBUG = true;
 
-    //*****************************end of othres***********************
-
+    /**
+     * Initializes the rule configuration.
+     * Sets all rules to true and then disables specific rules.
+     */
     public static void initRules() {
         for (int i = 0; i < RValue.length; i++)
             RValue[i] = true;
@@ -382,6 +389,10 @@ public class Gib {
 
     }
 
+    /**
+     * Constructs a new Gib instance.
+     * Initializes all internal data structures and sets default values.
+     */
     public Gib() {
 
         co_db = new Cond();
@@ -418,6 +429,10 @@ public class Gib {
         gt = null;
     }
 
+    /**
+     * Initializes the database.
+     * Resets various lists, counters, and clears auxiliary collections.
+     */
     public void init_dbase() {
 
         depth = 0;
@@ -493,38 +508,44 @@ public class Gib {
         tm_pr1 = new Cond();
     }
 
+    /**
+     * Validates the provided index.
+     *
+     * @param i the index to check
+     * @return true if the index is within valid bounds; false otherwise
+     */
     boolean valid(int i) {
         if (i == 0 || i > 100) return true;
         if (i < 0 || i >= RValue.length) return false;
         return RValue[i - 1];
     }
 
-    Cond add_e_codb(int n, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
-        Cond co = new Cond();
-
-        co.pred = n;
-        co.no = 0;
-        co.u.ln = null;
-        co.p[0] = p1;
-        co.p[1] = p2;
-        co.p[2] = p3;
-        co.p[3] = p4;
-        co.p[4] = p5;
-        co.p[5] = p6;
-        co.p[6] = p7;
-        co.p[7] = p8;
-        co.cd = co_db.nx;
-        return co;
-    }
-
+    /**
+     * Retrieves the x-coordinate of the point at the specified index.
+     *
+     * @param p the index of the point in the array
+     * @return the x-coordinate of the point
+     */
     final double VPTX(int p) {
         return allpts[p].x;
     }
 
+    /**
+     * Retrieves the y-coordinate of the point at the specified index.
+     *
+     * @param p the index of the point in the array
+     * @return the y-coordinate of the point
+     */
     final double VPTY(int p) {
         return allpts[p].y;
     }
 
+    /**
+     * Retrieves the name of the point at the specified index.
+     *
+     * @param p the index of the point in the array
+     * @return the name of the point, or null if the index is negative
+     */
     final String ANAME(int p) {
         if (p < 0) return null;
 
@@ -539,6 +560,12 @@ public class Gib {
             return null;
     }
 
+    /**
+     * Searches for a point by its name.
+     *
+     * @param s the name to search for
+     * @return the index of the point if found; otherwise, 0
+     */
     final int SPT(String s) {
         if (s == null || s.length() == 0) return 0;
 
@@ -549,28 +576,11 @@ public class Gib {
         return 0;
     }
 
-//    final double get_ptx(int i) {
-//        Pro_point pt = allpts[i];
-//        if (pt != null)
-//            return pt.x;
-//        else {
-//            //#######
-//            //Cm.print(i + " error");
-//            return 0.0;
-//        }
-//    }
-//
-//    final double get_pty(int i) {
-//        Pro_point pt = allpts[i];
-//        if (pt != null)
-//            return pt.y;
-//        else {
-//            //#######
-//            //Cm.print(i + " error");
-//            return 0.0;
-//        }
-//    }
-
+    /**
+     * Counts the number of defined properties among various entities.
+     *
+     * @return the total count of properties
+     */
     final int getNumberofProperties() {
         int n = 0;
         MidPt md = all_md.nx;
@@ -667,6 +677,12 @@ public class Gib {
         return n;
     }
 
+    /**
+     * Retrieves the point at the specified index.
+     *
+     * @param i the index of the point in the array
+     * @return the ProPoint at the specified index
+     */
     final ProPoint APT(int i) {
         ProPoint pt = allpts[i];
         if (pt == null) {
@@ -675,22 +691,33 @@ public class Gib {
         return pt;
     }
 
-    final int ATYPE(int p, int t) {
-        return (allpts)[p].type = t;
-    }
-
+    /**
+     * Returns the type of the point at the given index.
+     *
+     * @param t the index of the point in the array
+     * @return the type of the point
+     */
     final int ATYPE(int t) {
         return (allpts)[t].type;
     }
 
-    final int AUX(int p, int t) {
-        return (allpts)[p].aux = t;
-    }
-
+    /**
+     * Retrieves an auxiliary point index from the given point.
+     *
+     * @param p the index of the point in the array
+     * @param i the auxiliary index within the point
+     * @return the auxiliary point index
+     */
     final int APTS(int p, int i) {
         return ((allpts)[p].ps[i]);
     }
 
+    /**
+     * Returns the x-coordinate of the point at the given index.
+     *
+     * @param p the index of the point in the allpts array
+     * @return the x-coordinate of the point, or 0.0 if the point is null
+     */
     final double aptx(int p) {
         if (allpts[p] != null)
             return allpts[p].x;
@@ -700,6 +727,12 @@ public class Gib {
         }
     }
 
+    /**
+     * Returns the y-coordinate of the point at the given index.
+     *
+     * @param p the index of the point in the allpts array
+     * @return the y-coordinate of the point, or 0.0 if the point is null
+     */
     final double apty(int p) {
         if (allpts[p] != null)
             return allpts[p].y;
@@ -709,24 +742,35 @@ public class Gib {
         }
     }
 
+    /**
+     * Checks if the specified index corresponds to a conclusion.
+     *
+     * @param n the index in the allcns array
+     * @return true if the conclusion exists and is valid; false otherwise
+     */
     final boolean isConclusion(int n) {
         if (allcns[n] != null)
             return allcns[n].is_conc();
         return false;
     }
 
-    final XTerm P1(int p) {
-        return null;
-    }
-
-    final XTerm P2(int p) {
-        return null;
-    }
-
+    /**
+     * Finds the point index by its name.
+     *
+     * @param s the name of the point
+     * @return the index of the point if found; 0 otherwise
+     */
     public int fd_pt(String s) {
         return SPT(s);
     }
 
+    /**
+     * Finds a point by its coordinates.
+     *
+     * @param x the x-coordinate to match
+     * @param y the y-coordinate to match
+     * @return the point if one exists within tolerance; null otherwise
+     */
     public ProPoint fd_pt(double x, double y) {
         double m, n;
         for (int i = 1; i <= pts_no; i++) {
@@ -738,24 +782,35 @@ public class Gib {
         return null;
     }
 
+    /**
+     * Sets the print mode to output to a string buffer.
+     */
     void setPrintToString() {
         printype = 1;
         sout = new StringBuffer();//"";
     }
 
-    void setPrintToScreen() {
-        printype = 0;
-        sout = new StringBuffer();//"";
-    }
-
+    /**
+     * Disables printing output.
+     */
     public void setNoPrint() {
         printype = -1;
     }
 
+    /**
+     * Returns the string buffer containing the file proof.
+     *
+     * @return the string buffer with the proof content
+     */
     StringBuffer getFileProve() {
         return sout;
     }
 
+    /**
+     * Retrieves and resets the printed output string.
+     *
+     * @return the printed output as a string
+     */
     String getPrintedString() {
         if (sout == null) return "";
         String s = sout.toString();
@@ -763,11 +818,21 @@ public class Gib {
         return s;
     }
 
+    /**
+     * Prints an error message if debugging is enabled.
+     *
+     * @param s the error message to print
+     */
     void eprint(String s) {
         if (Cm.DEBUG)
             System.out.println(s);
     }
 
+    /**
+     * Prints a general message based on the current print type.
+     *
+     * @param s the message to print
+     */
     void gprint(String s) {
         if (printype == 0) {
             if (Cm.DEBUG)
@@ -778,31 +843,50 @@ public class Gib {
         }
     }
 
+    /**
+     * Prints a debug message if debugging is enabled.
+     *
+     * @param s the debug message to print
+     */
     void debug_print(String s) {
         if (DEBUG)
             Cm.print(s);
     }
 
+    /**
+     * Checks if the proof status is full.
+     *
+     * @return true if the proof status is full; false otherwise
+     */
     public boolean isPFull() {
         return P_STATUS == 0;
     }
 
-    public boolean isPTra() {
-        return P_STATUS == 1;
-    }
-
+    /**
+     * Exits the application with the specified error id.
+     *
+     * @param id the error id for the exit process
+     */
     public void gexit(int id) {
         gprint("exit " + id);
         Cm.print("Error, exit " + id);
     }
 
-    void gdb_help() {
-    }
-
+    /**
+     * Displays the parallel line information.
+     *
+     * @param pn the PLine object representing parallel lines
+     */
     void show_pn(PLine pn) {
         gprint(pn_string(pn));
     }
 
+    /**
+     * Returns a formatted string representing the parallel lines in a PLine.
+     *
+     * @param pn the PLine object containing lines to be formatted
+     * @return the formatted string of parallel lines
+     */
     String pn_string(PLine pn) {
         String s = "";
         for (int i = 0; i <= pn.no; i++) {
@@ -813,10 +897,23 @@ public class Gib {
         return s;
     }
 
+    /**
+     * Displays the string representation of the given line.
+     *
+     * @param ln the LLine object to display
+     * @param nk flag indicating whether to translate as collinear
+     */
     void show_ln(LLine ln, boolean nk) {
         gprint(ln_string(ln, nk));
     }
 
+    /**
+     * Returns a formatted string representing the line.
+     *
+     * @param ln the LLine object to convert to string
+     * @param nk flag indicating whether to use collinearity translation
+     * @return the formatted string of the line
+     */
     String ln_string(LLine ln, boolean nk) {
         int i;
         if (ln == null)
@@ -832,6 +929,12 @@ public class Gib {
         }
     }
 
+    /**
+     * Returns a formatted string representing the perpendicular relationship of a TLine.
+     *
+     * @param tn the TLine object to convert to string
+     * @return the formatted string indicating perpendicularity
+     */
     String tn_string(TLine tn) {
         LLine l1, l2;
 
@@ -844,10 +947,20 @@ public class Gib {
         return s;
     }
 
+    /**
+     * Displays the formatted string for the given TLine.
+     *
+     * @param tn the TLine object representing perpendicular lines
+     */
     void show_tn(TLine tn) {
         gprint(tn_string(tn));
     }
 
+    /**
+     * Displays the angle represented by an AngTn object as a combination of two angle components.
+     *
+     * @param atn the AngTn object containing two sets of line pairs forming an angle
+     */
     void show_atn(AngTn atn) {
         show_agll(atn.ln1, atn.ln2);
         gprint(" + ");
@@ -855,6 +968,11 @@ public class Gib {
         gprint(" = 90");
     }
 
+    /**
+     * Displays the segments contained in a CSegs object.
+     *
+     * @param cg the CSegs object holding congruent segments
+     */
     void show_cseg(CSegs cg) {
         if (cg.no < 0) {
             gprint("NULL");
@@ -867,6 +985,11 @@ public class Gib {
         }
     }
 
+    /**
+     * Displays the congruent segment information for the given CongSeg object.
+     *
+     * @param cg the CongSeg object containing congruence data
+     */
     void show_cg(CongSeg cg) {
         if (cg == null) {
             Cm.print("cong_seg is null");
@@ -920,10 +1043,27 @@ public class Gib {
         }
     }
 
+    /**
+     * Prints the formatted angle string for the angle defined by four points.
+     *
+     * @param p1 the first vertex of the angle
+     * @param p2 the second vertex of the angle
+     * @param p3 the third vertex of the angle
+     * @param p4 the fourth vertex of the angle
+     */
     void print_fang(int p1, int p2, int p3, int p4) {
         gprint(get_fang_str(p1, p2, p3, p4));
     }
 
+    /**
+     * Returns a formatted string representing an angle defined by four points.
+     *
+     * @param p1 the first vertex of the angle
+     * @param p2 the second vertex of the angle
+     * @param p3 the third vertex of the angle
+     * @param p4 the fourth vertex of the angle
+     * @return the formatted angle string
+     */
     String get_fang_str(int p1, int p2, int p3, int p4) {
         int p0;
 
@@ -950,11 +1090,23 @@ public class Gib {
 
     }
 
+    /**
+     * Returns the name of the point identified by its index.
+     *
+     * @param p the index of the point
+     * @return the name of the point, or an empty string if the index is zero
+     */
     final String pt_name(int p) {
         if (p != 0) return (APT(p).name);
         else return ("");
     }
 
+    /**
+     * Displays the angle between two lines by determining their intersection point.
+     *
+     * @param ln1 the first LLine object
+     * @param ln2 the second LLine object
+     */
     final public void show_agll(LLine ln1, LLine ln2) {  // overrited.
         int n = inter_lls(ln1, ln2);
         if (n == 0)
@@ -966,6 +1118,11 @@ public class Gib {
         }
     }
 
+    /**
+     * Displays a formatted representation of an angle expressed by an Angles object.
+     *
+     * @param as the Angles object containing the angle representation
+     */
     final void show_as(Angles as) {
         if (as == null) return;
         show_agll(as.l1, as.l2);
@@ -973,16 +1130,32 @@ public class Gib {
         show_agll(as.l3, as.l4);
     }
 
+    /**
+     * Returns a formatted string representing the midpoint relationship.
+     *
+     * @param md the MidPt object containing midpoint data
+     * @return the formatted midpoint string
+     */
     final String md_print(MidPt md) {
         String st = GExpert.getTranslationViaGettext("{0} is the midpoint of {1}",
                 ANAME(md.m), ANAME(md.a) + ANAME(md.b));
         return st;
     }
 
+    /**
+     * Displays a formatted representation of the midpoint.
+     *
+     * @param md the midpoint to be displayed
+     */
     final void show_md(MidPt md) {
         gprint(md_print(md));
     }
 
+    /**
+     * Displays a formatted representation of the ratio segment.
+     *
+     * @param ra the ratio segment to be displayed
+     */
     final void show_ra(RatioSeg ra) {
         if (show_dtype != 0) {
             gprint("[" + ra.type + "]:");
@@ -993,6 +1166,12 @@ public class Gib {
         gprint(str);
     }
 
+    /**
+     * Returns a string representation of the circle.
+     *
+     * @param cr the circle object
+     * @return the formatted circle string
+     */
     final String cr_string(ACir cr) {
         char i;
         if (cr == null) {
@@ -1015,10 +1194,20 @@ public class Gib {
         return GExpert.getTranslationViaGettext("Circle {0}", s);
     }
 
+    /**
+     * Displays the circle using its string representation.
+     *
+     * @param cr the circle object to be displayed
+     */
     final void show_cr(ACir cr) {
         gprint(cr_string(cr));
     }
 
+    /**
+     * Displays a formatted representation of the similar triangle.
+     *
+     * @param st the similar triangle to be displayed
+     */
     final void show_ct(SimTri st) {
         gprint(Cm.s2722);
         if (show_dtype != 0) {
@@ -1030,15 +1219,11 @@ public class Gib {
         gprint(s);
     }
 
-    final void show_st(SimTri st) {
-        gprint(Cm.s2720);
-
-        String s = "[" + st.dr + "." +
-                ANAME(st.p1[0]) + ANAME(st.p1[1]) + ANAME(st.p1[2]) +
-                "." + ANAME(st.p2[0]) + ANAME(st.p2[1]) + ANAME(st.p2[2]) + "] ";
-        gprint(s);
-    }
-
+    /**
+     * Displays a formatted representation of a set of similar triangles.
+     *
+     * @param st the set of similar triangles to be displayed
+     */
     final void show_sts(STris st) {
         String s = "";
         int i = 0;
@@ -1050,17 +1235,33 @@ public class Gib {
         gprint(s);
     }
 
-
+    /**
+     * Exits the system with the specified exit status.
+     *
+     * @param v the exit status code
+     */
     final public void exit(int v) {
         Cm.print("System exit: " + v);
         System.exit(v);
     }
 
+    /**
+     * Prints an error message and terminates the program.
+     *
+     * @param s the error message to display before exiting
+     */
     final public void gerror(String s) {
         Cm.print("Error: " + s);
         System.exit(0);
     }
 
+    /**
+     * Returns a common point between two lines, or 0 if none exists.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return the common point of the two lines, or 0 if there is no intersection
+     */
     final int inter_lls(LLine l1, LLine l2) {
         int i, j;
         if (l1 == null || l2 == null) return (0);
@@ -1072,6 +1273,13 @@ public class Gib {
         return (0);
     }
 
+    /**
+     * Returns the first point from the line that is not equal to the specified point.
+     *
+     * @param l1 the line to search
+     * @param p1 the point to be excluded
+     * @return the first point in the line that differs from p1, or 0 if none found
+     */
     final int get_lpt1(LLine l1, int p1) {
         char j;
         for (j = 0; j <= l1.no; j++) {
@@ -1080,6 +1288,14 @@ public class Gib {
         return (0);
     }
 
+    /**
+     * Returns the first point from the line that is different from both specified points.
+     *
+     * @param l1 the line to search
+     * @param p1 the first point to be excluded
+     * @param p2 the second point to be excluded
+     * @return the first point in the line that differs from both p1 and p2, or 0 if none found
+     */
     final int get_lpt2(LLine l1, int p1, int p2) {
         char j;
         for (j = 0; j <= l1.no; j++) {
@@ -1088,6 +1304,12 @@ public class Gib {
         return (0);
     }
 
+    /**
+     * Returns the default condition for the specified geometric class.
+     *
+     * @param cc the geometric class object
+     * @return a default condition associated with the provided class, or null if unsupported
+     */
     final public Cond getDefaultCond(CClass cc) {
         Cond co = new Cond();
         co.pred = 0;
@@ -1208,6 +1430,17 @@ public class Gib {
     //show
     ///////////////////////////////////
 
+    /**
+     * Computes the orientation of two triangles defined by their vertices.
+     *
+     * @param p1 the first point of the first triangle
+     * @param p2 the second point of the first triangle
+     * @param p3 the third point of the first triangle
+     * @param p4 the first point of the second triangle
+     * @param p5 the second point of the second triangle
+     * @param p6 the third point of the second triangle
+     * @return 1 if the triangles share the same orientation, -1 otherwise
+     */
     int check_tri_dr(int p1, int p2, int p3, int p4, int p5, int p6) {
         double r1 = (aptx(p2) - aptx(p1)) * (apty(p3) - apty(p1)) -
                 (aptx(p3) - aptx(p1)) * (apty(p2) - apty(p1));
@@ -1221,34 +1454,91 @@ public class Gib {
             return -1;
     }
 
+    /**
+     * Disables further checking and logs a check error.
+     */
     final void add_checkError() {
         ck_value = false;
         gprint("On Check Error!");
     }
 
+    /**
+     * Determines whether the three given points are collinear.
+     *
+     * @param p1 index of the first point
+     * @param p2 index of the second point
+     * @param p3 index of the third point
+     * @return true if the points are collinear; false otherwise
+     */
     final boolean check_coll(int p1, int p2, int p3) {
         return Math.abs((apty(p2) - apty(p1)) * (aptx(p3) - aptx(p1)) -
                 (aptx(p2) - aptx(p1)) * (apty(p3) - apty(p1))) < ZERO;
     }
 
+    /**
+     * Determines whether the four given points are collinear by checking if both
+     * the third and fourth points lie on the line through the first two points.
+     *
+     * @param p1 index of the first point
+     * @param p2 index of the second point
+     * @param p3 index of the third point
+     * @param p4 index of the fourth point
+     * @return true if all points are collinear; false otherwise
+     */
     final boolean check_coll(int p1, int p2, int p3, int p4) {
         return check_coll(p1, p2, p3) && check_coll(p1, p2, p4);
     }
 
+    /**
+     * Checks whether two lines are parallel.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return true if the lines are parallel; false otherwise
+     */
     final boolean check_para(LLine l1, LLine l2) {
         return check_para(l1.pt[0], l1.pt[1], l2.pt[0], l2.pt[1]);
     }
 
+    /**
+     * Checks whether two segments defined by their endpoints are parallel.
+     *
+     * @param p1 index of the first point of the first segment
+     * @param p2 index of the second point of the first segment
+     * @param p3 index of the first point of the second segment
+     * @param p4 index of the second point of the second segment
+     * @return true if the segments are parallel; false otherwise
+     */
     final boolean check_para(int p1, int p2, int p3, int p4) {
         return Math.abs((apty(p2) - apty(p1)) * (aptx(p4) - aptx(p3)) -
                 (aptx(p2) - aptx(p1)) * (apty(p4) - apty(p3))) < ZERO;
     }
 
+    /**
+     * Determines whether two segments defined by their endpoints are perpendicular.
+     *
+     * @param p1 index of the first point of the first segment
+     * @param p2 index of the second point of the first segment
+     * @param p3 index of the first point of the second segment
+     * @param p4 index of the second point of the second segment
+     * @return true if the segments are perpendicular; false otherwise
+     */
     final boolean check_perp(int p1, int p2, int p3, int p4) {
         return Math.abs((apty(p2) - apty(p1)) * (apty(p4) - apty(p3)) + (aptx(p4) - aptx(p3)) *
                 (aptx(p2) - aptx(p1))) < ZERO;
     }
 
+    /**
+     * Checks if the angles formed by points (p1, p2, p3) and (p4, p5, p6) are equal.
+     *
+     * @param p1 index of the vertex for the first angle
+     * @param p2 index of the first arm point for the first angle
+     * @param p3 index of the second arm point for the first angle
+     * @param p4 index of the vertex for the second angle
+     * @param p5 index of the first arm point for the second angle
+     * @param p6 index of the second arm point for the second angle
+     * @return true if the two angles are equal within a tolerance; false otherwise
+     */
     protected boolean check_eqangle(int p1, int p2, int p3, int p4, int p5, int p6) {
         if (p1 == 0 || p2 == 0 || p3 == 0 || p4 == 0 || p5 == 0 || p6 == 0) {
             Cm.print("null point in eqangle");
@@ -1257,11 +1547,35 @@ public class Gib {
         return Math.abs(getAngleValue(p1, p2, p2, p3) - getAngleValue(p4, p5, p5, p6)) < ZERO;
     }
 
+    /**
+     * Checks whether the sum of the two angles defined by the given points equals 90°.
+     *
+     * @param p1 index of the vertex for the first angle
+     * @param p2 index of an arm point for the first angle
+     * @param p3 index of the other arm point for the first angle
+     * @param p4 index of the vertex for the second angle
+     * @param p5 index of an arm point for the second angle
+     * @param p6 index of the other arm point for the second angle
+     * @return true if the sum of angles is 90° (within tolerance); false otherwise
+     */
     protected boolean check_atn(int p1, int p2, int p3, int p4, int p5, int p6) {
         double r = getAngleValue(p1, p2, p3) + getAngleValue(p4, p5, p6);
         return Math.abs(r - Math.PI / 2) < ZERO || Math.abs(r + Math.PI / 2) < ZERO;
     }
 
+    /**
+     * Checks if two angles defined by four points are equal or supplementary.
+     *
+     * @param p1 index of the first point of the first angle
+     * @param p2 index of the second point of the first angle
+     * @param p3 index of the third point of the first angle
+     * @param p4 index of the fourth point of the first angle
+     * @param p5 index of the first point of the second angle
+     * @param p6 index of the second point of the second angle
+     * @param p7 index of the third point of the second angle
+     * @param p8 index of the fourth point of the second angle
+     * @return true if the angles are equal or supplementary (within tolerance); false otherwise
+     */
     protected boolean check_eqangle(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
         if (p1 == 0 || p2 == 0 || p3 == 0 || p4 == 0 || p5 == 0 || p6 == 0) {
             Cm.print("null point in eqangle");
@@ -1273,6 +1587,19 @@ public class Gib {
         return r < ZERO || Math.abs(r - Math.PI) < ZERO;
     }
 
+    /**
+     * Checks if two angle values computed via a transformed approach are equal.
+     *
+     * @param p1 index of the first point of the first angle
+     * @param p2 index of the second point of the first angle
+     * @param p3 index of the third point of the first angle
+     * @param p4 index of the fourth point of the first angle
+     * @param p5 index of the first point of the second angle
+     * @param p6 index of the second point of the second angle
+     * @param p7 index of the third point of the second angle
+     * @param p8 index of the fourth point of the second angle
+     * @return true if the absolute transformed angle values are equal (within tolerance); false otherwise
+     */
     protected boolean check_eqangle_t(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
         if (p1 == 0 || p2 == 0 || p3 == 0 || p4 == 0 || p5 == 0 || p6 == 0) {
             Cm.print("Check EQANgle ==0");
@@ -1285,12 +1612,28 @@ public class Gib {
         return r < ZERO;
     }
 
+    /**
+     * Determines whether the angle formed by three points is a right angle (90°).
+     *
+     * @param p1 index of the vertex of the angle
+     * @param p2 index of the first arm point
+     * @param p3 index of the second arm point
+     * @return true if the angle is 90° (within tolerance); false otherwise
+     */
     public boolean check_angle_ls_90(int p1, int p2, int p3) {
 
         double r1 = getAngleValue(p1, p2, p3);
         return Math.abs(Math.abs(r1) - Math.PI / 2) < ZERO;
     }
 
+    /**
+     * Determines if a point lies strictly between two other points along both axes.
+     *
+     * @param p1 index of the point to test
+     * @param p2 index of the first boundary point
+     * @param p3 index of the second boundary point
+     * @return true if p1 is inside the interval defined by p2 and p3; false otherwise
+     */
     protected boolean x_inside(int p1, int p2, int p3) {
         double r1 = ((aptx(p1) - aptx(p2)) * (aptx(p1) - aptx(p3)));
         double r2 = ((apty(p1) - apty(p2)) * (apty(p1) - apty(p3)));
@@ -1300,6 +1643,17 @@ public class Gib {
         return false;
     }
 
+    /**
+     * Computes an angle value using transformed points.
+     *
+     * The method considers special ordering of the points to compute the appropriate angle.
+     *
+     * @param p1 index of the first point
+     * @param p2 index of the second point
+     * @param p3 index of the third point
+     * @param p4 index of the fourth point
+     * @return the computed angle value
+     */
     protected double getAngleValue_t(int p1, int p2, int p3, int p4) {
         int p0;
         if (p1 == p4) {
@@ -1324,6 +1678,17 @@ public class Gib {
             return getAngleValue(p1, p2, p3, p4);
     }
 
+    /**
+     * Checks if the distance between two pairs of points are equal after scaling.
+     *
+     * @param p1 index of the first point of the first segment
+     * @param p2 index of the second point of the first segment
+     * @param p3 index of the first point of the second segment
+     * @param p4 index of the second point of the second segment
+     * @param t1 scaling factor for the first segment
+     * @param t2 scaling factor for the second segment
+     * @return true if the scaled distances are equal (within tolerance); false otherwise
+     */
     protected boolean check_eqdistance(int p1, int p2, int p3, int p4, double t1, double t2) {
         double x1 = aptx(p1);
         double y1 = apty(p1);
@@ -1339,6 +1704,15 @@ public class Gib {
         return Math.abs(r) < ZERO;
     }
 
+    /**
+     * Checks if the distances between two pairs of points are equal.
+     *
+     * @param p1 index of the first point of the first segment
+     * @param p2 index of the second point of the first segment
+     * @param p3 index of the first point of the second segment
+     * @param p4 index of the second point of the second segment
+     * @return true if the distances are equal (within tolerance); false otherwise
+     */
     protected boolean check_eqdistance(int p1, int p2, int p3, int p4) {
         double x1 = aptx(p1);
         double y1 = apty(p1);
@@ -1352,14 +1726,45 @@ public class Gib {
                 - Math.pow(x4 - x3, 2) - Math.pow(y4 - y3, 2)) < ZERO;
     }
 
+    /**
+     * Validates whether the ratio of the squared lengths of two segments remain equal.
+     *
+     * @param a index of the first point of the first segment
+     * @param b index of the second point of the first segment
+     * @param c index of the first point of the second segment
+     * @param d index of the second point of the second segment
+     * @param p index of the first point of the third segment
+     * @param q index of the second point of the third segment
+     * @param r index of the first point of the fourth segment
+     * @param s index of the second point of the fourth segment
+     * @return true if the products of squared lengths are equal (within tolerance); false otherwise
+     */
     protected boolean check_ratio(int a, int b, int c, int d, int p, int q, int r, int s) {
         return Math.abs(length2(a, b) * length2(r, s) - length2(c, d) * length2(p, q)) < ZERO;
     }
 
+    /**
+     * Checks if two pairs of points are equal regardless of order.
+     *
+     * @param p1 the first point of the first pair
+     * @param p2 the second point of the first pair
+     * @param p3 the first point of the second pair
+     * @param p4 the second point of the second pair
+     * @return true if the pairs (p1, p2) and (p3, p4) are equal in any order, false otherwise
+     */
     public boolean ck_4peq(int p1, int p2, int p3, int p4) {
         return p1 == p3 && p2 == p4 || p1 == p4 && p2 == p3;
     }
 
+    /**
+     * Evaluates directional compatibility between two segments defined by two pairs of points.
+     *
+     * @param p1 the first point of the first segment
+     * @param p2 the second point of the first segment
+     * @param p3 the first point of the second segment
+     * @param p4 the second point of the second segment
+     * @return true if the segments satisfy specific directional conditions, false otherwise
+     */
     public boolean ck_dr(int p1, int p2, int p3, int p4) {
         double x1 = aptx(p1);
         double y1 = apty(p1);
@@ -1374,6 +1779,13 @@ public class Gib {
         return (r1 > 0 && r2 > 0) || (r1 == 0 && r2 > 0) || (r1 > 0 && r2 == 0);
     }
 
+    /**
+     * Calculates the squared Euclidean distance between two points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @return the squared distance between p1 and p2
+     */
     protected double length2(int p1, int p2) {
         double x1 = aptx(p1);
         double y1 = apty(p1);
@@ -1382,10 +1794,26 @@ public class Gib {
         return Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2);
     }
 
+    /**
+     * Computes the angle value at the middle point defined by three points.
+     *
+     * @param p1 the first point
+     * @param p2 the vertex point where the angle is measured
+     * @param p3 the third point
+     * @return the angle value at p2 (in radians)
+     */
     protected double getAngleValue(int p1, int p2, int p3) {
         return getAngleValue(p1, p2, p3, p2);
     }
 
+    /**
+     * Determines the angle formed at a common point by two lines.
+     *
+     * @param p the intersection point of the lines
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return the angle between l1 and l2 at point p (in radians)
+     */
     protected double getAngleValue(int p, LLine l1, LLine l2) {
         int a, b;
         if (p == l1.pt[0])
@@ -1399,6 +1827,15 @@ public class Gib {
         return getAngleValue(a, p, b, p);
     }
 
+    /**
+     * Checks if the angle formed by three points is approximately equal to a given value.
+     *
+     * @param a the first point
+     * @param b the vertex point where the angle is measured
+     * @param c the third point
+     * @param v the target angle value in degrees
+     * @return true if the measured angle is approximately equal to v, false otherwise
+     */
     protected boolean check_ateq(int a, int b, int c, int v) {
         double r = getAngleValue(a, b, c);
         double x = Math.abs(r * A_180 / Math.PI - v);
@@ -1409,16 +1846,15 @@ public class Gib {
         return d;
     }
 
-    protected boolean check_tn_eq(LLine l1, LLine l2, LLine l3, LLine l4, int p1, int p2) {
-        double r = getAngleValue(p1, l1, l2);
-        double r1 = getAngleValue(p2, l3, l4);
-        if (Math.abs(r - r1) < 0.01) return true;
-        if (Math.abs(Math.abs(r - r1) - Math.PI) < ZERO)
-            return false;
-        else
-            return false;
-    }
-
+    /**
+     * Computes the angle difference between the lines defined by two point pairs.
+     *
+     * @param p1 the first point of the first line
+     * @param p2 the second point of the first line
+     * @param p3 the first point of the second line
+     * @param p4 the second point of the second line
+     * @return the difference between the angles (in radians) of the two lines
+     */
     protected double getAngleValue(int p1, int p2, int p3, int p4) {
         if (p1 == 0 || p2 == 0 || p3 == 0 || p4 == 0) {
             int k = 0;
@@ -1467,6 +1903,17 @@ public class Gib {
         return dr;
     }
 
+    /**
+     * Checks whether the triangles defined by the given points are similar.
+     *
+     * @param p1 first vertex of the first triangle
+     * @param p2 second vertex of the first triangle
+     * @param p3 third vertex of the first triangle
+     * @param p4 first vertex of the second triangle
+     * @param p5 second vertex of the second triangle
+     * @param p6 third vertex of the second triangle
+     * @return true if the triangles are similar based on their side ratios, false otherwise
+     */
     boolean check_simtri(int p1, int p2, int p3, int p4, int p5, int p6) {
 
         double r1 = getRatio(p1, p2, p4, p5);
@@ -1476,6 +1923,17 @@ public class Gib {
         return (Math.abs(r1 - r2) < ZERO) && (Math.abs(r1 - r3) < ZERO);
     }
 
+    /**
+     * Checks whether two triangles are congruent by comparing side ratios and one corresponding side length.
+     *
+     * @param p1 first vertex of the first triangle
+     * @param p2 second vertex of the first triangle
+     * @param p3 third vertex of the first triangle
+     * @param p4 first vertex of the second triangle
+     * @param p5 second vertex of the second triangle
+     * @param p6 third vertex of the second triangle
+     * @return true if the triangles are congruent, false otherwise
+     */
     boolean check_congtri(int p1, int p2, int p3, int p4, int p5, int p6) {
 
         double r1 = getRatio(p1, p2, p4, p5);
@@ -1486,6 +1944,14 @@ public class Gib {
                 (Math.abs(length2(p1, p2) - length2(p4, p5)) < ZERO);
     }
 
+    /**
+     * Determines if the first point is the midpoint of the segment defined by the other two points.
+     *
+     * @param p1 the point to test as the midpoint
+     * @param p2 the first endpoint of the segment
+     * @param p3 the second endpoint of the segment
+     * @return true if p1 is the midpoint of p2 and p3, false otherwise
+     */
     boolean check_mid(int p1, int p2, int p3) {
         double x1 = aptx(p1);
         double y1 = apty(p1);
@@ -1496,13 +1962,28 @@ public class Gib {
         return Math.abs(x2 + x3 - 2 * x1) < ZERO && Math.abs(y2 + y3 - 2 * y1) < ZERO;
     }
 
+    /**
+     * Calculates the ratio of the squared distances between two pairs of points.
+     *
+     * @param p1 the first point of the first segment
+     * @param p2 the second point of the first segment
+     * @param p3 the first point of the second segment
+     * @param p4 the second point of the second segment
+     * @return the ratio of the squared distance between (p1, p2) and (p3, p4)
+     */
     double getRatio(int p1, int p2, int p3, int p4) {
         double r1 = (Math.pow(aptx(p1) - aptx(p2), 2) + Math.pow(apty(p1) - apty(p2), 2)) /
                 (Math.pow(aptx(p3) - aptx(p4), 2) + Math.pow(apty(p3) - apty(p4), 2));
         return r1;
     }
 
-
+    /**
+     * Computes the integer square root of a number.
+     * Returns the square root if the number is a perfect square; otherwise, returns -1.
+     *
+     * @param n the number to compute the square root of
+     * @return the integer square root if it exists; -1 otherwise
+     */
     int Sqrt(int n) {
         int i = 1;
         while (i * i < n)
@@ -1512,6 +1993,18 @@ public class Gib {
 
     }
 
+    /**
+     * Checks if two triangles, defined by three vertex points each, are identical.
+     * The comparison is independent of the vertex order.
+     *
+     * @param p1 vertex of the first triangle
+     * @param p2 vertex of the first triangle
+     * @param p3 vertex of the first triangle
+     * @param q1 vertex of the second triangle
+     * @param q2 vertex of the second triangle
+     * @param q3 vertex of the second triangle
+     * @return true if the triangles are the same; false otherwise
+     */
     final public boolean same_tri(int p1, int p2, int p3, int q1, int q2, int q3) {
         if (
                 p1 == q1 && (p2 == q2 && p3 == q3 || p2 == q3 && p3 == q2) ||
@@ -1521,19 +2014,10 @@ public class Gib {
         return false;
     }
 
-
-    public void add_ast(Angles as) {
-        AngSt ast = all_ast.nx;
-        while (ast != null) {
-            if (ast.addAngle(as))
-                return;
-            ast = ast.nx;
-        }
-        ast = new AngSt();
-        ast.addAngle(as);
-        return;
-    }
-
+    /**
+     * Collects angle expressions into a collection.
+     * Processes the global list of angle objects and groups unique angle expressions.
+     */
     public void collect_angst() {
 
         Vector v = new Vector();
@@ -1563,6 +2047,13 @@ public class Gib {
         }
     }
 
+    /**
+     * Adds an angle expression to a new angle structure.
+     * Updates the global angle structure list with the provided angle.
+     *
+     * @param ag the angle expression to add
+     * @param v a vector used for collecting angle structures
+     */
     public void addAngst(Angles ag, Vector v) {
         AngSt a = new AngSt();
         a.addAngle(ag);
@@ -1570,6 +2061,12 @@ public class Gib {
         last_ast = a;
     }
 
+    /**
+     * Attempts to insert an angle expression into the existing angle structure list.
+     *
+     * @param ag the angle expression to insert
+     * @return true if the angle was merged with an existing structure; false otherwise
+     */
     public boolean insertAngle(Angles ag) {
         if (ag.l1 == ag.l3 && ag.l2 == ag.l4 || ag.l1 == ag.l2 && ag.l3 == ag.l4)
             return true;
@@ -1584,6 +2081,13 @@ public class Gib {
         return false;
     }
 
+    /**
+     * Finds and returns the angle structure that contains the specified lines.
+     *
+     * @param l1 the first line to search within angle structures
+     * @param l2 the second line to search within angle structures
+     * @return the angle structure containing the lines, or null if not found
+     */
     public AngSt fd_ast(LLine l1, LLine l2) {
         AngSt ast = all_ast.nx;
         while (ast != null) {
@@ -1592,9 +2096,14 @@ public class Gib {
         }
         return null;
     }
-    ////////////////////////////////////////////////////////////////////////////////////
-    /// auxpoint list
 
+    /**
+     * Computes the greatest common divisor (GCD) of two long integers using the Euclidean algorithm.
+     *
+     * @param l1 the first number
+     * @param l2 the second number
+     * @return the GCD of the two numbers
+     */
     long gcd(long l1, long l2) {
         long l;
         if (l1 < 0L) {
@@ -1622,11 +2131,13 @@ public class Gib {
     protected Vector vauxpts = new Vector();
     protected Vector vauxptf = new Vector();
 
-    int get_auxptn() {
-        return vauxpts.size();
-    }
-
-    final public static void setValue(int n, boolean v) {
+    /**
+     * Sets the boolean flag at a given index in a shared values array.
+     *
+     * @param n the 1-based index of the value to set
+     * @param v the boolean value to set
+     */
+    public static void setValue(int n, boolean v) {
         RValue[n - 1] = v;
     }
 }

@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 
+/**
+ * CTMark is a class that represents a mark on a drawing, defined by two lines.
+ * It provides methods for drawing the mark, moving it, and saving/loading its state.
+ */
 public class CTMark extends CClass {
 
     CLine ln1, ln2;
@@ -17,7 +21,9 @@ public class CTMark extends CClass {
     int pos1x, pos1y, pos2x, pos2y;
     int pos3x, pos3y, pos4x, pos4y;
 
-
+    /**
+     * Default constructor for CTMark.
+     */
     public CTMark() {
         super(TMARK);
         m_color = 3;
@@ -25,6 +31,12 @@ public class CTMark extends CClass {
         m_color = DrawData.RED;
     }
 
+    /**
+     * Constructs a CTMark with two lines.
+     *
+     * @param ln1 the first line
+     * @param ln2 the second line
+     */
     public CTMark(CLine ln1, CLine ln2) {
         super(TMARK);
 
@@ -34,18 +46,39 @@ public class CTMark extends CClass {
         this.ln2 = ln2;
     }
 
+    /**
+     * Returns the type string of the mark.
+     *
+     * @return the type string
+     */
     public String TypeString() {
         return null;
     }
 
+    /**
+     * Returns the description of the mark.
+     *
+     * @return the description
+     */
     public String getDescription() {
         return null;
     }
 
+    /**
+     * Draws the mark using the specified Graphics2D object.
+     *
+     * @param g2 the Graphics2D object
+     */
     public void draw(Graphics2D g2) {
         draw(g2, false);
     }
 
+    /**
+     * Moves the mark by the specified delta values.
+     *
+     * @param dx the delta x value
+     * @param dy the delta y value
+     */
     void move(double dx, double dy) {
         double r[] = CLine.Intersect(ln1, ln2);
         if (r == null || r.length == 0)
@@ -64,6 +97,12 @@ public class CTMark extends CClass {
             length = len;
     }
 
+    /**
+     * Draws the mark using the specified Graphics2D object, with an option to select it.
+     *
+     * @param g2 the Graphics2D object
+     * @param selected whether the mark is selected
+     */
     public void draw(Graphics2D g2, boolean selected) {
         if (!isdraw())
             return;
@@ -84,11 +123,25 @@ public class CTMark extends CClass {
         }
     }
 
+    /**
+     * Selects the mark based on the specified coordinates.
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return true if the mark is selected, false otherwise
+     */
     boolean select(double x, double y) {
         boolean xr = Math.pow(tx - x, 2) + Math.pow(ty - y, 2) < CMisc.PIXEPS * CMisc.PIXEPS;
         return xr;
     }
 
+    /**
+     * Saves the mark to a PostScript file.
+     *
+     * @param fp the FileOutputStream to write to
+     * @param stype the stroke type
+     * @throws IOException if an I/O error occurs
+     */
     public void SavePS(FileOutputStream fp, int stype) throws IOException {
         if (!visible) return;
 
@@ -101,6 +154,16 @@ public class CTMark extends CClass {
 
     }
 
+    /**
+     * Draws the TTFoot mark using the specified Graphics2D object.
+     *
+     * @param g2 the Graphics2D object
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param select whether the mark is selected
+     */
     public void drawTTFoot(Graphics2D g2, double x, double y, CPoint p1, CPoint p2, boolean select) {
         if (p1 == null || p2 == null) return;
 
@@ -149,7 +212,12 @@ public class CTMark extends CClass {
         pos4y = (int) (ey);
     }
 
-
+    /**
+     * Saves the mark to a DataOutputStream.
+     *
+     * @param out the DataOutputStream to write to
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
         super.Save(out);
         out.writeInt(ln1.m_id);
@@ -157,6 +225,13 @@ public class CTMark extends CClass {
         out.writeInt(length);
     }
 
+    /**
+     * Loads the mark from a DataInputStream.
+     *
+     * @param in the DataInputStream to read from
+     * @param dp the DrawProcess used for loading
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         super.Load(in, dp);
         int d = in.readInt();

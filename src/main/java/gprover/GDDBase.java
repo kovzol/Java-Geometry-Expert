@@ -6,9 +6,20 @@
  * To change this template use File | Settings | File Templates.
  */
 package gprover;
-                           
+/**
+ * Base class for geometric deduction database operations.
+ */
 public class GDDBase extends Gib {
 
+    /**
+     * Returns an index corresponding to the occurrence of a value among three candidates.
+     *
+     * @param p the value to match
+     * @param p1 the first candidate value
+     * @param p2 the second candidate value
+     * @param p3 the third candidate value
+     * @return 1 if p equals p1, 2 if p equals p2, 3 if p equals p3, otherwise 0
+     */
     final int ind_3(int p, int p1, int p2, int p3) {
         if (p == p1) return (1);
         if (p == p2) return (2);
@@ -16,6 +27,13 @@ public class GDDBase extends Gib {
         return (0);
     }
 
+    /**
+     * Returns an index corresponding to the occurrence of a value among the first three elements of an array.
+     *
+     * @param p the value to match
+     * @param pp an array of candidate values (must contain at least three elements)
+     * @return 1 if p equals pp[0], 2 if p equals pp[1], 3 if p equals pp[2], otherwise 0
+     */
     final int ind_3(int p, int[] pp) {
         if (p == pp[0]) return (1);
         if (p == pp[1]) return (2);
@@ -23,7 +41,14 @@ public class GDDBase extends Gib {
         return (0);
     }
 
-
+    /**
+     * Determines whether the points identified by a, b, and c are collinear and registers the condition if true.
+     *
+     * @param a the first point
+     * @param b the second point
+     * @param c the third point
+     * @return true if the points are collinear, false otherwise
+     */
     final boolean ycoll(int a, int b, int c) {
         boolean i = xcoll(a, b, c);
         if (i) {
@@ -32,14 +57,15 @@ public class GDDBase extends Gib {
         return (i);
     }
 
-    final boolean ypara(int a, int b, int p, int q) {
-        boolean i = xpara(a, b, p, q);
-        if (i) {
-            add_codb(CO_PARA, a, b, p, q, 0, 0, 0, 0);
-        }
-        return (i);
-    }
-
+    /**
+     * Determines whether the lines defined by points (a, b) and (p, q) are perpendicular and records the condition if so.
+     *
+     * @param a the first point on the first line
+     * @param b the second point on the first line
+     * @param p the first point on the second line
+     * @param q the second point on the second line
+     * @return true if the lines are perpendicular, false otherwise
+     */
     final boolean yperp(int a, int b, int p, int q) {
         boolean i = xperp(a, b, p, q);
         if (i) {
@@ -48,6 +74,15 @@ public class GDDBase extends Gib {
         return (i);
     }
 
+    /**
+     * Checks whether the segments defined by (a, b) and (p, q) are congruent and registers the condition if they are.
+     *
+     * @param a the first point of the first segment
+     * @param b the second point of the first segment
+     * @param p the first point of the second segment
+     * @param q the second point of the second segment
+     * @return true if the segments are congruent, false otherwise
+     */
     final boolean ycong(int a, int b, int p, int q) {
         boolean i = xcong(a, b, p, q);
         if (i) {
@@ -56,26 +91,25 @@ public class GDDBase extends Gib {
         return (i);
     }
 
-    final boolean yacong(int a, int b, int c, int p, int q, int r) {
-        boolean i = xacong(a, b, c, p, q, r);
-        if (i) {
-            add_codb(CO_ACONG, a, b, b, c, p, q, q, r);
-        }
-        return (i);
-    }
-
-    final boolean ycir2(int o, int a, int b) {
-        boolean i = xcir2(o, a, b);
-        if (i) {
-            add_codb(CO_CYCLIC, o, a, b, 0, 0, 0, 0, 0);
-        }
-        return (i);
-    }
-
+    /**
+     * Checks if the given identifier is below the current depth or if the point registry is full.
+     *
+     * @param id the identifier to check
+     * @return true if id is less than depth or the point registry is full, false otherwise
+     */
     final boolean ch_dep(long id) {
         return id < depth || isPFull();
     }
 
+    /**
+     * Processes the provided circular arc by adding corresponding conditions for parallelism, cyclicity, and congruence.
+     *
+     * @param cr the circular arc used to derive conditions
+     * @param m1 the first marker or identifier related to the arc
+     * @param m2 the second marker or identifier related to the arc
+     * @param p1 the first point used for condition registration
+     * @param p2 the second point used for condition registration
+     */
     final void add_cr_pn_as(ACir cr, int m1, int m2, int p1, int p2) {
         int lm = R_CR_P_EQARC;
 
@@ -106,6 +140,15 @@ public class GDDBase extends Gib {
         pop_codb();
     }
 
+    /**
+     * Applies type 3 processing by adding cyclic, midpoint, and angle conditions based on the given markers and points.
+     *
+     * @param m the primary marker
+     * @param m2 the marker for the first midpoint condition
+     * @param p2 the point used in cyclic and midpoint conditions
+     * @param m3 the marker for the second midpoint condition
+     * @param p3 the point used in cyclic and midpoint conditions
+     */
     final void add_type3(int m, int m2, int p2, int m3, int p3) {
         int p1;
         add_codb(CO_CYCLIC, m, p2, p3, 0, 0, 0, 0, 0);
@@ -127,22 +170,15 @@ public class GDDBase extends Gib {
         pop_codb();
     }
 
-    final void add_type4(int m, int m1, int p1, int m2, int p2) {
-        add_codb(CO_PARA, m1, m2, p1, p2, 0, 0, 0, 0);
-        add_codb(CO_CYCLIC, m, p1, p2, 0, 0, 0, 0, 0);
-        add_codb(CO_MIDP, m, m1, m2, 0, 0, 0, 0, 0);
-        add_cir4(64, 0, m1, m2, p1, p2);
-        add_ea_pt_t(64, m1, m, p1, p2, m, m2);
-        add_ea_pt_t(64, m1, p1, m, m, p2, m2);
-        add_ea_pt_t(64, m2, m, p1, p2, m, m1);
-        add_ea_pt_t(64, m2, p1, m, m, p2, m1);
-        pop_codb();
-        pop_codb();
-        pop_codb();
-    }
-
 /* Lemmas  */
 
+    /**
+     * Searches for perpendicular and parallel relationships between a point-based
+     * line and a t-line, and adds corresponding conditions.
+     *
+     * @param pn the point-based line
+     * @param tn the t-line to be analyzed
+     */
     final void search_pn_tn(PLine pn, TLine tn) {
         LLine ln, l1, l2;
         int i;
@@ -175,6 +211,14 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Establishes a midpoint connection based on a midpoint object and two lines,
+     * adding necessary conditions if valid.
+     *
+     * @param md the midpoint instance containing connection data
+     * @param l1 the first line for connection
+     * @param l2 the second line for connection
+     */
     final void lm_md_connection(MidPt md, LLine l1, LLine l2) {
         int lm = R_MID_CONNECTION;
         if (!valid(lm)) return;
@@ -207,11 +251,25 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Checks if the given integer meets connection criteria based on internal state.
+     *
+     * @param n the value to be checked
+     * @return true if the condition is met, false otherwise
+     */
     boolean ch_it(int n) {
         return ((d_base != 0) ? (n != 0) : ((n) == 1));
 
     }
 
+    /**
+     * Constructs a parallelogram configuration based on a midpoint and two lines,
+     * adding conditions and lines if the configuration is valid.
+     *
+     * @param md the midpoint used for establishing the parallelogram
+     * @param l1 the first line of the configuration
+     * @param l2 the second line of the configuration
+     */
     final void lm_parallelogram(MidPt md, LLine l1, LLine l2) {
 
         if (!valid(R_PARALLELOGRAM)) return;
@@ -261,7 +319,15 @@ public class GDDBase extends Gib {
         }
     }
 
-
+    /**
+     * Establishes a ratio condition based on intersections of lines defined by points.
+     *
+     * @param lm the lemma identifier for the ratio condition
+     * @param p1 the first point of the first line
+     * @param p2 the second point of the first line
+     * @param p3 the first point of the second line
+     * @param p4 the second point of the second line
+     */
     final void lm_RATIO(int lm, int p1, int p2, int p3, int p4) {
         if (!valid(R_RATIO)) return;
 
@@ -280,19 +346,23 @@ public class GDDBase extends Gib {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    /// this frome pred.cpp
-
-    final void copy_pred(Cond p1, Cond p2) {
-        p2.pred = p1.pred;
-        p2.u.cpv(p1.u);
-        for (int i = 0; i <= 7; i++) p2.p[i] = p1.p[i];
-    }
-
+    /**
+     * Determines whether two condition nodes are equivalent.
+     *
+     * @param n1 the first condition node
+     * @param n2 the second condition node
+     * @return true if both nodes are equivalent, false otherwise
+     */
     boolean new_eq(Cond n1, Cond n2) {
         return (n1.pred == n2.pred && n1.u.equal(n2.u));
     }
 
+    /**
+     * Creates a new condition node with a given predicate value.
+     *
+     * @param pred the predicate identifier for the condition
+     * @return a new condition node instance
+     */
     final Cond new_pr(int pred) {
         Cond nd = new Cond();
         nd.pred = pred;
@@ -309,6 +379,9 @@ public class GDDBase extends Gib {
         return nd;
     }
 
+    /**
+     * Adjusts the condition list by updating the last condition based on equivalence.
+     */
     final void new_ot() {
         int i = 0;
         Cond nd1, nd = all_nd.nx;
@@ -324,6 +397,20 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Creates and adds a new condition node with specified properties.
+     *
+     * @param n the predicate or condition type
+     * @param p1 the first parameter
+     * @param p2 the second parameter
+     * @param p3 the third parameter
+     * @param p4 the fourth parameter
+     * @param p5 the fifth parameter
+     * @param p6 the sixth parameter
+     * @param p7 the seventh parameter
+     * @param p8 the eighth parameter
+     * @return the newly created condition node
+     */
     Cond add_codb(int n, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
 
 //        if(p1 == 1 && p2 ==4 && p3 == 1 && p4 == 9)
@@ -381,6 +468,9 @@ public class GDDBase extends Gib {
 
     }
 
+    /**
+     * Removes the last added condition node from the condition database.
+     */
     final void pop_codb() {
         Cond co = co_db.nx;
         if (co != null) {
@@ -388,6 +478,12 @@ public class GDDBase extends Gib {
         } /* free((cond *)co);  */
     }
 
+    /**
+     * Creates and adds a new coordinate condition node with the specified predicate.
+     *
+     * @param n the predicate for the coordinate condition
+     * @return the newly created coordinate condition node
+     */
     Cond add_coxy(int n) {
         Cond co = new Cond();
         co.pred = n;
@@ -404,16 +500,11 @@ public class GDDBase extends Gib {
         return (co);
     }
 
-    final void add_codx(int n, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
-        Cond co = add_codb(n, p1, p2, p3, p4, p5, p6, p7, p8);
-        if (co.pred != 0) {
-            co_db.nx = co.nx;
-            co.nx = co_xy.nx;
-            co_xy.nx = co;
-        }
-    }
-
-
+    /**
+     * Creates and adds a new parallel condition node associated with the given predicted line.
+     *
+     * @param pn the predicted line to be associated with the parallel condition
+     */
     final void new_para(PLine pn) {
         Cond nd = new Cond();
         nd.pred = CO_PARA;
@@ -426,10 +517,14 @@ public class GDDBase extends Gib {
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /*  geometry predictaes */
-
+    /**
+     * Checks if the three specified points are collinear.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @return true if the points are collinear, false otherwise
+     */
     final boolean xcoll(int p1, int p2, int p3) {
         LLine ln;
 
@@ -440,7 +535,14 @@ public class GDDBase extends Gib {
         return (ln != null);
     }
 
-
+    /**
+     * Finds and returns the line that contains the three specified points, if such a line exists.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @return the line (LLine) containing the points, or null if none exists
+     */
     final LLine fo_ln3(int p1, int p2, int p3) {
         LLine ln;
         ln = all_ln.nx;
@@ -453,6 +555,13 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Finds and returns a line that passes through all specified non-zero points in the array.
+     *
+     * @param ps an array of points
+     * @param n the number of indices to check in the array
+     * @return the line (LLine) if found, or null otherwise
+     */
     final LLine fo_ln(int ps[], int n)   ///xxxxx
     {
         LLine ln;
@@ -474,17 +583,44 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Checks if the four points satisfy collinearity conditions.
+     * If the first two points are equal, it delegates to xcoll; otherwise, it ensures collinearity for both
+     * subsets.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param p4 the fourth point
+     * @return true if the relevant points are collinear, false otherwise
+     */
     final boolean xcoll4(int p1, int p2, int p3, int p4) {
         if (p1 == p2) return (xcoll(p2, p3, p4));
         return (xcoll(p1, p2, p3) && xcoll(p1, p2, p4));
     }
 
+    /**
+     * Determines whether the two lines defined by the point pairs (p1, p2) and (p3, p4) are parallel.
+     *
+     * @param p1 the first point of the first line
+     * @param p2 the second point of the first line
+     * @param p3 the first point of the second line
+     * @param p4 the second point of the second line
+     * @return true if the lines are parallel, false otherwise
+     */
     final boolean xpara(int p1, int p2, int p3, int p4) {
 
         if (p1 == p2 || p3 == p4 || xcoll4(p1, p2, p3, p4)) return (true);
         return (fo_pn1(p1, p2, p3, p4) != null);
     }
 
+    /**
+     * Determines whether the two specified lines are parallel.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return true if the lines are parallel, false otherwise
+     */
     final boolean ln_para(LLine l1, LLine l2) {
         PLine pn;
         if (l1 == l2) return (true);
@@ -512,35 +648,27 @@ public class GDDBase extends Gib {
         return (false);
     }
 
-    final PLine fo_pn(int p1, int p2, int p3, int p4) {
-        PLine pn = all_pn.nx;
-        while (pn != null) {
-            if (pn.no == 0) {
-                pn = pn.nx;
-                continue;
-            }
-            for (int i = 0; i <= pn.no; i++) {
-                if (on_ln(p1, pn.ln[i]) && on_ln(p2, pn.ln[i])) {
-                    for (int j = i + 1; j <= pn.no; j++)
-                        if (on_ln(p3, pn.ln[j]) && on_ln(p4, pn.ln[j])) return (pn);
-                    if (pn.type != 0) return (null); //??
-                } else if (on_ln(p3, pn.ln[i]) && on_ln(p4, pn.ln[i])) {
-                    for (int j = i + 1; j <= pn.no; j++)
-                        if (on_ln(p1, pn.ln[j]) && on_ln(p2, pn.ln[j])) return (pn);
-                    if (pn.type != 0) return (null);//??
-                }
-            }
-            pn = pn.nx;
-        }
-        return (null);
-    }
-
+    /**
+     * Checks if the two lines defined by the points (p1, p2) and (p3, p4) are perpendicular.
+     *
+     * @param p1 the first point of the first line
+     * @param p2 the second point of the first line
+     * @param p3 the first point of the second line
+     * @param p4 the second point of the second line
+     * @return true if the lines are perpendicular, false otherwise
+     */
     final boolean xperp(int p1, int p2, int p3, int p4) {
         if (p1 == p2 || p3 == p4) return (true);
         return fo_tn1(p1, p2, p3, p4) != null;
     }
 
-
+    /**
+     * Determines whether the two specified lines are perpendicular.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return true if the lines are perpendicular, false otherwise
+     */
     final boolean ln_perp(LLine l1, LLine l2) {
         if (l1 == l2) return false;
         if (l1 == null) {
@@ -567,23 +695,12 @@ public class GDDBase extends Gib {
         return (false);
     }
 
-    final TLine fo_tn(int p1, int p2, int p3, int p4) {
-        LLine ln1, ln2;
-        TLine tn;
-        if (p1 == p2 || p3 == p4) return (null);
-        ln1 = fd_ln(p1, p2);
-        if (ln1 == null) return (null);
-        ln2 = fd_ln(p3, p4);
-        if (ln2 == null) return (null);
-        tn = all_tn.nx;
-        while (tn != null) {
-            if ((tn.l1 == ln1 && tn.l2 == ln2) || (tn.l1 == ln2 && tn.l2 == ln1)) return (tn);
-            tn = tn.nx;
-        }
-        return (null);
-    }
-
-
+    /**
+     * Searches for an existing circle that is a sub-circle of the given circle.
+     *
+     * @param c1 the reference circle (ACir) to compare against
+     * @return an existing circle that matches, or null if none is found
+     */
     final ACir xcir(ACir c1) {
         ACir c2;
         c2 = all_cir.nx;
@@ -594,6 +711,16 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Finds and returns a circle based on a specified property and four points.
+     *
+     * @param o the circle property or type indicator
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param p4 the fourth point
+     * @return the found circle (ACir) or null if none exists
+     */
     final ACir fo_cr(int o, int p1, int p2, int p3, int p4) {
         test_c.o = o;
         test_c.no = 3;
@@ -604,6 +731,14 @@ public class GDDBase extends Gib {
         return (xcir(test_c));
     }
 
+    /**
+     * Checks for the existence of a circle defined by the given property and two points.
+     *
+     * @param o the circle property or type indicator
+     * @param p1 the first point
+     * @param p2 the second point
+     * @return true if such a circle exists, false otherwise
+     */
     final boolean xcir2(int o, int p1, int p2) {
         test_c.o = o;
         test_c.no = 1;
@@ -612,6 +747,15 @@ public class GDDBase extends Gib {
         return (xcir(test_c) != null);
     }
 
+    /**
+     * Checks for the existence of a circle defined by the given property and three points.
+     *
+     * @param o the circle property or type indicator
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @return true if such a circle exists, false otherwise
+     */
     final boolean xcir3(int o, int p1, int p2, int p3) {
         test_c.o = o;
         test_c.no = 2;
@@ -621,6 +765,16 @@ public class GDDBase extends Gib {
         return (xcir(test_c) != null);
     }
 
+    /**
+     * Checks for the existence of a circle defined by the given property and four points.
+     *
+     * @param o the circle property or type indicator
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param p4 the fourth point
+     * @return true if such a circle exists, false otherwise
+     */
     final boolean xcir4(int o, int p1, int p2, int p3, int p4) {
         test_c.o = o;
         test_c.no = 3;
@@ -631,21 +785,26 @@ public class GDDBase extends Gib {
         return (xcir(test_c) != null);
     }
 
-    final boolean xcir5(int o, int p1, int p2, int p3, int p4, int p5) {
-        test_c.o = o;
-        test_c.no = 4;
-        test_c.pt[0] = p1;
-        test_c.pt[1] = p2;
-        test_c.pt[2] = p3;
-        test_c.pt[3] = p4;
-        test_c.pt[4] = p5;
-        return (xcir(test_c) != null);
-    }
-
+    /**
+     * Checks if a midpoint exists for the specified segment within the given model.
+     *
+     * @param m the model identifier
+     * @param a the first endpoint of the segment
+     * @param b the second endpoint of the segment
+     * @return true if a midpoint exists for the segment, false otherwise
+     */
     final boolean xmid(int m, int a, int b) {
         return (fo_md(m, a, b) != null);
     }
 
+    /**
+     * Searches for and returns a midpoint corresponding to the specified model and endpoints.
+     *
+     * @param m the model identifier
+     * @param a the first endpoint
+     * @param b the second endpoint
+     * @return the midpoint (MidPt) if found, or null otherwise
+     */
     final MidPt fo_md(int m, int a, int b) {
         MidPt md = all_md.nx;
         while (md != null) {
@@ -658,6 +817,13 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Searches for and returns a midpoint defined by the two specified endpoints.
+     *
+     * @param a the first endpoint
+     * @param b the second endpoint
+     * @return the midpoint (MidPt) if one exists, or null otherwise
+     */
     final MidPt fo_md(int a, int b) {
         MidPt md = all_md.nx;
         while (md != null) {
@@ -669,6 +835,17 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Determines if the angles defined by points (a, b, c) and (p, q, r) are congruent.
+     *
+     * @param a the first point of the first angle
+     * @param b the vertex of the first angle
+     * @param c the third point of the first angle
+     * @param p the first point of the second angle
+     * @param q the vertex of the second angle
+     * @param r the third point of the second angle
+     * @return true if the angles are congruent, false otherwise
+     */
     final boolean xacong(int a, int b, int c, int p, int q, int r) {
         if (!check_eqangle(a, b, c, p, q, r)) {
             return false;
@@ -683,6 +860,19 @@ public class GDDBase extends Gib {
         return (ln_acong(l1, l2, l3, l4));
     }
 
+    /**
+     * Determines if the angles defined by points (a, b, c, d) and (p, q, r, s) are congruent.
+     *
+     * @param a the first point of the first angle
+     * @param b the second point of the first angle
+     * @param c the third point of the first angle
+     * @param d the fourth point of the first angle
+     * @param p the first point of the second angle
+     * @param q the second point of the second angle
+     * @param r the third point of the second angle
+     * @param s the fourth point of the second angle
+     * @return true if the angles are congruent, false otherwise
+     */
     final boolean xacong(int a, int b, int c, int d, int p, int q, int r, int s) {
         if (!check_eqangle(a, b, c, d, p, q, r, s)) return false;
 
@@ -695,7 +885,13 @@ public class GDDBase extends Gib {
         return (ln_acong(l1, l2, l3, l4));
     }
 
-
+    /**
+     * Compares two lines based on their unique identifiers.
+     *
+     * @param l1 the first line to compare
+     * @param l2 the second line to compare
+     * @return 1 if l1 has a greater id than l2, 0 if they are equal, -1 if l1 has a smaller id than l2
+     */
     final int line_compare(LLine l1, LLine l2) {
         if (l1 == null) {
             // TODO. Handle this.
@@ -713,6 +909,16 @@ public class GDDBase extends Gib {
         return 0;
     }
 
+    /**
+     * Retrieves the angle set associated with the given four lines.
+     * Depending on the current state, a different method is used to generate the angle set.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the set of angles (Angles) if found, or null otherwise
+     */
     final Angles fo_las(LLine l1, LLine l2, LLine l3, LLine l4) {
         Angles as;
         if (isPFull())
@@ -722,7 +928,16 @@ public class GDDBase extends Gib {
         return as;
     }
 
-    final Angles fo_las0(LLine l1, LLine l2, LLine l3, LLine l4)    //????
+    /**
+     * Determines the angle set for the provided four lines based on available line ordering and comparisons.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the angle set (Angles) if found, or null otherwise
+     */
+    final Angles fo_las0(LLine l1, LLine l2, LLine l3, LLine l4)
     {
         LLine n1, n2;
         Angles as;
@@ -795,17 +1010,15 @@ public class GDDBase extends Gib {
         return (null);
     }
 
-    final Angles fo_as(int a, int b, int c, int d, int p, int q, int r, int s) {
-        LLine l1, l2, l3, l4;
-        l1 = fd_ln(a, b);
-        l2 = fd_ln(c, d);
-        l3 = fd_ln(p, q);
-        l4 = fd_ln(r, s);
-        if (l1 == null || l2 == null || l3 == null || l4 == null) return (null);
-        return (fo_las(l1, l2, l3, l4));
-    }
-
-
+    /**
+     * Determines if the angles defined by (l1, l2) and (l3, l4) are congruent.
+     *
+     * @param l1 first line of the first angle
+     * @param l2 second line of the first angle
+     * @param l3 first line of the second angle
+     * @param l4 second line of the second angle
+     * @return true if the angles are congruent, false otherwise
+     */
     final boolean ln_acong(LLine l1, LLine l2, LLine l3, LLine l4) {
         if (l1 == null || l2 == null || l3 == null || l4 == null) {
             int k = 0;
@@ -828,7 +1041,15 @@ public class GDDBase extends Gib {
         return (fo_las(l1, l2, l3, l4) != null);
     }
 
-
+    /**
+     * Checks whether the segments defined by endpoints a, b and p, q are congruent.
+     *
+     * @param a first endpoint of the first segment
+     * @param b second endpoint of the first segment
+     * @param p first endpoint of the second segment
+     * @param q second endpoint of the second segment
+     * @return true if the segments are congruent, false otherwise
+     */
     final boolean xcong(int a, int b, int p, int q) {
         if (!check_eqdistance(a, b, p, q)) return false;
 
@@ -864,6 +1085,17 @@ public class GDDBase extends Gib {
         return (false);
     }
 
+    /**
+     * Determines if the segments (a, b) and (p, q) are congruent using specific angle values.
+     *
+     * @param a first endpoint of the first segment
+     * @param b second endpoint of the first segment
+     * @param p first endpoint of the second segment
+     * @param q second endpoint of the second segment
+     * @param t1 first angle factor for congruency check
+     * @param t2 second angle factor for congruency check
+     * @return true if the segments are congruent based on the provided ratios, false otherwise
+     */
     final boolean xcong1(int a, int b, int p, int q, int t1, int t2) {
         CongSeg cg;
         int o;
@@ -903,10 +1135,28 @@ public class GDDBase extends Gib {
             return cg.t1 * t1 == cg.t2 * t2;
     }
 
+    /**
+     * Checks if the segments (a, b) and (c, d) are congruent using both default and extended methods.
+     *
+     * @param a first endpoint of the first segment
+     * @param b second endpoint of the first segment
+     * @param c first endpoint of the second segment
+     * @param d second endpoint of the second segment
+     * @return true if the segments are congruent by any method, false otherwise
+     */
     final boolean xcong_all(int a, int b, int c, int d) {
         return xcong(a, b, c, d) || xcong1(a, b, c, d);
     }
 
+    /**
+     * Checks whether the segments defined by endpoints a, b and p, q are congruent using an alternative ratio approach.
+     *
+     * @param a first endpoint of the first segment
+     * @param b second endpoint of the first segment
+     * @param p first endpoint of the second segment
+     * @param q second endpoint of the second segment
+     * @return true if the segments are congruent, false otherwise
+     */
     final boolean xcong1(int a, int b, int p, int q) {
         CongSeg cg;
         int o;
@@ -939,6 +1189,15 @@ public class GDDBase extends Gib {
         return (false);
     }
 
+    /**
+     * Searches for a congruent segment in the ratio group for segments (a, b) and (p, q).
+     *
+     * @param a first endpoint of the first segment
+     * @param b second endpoint of the first segment
+     * @param p first endpoint of the second segment
+     * @param q second endpoint of the second segment
+     * @return the congruent segment if found, null otherwise
+     */
     final CongSeg fo_rg1(int a, int b, int p, int q) {
         CongSeg cg = all_rg.nx;
         while (cg != null) {
@@ -948,6 +1207,15 @@ public class GDDBase extends Gib {
         return null;
     }
 
+    /**
+     * Returns the first matching congruent segment from the ratio list based on endpoints (a, b) and (p, q).
+     *
+     * @param a first endpoint of the first segment
+     * @param b second endpoint of the first segment
+     * @param p first endpoint of the second segment
+     * @param q second endpoint of the second segment
+     * @return the congruent segment if present; null otherwise
+     */
     final CongSeg fo_cg1(int a, int b, int p, int q) {
         CongSeg cg;
         int o;
@@ -970,6 +1238,15 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Retrieves a congruent segment from the common group based on endpoints (a, b) and (p, q).
+     *
+     * @param a first endpoint of the first segment
+     * @param b second endpoint of the first segment
+     * @param p first endpoint of the second segment
+     * @param q second endpoint of the second segment
+     * @return the congruent segment if found, null otherwise
+     */
     final CongSeg fo_cg(int a, int b, int p, int q) {
         CongSeg cg;
         int o;
@@ -992,17 +1269,52 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Determines whether the triangles defined by points (a, b, c) and (p, q, r) are similar.
+     *
+     * @param a first vertex of the first triangle
+     * @param b second vertex of the first triangle
+     * @param c third vertex of the first triangle
+     * @param p first vertex of the second triangle
+     * @param q second vertex of the second triangle
+     * @param r third vertex of the second triangle
+     * @return true if the triangles are similar, false otherwise
+     */
     boolean xsim_tri(int a, int b, int c, int p, int q, int r) {
         if (!check_simtri(a, b, c, p, q, r)) return false;
 
         return (fo_st(1, 0, a, b, c, p, q, r) != null);
     }
 
+    /**
+     * Determines whether the triangles defined by points (a, b, c) and (p, q, r) are congruent.
+     *
+     * @param a first vertex of the first triangle
+     * @param b second vertex of the first triangle
+     * @param c third vertex of the first triangle
+     * @param p first vertex of the second triangle
+     * @param q second vertex of the second triangle
+     * @param r third vertex of the second triangle
+     * @return true if the triangles are congruent, false otherwise
+     */
     boolean xcon_tri(int a, int b, int c, int p, int q, int r) {
         if (!this.check_simtri(a, b, c, p, q, r)) return false;
         return (fo_st(0, 0, a, b, c, p, q, r) != null);
     }
 
+    /**
+     * Finds a similar or congruent triangle structure based on the provided vertices.
+     *
+     * @param xsim_2 flag to indicate extended similarity testing
+     * @param xsim_1 flag to optionally bypass congruency type check
+     * @param a first vertex of the first triangle
+     * @param b second vertex of the first triangle
+     * @param c third vertex of the first triangle
+     * @param p first vertex of the second triangle
+     * @param q second vertex of the second triangle
+     * @param r third vertex of the second triangle
+     * @return the triangle structure if found, null otherwise
+     */
     SimTri fo_st(int xsim_2, int xsim_1, int a, int b, int c, int p, int q, int r) {
         SimTri st = (xsim_2 != 0) ? all_st.nx : all_ct.nx; //???
         while (st != null) {
@@ -1014,6 +1326,19 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Checks if the ratio of lengths between segments (a, b) and (c, d) equals that between (p, q) and (r, s).
+     *
+     * @param a first endpoint of the first segment
+     * @param b second endpoint of the first segment
+     * @param c first endpoint of the second segment
+     * @param d second endpoint of the second segment
+     * @param p first endpoint of the third segment
+     * @param q second endpoint of the third segment
+     * @param r first endpoint of the fourth segment
+     * @param s second endpoint of the fourth segment
+     * @return true if the ratios are equal, false otherwise
+     */
     boolean xeq_ratio(int a, int b, int c, int d, int p, int q, int r, int s) {
         if ((xcong(a, b, p, q) && xcong(c, d, r, s)) ||
                 (xcong(a, b, c, d) && xcong(p, q, r, s)) ||
@@ -1022,6 +1347,19 @@ public class GDDBase extends Gib {
         return (fo_ra(a, b, c, d, p, q, r, s) != null);
     }
 
+    /**
+     * Finds and returns the ratio segment structure that matches the given endpoints.
+     *
+     * @param a first endpoint of the first segment
+     * @param b second endpoint of the first segment
+     * @param c first endpoint of the second segment
+     * @param d second endpoint of the second segment
+     * @param p first endpoint of the third segment
+     * @param q second endpoint of the third segment
+     * @param r first endpoint of the fourth segment
+     * @param s second endpoint of the fourth segment
+     * @return the matching ratio segment structure if found, null otherwise
+     */
     RatioSeg fo_ra(int a, int b, int c, int d, int p, int q, int r, int s) {
         RatioSeg ra = all_ra.nx;
         for (; ra != null; ra = ra.nx) {
@@ -1038,7 +1376,13 @@ public class GDDBase extends Gib {
         return (null);
     }
 
-
+    /**
+     * Compares two lines based on their primary endpoints.
+     *
+     * @param l1 the first line to compare
+     * @param l2 the second line to compare
+     * @return true if l1 is considered less than l2, false otherwise
+     */
     boolean ln_less(LLine l1, LLine l2) {
         if (l1 == l2) return (false);
         if (l1.pt[1] < l2.pt[1]) return (true);
@@ -1047,6 +1391,15 @@ public class GDDBase extends Gib {
         return (false);
     }
 
+    /**
+     * Compares two pairs of lines to determine order.
+     *
+     * @param l1 first line of the first pair
+     * @param l2 second line of the first pair
+     * @param l3 first line of the second pair
+     * @param l4 second line of the second pair
+     * @return true if the second pair is considered less than the first pair, false otherwise
+     */
     boolean l2_less(LLine l1, LLine l2, LLine l3, LLine l4) {
         LLine ln;
         if (ln_less(l2, l1)) {
@@ -1064,16 +1417,15 @@ public class GDDBase extends Gib {
         return (false);
     }
 
-
-    int get_cpt2(ACir c1, int p1, int p2) {
-        char j;
-        if (c1 == null) return 0;  /// 2006.7.10
-        for (j = 0; j <= c1.no; j++) {
-            if (c1.pt[j] != p1 && c1.pt[j] != p2) return (c1.pt[j]);
-        }
-        return (0);
-    }
-
+    /**
+     * Returns the third point of circle c1 that is not equal to p1, p2, or p3.
+     *
+     * @param c1 the circle to examine
+     * @param p1 the first point to exclude
+     * @param p2 the second point to exclude
+     * @param p3 the third point to exclude
+     * @return the point number that is different from p1, p2, and p3, or 0 if not found
+     */
     int get_cpt3(ACir c1, int p1, int p2, int p3) {
         char j;
         for (j = 0; j <= c1.no; j++) {
@@ -1083,6 +1435,13 @@ public class GDDBase extends Gib {
         return (0);
     }
 
+    /**
+     * Finds the intersection point of two lines if one exists.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return the intersection point number if found, 0 otherwise
+     */
     int inter_ll(LLine l1, LLine l2) {
         if (l1 == null || l2 == null || l1 == l2) return (0);
         LLine ln1, ln2;
@@ -1105,6 +1464,14 @@ public class GDDBase extends Gib {
         return (0);
     }
 
+    /**
+     * Finds the intersection of two lines that is different from a given point.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param p1 the point to exclude from the intersection result
+     * @return the intersection point number if found and not equal to p1, 0 otherwise
+     */
     int inter_ll1(LLine l1, LLine l2, int p1) {
         char i, j;
         if (l1 == l2) return (0);
@@ -1117,6 +1484,13 @@ public class GDDBase extends Gib {
         return (0);
     }
 
+    /**
+     * Finds the intersection point between a line and a circle.
+     *
+     * @param l1 the line to check for intersection
+     * @param c1 the circle to check for intersection
+     * @return the intersection point number if found, 0 otherwise
+     */
     int inter_lc(LLine l1, ACir c1) {
         char i, j;
         if (l1 == null || c1 == null) return (0);
@@ -1127,6 +1501,14 @@ public class GDDBase extends Gib {
         return (0);
     }
 
+    /**
+     * Returns the intersection point between a line and a circle, excluding a given point.
+     *
+     * @param l1 the line to check
+     * @param c1 the circle to check
+     * @param p1 the point to exclude
+     * @return the intersection point or 0 if none
+     */
     int inter_lc1(LLine l1, ACir c1, int p1) {
 
         if (l1 == null || c1 == null) return (0);
@@ -1137,6 +1519,13 @@ public class GDDBase extends Gib {
         return (0);
     }
 
+    /**
+     * Returns the intersection point between two circles.
+     *
+     * @param c1 the first circle
+     * @param c2 the second circle
+     * @return the intersection point or 0 if none
+     */
     int inter_cc(ACir c1, ACir c2) {
         char i, j;
         for (i = 0; i <= c1.no; i++)
@@ -1146,6 +1535,14 @@ public class GDDBase extends Gib {
         return (0);
     }
 
+    /**
+     * Returns the intersection point between two circles, excluding a given point.
+     *
+     * @param c1 the first circle
+     * @param c2 the second circle
+     * @param p1 the point to exclude
+     * @return the intersection point or 0 if none
+     */
     int inter_cc1(ACir c1, ACir c2, int p1) {
         char i, j;
         for (i = 0; i <= c1.no; i++)
@@ -1155,28 +1552,13 @@ public class GDDBase extends Gib {
         return (0);
     }
 
-    int fd_pt_la(int o, int p1, int p2) {
-        int i, p3;
-        LLine ln;
-        ln = fd_ln(p1, p2);
-        if (ln == null || ln.no <= 1) return (0);
-        for (i = 0; i <= ln.no; i++) {
-            p3 = ln.pt[i];
-            if (!meq_pt(p3, p1) && !meq_pt(p3, p2) && xacong(p1, o, p3, p3, o, p2)) return (p3);
-        }
-        return (0);
-    }
-
-    int common_pp(PLine pl1, PLine pl2) {
-        char i, j;
-        for (i = 0; i <= pl1.no; i++)
-            for (j = 0; j <= pl2.no; j++) {
-                if (pl1.ln[i] == pl2.ln[j]) return (1);
-            }
-        return (0);
-    }
-
-
+    /**
+     * Finds the midpoint index for the segment defined by two points.
+     *
+     * @param a the first point
+     * @param b the second point
+     * @return the midpoint index or 0 if not found
+     */
     int fd_pt_md(int a, int b) {
         MidPt md = all_md.nx;
         while (md != null) {
@@ -1186,26 +1568,14 @@ public class GDDBase extends Gib {
         return (0);
     }
 
-    int fd_pt_ref(int a, int o) {
-        MidPt md = all_md.nx;
-        while (md != null) {
-            if (md.m == o && a == md.a) return (md.b);
-            if (md.m == o && a == md.b) return (md.a);
-            md = md.nx;
-        }
-        return (0);
-    }
-
-
-    MidPt fd_md_ml(int m, LLine l) {
-        MidPt md = all_md.nx;
-        while (md != null) {
-            if (md.m == m && on_ln(md.a, l)) return (md);
-            md = md.nx;
-        }
-        return (null);
-    }
-
+    /**
+     * Adds a midpoint for the segment between two points if valid.
+     *
+     * @param lm the midpoint lemma or marker
+     * @param pt the new midpoint
+     * @param p1 the first endpoint
+     * @param p2 the second endpoint
+     */
     final void add_mid(int lm, int pt, int p1, int p2) {
         MidPt md;
         if (p1 == p2 || !check_mid(pt, p1, p2)) {
@@ -1229,6 +1599,13 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Checks if a point is on the given line.
+     *
+     * @param p the point to check
+     * @param ln the line to inspect
+     * @return true if the point exists on the line; false otherwise
+     */
     boolean on_ln(int p, LLine ln) {
         int i;
         if (ln == null) return (false);
@@ -1236,6 +1613,13 @@ public class GDDBase extends Gib {
         return (false);
     }
 
+    /**
+     * Determines if all points of one line are contained within another line.
+     *
+     * @param l1 the line to check if it is a subline
+     * @param l2 the line to be checked against
+     * @return true if l1 is a subline of l2; false otherwise
+     */
     boolean sub_ln(LLine l1, LLine l2) {
         int i;
         if (l1 == null) {
@@ -1247,6 +1631,12 @@ public class GDDBase extends Gib {
         return (true);
     }
 
+    /**
+     * Adds a point to the line in sorted order.
+     *
+     * @param p the point to add
+     * @param ln the line to which the point is added
+     */
     final void add_pt2l(int p, LLine ln) {
         int j, i = 0;
         while (i <= ln.no && ln.pt[i] < p) i++;
@@ -1263,6 +1653,13 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Finds a finite line that contains the two specified points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @return the line containing both points or null if not found
+     */
     LLine fd_ln(int p1, int p2) {
         LLine ln = all_ln.nx;
         while (ln != null && !(ln.type != 0 && on_ln(p1, ln) && on_ln(p2, ln))) {
@@ -1271,6 +1668,14 @@ public class GDDBase extends Gib {
         return (ln);
     }
 
+    /**
+     * Finds a finite line that contains the three specified points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @return the line containing the three points or null if not found
+     */
     LLine fd_ln3(int p1, int p2, int p3) {
         LLine ln = all_ln.nx;
         while (ln != null) {
@@ -1283,6 +1688,14 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Retrieves a line from a parallel structure that contains the specified point.
+     *
+     * @param p1 the point to check
+     * @param p2 the first reference point for the parallel line search
+     * @param p3 the second reference point for the parallel line search
+     * @return the line that contains the point or null if not found
+     */
     LLine fd_pline(int p1, int p2, int p3) {
         int i;
         PLine pn;
@@ -1293,6 +1706,14 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Retrieves a transversal line associated with the given points.
+     *
+     * @param p1 the point to check
+     * @param p2 the first reference point for the transversal search
+     * @param p3 the second reference point for the transversal search
+     * @return the transversal line containing the point or null if not found
+     */
     LLine fd_tline(int p1, int p2, int p3) {
         LLine ln;
         TLine tn;
@@ -1310,6 +1731,13 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Searches for a line within a parallel structure that contains the given point.
+     *
+     * @param pn the parallel line structure
+     * @param p the point to check
+     * @return the line containing the point or null if not found
+     */
     LLine fd_ln_pn1(PLine pn, int p) {
         int i;
         if (pn == null) return (null);
@@ -1317,15 +1745,12 @@ public class GDDBase extends Gib {
         return (null);
     }
 
-    LLine fd_ln1(int p1) {
-        LLine ln = all_ln.nx;
-        while (ln != null) {
-            if (on_ln(p1, ln) && ln.type != 0 && ln.no > 1) return (ln);
-            ln = ln.nx;
-        }
-        return (null);
-    }
-
+    /**
+     * Finds a finite line associated with the given line by checking for shared intersection points.
+     *
+     * @param l1 the reference line
+     * @return the associated finite line or null if not found
+     */
     LLine fd_lnl(LLine l1) {
         LLine ln = all_ln.nx;
         int p1, p2;
@@ -1340,6 +1765,13 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Retrieves or constructs a refined line related to the given line based on an exclusion point.
+     *
+     * @param l1 the original line
+     * @param p the exclusion point for refining the line
+     * @return the refined line or the original line if no refinement is needed
+     */
     LLine fd_ln_rl(LLine l1, int p) {
         if (l1.type != 0) return l1;
 
@@ -1370,7 +1802,13 @@ public class GDDBase extends Gib {
 
     }
 
-
+    /**
+     * Creates a new line with the two specified points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @return the newly created line or null if the points are identical
+     */
     LLine add_ln(int p1, int p2) {
 
         if (p1 == p2) {
@@ -1395,6 +1833,13 @@ public class GDDBase extends Gib {
         return (ln);
     }
 
+    /**
+     * Combines two lines to create a new line that contains points from both.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return the new combined line or null if the combined line is a subline of an existing line
+     */
     LLine add_ln2l(LLine l1, LLine l2) {
         test_ln.cp_ln(l1);
         LLine ln = test_ln;
@@ -1413,6 +1858,13 @@ public class GDDBase extends Gib {
         return ln;
     }
 
+    /**
+     * Finds an existing line containing the two points or creates a new one if not found.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @return the found or newly created line
+     */
     LLine fadd_ln(int p1, int p2) {
         LLine ln;
         ln = fd_ln(p1, p2);
@@ -1420,7 +1872,13 @@ public class GDDBase extends Gib {
         return (add_ln(p1, p2));
     }
 
-
+    /**
+     * Creates a copy of the given line by duplicating its point data.
+     * The new copy is linked as the last line.
+     *
+     * @param ln the line to copy
+     * @return a new line object that is a copy of ln
+     */
     LLine cp_ln(LLine ln) {
         LLine ln1;
         ln1 = new LLine();
@@ -1433,6 +1891,13 @@ public class GDDBase extends Gib {
         return (ln1);
     }
 
+    /**
+     * Replaces occurrences of ln1 with ln2 in parallel, perpendicular, and angle relations.
+     * Updates related structures accordingly.
+     *
+     * @param ln1 the original line to be replaced
+     * @param ln2 the new line to substitute for ln1
+     */
     final void ch_ln(LLine ln1, LLine ln2) {
 
         LLine l1, l2, l3, l4;
@@ -1558,6 +2023,15 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Adds a line based on three given point identifiers.
+     * Validates collinearity and either creates a new line or updates an existing one.
+     *
+     * @param lm the lemma identifier used for processing
+     * @param p1 identifier for the first point
+     * @param p2 identifier for the second point
+     * @param p3 identifier for the third point
+     */
     final void add_line(int lm, int p1, int p2, int p3) {
         LLine ln1;
         if (xcoll(p1, p2, p3)) return;
@@ -1586,6 +2060,15 @@ public class GDDBase extends Gib {
         ch_lns(ln1);
     }
 
+    /**
+     * Adds a line for hypothesis purposes, defined by three point identifiers.
+     * If the line exists, it updates the structure; otherwise, it creates a new one.
+     *
+     * @param lm the lemma identifier used for processing
+     * @param p1 identifier for the first point
+     * @param p2 identifier for the second point
+     * @param p3 identifier for the third point
+     */
     final void add_line1(int lm, int p1, int p2, int p3) {      // for hypothesis only.
         if (!check_coll(p1, p2, p3)) {
             add_checkError();
@@ -1600,6 +2083,12 @@ public class GDDBase extends Gib {
         add_line(lm, p1, p2, p3);
     }
 
+    /**
+     * Processes and adjusts collections of lines.
+     * Iterates through sub-line relationships to update and merge lines as needed.
+     *
+     * @param ln1 the initial line to process and potentially replace with merged data
+     */
     public void ch_lns(LLine ln1) {
         LLine ln2, ln3, ln4;
         ln2 = ln1;
@@ -1641,12 +2130,25 @@ public class GDDBase extends Gib {
         last_nd.u.ln = ln2;
     }
 
+    /**
+     * Checks if the given line is contained within the specified parallel line container.
+     *
+     * @param ln the line to check for membership
+     * @param pn the parallel line container to search
+     * @return true if ln is part of pn; otherwise, false
+     */
     boolean on_pn(LLine ln, PLine pn) {
         int i;
         for (i = 0; i <= pn.no; i++) if (pn.ln[i] == ln) return (true);
         return (false);
     }
 
+    /**
+     * Finds the parallel line container associated with the specified line.
+     *
+     * @param ln the line for which to locate its parallel container
+     * @return the parallel line container if found; otherwise, null
+     */
     PLine fd_pnl(LLine ln) {
         PLine pn;
         pn = all_pn.nx;
@@ -1656,6 +2158,13 @@ public class GDDBase extends Gib {
         return (pn);
     }
 
+    /**
+     * Searches within the parallel line container for a line that contains the specified point.
+     *
+     * @param p the point identifier to look for
+     * @param ln the parallel line container in which to search
+     * @return the line containing the point if found; otherwise, null
+     */
     LLine fd_lpp2(int p, LLine ln) {
         PLine pn;
         pn = all_pn.nx;
@@ -1669,12 +2178,26 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Retrieves the parallel line container corresponding to the line defined by two points.
+     *
+     * @param p1 identifier for the first point
+     * @param p2 identifier for the second point
+     * @return the associated parallel line container if it exists; otherwise, null
+     */
     PLine fd_pn(int p1, int p2) {
         LLine ln = fd_ln(p1, p2);
         if (ln == null) return (null);
         return (fd_pnl(ln));
     }
 
+    /**
+     * Finds an alternative parallel line container (different from the given one) that includes the specified line.
+     *
+     * @param pn the current parallel line container
+     * @param ln the line to search for in other containers
+     * @return another parallel line container if found; otherwise, null
+     */
     PLine fd_pnp(PLine pn, LLine ln) {
         PLine pn1;
         pn1 = all_pn.nx;
@@ -1684,6 +2207,13 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Creates a copy of the given parallel line container.
+     * Duplicates its type, line array, and other associated properties.
+     *
+     * @param pn the parallel line container to copy
+     * @return a new parallel line container that is a copy of pn
+     */
     PLine cp_pn(PLine pn) {
         PLine pn1;
         char i;
@@ -1700,6 +2230,12 @@ public class GDDBase extends Gib {
         return (pn1);
     }
 
+    /**
+     * Merges two parallel line containers by uniting the lines from pn2 into pn1.
+     *
+     * @param pn1 the primary parallel line container to update
+     * @param pn2 the source container whose lines will be merged into pn1
+     */
     final void pn_un(PLine pn1, PLine pn2) {
         for (int i = 0; i <= pn2.no; i++)
             if (!on_pn(pn2.ln[i], pn1)) {
@@ -1716,18 +2252,16 @@ public class GDDBase extends Gib {
             }
     }
 
-
-    final PLine fd_pn(LLine ln1, LLine ln2) {
-        PLine pn1 = all_pn.nx;
-        while (pn1 != null)
-            if (pn1.type != 0 && on_pn(ln1, pn1) && on_pn(ln2, pn1))
-                return (pn1);
-            else
-                pn1 = pn1.nx;
-        return null;
-    }
-
-
+    /**
+     * Adds a parallel line structure using four point identifiers.
+     * Validates the input and creates a new parallel line container to represent the relation.
+     *
+     * @param lm the lemma identifier used for processing
+     * @param p1 identifier for the first point of the first line
+     * @param p2 identifier for the second point of the first line
+     * @param p3 identifier for the first point of the second line
+     * @param p4 identifier for the second point of the second line
+     */
     final void add_pline(int lm, int p1, int p2, int p3, int p4) {
         if (!valid(lm)) return;
 
@@ -1766,7 +2300,15 @@ public class GDDBase extends Gib {
         //adj_pn(pn);
     }
 
-
+    /**
+     * Adds a parallel connection between two lines.
+     * Creates a new parallel line container if the given lines are not already parallel.
+     *
+     * @param lm the lemma identifier used for processing
+     * @param ln1 the first line in the connection
+     * @param ln2 the second line in the connection
+     * @return the newly created parallel line container if the connection is established; otherwise, null
+     */
     PLine add_px(int lm, LLine ln1, LLine ln2) {
         if (!valid(lm)) return null;
 
@@ -1789,12 +2331,24 @@ public class GDDBase extends Gib {
         return (pn);
     }
 
-
+    /**
+     * Checks if the given LLine is one of the defining lines of the specified TLine.
+     *
+     * @param ln the line to check
+     * @param tn the TLine whose defining lines are examined
+     * @return true if ln equals tn.l1 or tn.l2, false otherwise
+     */
     boolean on_tn(LLine ln, TLine tn) {
         if ((ln == tn.l1) || (ln == tn.l2)) return (true);
         return (false);
     }
 
+    /**
+     * Finds and returns the first non-zero type TLine that uses the given LLine.
+     *
+     * @param ln the LLine to search for in TLines
+     * @return the found TLine, or null if none exists
+     */
     TLine fd_tn(LLine ln) {
         TLine tn;
         tn = all_tn.nx;
@@ -1808,6 +2362,13 @@ public class GDDBase extends Gib {
         return (tn);
     }
 
+    /**
+     * Creates a new TLine from two given LLines.
+     *
+     * @param ln1 the first LLine component
+     * @param ln2 the second LLine component
+     * @return the newly created TLine
+     */
     TLine add_tn(LLine ln1, LLine ln2) {
         TLine tn = new TLine();
         tn.l1 = ln1;
@@ -1820,6 +2381,14 @@ public class GDDBase extends Gib {
         return (tn);
     }
 
+    /**
+     * Adds a TLine based on two LLines if they are valid and not perpendicular.
+     *
+     * @param lm the lemma (identifier) associated with the TLine
+     * @param l1 the first LLine component
+     * @param l2 the second LLine component
+     * @return the added TLine, or null if invalid conditions are met
+     */
     final TLine add_tline(int lm, LLine l1, LLine l2) {
         if (!valid(lm)) return null;
 
@@ -1837,6 +2406,15 @@ public class GDDBase extends Gib {
         return tn1;
     }
 
+    /**
+     * Adds a TLine using point indices by converting them to LLines.
+     *
+     * @param lm the lemma (identifier) for the TLine
+     * @param p1 the first point of the first LLine
+     * @param p2 the second point of the first LLine
+     * @param p3 the first point of the second LLine
+     * @param p4 the second point of the second LLine
+     */
     final void add_tline(int lm, int p1, int p2, int p3, int p4) {
         if (!valid(lm)) return;
 
@@ -1860,6 +2438,14 @@ public class GDDBase extends Gib {
         last_nd.u.tn = tn1;
     }
 
+    /**
+     * Adds a TLine from two LLines with a different coordinate source.
+     *
+     * @param lm the lemma (identifier) for the TLine
+     * @param l1 the first LLine component
+     * @param l2 the second LLine component
+     * @return the newly added TLine, or null if preconditions fail
+     */
     final TLine add_tx(int lm, LLine l1, LLine l2) {
         if (!valid(lm)) return null;
 
@@ -1877,7 +2463,15 @@ public class GDDBase extends Gib {
         return tn1;
     }
 
-
+    /**
+     * Adds a TLine in test mode using input point indices.
+     *
+     * @param lm the lemma (identifier) for the TLine
+     * @param p1 the first point of the first LLine
+     * @param p2 the second point of the first LLine
+     * @param p3 the first point of the second LLine
+     * @param p4 the second point of the second LLine
+     */
     public void add_tline_t(int lm, int p1, int p2, int p3, int p4) {
         if (!valid(lm)) return;
 
@@ -1904,7 +2498,13 @@ public class GDDBase extends Gib {
         last_nd.u.tn = tn1;
     }
 
-
+    /**
+     * Checks if a given point is contained in the specified circle.
+     *
+     * @param a the point to check; zero is always considered valid
+     * @param cr the circle in which to check for the point
+     * @return true if the point is found in the circle, or if a is zero; false otherwise
+     */
     boolean on_cir(int a, ACir cr) {
         char i;
         if (a == 0) return (true);
@@ -1912,13 +2512,13 @@ public class GDDBase extends Gib {
         return (false);
     }
 
-    int eq_cir(int o, int a, ACir cr) {
-        char i;
-        if (cr.o != o) return (0);
-        for (i = 0; i <= cr.no; i++) if (cr.pt[i] == a) return (1);
-        return (0);
-    }
-
+    /**
+     * Determines whether all points of the first circle are contained in the second circle.
+     *
+     * @param c1 the circle whose points are to be checked
+     * @param c2 the circle to check against
+     * @return true if c1 is a subset of c2, false otherwise
+     */
     boolean sub_cir(ACir c1, ACir c2) {
         char i;
         if (c1.o == c2.o || c1.o == 0) {
@@ -1930,32 +2530,14 @@ public class GDDBase extends Gib {
         return (false);
     }
 
-    boolean circle_p(int ptn) {
-        char i;
-        ACir c1 = all_cir.nx;
-        if (ptn < 3) return (false);
-
-        if (ptn == 3 && ATYPE(3) == C_POINT && ATYPE(2) == C_POINT
-                && ATYPE(1) == C_POINT)
-            return (false);
-        for (i = 1; i <= ptn; i++)
-            if (!(ATYPE(i) == C_POINT || ATYPE(i) == C_O_C || ATYPE(i) == C_CIRCLE || ATYPE(i) == C_CIRCUM))
-                return (false);
-
-        while (c1 != null) {
-            for (i = 1; i <= ptn; i++)
-                if (i != c1.o && !(on_cir(i, c1))) {
-                    break;
-                } else
-                    return true;
-            l1:
-            c1 = c1.nx;
-        }
-
-        Cm.print("function : circle_p. careful! ");
-        return (false);
-    }
-
+    /**
+     * Searches for a circle that contains all three specified points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @return the identifier of the found circle if all points belong to it; otherwise, zero
+     */
     int fd_co(int p1, int p2, int p3) {
         ACir c2;
         c2 = all_cir.nx;
@@ -1966,6 +2548,13 @@ public class GDDBase extends Gib {
         return (0);
     }
 
+    /**
+     * Finds a circle with the specified center identifier that contains a given point.
+     *
+     * @param o the center identifier to match
+     * @param p the point to check for within the circle
+     * @return the found circle, or null if none match
+     */
     ACir fd_cr_op(int o, int p) {
         ACir c2 = all_cir.nx;
         while (c2 != null) {
@@ -1975,6 +2564,14 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Retrieves a circle that contains three specified points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @return the found circle containing all three points, or null if none exists
+     */
     ACir fd_cr_p3(int p1, int p2, int p3) {
         ACir c2 = all_cir.nx;
         while (c2 != null) {
@@ -1984,6 +2581,12 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Finds and returns a circle that is similar to the given circle by matching common points.
+     *
+     * @param c1 the circle to compare
+     * @return a matching circle based on shared center or common points, or null if none is found
+     */
     ACir fd_cir(ACir c1) {
         ACir c2;
         char i, j;
@@ -2002,21 +2605,12 @@ public class GDDBase extends Gib {
         return (null);
     }
 
-    ACir fd_cir(int o, int a) {
-        if (o == 0 || a == 0) return null;
-
-        ACir cr = all_cir.nx;
-        while (cr != null) {
-            if (cr.type != 0 && cr.o == o) {
-                for (int i = 0; i <= cr.no; i++)
-                    if (cr.pt[i] == a) return cr;
-            }
-            cr = cr.nx;
-        }
-        return null;
-
-    }
-
+    /**
+     * Adds a point to the specified circle in sorted order if it does not already exist.
+     *
+     * @param p the point to add
+     * @param cr the circle to which the point will be added
+     */
     final void add_pt2c(int p, ACir cr) {
         int j, i = 0;
         if (p <= 0) return;
@@ -2036,6 +2630,15 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Creates and adds a new circle with the given lemma, center, and initial two points.
+     *
+     * @param lm the lemma (identifier) associated with the circle
+     * @param o the center identifier of the circle
+     * @param a the first point defining the circle's boundary
+     * @param b the second point defining the circle's boundary
+     * @return the newly created circle, or null if the lemma is invalid
+     */
     ACir add_c2(int lm, int o, int a, int b) {
         if (!valid(lm)) return null;
 
@@ -2058,6 +2661,12 @@ public class GDDBase extends Gib {
         return (cr);
     }
 
+    /**
+     * Creates a copy of the specified circle with the same properties and points.
+     *
+     * @param cir the circle to copy
+     * @return a new circle object that is a copy of cir
+     */
     ACir cp_cr(ACir cir) {
         ACir cir1;
         char i;
@@ -2074,40 +2683,14 @@ public class GDDBase extends Gib {
         return (cir1);
     }
 
-    final void adj_cir(ACir cr) {
-        ACir cr1, cr2, cr3;
-        Cond co;
-        char i;
-        cr1 = cr;
-        while ((cr2 = fd_cir(cr1)) != null) {
-            if (sub_cir(cr2, cr1)) {
-                cr2.type = 0;
-            } else if (sub_cir(cr1, cr2)) {
-                cr1.type = 0;
-                cr1 = cr2;
-            } else {
-                cr3 = cp_cr(cr1);
-                cr1.type = 0;
-                cr2.type = 0;
-                if (cr3.o == 0) cr3.o = cr2.o;
-                for (i = 0; i <= cr2.no; i++) add_pt2c(cr2.pt[i], cr3);
-                if (cr1.co == null && cr2.co == null)
-                    cr3.co = null;
-                else {
-                    co_xy.nx = null;
-                    co = add_coxy(CO_CYCLIC);
-                    co.u.cr = cr1;
-                    co = add_coxy(CO_CYCLIC);
-                    co.u.cr = cr2;
-                    cr3.co = co_xy.nx;
-                }
-                cr1 = cr3;
-            }
-        }
-        new_pr(CO_CYCLIC);
-        last_nd.u.cr = cr1;
-    }
-
+    /**
+     * Adds a cyclic circle using the specified lemma, origin and two point identifiers.
+     *
+     * @param lm the lemma identifier
+     * @param o  the origin or center point identifier
+     * @param a  the first point identifier on the circle
+     * @param b  the second point identifier on the circle
+     */
     final void add_cir2(int lm, int o, int a, int b) {
         if (!valid(lm)) return;
 
@@ -2118,6 +2701,15 @@ public class GDDBase extends Gib {
         last_nd.u.cr = cr;
     }
 
+    /**
+     * Adds a cyclic circle using the specified lemma, origin, two point identifiers and an additional point.
+     *
+     * @param lm the lemma identifier
+     * @param o  the origin or center point identifier
+     * @param a  the first point identifier on the circle
+     * @param b  the second point identifier on the circle
+     * @param c  the additional point identifier to be added to the circle
+     */
     final void add_cir3(int lm, int o, int a, int b, int c) {
         if (!valid(lm)) return;
 
@@ -2132,6 +2724,16 @@ public class GDDBase extends Gib {
         last_nd.u.cr = cr;
     }
 
+    /**
+     * Adds a cyclic circle using the specified lemma, origin, two point identifiers and two additional points.
+     *
+     * @param lm the lemma identifier
+     * @param o  the origin or center point identifier
+     * @param a  the first point identifier on the circle
+     * @param b  the second point identifier on the circle
+     * @param c  the first additional point identifier to be added to the circle
+     * @param d  the second additional point identifier to be added to the circle
+     */
     final void add_cir4(int lm, int o, int a, int b, int c, int d) {
         if (!valid(lm)) return;
 
@@ -2149,26 +2751,31 @@ public class GDDBase extends Gib {
         last_nd.u.cr = cr;
     }
 
-
+    /**
+     * Checks if the given pair of lines match the sides defined in the specified angles structure.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param as the angles structure to compare against
+     * @return true if the lines match either the first or second half of the angles structure; false otherwise
+     */
     boolean onl_as(LLine l1, LLine l2, Angles as) {
         if (l1 == as.l1 && l2 == as.l2) return (true);
         if (l1 == as.l3 && l2 == as.l4) return (true);
         return (false);
     }
 
-    Angles fd_as(LLine l1, LLine l2) {
-        Angles as;
-        for (as = all_as.nx; as != null; as = as.nx) {
-            if (
-                    (l1 == as.l1 && l2 == as.l2) || (l1 == as.l2 && l2 == as.l1) ||
-                            (l1 == as.l3 && l2 == as.l4) || (l1 == as.l4 && l2 == as.l3) ||
-                            (l1 == as.l1 && l2 == as.l3) || (l1 == as.l3 && l2 == as.l1) ||
-                            (l1 == as.l2 && l2 == as.l4) || (l1 == as.l4 && l2 == as.l2))
-                return (as);
-        }
-        return (null);
-    }
-
+    /**
+     * Creates a new angles object from the given lemma and four lines representing two pairs of corresponding sides.
+     * Performs necessary comparisons and adjustments between the lines.
+     *
+     * @param lm the lemma identifier
+     * @param l1 the first line of the first angle pair
+     * @param l2 the second line of the first angle pair
+     * @param l3 the first line of the second angle pair
+     * @param l4 the second line of the second angle pair
+     * @return the created angles object, or null if the parameters are invalid
+     */
     Angles add_as0(int lm, LLine l1, LLine l2, LLine l3, LLine l4) {
         if (!valid(lm)) return null;
 
@@ -2266,50 +2873,16 @@ public class GDDBase extends Gib {
         return (as);
     }
 
-    final void add_co_as(LLine l1, LLine l2, LLine l3, LLine l4) {
-        int p1, p2, p3, p4, p5, p6, p7, p8;
-        int a = inter_ll(l1, l2);
-        int b = inter_ll(l3, l4);
-        //    a = b = 0;
-        if (a != 0) {
-            p2 = a;
-            p3 = a;
-            if (l1.pt[0] == a)
-                p1 = l1.pt[1];
-            else
-                p1 = l1.pt[0];
-
-            if (l2.pt[0] == a)
-                p4 = l2.pt[1];
-            else
-                p4 = l2.pt[0];
-        } else {
-            p1 = l1.pt[0];
-            p2 = l1.pt[1];
-            p3 = l2.pt[0];
-            p4 = l2.pt[1];
-        }
-        if (b != 0) {
-            p6 = b;
-            p7 = b;
-            if (l3.pt[0] == b)
-                p5 = l3.pt[1];
-            else
-                p5 = l3.pt[0];
-
-            if (l4.pt[0] == b)
-                p8 = l4.pt[1];
-            else
-                p8 = l4.pt[0];
-        } else {
-            p5 = l3.pt[0];
-            p6 = l3.pt[1];
-            p7 = l4.pt[0];
-            p8 = l4.pt[1];
-        }
-        add_codx(CO_ACONG, p1, p2, p3, p4, p5, p6, p7, p8);
-    }
-
+    /**
+     * Checks and adjusts the given angles structure based on the provided four lines.
+     * Modifies the angles type and associates new conditions if necessary.
+     *
+     * @param as the angles structure to check and adjust
+     * @param l1 the first line of the first angle pair
+     * @param l2 the second line of the first angle pair
+     * @param l3 the first line of the second angle pair
+     * @param l4 the second line of the second angle pair
+     */
     final void ck_as(Angles as, LLine l1, LLine l2, LLine l3, LLine l4) {
         co_xy.nx = null;
         if (ln_para(l1, l2) && l3 != l4) {
@@ -2338,6 +2911,12 @@ public class GDDBase extends Gib {
         co_xy.nx = null;
     }
 
+    /**
+     * Creates and returns a new condition object associated with the given angles structure.
+     *
+     * @param as the angles structure for which the condition is created
+     * @return the newly created condition object
+     */
     final Cond add_acoxy(Angles as) {
         co_xy.nx = null;
         Cond c = add_coxy(CO_ACONG);
@@ -2345,6 +2924,13 @@ public class GDDBase extends Gib {
         return c;
     }
 
+    /**
+     * Adjusts the specified angles structure based on the provided type flag.
+     * Iterates over existing angles objects and applies necessary adjustments.
+     *
+     * @param t  the type flag indicating the adjustment mode
+     * @param as the angles structure to adjust
+     */
     final void adj_as(int t, Angles as) {
         if (as == null) return;
         if (as.type == 0) return;
@@ -2378,6 +2964,14 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Adjusts tangency relationships for the specified angles structure by comparing
+     * the tangency lines associated with its component lines using the given markers.
+     *
+     * @param m1 a marker or point identifier used for tangency adjustment
+     * @param m2 a marker or point identifier used for tangency adjustment
+     * @param as the angles structure whose tangency relationships are to be adjusted
+     */
     public void adj_as_tn(int m1, int m2, Angles as) {
 
         if (m1 == 0 || m2 == 0) return;
@@ -2393,6 +2987,13 @@ public class GDDBase extends Gib {
 
     }
 
+    /**
+     * Searches and adjusts transversal angles based on the provided t-lines.
+     *
+     * @param tn1 the first transversal line
+     * @param tn2 the second transversal line
+     * @param as the angle set to update
+     */
     public void search_as_tn1(TLine tn1, TLine tn2, Angles as) {
         if (tn1 == null || tn2 == null) return;
 
@@ -2402,31 +3003,16 @@ public class GDDBase extends Gib {
         adj_as_plus(tn2.l1, tn2.l2, tn1.l2, tn1.l1, as);
     }
 
-    final void adj_bisector(LLine l1, LLine l2, LLine l3, LLine l4, Angles r1, Angles r2) {
-        LLine ln1, ln2, ln3, ln4, ln5, ln6;
-        if (l2 == l3) {
-            ln1 = l1;
-            ln2 = l2;
-            ln3 = l4;
-        } else if (l1 == l4) {
-            ln1 = l2;
-            ln2 = l1;
-            ln3 = l3;
-        } else
-            return;
-        if (r1.l2 == r1.l3) {
-            ln1 = r1.l1;
-            ln2 = r1.l2;
-            ln3 = r1.l4;
-        } else if (l1 == l4) {
-            ln1 = r1.l2;
-            ln2 = r1.l1;
-            ln3 = r1.l3;
-        } else
-            return;
-
-    }
-
+    /**
+     * Adjusts angles based on the line configuration in the given angle sets.
+     *
+     * @param l1 the first line in the configuration
+     * @param l2 the second line in the configuration
+     * @param l3 the third line in the configuration
+     * @param l4 the fourth line in the configuration
+     * @param r1 the primary angle set
+     * @param r2 the secondary angle set
+     */
     final void adj_as1(LLine l1, LLine l2, LLine l3, LLine l4, Angles r1, Angles r2) {
         Cond co;
         LLine t1, t2;
@@ -2477,6 +3063,16 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Adjusts angles using an alternative line pairing.
+     *
+     * @param l1 the first line in the configuration
+     * @param l2 the second line in the configuration
+     * @param l3 the third line in the configuration
+     * @param l4 the fourth line in the configuration
+     * @param r1 the primary angle set
+     * @param r2 the secondary angle set
+     */
     final void adj_as2(LLine l1, LLine l2, LLine l3, LLine l4, Angles r1, Angles r2) {
         Cond co;
         LLine t1, t2;
@@ -2503,6 +3099,15 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Attempts to combine line segments and adjust angles based on additional angle information.
+     *
+     * @param l1 the first line in the initial pair
+     * @param l2 the second line in the initial pair
+     * @param l3 the first line in the alternate pair
+     * @param l4 the second line in the alternate pair
+     * @param r1 the reference angle set
+     */
     final void adj_as_plus(LLine l1, LLine l2, LLine l3, LLine l4, Angles r1) {
 
 
@@ -2599,22 +3204,46 @@ public class GDDBase extends Gib {
 
     }
 
+    /**
+     * Retrieves a line that matches the endpoints of two given line pairs.
+     *
+     * @param l1 the first line of the first pair
+     * @param l2 the second line of the first pair
+     * @param l3 the first line of the second pair
+     * @param l4 the second line of the second pair
+     * @return the matching line if found; otherwise, null
+     */
     public LLine get_82l0(LLine l1, LLine l2, LLine l3, LLine l4) {
         if (l1 == l4) return l1;
         if (l2 == l3) return l2;
         return null;
     }
 
-    public LLine get_82l1(LLine l1, LLine l2, LLine l) {
-        if (l1 == l) return l2;
-        if (l2 == l) return l1;
-        return null;
-    }
-
+    /**
+     * Creates an angle point using the intersection of line segments.
+     *
+     * @param lm lemma identifier
+     * @param a first endpoint of the first line
+     * @param b second endpoint of the first line
+     * @param c additional parameter for the first line
+     * @param p first endpoint of the second line
+     * @param q second endpoint of the second line
+     * @param r additional parameter for the second line
+     */
     final void add_ea_pt(int lm, int a, int b, int c, int p, int q, int r) {
         add_ea_ln(lm, fadd_ln(a, b), fadd_ln(b, c), fadd_ln(p, q), fadd_ln(q, r));
     }
 
+    /**
+     * Adds an angle by combining four lines if the configuration is valid.
+     *
+     * @param lm lemma identifier
+     * @param l1 the first line of the first pair
+     * @param l2 the second line of the first pair
+     * @param l3 the first line of the second pair
+     * @param l4 the second line of the second pair
+     * @return the constructed angle set or null if invalid
+     */
     final Angles add_ea_ln(int lm, LLine l1, LLine l2, LLine l3, LLine l4) {
 
         if (d_base == 1) return null;
@@ -2626,7 +3255,18 @@ public class GDDBase extends Gib {
         return as;
     }
 
-
+    /**
+     * Determines if a set of points belongs to the specified similar triangle configuration.
+     *
+     * @param p1 first point of the first triangle
+     * @param p2 second point of the first triangle
+     * @param p3 third point of the first triangle
+     * @param p first point of the second triangle
+     * @param q second point of the second triangle
+     * @param r third point of the second triangle
+     * @param st the similar triangle to compare against
+     * @return true if the points match the triangle configuration; false otherwise
+     */
     boolean on_st(int p1, int p2, int p3, int p, int q, int r, SimTri st) {                         //??????????????????
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
@@ -2641,7 +3281,18 @@ public class GDDBase extends Gib {
         return (false);
     }
 
-
+    /**
+     * Adds a pair of triangles based on provided vertex configurations.
+     *
+     * @param lm lemma identifier
+     * @param dr direction flag
+     * @param a first vertex of the first triangle
+     * @param b second vertex of the first triangle
+     * @param c third vertex of the first triangle
+     * @param p first vertex of the second triangle
+     * @param q second vertex of the second triangle
+     * @param r third vertex of the second triangle
+     */
     final void add_stri(int lm, int dr, int a, int b, int c, int p, int q, int r) {
         if (!valid(lm)) return;
 
@@ -2699,7 +3350,14 @@ public class GDDBase extends Gib {
         return;
     }
 
-
+    /**
+     * Checks if a line defined by two points is part of the provided congruency segment.
+     *
+     * @param p1 the first point of the line
+     * @param p2 the second point of the line
+     * @param cg the congruency segment to check
+     * @return true if the line is on the congruency segment; false otherwise
+     */
     final boolean on_cg(int p1, int p2, CongSeg cg) {
         int i;
         if (p2 < p1) {
@@ -2711,6 +3369,16 @@ public class GDDBase extends Gib {
         return (false);
     }
 
+    /**
+     * Checks if the lines defined by two pairs of points form the provided congruency segment.
+     *
+     * @param p1 the first point of the first line
+     * @param p2 the second point of the first line
+     * @param p3 the first point of the second line
+     * @param p4 the second point of the second line
+     * @param cg the congruency segment to check
+     * @return true if the points form the congruency segment; false otherwise
+     */
     final boolean on_cg(int p1, int p2, int p3, int p4, CongSeg cg) {
         int i;
         if (p2 < p1) {
@@ -2728,22 +3396,12 @@ public class GDDBase extends Gib {
         return (false);
     }
 
-
-    final CongSeg fd_cg2(int p1, int p2, CongSeg cg) {
-        CongSeg cg1 = all_cg.nx;
-        boolean f = false;
-        while (cg1 != null) {
-            if (cg1.type != 0) {
-                if (cg1 == cg)
-                    f = true;
-                else if ((f || cg == null) && on_cg(p1, p2, cg1)) return (cg1);
-            }
-            cg1 = cg1.nx;
-        }
-        return (null);
-    }
-
-
+    /**
+     * Adjusts congruency segments by comparing the specified congruency with others.
+     *
+     * @param c flag indicating which congruency list to traverse
+     * @param cg the reference congruency segment
+     */
     final void adj_cg(int c, CongSeg cg) {
         CongSeg cg1 = (c == 1) ? all_cg.nx : all_rg.nx;
 
@@ -2783,7 +3441,23 @@ public class GDDBase extends Gib {
         }
     }
 
-
+    /**
+     * Searches for and creates a congruency by comparing endpoints and ratios of two segments.
+     *
+     * @param a first endpoint of the first segment
+     * @param b second endpoint of the first segment
+     * @param c third endpoint of the first segment
+     * @param d fourth endpoint of the first segment
+     * @param a1 first endpoint of the second segment
+     * @param b1 second endpoint of the second segment
+     * @param c1 third endpoint of the second segment
+     * @param d1 fourth endpoint of the second segment
+     * @param k1 first ratio component of the first segment
+     * @param k2 second ratio component of the first segment
+     * @param k3 first ratio component of the second segment
+     * @param k4 second ratio component of the second segment
+     * @return true if a valid congruency is found or established; false otherwise
+     */
     final boolean search_cg3(int a, int b, int c, int d, int a1, int b1, int c1, int d1, int k1, int k2, int k3, int k4) {
 
         int t1, t2, t3, t4, m1, m2;
@@ -2836,13 +3510,18 @@ public class GDDBase extends Gib {
         return true;
     }
 
-    final int get_coll43(int a, int b, int c, int d) {
-        if (a == b || a == c || a == d) return a;
-        if (b == c || b == d) return b;
-        if (c == d) return c;
-        return 0;
-    }
-
+    /**
+     * Adds a congruency segment based on two lines and their ratio components.
+     *
+     * @param lm lemma identifier
+     * @param l_no line number flag
+     * @param a the first point of the first line
+     * @param b the second point of the first line
+     * @param p the first point of the second line
+     * @param q the second point of the second line
+     * @param t1 first ratio component
+     * @param t2 second ratio component
+     */
     final void add_cong(int lm, int l_no, int a, int b, int p, int q, int t1, int t2) {
         CongSeg cg;
         if (!valid(lm)) return;
@@ -2925,6 +3604,16 @@ public class GDDBase extends Gib {
         last_nd.u.cg = cg;
     }
 
+    /**
+     * Adds a congruency segment for two lines without specifying ratio components.
+     *
+     * @param lm lemma identifier
+     * @param l_no line number flag
+     * @param a the first point of the first line
+     * @param b the second point of the first line
+     * @param p the first point of the second line
+     * @param q the second point of the second line
+     */
     final void add_cong(int lm, int l_no, int a, int b, int p, int q) {
         CongSeg cg;
         if (a == b || p == q) return;
@@ -2981,6 +3670,19 @@ public class GDDBase extends Gib {
         last_nd.u.cg = cg;
     }
 
+    /**
+     * Adds a congruence segment based on the provided point indices and lemma.
+     *
+     * @param lm the lemma identifier
+     * @param p1 first point index of the first segment
+     * @param p2 second point index of the first segment
+     * @param p3 first point index of the second segment
+     * @param p4 second point index of the second segment
+     * @param a first point index of the first congruence pair
+     * @param b second point index of the first congruence pair
+     * @param p first point index of the second congruence pair
+     * @param q second point index of the second congruence pair
+     */
     final void add_cong1(int lm, int p1, int p2, int p3, int p4, int a, int b, int p, int q) {
         CongSeg cg;
         Cond co;
@@ -3050,6 +3752,15 @@ public class GDDBase extends Gib {
         last_nd.u.cg = cg;
     }
 
+    /**
+     * Determines the index for a ratio segment based on point congruence.
+     *
+     * @param a first point index
+     * @param b second point index
+     * @param ra the ratio segment reference
+     * @param m mode indicator affecting the returned index
+     * @return an integer representing the determined index
+     */
     int ind_ra(int a, int b, RatioSeg ra, int m) {
         int c = 0;
         if (xcong(a, b, ra.r[1], ra.r[2])) {
@@ -3064,6 +3775,21 @@ public class GDDBase extends Gib {
         return (c);
     }
 
+    /**
+     * Adds a ratio segment if the ratio parameters pass the validity checks.
+     *
+     * @param lm the lemma identifier
+     * @param o an origin or operator parameter
+     * @param a first point index of the first ratio pair
+     * @param b second point index of the first ratio pair
+     * @param c first point index of the second ratio pair
+     * @param d second point index of the second ratio pair
+     * @param p first point index of the third ratio pair
+     * @param q second point index of the third ratio pair
+     * @param r first point index of the fourth ratio pair
+     * @param s second point index of the fourth ratio pair
+     * @return the created RatioSeg object, or null if the check fails
+     */
     RatioSeg add_ra(int lm, int o, int a, int b, int c, int d, int p, int q, int r, int s) {
         RatioSeg ra;
         Cond co;
@@ -3124,6 +3850,11 @@ public class GDDBase extends Gib {
         return (ra);
     }
 
+    /**
+     * Adjusts the ratio segments by comparing with all existing segments and reconciling differences.
+     *
+     * @param ra the starting RatioSeg to adjust
+     */
     final void adj_ra(RatioSeg ra) {
         RatioSeg r1;
         int i1, i2, i3, i4;
@@ -3170,6 +3901,18 @@ public class GDDBase extends Gib {
         test_ra = last_ra;
     }
 
+    /**
+     * Adjusts a ratio segment relation using the specified ratio parameters and indices.
+     *
+     * @param a first point index of the first ratio pair
+     * @param b second point index of the first ratio pair
+     * @param c first point index of the second ratio pair
+     * @param d second point index of the second ratio pair
+     * @param i1 indicator for the first ratio selection in r1
+     * @param i2 indicator for the second ratio selection in r1
+     * @param r1 the ratio segment to be adjusted
+     * @param r2 a related ratio segment used for adjustment context
+     */
     final void adj_ra1(int a, int b, int c, int d, int i1, int i2, RatioSeg r1, RatioSeg r2) {
         int p, q, r, s;
         Cond co;
@@ -3233,6 +3976,17 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Adjusts a ratio segment relation based on a single indicator and updates connection information.
+     *
+     * @param a first point index of the first ratio pair
+     * @param b second point index of the first ratio pair
+     * @param c first point index of the second ratio pair
+     * @param d second point index of the second ratio pair
+     * @param i1 indicator dictating the selection of ratio components in r1
+     * @param r1 the ratio segment to be adjusted
+     * @param r2 a related ratio segment for context
+     */
     final void adj_ra2(int a, int b, int c, int d, int i1, RatioSeg r1, RatioSeg r2) {
         int p, q, r, s;
         Cond co;
@@ -3265,11 +4019,35 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Adds a ratio segment if no equivalent ratio exists.
+     *
+     * @param lm the lemma identifier
+     * @param o an origin or operator parameter
+     * @param a first point index of the first ratio pair
+     * @param b second point index of the first ratio pair
+     * @param c first point index of the second ratio pair
+     * @param d second point index of the second ratio pair
+     * @param p first point index of the third ratio pair
+     * @param q second point index of the third ratio pair
+     * @param r first point index of the fourth ratio pair
+     * @param s second point index of the fourth ratio pair
+     */
     final void add_ratio(int lm, int o, int a, int b, int c, int d, int p, int q, int r, int s) {
         if (xeq_ratio(a, b, c, d, p, q, r, s)) return;
         add_ra(lm, o, a, b, c, d, p, q, r, s);
     }
 
+    /**
+     * Adds a ratio segment using only four points by inferring the remaining ratio components.
+     *
+     * @param lm the lemma identifier
+     * @param o an origin or operator parameter
+     * @param a first point index
+     * @param b second point index
+     * @param c third point index
+     * @param d fourth point index
+     */
     final void add_ratioo(int lm, int o, int a, int b, int c, int d) {
         if (!xeq_ratio(o, a, o, c, o, b, o, d))
             add_ra(lm, 1, o, a, o, c, o, b, o, d);
@@ -3287,16 +4065,22 @@ public class GDDBase extends Gib {
             add_ra(lm, 1, o, c, c, a, o, d, d, b);
     }
 
+    /**
+     * Checks if two points are equal.
+     *
+     * @param p1 the first point index
+     * @param p2 the second point index
+     * @return true if points are equal, false otherwise
+     */
     boolean meq_pt(int p1, int p2) {
         return p1 == p2;
     }
 
-    final void free_dbase() {
-        init_dbase();
-    }
-
-////////////////////////////////////////////////////////////
-
+    /**
+     * Processes and validates all conclusions.
+     *
+     * @return true if all conclusions are processed successfully
+     */
     public boolean sbase() {
         for (int i = 1; i <= cns_no; i++) {
             if (!isConclusion(i))
@@ -3306,6 +4090,11 @@ public class GDDBase extends Gib {
         return true;
     }
 
+    /**
+     * Sets the example context for the theorem by initializing various parameters.
+     *
+     * @param tm the geometric term containing the example information
+     */
     final public void setExample(GTerm tm) {
         gt = tm;
         cons_no = tm.getCons_no();
@@ -3316,7 +4105,11 @@ public class GDDBase extends Gib {
         pts_no = tm.getPointsNum();
     }
 
-
+    /**
+     * Sets the conclusion condition.
+     *
+     * @param tco the condition object containing conclusion data
+     */
     final public void setConc(Cond tco) {
         if (tco == null) return;
 
@@ -3342,24 +4135,25 @@ public class GDDBase extends Gib {
         }
     }
 
-
-    public void add_nln(int[] p, int n) {
-        for (int i = 0; i < n; i++)
-            fadd_ln(p[i * 2], p[i * 2 + 1]);
-    }
-
-
+    /**
+     * Processes the individual conclusion for the specified index.
+     *
+     * @param ptn the conclusion index
+     * @return true after processing the conclusion
+     */
     public boolean do_i_cons(int ptn) {
         do_pd(ptn, allcns[ptn].type, allcns[ptn].ps);
         return true;
     }
 
-    public boolean do_i_ln(int ptn) {
-        do_pdln(ptn, allcns[ptn].type, allcns[ptn].ps);
-        return true;
-    }
-
-
+    /**
+     * Processes the predicate for a given conclusion based on its type and parameters.
+     *
+     * @param ptn the conclusion index
+     * @param t the type of predicate
+     * @param p an array of parameters associated with the predicate
+     * @return true if the predicate is processed successfully; false otherwise
+     */
     public boolean do_pd(int ptn, int t, int[] p) {
         if (t == 0) return true;
         switch (t) {
@@ -3575,7 +4369,11 @@ public class GDDBase extends Gib {
 
     }
 
-
+    /**
+     * Adds a circle defined by the provided parameters.
+     *
+     * @param p an array containing circle parameters; p[2] must be non-zero
+     */
     public void add_cir_n(int p[]) {
         if (p[2] == 0) return;
 
@@ -3592,122 +4390,42 @@ public class GDDBase extends Gib {
             }
     }
 
+    /**
+     * Adds a line angle ratio by drawing lines between the provided endpoints and establishing
+     * squared ratio relationships.
+     *
+     * @param p1 the first point index
+     * @param p2 the second point index
+     * @param p3 the third point index
+     * @param p4 the fourth point index
+     * @param t1 the first ratio value (to be squared)
+     * @param t2 the second ratio value (to be squared)
+     */
     public void add_laratio(int p1, int p2, int p3, int p4, int t1, int t2) {
         add_line1(0, p1, p2, p3);
         add_line1(0, p1, p2, p4);
         add_cong(0, 0, p1, p2, p3, p4, t1 * t1, t2 * t2);
     }
 
+    /**
+     * Adds a congruence relation between segments based on the provided endpoints and squared ratio values.
+     *
+     * @param p1 the first point index of the first segment
+     * @param p2 the second point index of the first segment
+     * @param p3 the first point index of the second segment
+     * @param p4 the second point index of the second segment
+     * @param t1 the first ratio value (to be squared)
+     * @param t2 the second ratio value (to be squared)
+     */
     public void add_ratio(int p1, int p2, int p3, int p4, int t1, int t2) {
         add_cong(0, 0, p1, p2, p3, p4, t1 * t1, t2 * t2);
     }
 
-    public boolean do_pdln(int ptn, int t, int[] p) {
-        if (t == 0) return true;
-        switch (t) {
-            case C_POINT:
-                break;
-            case C_CONSTANT:
-                break;
-            case C_MIDPOINT:
-                break;
-            case C_FOOT:    // foot
-                fadd_ln(p[0], p[1]);
-                break;
-            case C_O_C:
-                break;
-            case C_O_L:
-                fadd_ln(p[1], p[2]);
-                break;
-            case C_O_T:
-                add_nln(p, 2);
-                break;
-            case C_O_P:
-                add_nln(p, 2);
-                break;
-            case C_EQANGLE:
-            case C_O_A:
-                fadd_ln(p[0], p[1]);
-                fadd_ln(p[1], p[2]);
-                fadd_ln(p[3], p[4]);
-                fadd_ln(p[4], p[5]);
-                break;
-            case C_O_R:
-                break;
-            case C_O_B:
-                break;
-            case C_NSQUARE:
-                break;
-            case C_PSQUARE:
-                break;
-            case C_I_CC:
-                break;
-            case C_CIRCUM:
-                break;
-            case C_ORTH:
-                fadd_ln(p[0], p[1]);
-                fadd_ln(p[0], p[2]);
-                fadd_ln(p[0], p[3]);
-                fadd_ln(p[1], p[2]);
-                fadd_ln(p[1], p[3]);
-                fadd_ln(p[2], p[3]);
-                break;
-            case C_PETRIANGLE:
-                fadd_ln(p[0], p[1]);
-                fadd_ln(p[1], p[2]);
-                fadd_ln(p[2], p[3]);
-                break;
-            case C_NETRIANGLE:
-                break;
-            case C_REF:  //Point wrpt POINT
-                fadd_ln(p[1], p[2]);
-                break;
-            case C_SYM:  // Point wrpt LINE
-                add_nln(p, 2);
-                break;
-            case C_ICENT:
-                break;
-            case C_PRATIO:
-                add_nln(p, 2);
-                break;
-            case C_TRATIO:
-                add_nln(p, 2);
-                break;
-            case C_EQDISTANCE:
-                add_nln(p, 2);
-                break;
-            case C_SANGLE:
-                fadd_ln(p[0], p[1]);
-                fadd_ln(p[1], p[2]);
-                break;
-            case C_LRATIO:
-                break;
-            case C_NRATIO:
-                break;
-            case C_LINE:
-                fadd_ln(p[0], p[1]);
-                break;
-            case C_TRIANGLE:
-            case C_ISO_TRI:
-            case C_R_TRI:
-            case C_EQ_TRI:
-            case C_QUADRANGLE:
-            case C_PENTAGON:
-            case C_POLYGON:
-            case C_TRAPEZOID:
-            case C_R_TRAPEZOID:
-            case C_PARALLELOGRAM:
-            case C_LOZENGE:
-            case C_RECTANGLE:
-            case C_SQUARE:
-                add_pg_ln(p);
-                break;
-            default:
-                return false;
-        }
-        return true;
-    }
-
+    /**
+     * Adds a polygon line by connecting the series of points in a loop.
+     *
+     * @param p an array of point indices representing the polygon vertices; a zero value indicates termination
+     */
     public void add_pg_ln(int[] p) {
         int t = p[0];
         if (t == 0) return;
@@ -3719,13 +4437,22 @@ public class GDDBase extends Gib {
         fadd_ln(p[0], t);
     }
 
-
+    /**
+     * Adds a trapezoid by drawing the primary lines for its shape.
+     *
+     * @param p an array of 4 vertex indices representing the trapezoid
+     */
     public void add_r_trapezoid(int[] p) {
         add_pline(0, p[0], p[1], p[2], p[3]);
         add_tline(0, p[0], p[1], p[0], p[3]);
         add_tline(0, p[0], p[3], p[2], p[3]);
     }
 
+    /**
+     * Adds a parallelogram by drawing its outline, congruencies, and structural elements.
+     *
+     * @param p an array of 4 vertex indices representing the parallelogram
+     */
     public void add_parallelogram(int[] p) {
         add_pline(0, p[0], p[1], p[2], p[3]);
         add_pline(0, p[0], p[3], p[1], p[2]);
@@ -3736,6 +4463,11 @@ public class GDDBase extends Gib {
         add_stri(0, 1, p[0], p[1], p[3], p[2], p[3], p[1]);
     }
 
+    /**
+     * Adds a lozenge by drawing its lines and congruencies.
+     *
+     * @param p an array of 4 vertex indices representing the lozenge
+     */
     public void add_lozenge(int[] p) {
         add_pline(0, p[0], p[1], p[2], p[3]);
         add_pline(0, p[0], p[3], p[1], p[2]);
@@ -3749,6 +4481,11 @@ public class GDDBase extends Gib {
         add_stri(0, 1, p[0], p[1], p[3], p[2], p[3], p[1]);
     }
 
+    /**
+     * Adds a rectangle by drawing its outline, tangents, congruencies, and structural elements.
+     *
+     * @param p an array of 4 vertex indices representing the rectangle
+     */
     public void add_rectangle(int[] p) {
         add_pline(0, p[0], p[1], p[2], p[3]);
         add_pline(0, p[0], p[3], p[2], p[1]);
@@ -3763,6 +4500,11 @@ public class GDDBase extends Gib {
         add_stri(0, 1, p[0], p[1], p[3], p[2], p[3], p[1]);
     }
 
+    /**
+     * Adds a square by drawing its lines, tangents, congruencies, and angle structures.
+     *
+     * @param p an array of 4 vertex indices representing the square
+     */
     public void add_square(int[] p) {
         add_pline(0, p[0], p[1], p[2], p[3]);
         add_pline(0, p[0], p[3], p[2], p[1]);
@@ -3807,6 +4549,12 @@ public class GDDBase extends Gib {
 
     }
 
+    /**
+     * Adds an auxiliary point based on the provided ProPoint type.
+     *
+     * @param pt the ProPoint object containing point and type information
+     * @return true if the auxiliary point is added successfully; false otherwise
+     */
     public boolean add_auxpt(ProPoint pt) {
 
         int[] p = pt.ps;
@@ -3849,6 +4597,14 @@ public class GDDBase extends Gib {
         return true;
     }
 
+    /**
+     * Performs a predicate operation based on the given type.
+     *
+     * @param p1 the array of points and parameters (first element is used as predicate target)
+     * @param mk the predicate type code
+     * @param ptn the predicate target (overwritten by the first element of p1)
+     * @return true if the predicate action is executed successfully, false otherwise
+     */
     public boolean do_pred2(int[] p1, int mk, int ptn) {
         ptn = p1[0];
         int[] p = new int[p1.length];
@@ -4021,60 +4777,12 @@ public class GDDBase extends Gib {
         return true;
     }
 
-    final public void add_square(ProPoint p) {
-
-
-        int i = 0;
-        for (; allpts[i + 1] != p; i++) ;
-        ProPoint p1 = allpts[i];
-
-        if (!(p1.ps[1] == p.ps[1] && p1.ps[2] == p.ps[2] || p1.ps[1] == p.ps[2] && p1.ps[2] == p.ps[1])) return;
-
-        {
-            int a = p1.ps[0];
-            int b = p1.ps[1];
-            int c = p1.ps[2];
-            int d = p.ps[0];
-            add_at(0, a, b, c, A_90);
-            add_at(0, b, c, d, A_90);
-            add_at(0, c, d, a, A_90);
-            add_at(0, d, a, b, A_90);
-            add_at(0, a, b, d, A_45);
-            add_at(0, a, d, b, A_45);
-            add_at(0, a, c, d, A_45);
-            add_at(0, a, c, b, A_45);
-            add_at(0, c, b, d, A_45);
-            add_at(0, c, d, b, A_45);
-            add_at(0, c, a, b, A_45);
-            add_at(0, c, a, d, A_45);
-        }
-
-
-        if (p.type == C_PSQUARE && p1.type == C_NSQUARE || p.type == C_NSQUARE && p1.type == C_PSQUARE) {
-            if (p1.ps[1] == p.ps[2] && p1.ps[2] == p.ps[1]) {
-                int a = p1.ps[0];
-                int b = p1.ps[1];
-                int c = p1.ps[2];
-                int d = p.ps[0];
-                add_pline(0, a, b, c, d);
-                add_pline(0, a, d, b, c);
-
-                add_tline(0, a, b, b, c);
-                add_tline(0, b, c, c, d);
-                add_tline(0, c, d, d, a);
-                add_tline(0, a, b, a, d);
-
-                add_cong(0, 0, a, b, b, c);
-                add_cong(0, 0, a, b, c, d);
-                add_cong(0, 0, a, b, a, d);
-                add_cong(0, 0, b, c, c, d);
-                add_cong(0, 0, b, c, a, d);
-                add_cong(0, 0, c, d, a, d);
-            }
-        }
-
-    }
-
+    /**
+     * Adds an equilateral triangle using the specified points.
+     *
+     * @param ptn the identifier or index used for the triangle
+     * @param ps  an array containing the triangle's vertex points
+     */
     final public void add_e_triangle(int ptn, int[] ps) {
         int a = ps[0];
         int b = ps[1];
@@ -4116,6 +4824,16 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Checks whether a triangle with vertices a, b, and c exists in the given STris,
+     * considering all permutations of the vertices.
+     *
+     * @param a  first vertex
+     * @param b  second vertex
+     * @param c  third vertex
+     * @param st the STris instance to search
+     * @return the index of the matching triangle if found; otherwise, -1
+     */
     final public int on_sts1(int a, int b, int c, STris st) {
         int p, q, r;
         for (int i = 0; i <= st.no; i++) {
@@ -4134,6 +4852,15 @@ public class GDDBase extends Gib {
         return -1;
     }
 
+    /**
+     * Checks for the existence of a triangle with vertices a, b, and c, in the given order, within a STris.
+     *
+     * @param a  first vertex
+     * @param b  second vertex
+     * @param c  third vertex
+     * @param st the STris instance to search
+     * @return the index of the triangle if it exists; otherwise, -1
+     */
     final public int on_sts(int a, int b, int c, STris st) {
         int p, q, r;
         for (int i = 0; i <= st.no; i++) {
@@ -4147,6 +4874,15 @@ public class GDDBase extends Gib {
         return -1;
     }
 
+    /**
+     * Adds a triangle with vertices a, b, and c to the specified STris if it does not already exist.
+     *
+     * @param d  a multiplier or descriptor value for the triangle
+     * @param a  first vertex
+     * @param b  second vertex
+     * @param c  third vertex
+     * @param st the STris instance to which the triangle will be added
+     */
     final public void add_to_sts(int d, int a, int b, int c, STris st) {
 
         if (on_sts1(a, b, c, st) >= 0) return;
@@ -4158,7 +4894,13 @@ public class GDDBase extends Gib {
         st.p3[n] = c;
     }
 
-
+    /**
+     * Merges triangle data from the secondary STris into the primary one, based on a specified index.
+     *
+     * @param s  the primary STris instance
+     * @param s1 the secondary STris instance to merge from
+     * @param t  the index within the secondary STris used for merging
+     */
     final public void cb_sts(STris s, STris s1, int t) {
         s1.type = 0;
 
@@ -4198,6 +4940,12 @@ public class GDDBase extends Gib {
 
     }
 
+    /**
+     * Attempts to add a SimTri to an existing STris structure.
+     *
+     * @param t the SimTri object representing the triangle to be added
+     * @return true if the list was updated successfully, false otherwise
+     */
     final public boolean add_sts1(SimTri t) {
         STris st = null;
 
@@ -4264,6 +5012,11 @@ public class GDDBase extends Gib {
         return true;
     }
 
+    /**
+     * Adds a SimTri object to the appropriate STris structure or creates a new STris if necessary.
+     *
+     * @param st the SimTri object representing the triangle to add
+     */
     final public void add_sts(SimTri st) {
 
         if (add_sts1(st)) return;
@@ -4292,6 +5045,9 @@ public class GDDBase extends Gib {
         return;
     }
 
+    /**
+     * Collects and organizes triangles from all SimTri objects into STris structures.
+     */
     public void collect_sts() {
         SimTri st = all_st.nx;
         tri_type = 0;
@@ -4310,13 +5066,25 @@ public class GDDBase extends Gib {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////
+    /**
+     * Adds a connection between two points into the specified CSegs.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param cg the CSegs instance where the connection is added
+     */
     public void add_to_cg(int p1, int p2, CSegs cg) {
         cg.no++;
         cg.p1[cg.no] = p1;
         cg.p2[cg.no] = p2;
     }
 
+    /**
+     * Merges connections from one CSegs instance into another.
+     *
+     * @param cg  the primary CSegs instance
+     * @param cg1 the secondary CSegs instance to merge from
+     */
     public void cb_cgs(CSegs cg, CSegs cg1) {
         cg1.type = 0;
         for (int i = 0; i <= cg1.no; i++) {
@@ -4325,12 +5093,28 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Checks whether a connection between two points exists within the given CSegs.
+     *
+     * @param p1  the first point
+     * @param p2  the second point
+     * @param cgs the CSegs instance to check
+     * @return true if the connection exists, false otherwise
+     */
     public boolean on_cgs(int p1, int p2, CSegs cgs) {
         for (int i = 0; i <= cgs.no; i++)
             if (p1 == cgs.p1[i] & p2 == cgs.p2[i]) return true;
         return false;
     }
 
+    /**
+     * Adds a connection between two pairs of points, merging with existing connections if applicable.
+     *
+     * @param p1 the first point of the first pair
+     * @param p2 the second point of the first pair
+     * @param p3 the first point of the second pair
+     * @param p4 the second point of the second pair
+     */
     public void add_cgs(int p1, int p2, int p3, int p4) {
         CSegs cg = all_cgs.nx;
         boolean t1, t2;
@@ -4385,8 +5169,15 @@ public class GDDBase extends Gib {
 
     }
 
-
-    /////////////////////////////////////
+    /**
+     * Finds a PLine object that contains both line segments defined by the given points.
+     *
+     * @param p the first point of the first line segment
+     * @param q the second point of the first line segment
+     * @param r the first point of the second line segment
+     * @param s the second point of the second line segment
+     * @return the matching PLine if found; otherwise, null
+     */
     final PLine fo_pn1(int p, int q, int r, int s) {
         PLine pn = all_pn.nx;
         boolean r1, r2;
@@ -4404,6 +5195,17 @@ public class GDDBase extends Gib {
 
     }
 
+    /**
+     * Finds a TLine object that matches the given line segments.
+     *
+     * If any parameter is zero, this method returns null.
+     *
+     * @param p1 the first point of the first line segment
+     * @param p2 the second point of the first line segment
+     * @param p3 the first point of the second line segment
+     * @param p4 the second point of the second line segment
+     * @return the matching TLine if found; otherwise, null
+     */
     final TLine fo_tn1(int p1, int p2, int p3, int p4) {
         if (p1 == 0 || p2 == 0 || p3 == 0 || p4 == 0) return null;
 
@@ -4417,6 +5219,22 @@ public class GDDBase extends Gib {
         return tn;
     }
 
+    /**
+     * Finds an Angles object matching the given configuration of lines.
+     *
+     * This method checks various combinations of lines in the Angles object using on_ln.
+     * Additional checks are applied when isPFull() returns true.
+     *
+     * @param a the first point for the first line
+     * @param b the second point for the first line
+     * @param c the first point for the second line
+     * @param d the second point for the second line
+     * @param p the first point for the third line
+     * @param q the second point for the third line
+     * @param r the first point for the fourth line
+     * @param s the second point for the fourth line
+     * @return the matching Angles object if found; otherwise, null
+     */
     final Angles fo_as1(int a, int b, int c, int d, int p, int q, int r, int s) {
         Angles as = all_as.nx;
         while (as != null) {
@@ -4436,6 +5254,16 @@ public class GDDBase extends Gib {
         return null;
     }
 
+    /**
+     * Determines whether the given LLine contains exactly the two specified points.
+     *
+     * This method counts the occurrences of the points in the LLine.
+     *
+     * @param p the first point
+     * @param q the second point
+     * @param ln the LLine to check
+     * @return true if the line contains both points exactly; otherwise, false
+     */
     boolean on_ln(int p, int q, LLine ln) {
 
         int i, n;
@@ -4447,23 +5275,15 @@ public class GDDBase extends Gib {
         return (n == 2);
     }
 
-    LLine fd_ln1(int p1, int p2, LLine lnx) {
-        LLine ln = all_ln.nx;
-
-        while (ln != null) {
-            if (lnx != null && ln != lnx)
-                ln = ln.nx;
-            else if (lnx != null && ln == lnx) {
-                ln = ln.nx;
-                lnx = null;
-            } else if (on_ln(p1, ln) && on_ln(p2, ln))
-                break;
-            else
-                ln = ln.nx;
-        }
-        return (ln);
-    }
-
+    /**
+     * Searches for an LLine that is a super-line of the given line and contains the specified additional point.
+     *
+     * The method expects the found LLine to match the required point count.
+     *
+     * @param ln the base LLine to be contained
+     * @param p the additional point to be present in the super-line
+     * @return the matching LLine if found; otherwise, null
+     */
     public LLine fd_ln_lp(LLine ln, int p) {  // a line contian ln, and p , no others.
         int n = 0;
         if (on_ln(p, ln))
@@ -4479,6 +5299,20 @@ public class GDDBase extends Gib {
         return null;
     }
 
+    /**
+     * Checks whether a circle defined by the given set of points exists.
+     *
+     * This method initializes test parameters using the provided points and verifies the existence
+     * of a corresponding circle.
+     *
+     * @param o a parameter for the circle (e.g. origin)
+     * @param a the first point
+     * @param b the second point
+     * @param c the third point
+     * @param d the fourth point
+     * @param e the fifth point
+     * @return true if the circle exists; otherwise, false
+     */
     final public boolean xcir_n(int o, int a, int b, int c, int d, int e) {
         test_c.no = -1;
         test_c.o = o;
@@ -4493,6 +5327,14 @@ public class GDDBase extends Gib {
         return false;
     }
 
+    /**
+     * Adjusts the specified ACir object based on sub-circle or overlapping conditions.
+     *
+     * This method iterates through related circles and updates their types and associated properties
+     * when sub-circle relationships are detected.
+     *
+     * @param cr the ACir object to adjust
+     */
     final void adj_cir1(ACir cr) {
         ACir cr1, cr2, cr3;
         Cond co;
@@ -4531,6 +5373,13 @@ public class GDDBase extends Gib {
         }
     }
 
+    /**
+     * Searches for an LLine that exactly contains the two specified points and has exactly one segment.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @return the matching LLine if found; otherwise, null
+     */
     public LLine fd_ln1(int p1, int p2) {
         LLine ln = all_ln.nx;
         while (ln != null) {
@@ -4542,7 +5391,18 @@ public class GDDBase extends Gib {
         return ln;
     }
 
-
+    /**
+     * Creates and adds a PLine connecting two line segments defined by the given points.
+     *
+     * This method validates the parameters, checks for necessary conditions such as non-collinearity,
+     * updates or creates required LLine objects, and constructs a new PLine based on the provided points.
+     *
+     * @param lm the lemma or identifier for the PLine
+     * @param p1 the first point of the first segment
+     * @param p2 the second point of the first segment
+     * @param p3 the first point of the second segment
+     * @param p4 the second point of the second segment
+     */
     final void add_pline1(int lm, int p1, int p2, int p3, int p4) {
         PLine pn;
         if (!valid(lm)) return;
@@ -4618,6 +5478,14 @@ public class GDDBase extends Gib {
 
     }
 
+    /**
+     * Adjusts the configuration of the specified PLine based on its constituent lines.
+     *
+     * This method refines the composition of the PLine by evaluating its associated LLine segments,
+     * updating their states, and readjusting the PLine properties if necessary.
+     *
+     * @param pn the PLine to adjust
+     */
     final void adj_pn(PLine pn) {
         PLine pn1, pn2, pn3;
         Cond co;
@@ -4698,58 +5566,16 @@ public class GDDBase extends Gib {
         }
     }
 
-    final void add_as_codb(LLine l1, LLine l2, LLine l3, LLine l4) {
-        int p1, p2, p3, p4, p5, p6, p7, p8;
-        int a = inter_ll(l1, l2);
-        int b = inter_ll(l3, l4);
-
-        if (a != 0) {
-            p2 = a;
-            p3 = a;
-            if (l1.pt[0] == a)
-                p1 = l1.pt[1];
-            else
-                p1 = l1.pt[0];
-
-            if (l2.pt[0] == a)
-                p4 = l2.pt[1];
-            else
-                p4 = l2.pt[0];
-        } else {
-            p1 = l1.pt[0];
-            p2 = l1.pt[1];
-            p3 = l2.pt[0];
-            p4 = l2.pt[1];
-        }
-        if (b != 0) {
-            p6 = b;
-            p7 = b;
-            if (l3.pt[0] == b)
-                p5 = l3.pt[1];
-            else
-                p5 = l3.pt[0];
-
-            if (l4.pt[0] == b)
-                p8 = l4.pt[1];
-            else
-                p8 = l4.pt[0];
-        } else {
-            p5 = l3.pt[0];
-            p6 = l3.pt[1];
-            p7 = l4.pt[0];
-            p8 = l4.pt[1];
-        }
-        add_codb(CO_ACONG, p1, p2, p3, p4, p5, p6, p7, p8);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    // traditional prove
-
-
+    /**
+     * Creates an Angles object using the four provided lines.
+     *
+     * @param lm the lemma identifier
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the constructed Angles object, or null if the input is invalid
+     */
     Angles add_as_t(int lm, LLine l1, LLine l2, LLine l3, LLine l4) {
         if (l1 == l2 && l3 == l4) return null;
         if (!valid(lm)) return null;
@@ -4812,6 +5638,17 @@ public class GDDBase extends Gib {
         return (as);
     }
 
+    /**
+     * Checks whether the given sets of three points satisfy the congruence conditions.
+     *
+     * @param a first point of the first segment
+     * @param b second point of the first segment
+     * @param c third point of the first segment
+     * @param p first point of the second segment
+     * @param q second point of the second segment
+     * @param r third point of the second segment
+     * @return true if the conditions for congruence hold; false otherwise
+     */
     final boolean xacongt(int a, int b, int c, int p, int q, int r) {
         LLine l1, l2, l3, l4;
         l1 = fd_ln(a, b);
@@ -4826,6 +5663,19 @@ public class GDDBase extends Gib {
         return (this.fo_as1_t(a, b, b, c, p, q, q, r) != null);
     }
 
+    /**
+     * Finds and returns an Angles object that matches the specified endpoints from four lines.
+     *
+     * @param a the first endpoint of the first line
+     * @param b the second endpoint of the first line
+     * @param c the first endpoint of the second line
+     * @param d the second endpoint of the second line
+     * @param p the first endpoint of the third line
+     * @param q the second endpoint of the third line
+     * @param r the first endpoint of the fourth line
+     * @param s the second endpoint of the fourth line
+     * @return the matching Angles object, or null if none is found
+     */
     final Angles fo_as1_t(int a, int b, int c, int d, int p, int q, int r, int s) {
 
         Angles as = all_as.nx;
@@ -4839,17 +5689,15 @@ public class GDDBase extends Gib {
         return null;
     }
 
-    Angles fd_as_t(LLine l1, LLine l2) {
-        Angles as;
-        for (as = all_as.nx; as != null; as = as.nx) {
-            if (
-                    (l1 == as.l1 && l2 == as.l2) || (l1 == as.l2 && l2 == as.l1) ||
-                            (l1 == as.l3 && l2 == as.l4) || (l1 == as.l4 && l2 == as.l3))
-                return (as);
-        }
-        return (null);
-    }
-
+    /**
+     * Retrieves an Angles object using four specified lines.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the matching Angles object, or null if no match is found
+     */
     final Angles fo_las_t(LLine l1, LLine l2, LLine l3, LLine l4) {
         Angles as = all_as.nx;
         while (as != null) {
@@ -4862,6 +5710,16 @@ public class GDDBase extends Gib {
         return (null);
     }
 
+    /**
+     * Adds an Angles object from the provided lines based on the project state.
+     *
+     * @param lm the lemma identifier
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the added Angles object
+     */
     public Angles add_as(int lm, LLine l1, LLine l2, LLine l3, LLine l4) {
         if (isPFull())
             return add_as0(lm, l1, l2, l3, l4);
@@ -4869,6 +5727,17 @@ public class GDDBase extends Gib {
             return add_as_t(lm, l1, l2, l3, l4);
     }
 
+    /**
+     * Adds an inscribed angle point using the provided parameters.
+     *
+     * @param lm the lemma identifier
+     * @param a the first point on the first line
+     * @param b the second point on the first line
+     * @param c the third point on the first line
+     * @param p the first point on the second line
+     * @param q the second point on the second line
+     * @param r the third point on the second line
+     */
     final void add_ea_pt_t(int lm, int a, int b, int c, int p, int q, int r) {        // for inscrible angle.
 
         if (d_base == 1) return;
@@ -4887,6 +5756,13 @@ public class GDDBase extends Gib {
         Angles as = add_as(lm, l1, l2, l3, l4);
     }
 
+    /**
+     * Adds a new line segment with endpoints a and b.
+     *
+     * @param a the first endpoint
+     * @param b the second endpoint
+     * @return the new or existing LLine instance, or null if the input is invalid
+     */
     final LLine add_ln_t0(int a, int b) {
         if (a == 0 || b == 0) return null;
 
@@ -4904,10 +5780,25 @@ public class GDDBase extends Gib {
         return ln;
     }
 
+    /**
+     * Fast-adds a line segment using the given endpoints.
+     *
+     * @param p1 the first endpoint
+     * @param p2 the second endpoint
+     * @return the added LLine object
+     */
     LLine fadd_ln_t(int p1, int p2) {
         return add_ln_t0(p1, p2);
     }
 
+    /**
+     * Returns the anti midpoint from a line, excluding the specified endpoints.
+     *
+     * @param ln the line to search
+     * @param p one of the endpoints
+     * @param p1 the other endpoint
+     * @return the internal point on the line between p and p1, or 0 if not found
+     */
     public int get_anti_pt(LLine ln, int p, int p1) { // p is imdpoint of x and p1
         for (int i = 0; i <= ln.no; i++) {
             if (ln.pt[i] != p && ln.pt[i] != p1 && (x_inside(p, ln.pt[i], p1)))
@@ -4916,7 +5807,13 @@ public class GDDBase extends Gib {
         return 0;
     }
 
-
+    /**
+     * Determines whether two lines are collinear.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return true if l1 and l2 are collinear; false otherwise
+     */
     boolean xcoll_ln(LLine l1, LLine l2) {
         if (l1.type == 0 && l2.type == 0) {
             int r = 0;
@@ -4932,31 +5829,47 @@ public class GDDBase extends Gib {
             l2 = fd_lnl(l2);
         return l1 == l2;
     }
-    ////////////////////////////////////////////////////////////////////
-    //// for multipul prove.
 
-    //////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * Adds an angle (AngleT) by creating it from line segments corresponding to points a, b, and c.
+     *
+     * @param lemma the lemma identifier
+     * @param a the first point of the angle
+     * @param b the vertex point of the angle
+     * @param c the third point of the angle
+     * @param v the angle value
+     * @return the created AngleT object
+     */
     public AngleT add_at(int lemma, int a, int b, int c, int v) {
 
         return add_at(lemma, fadd_ln_t(a, b), fadd_ln_t(b, c), v);
     }
 
+    /**
+     * Adds an angle (AngleT) by creating it using line segments looked up directly.
+     *
+     * @param lemma the lemma identifier
+     * @param a the first point of the angle
+     * @param b the vertex point of the angle
+     * @param c the third point of the angle
+     * @param v the angle value
+     * @return the created AngleT object
+     */
     public AngleT add_at0(int lemma, int a, int b, int c, int v) {
 
         return add_at(lemma, fd_ln(a, b), fd_ln(b, c), v);
     }
 
-
-    public AngleT new_at(int v, int p, LLine l1, LLine l2) {
-        AngleT at = new AngleT();
-        at.v = v;
-        at.p = p;
-        at.l1 = l1;
-        at.l2 = l2;
-        return at;
-    }
-
+    /**
+     * Creates and adds an AngleT instance with the given lemma, lines, and angle value.
+     * Returns the created AngleT if successful, or null otherwise.
+     *
+     * @param lemma the lemma identifier
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param v the angle value
+     * @return the created AngleT instance or null
+     */
     public AngleT add_at(int lemma, LLine l1, LLine l2, int v) {
         if (isPFull()) return null;
         if (!valid(R_AG_SPECIAL)) return null;
@@ -5004,21 +5917,53 @@ public class GDDBase extends Gib {
         return at;
     }
 
+    /**
+     * Checks whether the angle formed by points a, b, and c is congruent to the specified angle value.
+     *
+     * @param a the first point
+     * @param b the second point
+     * @param c the third point
+     * @param v the angle value to compare
+     * @return true if the angle is congruent; false otherwise
+     */
     public boolean xatcong(int a, int b, int c, int v) {
         AngleT at = fo_at(a, b, c);
         return check_ll_dr(at.p, at.l1, at.l2, v);
     }
 
+    /**
+     * Determines if the angle formed by the two lines is congruent.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return true if the lines form a congruent angle or are collinear; false otherwise
+     */
     public boolean xatcong(LLine l1, LLine l2) {
         if (l1 == l2 || xcoll_ln(l1, l2)) return true;
 
         return fd_at(l1, l2) != null;
     }
 
+    /**
+     * Finds an existing AngleT instance based on three points, mapping these points to corresponding lines.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @return the found AngleT instance, or null if none exists
+     */
     public AngleT fd_at(int p1, int p2, int p3) {
         return fd_at(fd_ln(p1, p2), fd_ln(p2, p3));
     }
 
+    /**
+     * Searches for the first AngleT instance that matches the line segments determined by the given points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @return the found AngleT instance, or null if not found
+     */
     public AngleT fo_at(int p1, int p2, int p3) {
         AngleT at = all_at.nx;
         while (at != null) {
@@ -5028,6 +5973,13 @@ public class GDDBase extends Gib {
         return null;
     }
 
+    /**
+     * Finds an AngleT instance defined by the two specified lines.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return the found AngleT instance, or null if it does not exist
+     */
     public AngleT fd_at(LLine l1, LLine l2) {
         if (l1 == null || l2 == null) return null;
 
@@ -5041,55 +5993,42 @@ public class GDDBase extends Gib {
         return null;
     }
 
+    /**
+     * Checks if the angle between the two lines at a specific point approximates the given angle measure.
+     *
+     * @param p the vertex point
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param d the expected angle in degrees
+     * @return true if the measured angle is approximately equal to d degrees; false otherwise
+     */
     public boolean check_ll_dr(int p, LLine l1, LLine l2, int d) {
         double r = getAngleValue(p, l1, l2);
         double x = Math.abs(r * A_180 / Math.PI - d);
         return x < ZERO || Math.abs(x - A_180) < ZERO || Math.abs(x + A_180) < ZERO;
     }
 
-    public int check_ll_type(int a, int b, int c, int d) {
-        double r = this.getAngleValue(a, b, c);
-        double x = Math.abs(r * A_180 / Math.PI - d);
-        if (x < ZERO) return 0;
-        if (Math.abs(x - A_180) < ZERO) return 1;
-        return -1;
-    }
-
+    /**
+     * Checks if two angle measures are equal or supplementary.
+     *
+     * @param t1 the first angle measure
+     * @param t2 the second angle measure
+     * @return true if the angles are equal or differ by 180 degrees; false otherwise
+     */
     public boolean check_at_eq(int t1, int t2) {
         return t1 == t2 || Math.abs(Math.abs(t1 - t2) - A_180) < ZERO;
     }
 
-    ////////////////////////////////////////////////////
-    // polygon
-    public void add_polygon(int t, int p[]) {
-        Polygon pg = new Polygon(t);
-        for (int i = 0; i < p.length && p[i] != 0; i++)
-            pg.p[i] = p[i];
-        add_pg(pg);
-    }
-
-    public Polygon fd_trix(int t, int a, int b, int c) {
-        Polygon pg = all_pg.nx;
-        while (pg != null) {
-            if (pg.qtype == t) {
-                if (pg.p[0] == a && (pg.p[1] == b && pg.p[2] == c || pg.p[1] == c && pg.p[2] == b)) return pg;
-                if (pg.p[0] == b && (pg.p[1] == a && pg.p[2] == c || pg.p[1] == c && pg.p[2] == a)) return pg;
-                if (pg.p[0] == c && (pg.p[1] == b && pg.p[2] == a || pg.p[1] == a && pg.p[2] == b)) return pg;
-            }
-            pg = pg.nx;
-        }
-        return null;
-    }
-
-    public void add_pg(Polygon pg) {
-        last_pg.nx = pg;
-        last_pg = pg;
-        this.new_pr(pg.qtype);
-        last_nd.u.pg = pg;
-    }
-
-    /////////////////////////////////////////////////////////////////////
-
+    /**
+     * Searches for an AngTn instance with the specified set of four lines.
+     * The search considers both direct and reverse orders.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the found AngTn instance, or null if not found
+     */
     public AngTn fo_atn(LLine l1, LLine l2, LLine l3, LLine l4) {
         AngTn atn = all_atn.nx;
         while (atn != null) {
@@ -5104,6 +6043,20 @@ public class GDDBase extends Gib {
         return null;
     }
 
+    /**
+     * Searches for an AngTn instance matching the provided point-derived line parameters.
+     * Various order combinations are evaluated.
+     *
+     * @param a the first point of the first line
+     * @param b the second point of the first line
+     * @param c the first point of the second line
+     * @param d the second point of the second line
+     * @param a1 the first point of the third line
+     * @param b1 the second point of the third line
+     * @param c1 the first point of the fourth line
+     * @param d1 the second point of the fourth line
+     * @return the matching AngTn instance, or null if not found
+     */
     public AngTn fo_atn(int a, int b, int c, int d, int a1, int b1, int c1, int d1) {
         AngTn atn = all_atn.nx;
         while (atn != null) {
@@ -5120,13 +6073,11 @@ public class GDDBase extends Gib {
         return null;
     }
 
-
-    public AngTn add_atn(int lemma, int a, int b, int c, int a1, int b1, int c1) {
-        if (fo_atn(a, b, b, c, a1, b1, b1, c1) != null) return null;
-
-        return add_atn(lemma, fadd_ln_t(a, b), fadd_ln_t(b, c), fadd_ln_t(a1, b1), fadd_ln_t(b1, c1));
-    }
-
+    /**
+     * Adjusts the given angle tangent node if necessary.
+     *
+     * @param atn the AngTn node to adjust
+     */
     public void adj_atn(AngTn atn) {
         if (atn.type == 0) return;
         LLine l1 = atn.ln1;
@@ -5170,6 +6121,13 @@ public class GDDBase extends Gib {
         atn.type = 0;
     }
 
+    /**
+     * Adjusts a specific line segment within the angle tangent node based on a change.
+     *
+     * @param ln1 the modified line
+     * @param ln2 an associated line for adjustment
+     * @param atn the AngTn node to update
+     */
     final void ch_ln_atn(LLine ln1, LLine ln2, AngTn atn) {
         if (atn.type == 0) return;
         LLine l1 = atn.ln1;
@@ -5209,6 +6167,16 @@ public class GDDBase extends Gib {
         atn.type = 0;
     }
 
+    /**
+     * Adds a new angle tangent node using four line objects.
+     *
+     * @param lemma the lemma identifier
+     * @param l1 the first line in the angle configuration
+     * @param l2 the second line in the angle configuration
+     * @param l3 the third line in the angle configuration
+     * @param l4 the fourth line in the angle configuration
+     * @return the new AngTn object, or null if creation fails
+     */
     public AngTn add_atn(int lemma, LLine l1, LLine l2, LLine l3, LLine l4) {
         if (isPFull()) return null;
         if (!valid(R_AG_ATN)) return null;
@@ -5275,6 +6243,17 @@ public class GDDBase extends Gib {
         return atn;
     }
 
+    /**
+     * Checks the directional relationship between two angles defined by three points each.
+     *
+     * @param a the first point of the first angle
+     * @param b the vertex point of the first angle
+     * @param c the second point of the first angle
+     * @param a1 the first point of the second angle
+     * @param b1 the vertex point of the second angle
+     * @param c1 the second point of the second angle
+     * @return 0, 1, 2, or 3 for specific directional configurations, or -1 if false
+     */
     public int check_atn_dr(int a, int b, int c, int a1, int b1, int c1) {
         double t1 = getAngleValue(a, b, c);
         double t2 = getAngleValue(a1, b1, c1);
@@ -5286,13 +6265,29 @@ public class GDDBase extends Gib {
         return -1; // false
     }
 
-
-    /////////////////////////////////////////////////////////////////
+    /**
+     * Retrieves the adjusted angle value based on an AngleT object.
+     *
+     * @param a the first point for angle calculation
+     * @param b the vertex point for angle calculation
+     * @param c the second point for angle calculation
+     * @param at the AngleT object containing the original angle value
+     * @return the adjusted angle value
+     */
     public int getAtv(int a, int b, int c, AngleT at) {
         int v = at.get_val(a, c);
         return getAtv(a, b, c, v);
     }
 
+    /**
+     * Computes the adjusted angle value using a given angle value.
+     *
+     * @param a the first point for angle calculation
+     * @param b the vertex point for angle calculation
+     * @param c the second point for angle calculation
+     * @param v the initial angle value
+     * @return the adjusted angle value, or 0 if no adjustment is needed
+     */
     public int getAtv(int a, int b, int c, int v) {
         double r = getAngleValue(a, b, c) * A_180 / Math.PI;
         if (v > A_180)
@@ -5306,30 +6301,65 @@ public class GDDBase extends Gib {
         return 0;
     }
 
+    /**
+     * Determines if only existing lines should be searched.
+     *
+     * @return true if only existing lines are considered, false otherwise
+     */
     public boolean search_only_exists_ln() {
         return (!R_SEARCH_ALL_LN);// && depth != 0);
     }
 
-    public boolean search_only_exists_ln(int a, int b) {
-        return (!R_SEARCH_ALL_LN) && fd_ln(a, b) == null;
-    }
-
+    /**
+     * Checks whether lines defined by two pairs of points exist.
+     *
+     * @param a the first point of the first line
+     * @param b the second point of the first line
+     * @param c the first point of the second line
+     * @param d the second point of the second line
+     * @return true if at least one corresponding line does not exist, false otherwise
+     */
     public boolean search_only_exists_ln(int a, int b, int c, int d) {
         return (!R_SEARCH_ALL_LN) && (fd_ln(a, b) == null || fd_ln(c, d) == null);
     }
 
+    /**
+     * Checks whether lines defined by three pairs of points exist.
+     *
+     * @param a the first point of the first line
+     * @param b the second point of the first line
+     * @param c the first point of the second line
+     * @param d the second point of the second line
+     * @param e the first point of the third line
+     * @param f the second point of the third line
+     * @return true if at least one corresponding line does not exist, false otherwise
+     */
     public boolean search_only_exists_ln(int a, int b, int c, int d, int e, int f) {
         return (!R_SEARCH_ALL_LN) && (fd_ln(a, b) == null || fd_ln(c, d) == null || fd_ln(e, f) == null);
     }
 
+    /**
+     * Checks if the set of four lines satisfies the search criteria based on intersections.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return true if the lines meet the search criteria, false otherwise
+     */
     public boolean search_only_exists_ln(LLine l1, LLine l2, LLine l3, LLine l4) {
         if (!R_AG_ALL && (inter_lls(l1, l2) == 0 || inter_lls(l3, l4) == 0))
             return false;
         return true;
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * Processes an array of integers to add nodes for a conclusion.
+     * Each group of three integers represents properties of one node.
+     * If an extra integer exists after grouping, it is processed as a separate node.
+     *
+     * @param p the array of integers representing node properties (zero-terminated)
+     */
     public void add_nodes(int[] p) { // for conclusion;
 
         LList d = new LList();
@@ -5362,12 +6392,23 @@ public class GDDBase extends Gib {
         last_ns = d;
     }
 
+    /**
+     * Creates and returns a copy of the given node list.
+     *
+     * @param ns the original node list to copy
+     * @return a new node list copied from the provided list
+     */
     public LList cp_nodes(LList ns) {
         LList d = new LList();
         d.cp(ns);
         return d;
     }
 
+    /**
+     * Adds the specified node list to the global node list if it is not already present.
+     *
+     * @param d the node list to add
+     */
     public void add_nodes(LList d) {
         if (d == null) return;
         if (x_list(d)) return;
@@ -5376,6 +6417,12 @@ public class GDDBase extends Gib {
         last_ns = d;
     }
 
+    /**
+     * Checks whether an equivalent node list already exists in the collection.
+     *
+     * @param ls the node list to check
+     * @return true if an equivalent list exists; false otherwise
+     */
     public boolean x_list(LList ls) {
         if (ls.nd == 0 && ls.nf == 0) return false;
 
@@ -5387,6 +6434,13 @@ public class GDDBase extends Gib {
         return false;
     }
 
+    /**
+     * Compares two node lists for equality based on their node and factor arrays.
+     *
+     * @param ls the first node list
+     * @param ls1 the second node list
+     * @return true if both lists are equal; false otherwise
+     */
     public boolean eq_list(LList ls, LList ls1) {
         if (ls.nd != ls1.nd) return false;
         for (int i = 0; i < ls.nd; i++) {
@@ -5401,6 +6455,14 @@ public class GDDBase extends Gib {
         return true;
     }
 
+    /**
+     * Determines if two Mnde objects are equivalent.
+     * Equivalence is based on the type value and, if present, the associated transformation.
+     *
+     * @param m1 the first Mnde object
+     * @param m2 the second Mnde object
+     * @return true if both Mnde objects are considered equal; false otherwise
+     */
     public boolean eq_mnde(Mnde m1, Mnde m2) {
         if (m1.t != m2.t) return false;
         if (m1.tr == null && m2.tr == null) return true;
@@ -5409,9 +6471,18 @@ public class GDDBase extends Gib {
         if (m1.tr.l1 == m2.tr.l1 && m1.tr.l2 == m2.tr.l2) return true;
         return false;
     }
-    /////////////////////////////////////////////////////////
 
-
+    /**
+     * Retrieves an existing AngTr object matching the specified parameters,
+     * or creates a new one if none exists.
+     *
+     * @param v the angle value
+     * @param t1 the first transformation parameter
+     * @param t2 the second transformation parameter
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return an existing or newly created AngTr object based on the parameters
+     */
     public AngTr fadd_tr(int v, int t1, int t2, LLine l1, LLine l2) {
         AngTr tr = fd_tr(v, l1, l2);
         if (tr != null) return tr;
@@ -5422,6 +6493,14 @@ public class GDDBase extends Gib {
         return t;
     }
 
+    /**
+     * Creates and returns a new AngTr object with the specified angle value and lines.
+     *
+     * @param v the angle value
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return a new AngTr object initialized with the provided parameters
+     */
     public AngTr add_tr(int v, LLine l1, LLine l2) {
         AngTr tr = new AngTr();
         tr.v = v;
@@ -5432,6 +6511,14 @@ public class GDDBase extends Gib {
         return tr;
     }
 
+    /**
+     * Searches for an existing AngTr object that matches the specified angle value and lines.
+     *
+     * @param v the angle value
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return the matching AngTr object if found; otherwise, null
+     */
     public AngTr fd_tr(int v, LLine l1, LLine l2) {
         AngTr tr = all_tr.nx;
         while (tr != null) {

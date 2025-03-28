@@ -24,7 +24,7 @@ class ColorMenu extends JPopupMenu
         super(name);
         unselectedBorder = new CompoundBorder(new MatteBorder(1, 1, 1, 1,
                 getBackground()), new BevelBorder(BevelBorder.LOWERED,
-                        Color.white, Color.gray));
+                Color.white, Color.gray));
         selectedBorder = new CompoundBorder(new MatteBorder(1, 1, 1, 1,
                 Color.red), new MatteBorder(1, 1, 1, 1, getBackground()));
         activeBorder = new CompoundBorder(new MatteBorder(1, 1, 1, 1,
@@ -52,7 +52,11 @@ class ColorMenu extends JPopupMenu
         }
         add(p);
     }
-
+    /**
+     * Sets the selected color in the ColorMenu.
+     *
+     * @param c the color to be selected
+     */
     public void setColor(Color c)
     {
         Object obj = paneTable.get(c);
@@ -64,6 +68,11 @@ class ColorMenu extends JPopupMenu
         colorPane.setSelected(true);
     }
 
+/**
+ * Gets the currently selected color in the ColorMenu.
+ *
+ * @return the selected color, or null if no color is selected
+ */
     public Color getColor()
     {
         if (colorPane == null)
@@ -71,10 +80,16 @@ class ColorMenu extends JPopupMenu
         return colorPane.getColor();
     }
 
+    /**
+     * Performs the selection action. This method is intended to be overridden.
+     */
     public void doSelection()
     {
     }
 
+    /**
+     * Hides the ColorMenu.
+     */
     public void HideMenu()
     {
         this.setVisible(false);
@@ -86,37 +101,68 @@ class ColorMenu extends JPopupMenu
 
         protected boolean isSelected;
 
+/**
+         * Constructs a ColorPane with the specified color.
+         * Sets the background color, border, tooltip text, and registers a MouseListener.
+         *
+         * @param c the color of the pane
+         */
         public ColorPane(Color c)
         {
             color = c;
             setBackground(c);
             setBorder(unselectedBorder);
-            String msg = "R " + c.getRed() + ", G " + c.getGreen() + ", B "
-                    + c.getBlue();
+            String msg = "R " + c.getRed() + ", G " + c.getGreen() + ", B " + c.getBlue();
             setToolTipText(msg);
             addMouseListener(this);
         }
 
+        /**
+         * Returns the color of the pane.
+         *
+         * @return the color of the pane
+         */
         public Color getColor()
         {
             return color;
         }
 
+        /**
+         * Returns the preferred size of the pane.
+         *
+         * @return the preferred size of the pane
+         */
         public Dimension getPreferredSize()
         {
             return new Dimension(25, 25);
         }
 
+        /**
+         * Returns the maximum size of the pane.
+         *
+         * @return the maximum size of the pane
+         */
         public Dimension getMaximumSize()
         {
             return getPreferredSize();
         }
 
+        /**
+         * Returns the minimum size of the pane.
+         *
+         * @return the minimum size of the pane
+         */
         public Dimension getMinimumSize()
         {
             return getPreferredSize();
         }
 
+        /**
+         * Sets the selection state of the pane.
+         * Updates the border based on the selection state.
+         *
+         * @param selected the selection state to set
+         */
         public void setSelected(boolean selected)
         {
             isSelected = selected;
@@ -126,19 +172,40 @@ class ColorMenu extends JPopupMenu
                 setBorder(unselectedBorder);
         }
 
+        /**
+         * Returns whether the pane is selected.
+         *
+         * @return true if the pane is selected, false otherwise
+         */
         public boolean isSelected()
         {
             return isSelected;
         }
 
+        /**
+         * Invoked when a mouse button has been pressed on the pane.
+         *
+         * @param e the MouseEvent triggered by the press
+         */
         public void mousePressed(MouseEvent e)
         {
         }
 
+        /**
+         * Invoked when the mouse has been clicked on the pane.
+         *
+         * @param e the MouseEvent triggered by the click
+         */
         public void mouseClicked(MouseEvent e)
         {
         }
 
+        /**
+         * Invoked when a mouse button has been released on the pane.
+         * Sets the color, clears the selected path, performs the selection action, and hides the menu.
+         *
+         * @param e the MouseEvent triggered by the release
+         */
         public void mouseReleased(MouseEvent e)
         {
             setColor(color);
@@ -147,11 +214,23 @@ class ColorMenu extends JPopupMenu
             HideMenu();
         }
 
+        /**
+         * Invoked when the mouse enters the pane.
+         * Sets the border to the active border.
+         *
+         * @param e the MouseEvent triggered when entering the pane
+         */
         public void mouseEntered(MouseEvent e)
         {
             setBorder(activeBorder);
         }
 
+        /**
+         * Invoked when the mouse exits the pane.
+         * Sets the border based on the selection state.
+         *
+         * @param e the MouseEvent triggered when exiting the pane
+         */
         public void mouseExited(MouseEvent e)
         {
             setBorder(isSelected ? selectedBorder : unselectedBorder);

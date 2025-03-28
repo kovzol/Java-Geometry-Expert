@@ -8,8 +8,20 @@
 package gprover;
 
 
+/**
+ * A class representing the geometric deduction system.
+ * <p>
+ * This class extends GDDBase and implements additional algorithms for
+ * geometric constructions, predicate validations, and search operations used in
+ * the deduction process.
+ * </p>
+ */
 public class GDD extends GDDBase {
 
+    /**
+     * Performs the fixed‐point computation for the geometric deduction system.
+     * Processes all pending conditions, adjusts parameters, and collects results.
+     */
     void fixpoint() {
         d_base = 0;
         test_ra = null;
@@ -86,7 +98,11 @@ public class GDD extends GDDBase {
     }
 
 /* Searching */
-
+    /**
+     * Searches for parallel line configurations within the specified PLine.
+     *
+     * @param pn the PLine in which to search.
+     */
     final void search_pn(PLine pn) {
 
         if (pn == null) return;
@@ -154,7 +170,11 @@ public class GDD extends GDDBase {
         }
     }
 
-
+    /**
+     * Searches for line collisions within the specified PLine.
+     *
+     * @param pn the PLine to inspect.
+     */
     final void search_pn_mds(PLine pn) {
         MidPt md = all_md.nx;
 
@@ -166,6 +186,12 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches within a PLine for configurations based on the provided midpoint.
+     *
+     * @param pn the PLine in which to search.
+     * @param md the midpoint used for finding connections.
+     */
     final void search_pn_md(PLine pn, MidPt md) {
 
         add_codb(CO_MIDP, md.m, md.a, md.b, 0, 0, 0, 0, 0);
@@ -219,6 +245,12 @@ public class GDD extends GDDBase {
             }
     }
 
+    /**
+     * Searches for additional line intersections and processes parallel connections.
+     *
+     * @param ln1 the first line.
+     * @param ln2 the second line.
+     */
     final void search_pn_1(LLine ln1, LLine ln2) {
         if (ln1 == null) {
             // TODO. Handle this.
@@ -249,19 +281,11 @@ public class GDD extends GDDBase {
 
     }
 
-    final void search_pn_md(PLine pn1, LLine ln1, LLine ln2) {
-        MidPt md = all_md.nx;
-        if (md == null) return;
-
-        add_codb(CO_MIDP, md.m, md.a, md.b, 0, 0, 0, 0, 0);
-        for (; md != null; md = md.nx) {
-            if (!ch_dep(md.dep)) break;
-            lm_md_connection(md, ln1, ln2);
-            lm_parallelogram(md, ln1, ln2);
-        }
-        pop_codb();
-    }
-
+    /**
+     * Searches for configurations in the given PLine based on TLine intersections.
+     *
+     * @param pn the PLine to search within.
+     */
     final void search_pn_tns(PLine pn) {
         TLine tn = all_tn.nx;
         while (tn != null) {
@@ -272,6 +296,12 @@ public class GDD extends GDDBase {
         }
     }
 
+/**
+ * Searches for circle intersections within the provided PLine.
+ * Finds intersection points between each line in the PLine and the given circle.
+ *
+ * @param pn the PLine to search for circle intersections
+ */
     public void search_pn_cr(PLine pn) {
         LLine l1, l2;
         ACir cr;
@@ -299,6 +329,12 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Processes a TLine for potential geometric relations.
+     * Checks intersections between the two lines forming the TLine and performs several searches.
+     *
+     * @param tn the TLine to process
+     */
     final void search_tn(TLine tn) {
 
         co_db.nx = null;
@@ -321,6 +357,12 @@ public class GDD extends GDDBase {
         search_tn0(tn);
     }
 
+    /**
+     * Refines a TLine by attempting to adjust its defining lines.
+     * Replaces any degenerate line with a valid one if necessary, then adds a perpendicular condition.
+     *
+     * @param tn the TLine to adjust
+     */
     final void search_tn0(TLine tn) {
         LLine ln1, ln2;
         if (tn.type == 0) return;
@@ -341,6 +383,12 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Initiates the search for isosceles configurations in a TLine.
+     * Utilizes the intersection of the lines to search for isosceles triangle–like conditions.
+     *
+     * @param tn the TLine to search for isosceles configurations in
+     */
     final void search_tn_iso(TLine tn) {
         int p = inter_lls(tn.l1, tn.l2);
         if (p == 0) return;
@@ -348,6 +396,13 @@ public class GDD extends GDDBase {
         search_tn_iso1(p, tn.l2, tn.l1);
     }
 
+    /**
+     * Searches for isosceles or congruent configurations in a pair of lines with a shared intersection.
+     *
+     * @param p the common intersection point from the first line pair
+     * @param l1 the first line to check
+     * @param l2 the second line to check
+     */
     final void search_tn_iso1(int p, LLine l1, LLine l2) {
         int p1, p2, p3;
         for (int i = 0; i <= l1.no; i++)
@@ -391,6 +446,15 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Processes circle-related configurations for a TLine.
+     * Searches for tangent conditions and square formations with respect to a circle.
+     *
+     * @param ln1 the first line of the TLine
+     * @param ln2 the second line of the TLine
+     * @param m the intersection point of ln1 and ln2
+     * @param tn the source TLine being processed
+     */
     final void search_tn_crs(LLine ln1, LLine ln2, int m, TLine tn) {
         int p2, p3, m2, m3;
         ACir cr = all_cir.nx;
@@ -417,29 +481,37 @@ public class GDD extends GDDBase {
         }
     }
 
-
-    final private void search_tn_dim(TLine tn, int m, ACir cr) {
-        if (m == 0 || !on_cir(m, cr)) return;
-        LLine l1 = tn.l1;
-        LLine l2 = tn.l2;
-        int p1 = inter_lc1(l1, cr, m);
-        if (p1 == 0) return;
-        int p2 = inter_lc1(l2, cr, m);
-        if (p2 == 0) return;
-
-    }
-
+    /**
+     * Searches for midpoint configurations associated with a TLine.
+     * Iterates over all midpoints to find relevant relations with the given TLine.
+     *
+     * @param tn the TLine to search for midpoint relations
+     */
     final void search_tn_mds(TLine tn) {
         for (MidPt md = all_md.nx; md != null && ch_dep(md.dep); md = md.nx)
             search_tn_md(tn, md);
     }
 
+    /**
+     * Searches through all TLine entries and, for each valid TLine,
+     * invokes search_tn_md with the given midpoint.
+     *
+     * @param md the midpoint used to relate TLine configurations
+     */
     final void search_md_tns(MidPt md) {
         for (TLine tn = all_tn.nx; tn != null && tn.nx != null && ch_dep(tn.dep); tn = tn.nx)
             if (tn.type != 0)
                 search_tn_md(tn, md);
     }
 
+    /**
+     * Processes a TLine with respect to a given midpoint.
+     * Determines the intersection of the TLine's defining lines and,
+     * if appropriate, adds midpoint-related constructions.
+     *
+     * @param tn the TLine to process
+     * @param md the midpoint used for validation and configuration
+     */
     final void search_tn_md(TLine tn, MidPt md) {
         LLine ln1 = tn.l1;
         LLine ln2 = tn.l2;
@@ -465,6 +537,12 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Iterates through all available PLine entries and searches for
+     * TLine intersections within each PLine that meet the dependency criteria.
+     *
+     * @param tn the TLine serving as search criteria for parallel configurations
+     */
     final void search_tn_pns(TLine tn) {
         PLine pn;
         pn = all_pn.nx;
@@ -475,6 +553,14 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for angle relationships between two TLine entities.
+     * Iterates over all angle configurations to determine additional
+     * angle-related constructions.
+     *
+     * @param tn1 the first TLine
+     * @param tn2 the second TLine
+     */
     final void serach_tn2_as(TLine tn1, TLine tn2) {
         Angles as = all_as.nx;
         if (tn1.type == 0) return;
@@ -486,6 +572,16 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Processes interactions between a TLine and all other TLine entries.
+     * Evaluates perpendicular and cyclic configurations based on the
+     * intersections of the defining lines and applies necessary constructions.
+     *
+     * @param tn the source TLine to compare
+     * @param ln1 one of the lines defining the source TLine
+     * @param ln2 the other line defining the source TLine
+     * @param p1 the intersection point of ln1 and ln2
+     */
     final void search_tn_tn(TLine tn, LLine ln1, LLine ln2, int p1) {
         TLine tn1;
         PLine pn;
@@ -563,6 +659,13 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for various circle configurations within the specified circle.
+     * Evaluates diameter conditions, inscribed angle relationships,
+     * and parallel intersections related to the circle.
+     *
+     * @param cr1 the circle to process
+     */
     final void search_cr(ACir cr1) {
         int p1, p2, p3, p4, i, j, k;
         co_db.nx = null;
@@ -623,6 +726,13 @@ public class GDD extends GDDBase {
         adj_cir1(cr1);
     }
 
+    /**
+     * Searches for midpoint configurations related to the given circle.
+     * If the circle's center coincides with a midpoint, constructs the appropriate
+     * cyclic configurations based on the circle and the midpoint's endpoints.
+     *
+     * @param cr the circle to process for midpoint relationships
+     */
     final void search_cr_md(ACir cr) {
         MidPt md = all_md.nx;
         if (cr.pt[1] == 0) return;
@@ -649,6 +759,13 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for additional circle‐line intersections within a PLine.
+     *
+     * @param cr1 the circle to search intersections with
+     * @param p1  the first point index defining the line
+     * @param p2  the second point index defining the line
+     */
     final void search_cr_pn(ACir cr1, int p1, int p2) {
         int i, p3, p4;
         LLine l1, l2;
@@ -666,7 +783,12 @@ public class GDD extends GDDBase {
         }
     }
 
-
+    /**
+     * Searches for tangent configurations between the given circle and a TLine.
+     *
+     * @param cr1 the circle to check for tangency conditions
+     * @param tn  the TLine used for searching tangent intersections
+     */
     final void search_cr_tan(ACir cr1, TLine tn) {
         if (cr1.o == 0 || cr1.no < 1)
             return;
@@ -709,6 +831,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for circle‐circle intersections between the provided circle and all other circles.
+     *
+     * @param cr1 the circle to search for intersections with other circles
+     */
     final void search_cr_cr(ACir cr1) {
         ACir cr2;
         int p1, p2;
@@ -746,6 +873,13 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for isosceles configurations related to a circle using a line segment defined by two points.
+     *
+     * @param cr1 the circle to process
+     * @param p1  the first point index defining the segment
+     * @param p2  the second point index defining the segment
+     */
     final void search_cr_iso(ACir cr1, int p1, int p2) {
         int p3 = fd_pt_md(p1, p2);
         if (p3 != 0) {
@@ -755,6 +889,12 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches and constructs midpoint‐related cyclic configurations for the given circle.
+     *
+     * @param cr the circle to process
+     * @param md the midpoint data structure containing endpoints and the midpoint
+     */
     final void search_cr_md(ACir cr, MidPt md) {
         int o = cr.o;
         if (o == 0) return;
@@ -776,6 +916,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for congruent configurations by evaluating circle properties.
+     *
+     * @param cr1 the circle used to search congruence conditions between its intersection points
+     */
     final void search_cr_cg(ACir cr1) {
         if (cr1.o != 0) {
             for (int i = 0; i <= cr1.no; i++)
@@ -790,6 +935,11 @@ public class GDD extends GDDBase {
     }
 
 
+    /**
+     * Processes all midpoint‐related configurations including congruence, parallel, and cyclic conditions.
+     *
+     * @param md the midpoint to process
+     */
     final void search_md(MidPt md) {
 
         co_db.nx = null;
@@ -839,6 +989,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for additional midpoint configurations and connections between different midpoints.
+     *
+     * @param md the midpoint from which to search connected midpoint configurations
+     */
     final void search_md_mds(MidPt md) {
 
         MidPt md1;
@@ -903,6 +1058,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for midpoint-related parallel segment configurations.
+     *
+     * @param md the midpoint object containing endpoints for the search
+     */
     final void search_md_pns(MidPt md) {
         if (!valid(R_PARALLELOGRAM)) return;
         LLine l0 = fd_ln(md.a, md.b);
@@ -914,6 +1074,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Processes an angle object by adjusting and verifying its associated lines.
+     *
+     * @param as1 the angle object to process
+     */
     final void search_as(Angles as1) {
         LLine l1 = as1.l1;
         LLine l2 = as1.l2;
@@ -998,6 +1163,15 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Adjusts the angle based on parallel or perpendicular relationships between provided lines.
+     *
+     * @param as the angle object to adjust
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     */
     final void search_as_0(Angles as, LLine l1, LLine l2, LLine l3, LLine l4) {
         if (ln_para(l1, l2) && l3 != l4) {
             as.type = 0;
@@ -1030,6 +1204,15 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for specific angle relations given intersecting lines.
+     *
+     * @param p1 the first intersection point
+     * @param p2 the second intersection point, expected as the intersection of l1 and l3
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     */
     final void search_as_1(int p1, int p2, LLine l1, LLine l2, LLine l3) {
         if (p1 == 0 || p2 == 0) return;
         int o = inter_ll(l1, l3);
@@ -1093,6 +1276,16 @@ public class GDD extends GDDBase {
             }
     }
 
+    /**
+     * Identifies and processes angle relationships using the inscribed angle theorem and tangency conditions.
+     *
+     * @param p1 the first intersection point
+     * @param p2 the second intersection point
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     */
     final void search_as_2(int p1, int p2, LLine l1, LLine l2, LLine l3, LLine l4) {
         int o, p3, p4;
         o = 0;
@@ -1129,6 +1322,16 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for cyclic angle configurations based on line and circle intersections.
+     *
+     * @param p1 the first intersection point
+     * @param p2 the second intersection point
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     */
     final void search_as_3(int p1, int p2, LLine l1, LLine l2, LLine l3, LLine l4) {
         int p3, p4, m;
         if ((p3 = inter_ll(l1, l3)) != 0 && xcir2(p2, p1, p3) &&
@@ -1153,6 +1356,16 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Adjusts angle configurations based on alignment and concurrency of lines.
+     *
+     * @param p1 the first reference point from an intersection
+     * @param p2 the second reference point from an intersection
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     */
     final void lm_43(int p1, int p2, LLine l1, LLine l2, LLine l3, LLine l4) {
         int p3, p4, o;
 
@@ -1177,6 +1390,16 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for similar angle configurations and triggers operations to construct congruences.
+     *
+     * @param p1 the first intersection point
+     * @param p2 the second intersection point
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     */
     final void search_as_sim(int p1, int p2, LLine l1, LLine l2, LLine l3, LLine l4) {
 //        if (!valid(R_STRI)) return;
         int p3, p4, p5, p6;
@@ -1237,6 +1460,17 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Determines if two triangles are similar based on their vertices.
+     *
+     * @param p1 the first vertex of the first triangle
+     * @param p2 the second vertex of the first triangle
+     * @param p3 the third vertex of the first triangle
+     * @param p4 the first vertex of the second triangle
+     * @param p5 the second vertex of the second triangle
+     * @param p6 the third vertex of the second triangle
+     * @return true if the triangles are similar, false otherwise
+     */
     boolean tri_sim(int p1, int p2, int p3, int p4, int p5, int p6) {
         int p;
         if (ind_3(p1, p4, p5, p6) != 0 && ind_3(p2, p4, p5, p6) != 0 && ind_3(p3, p4, p5, p6) != 0)//???
@@ -1276,6 +1510,9 @@ public class GDD extends GDDBase {
         return (false);
     }
 
+    /**
+     * Iterates through angle objects to perform angle search operations.
+     */
     final void search_as_pt() {
         Angles as;
         as = all_as.nx;
@@ -1290,6 +1527,18 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches and processes string-based congruency conditions for the provided points.
+     *
+     * @param dr a direction flag for processing
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param p4 the fourth point
+     * @param p5 the fifth point
+     * @param p6 the sixth point
+     * @return true if a congruency condition is met, false otherwise
+     */
     boolean search_st_ct(int dr, int p1, int p2, int p3, int p4, int p5, int p6) {
         int oldt = tri_type;
         boolean mk = false;
@@ -1314,6 +1563,17 @@ public class GDD extends GDDBase {
         return mk;
     }
 
+    /**
+     * Searches for congruent segment configurations and processes string congruency scenarios.
+     *
+     * @param dr a direction flag for processing
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param p4 the fourth point
+     * @param p5 the fifth point
+     * @param p6 the sixth point
+     */
     void search_st_rg(int dr, int p1, int p2, int p3, int p4, int p5, int p6) {
         CongSeg rg = fo_rg1(p1, p2, p4, p5);
         int t1, t2;
@@ -1366,6 +1626,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches and processes a SimTri structure.
+     *
+     * @param st the SimTri instance representing the similar triangle to search
+     */
     final void search_st(SimTri st) {
         int dr, p1, p2, p3, p4, p5, p6;
         RatioSeg ra1, ra = null;
@@ -1408,6 +1673,11 @@ public class GDD extends GDDBase {
         pop_codb();
     }
 
+    /**
+     * Searches and processes a congruent triangle based on the given SimTri.
+     *
+     * @param st the SimTri instance containing triangle data
+     */
     final void search_ct(SimTri st) {
         tri_type = 1;
         adj_ct(st);
@@ -1441,6 +1711,11 @@ public class GDD extends GDDBase {
         pop_codb();
     }
 
+    /**
+     * Searches and processes a CongSeg object.
+     *
+     * @param cg the CongSeg instance to process
+     */
     final void search_cg(CongSeg cg) {
         int o, p1, p2, p3, p4;
         if (cg.t1 == 0 || cg.t2 == 0) {
@@ -1508,6 +1783,13 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Searches for an isosceles configuration based on the given points.
+     *
+     * @param o the origin point
+     * @param a the first point defining the base
+     * @param b the second point defining the base
+     */
     final void search_cg_iso(int o, int a, int b) {
         MidPt m = fo_md(a, b);
         if (m != null && m.m != o) { // mid
@@ -1547,6 +1829,14 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Searches for a triangle structure within congruent segments.
+     *
+     * @param p1 the first point of the congruency
+     * @param p2 the second point of the congruency
+     * @param p3 the third point of the congruency
+     * @param p4 the fourth point of the congruency
+     */
     final void search_cg_st(int p1, int p2, int p3, int p4) {
 
         SimTri st;
@@ -1599,7 +1889,11 @@ public class GDD extends GDDBase {
         }
     }
 
-
+    /**
+     * Searches for a ratio segment configuration and processes it accordingly.
+     *
+     * @param ra the RatioSeg instance containing ratio and segment data
+     */
     final void search_ra(RatioSeg ra) {
         int n, a1, b1, a2, b2, a3, b3, a4, b4;
         if (ra.type == 0) return;
@@ -1653,45 +1947,11 @@ public class GDD extends GDDBase {
             }
     }
 
-
-    final void adj_ras(RatioSeg ra) {
-        if (ra.type == 0) return;
-        CongSeg cg;
-        int p1, p2;
-        int[] p;
-        test_ra1.cp_ratio(ra);
-        p = test_ra1.r;
-        cg = null;
-
-        for (int n = 0; n < 4; n++) {
-            p1 = p[n * 2 + 1];
-            p2 = p[n * 2 + 2];
-
-            cg = fd_cg2(p1, p2, cg);
-            while (cg != null) {
-                if (p1 == cg.p1 && p2 == cg.p2 || p1 == cg.p2 && p2 == cg.p1) {
-                    p[n * 2 + 1] = cg.p3;
-                    p[n * 2 + 2] = cg.p4;
-                } else {
-                    p[n * 2 + 1] = cg.p1;
-                    p[n * 2 + 2] = cg.p2;
-                }
-
-                if (!xeq_ratio(p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8])) {     // mod here.
-
-                    add_codb(CO_CONG, cg.p1, cg.p2, cg.p3, cg.p4, 0, 0, 0, 0);
-                    add_codb(CO_PROD, ra.r[1], ra.r[2], ra.r[3], ra.r[4], ra.r[5], ra.r[6], ra.r[7], ra.r[8]);
-                    add_ra(0, 0, p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8]);
-                    pop_codb();
-                    pop_codb();
-                }
-                cg = cg.nx;
-            }
-            p[n * 2 + 1] = p1;
-            p[n * 2 + 2] = p2;
-        }
-    }
-
+    /**
+     * Searches and processes the ratio segment for state-specific actions.
+     *
+     * @param ra the RatioSeg instance to process
+     */
     final void serach_ra_st(RatioSeg ra) {
         int a, a1, a2, b, b1, b2;
         int[] p = ra.r;
@@ -1808,6 +2068,9 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches and processes ratio segments for congruency operations.
+     */
     final void search_ra_cg() {
 
         RatioSeg ra;
@@ -1851,23 +2114,40 @@ public class GDD extends GDDBase {
         }
     }
 
-    ///////////////////////////////////////////////////////////////
+    /**
+     * Checks if three points are collinear.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @return true if the points are collinear; false otherwise
+     */
     public boolean mcoll(int p1, int p2, int p3) {
         return xcoll(p1, p2, p3);
     }
 
+    /**
+     * Checks if the line formed by p1 and p2 is perpendicular to the line formed by p3 and p4.
+     *
+     * @param p1 the first point of the first line
+     * @param p2 the second point of the first line
+     * @param p3 the first point of the second line
+     * @param p4 the second point of the second line
+     * @return true if the lines are perpendicular; false otherwise
+     */
     public boolean mperp(int p1, int p2, int p3, int p4) {
         return xperp(p1, p2, p3, p4);
     }
 
-    public boolean mpara(int p1, int p2, int p3, int p4) {
-        return xpara(p1, p2, p3, p4);
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    // added by yezheng 2006.9.26
-
-
+    /**
+     * Adds an isosceles configuration when three lines concur.
+     *
+     * @param lm the identifier to be used for the configuration
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param m the midpoint to be used in the configuration
+     */
     final void add_iso_3lines_concur(int lm, int p1, int p2, int p3, int m) {
         if (p1 == m) return;
         if (check_coll(p1, p2, p3)) {
@@ -1883,11 +2163,27 @@ public class GDD extends GDDBase {
         add_tline(lm, p1, m, p2, p3);
     }
 
+    /**
+     * Searches for congruent triangle configurations via side‑side‑side relationships.
+     *
+     * @param p1 the first point of the first segment
+     * @param p2 the second point of the first segment
+     * @param p3 the first point of the second segment
+     * @param p4 the second point of the second segment
+     */
     public final void search_cg_ct(int p1, int p2, int p3, int p4) {
         search_cg_ct0(p1, p2, p3, p4);      //SSS
         search_cg_ct0(p3, p4, p1, p2);      //SSS
     }
 
+    /**
+     * Searches for congruent triangle configurations using angle‑angle‑side conditions.
+     *
+     * @param p1 the first point of the first segment
+     * @param p2 the second point of the first segment
+     * @param p3 the first point of the second segment
+     * @param p4 the second point of the second segment
+     */
     public final void search_cg_aas(int p1, int p2, int p3, int p4) {
         for (int i = 1; i <= pts_no; i++)
             for (int j = 1; j <= pts_no; j++) {
@@ -1915,6 +2211,14 @@ public class GDD extends GDDBase {
             }
     }
 
+    /**
+     * Searches for congruent triangle configurations with trimmed conditions using SSS.
+     *
+     * @param p1 the first reference point
+     * @param p2 the second reference point
+     * @param p3 the third reference point
+     * @param p4 the fourth reference point
+     */
     public final void search_cg_ct0(int p1, int p2, int p3, int p4) {
         //   if (!valid(R_SSS)) return;
 
@@ -2031,6 +2335,16 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for similar triangle configurations using corresponding line segments.
+     *
+     * @param p1 the reference point from the first triangle
+     * @param p2 the reference point from the second triangle
+     * @param ln1 the line data for the first triangle side
+     * @param ln2 the line data for the second triangle side
+     * @param ln3 the line data for the third triangle side
+     * @param ln4 the line data for the alternative configuration side
+     */
     final public void search_as_ct(int p1, int p2, LLine ln1, LLine ln2, LLine ln3, LLine ln4) {
 //        if (!valid(R_SAS)) return;
         if (p1 == 0 || p2 == 0) return;
@@ -2101,7 +2415,14 @@ public class GDD extends GDDBase {
         }
     }
 
-
+    /**
+     * Searches for T-line structures by testing intersections and perpendicular conditions.
+     *
+     * @param p1 the first reference point index
+     * @param ln1 the first line of the primary structure
+     * @param ln2 the second line of the primary structure
+     * @param tn1 the candidate T-line structure
+     */
     final public void search_tn_st(int p1, LLine ln1, LLine ln2, TLine tn1) {
 
 
@@ -2170,6 +2491,14 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Searches for congruent triangle configurations by finding midpoints and establishing congruency.
+     *
+     * @param p1 the first point index of the first segment
+     * @param p2 the second point index of the first segment
+     * @param p3 the first point index of the second segment
+     * @param p4 the second point index of the second segment
+     */
     final public void search_cg_md(int p1, int p2, int p3, int p4) {
         int t1 = fd_pt_md(p1, p2);
         int t2 = fd_pt_md(p3, p4);
@@ -2187,14 +2516,11 @@ public class GDD extends GDDBase {
         }
     }
 
-    final public void search_cg_mds(int p1, int p2, int p3, int p4) {
-        MidPt md = all_md.nx;
-        while (md != null) {
-
-            md = md.nx;
-        }
-    }
-
+    /**
+     * Searches for congruent segment configurations within the current geometric construction.
+     *
+     * @param cg the congruent segment configuration to be evaluated
+     */
     public void search_cgs(CongSeg cg) {
         CongSeg cg1 = all_cg.nx;
         while (cg1 != null) {
@@ -2210,6 +2536,12 @@ public class GDD extends GDDBase {
         search_2cong1(cg);
     }
 
+    /**
+     * Searches for congruent configurations between two congruent segment structures.
+     *
+     * @param cg the first congruent segment configuration
+     * @param cg1 the second congruent segment configuration
+     */
     public void search_cg_cg(CongSeg cg, CongSeg cg1) {
         int p1, p2, p3, p4, t1, t2, t3, t4;
         if (cg == cg1) return;
@@ -2275,6 +2607,22 @@ public class GDD extends GDDBase {
         pop_codb();
     }
 
+    /**
+     * Searches for congruent configurations using plus or minus criteria for segment measures.
+     *
+     * @param a first point of the first segment
+     * @param b second point of the first segment
+     * @param c first point of the second segment
+     * @param d second point of the second segment
+     * @param t1 first measure associated with the first segment
+     * @param t2 second measure associated with the first segment
+     * @param a1 first point of the alternative segment configuration
+     * @param b1 second point of the alternative segment configuration
+     * @param c1 first point of the alternative segment configuration
+     * @param d1 second point of the alternative segment configuration
+     * @param t11 first measure associated with the alternative configuration
+     * @param t22 second measure associated with the alternative configuration
+     */
     public void search_cg__plus_or_minus(int a, int b, int c, int d, int t1, int t2,
                                          int a1, int b1, int c1, int d1, int t11, int t22) {
         int m1, m2, m3, m4, m5, m6;
@@ -2329,7 +2677,11 @@ public class GDD extends GDDBase {
         pop_codb();
     }
 
-
+    /**
+     * Searches for configurations where two congruent segments share a common intersection.
+     *
+     * @param cg the congruent segment configuration to analyze
+     */
     public void search_2cong1(CongSeg cg) {
         if (!xcoll4(cg.p1, cg.p2, cg.p3, cg.p4)) return;
         int p1, p2, p3;
@@ -2371,6 +2723,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for congruent configurations based on midpoint relationships.
+     *
+     * @param md the midpoint structure used for establishing congruence
+     */
     final public void search_md_cong(MidPt md) {
         MidPt md1 = all_md.nx;
         while (md1 != null && ch_dep(md1.dep)) {
@@ -2390,6 +2747,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for parallelogram configurations among point-line relationships.
+     *
+     * @param pn the candidate point-line configuration
+     */
     public void search_pn_pn(PLine pn) {
         if (!valid(R_PARALLELOGRAM)) return;
         if (pn.type == 0 || pn.no <= 0) return;
@@ -2448,7 +2810,16 @@ public class GDD extends GDDBase {
         }
     }
 
-
+    /**
+     * Searches for SAS (Side-Angle-Side) triangle configurations using the specified points and line segments.
+     *
+     * @param p1 the first point identifier
+     * @param p2 the second point identifier
+     * @param ln1 the first line segment container
+     * @param ln2 the second line segment container
+     * @param ln3 the third line segment container
+     * @param ln4 the fourth line segment container
+     */
     final public void search_as_st(int p1, int p2, LLine ln1, LLine ln2, LLine ln3, LLine ln4) { //sas for st
         if (!valid(R_SAS)) return;
         if (p1 == 0 || p2 == 0) return;
@@ -2525,6 +2896,16 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for congruent segment triangle states based on the given points and ratio parameters.
+     *
+     * @param p1 the first point identifier
+     * @param p2 the second point identifier
+     * @param p3 the third point identifier
+     * @param p4 the fourth point identifier
+     * @param r1 the first ratio value
+     * @param r2 the second ratio value
+     */
     public final void search_cg_st0(int p1, int p2, int p3, int p4, int r1, int r2) {
 //        if (!valid(R_SSS) || !valid(R_STRI)) return;
 
@@ -2615,6 +2996,18 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for congruent triangles by validating angle equality and congruence conditions.
+     *
+     * @param t1 the first triangle base point identifier
+     * @param t2 the second triangle base point identifier
+     * @param t3 the third triangle base point identifier
+     * @param t4 the first point of the second triangle
+     * @param t5 the second point of the second triangle
+     * @param t6 the third point of the second triangle
+     * @param r1 the first ratio value associated with congruence
+     * @param r2 the second ratio value associated with congruence
+     */
     public void search_cong_st(int t1, int t2, int t3, int t4, int t5, int t6, int r1, int r2) {
         if (!check_eqangle_t(t2, t1, t1, t3, t5, t4, t4, t6)) return;
 
@@ -2641,6 +3034,17 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Searches for triangle configurations based on segment congruence and structural properties.
+     *
+     * @param dr the directional factor for the configuration
+     * @param p1 the first point identifier of the triangle
+     * @param p2 the second point identifier of the triangle
+     * @param p3 the third point identifier of the triangle
+     * @param p4 the first point identifier of the second triangle
+     * @param p5 the second point identifier of the second triangle
+     * @param p6 the third point identifier of the second triangle
+     */
     public void search_st1(int dr, int p1, int p2, int p3, int p4, int p5, int p6) {
         if (xcong(p1, p2, p2, p3) && !xcong(p4, p5, p5, p6)) {
             add_codb(CO_CONG, p1, p2, p2, p3, 0, 0, 0, 0);
@@ -2681,12 +3085,17 @@ public class GDD extends GDDBase {
         pop_codb();
     }
 
-
-    public boolean get_at_dr(AngleT at, int p1, int p2) {
-        if (on_ln(p1, at.l1) && on_ln(p2, at.l2)) return true;
-        return false;
-    }
-
+    /**
+     * Adds structural angle congruency information by comparing two complementary angles from the given points.
+     *
+     * @param dr the directional factor for angle assignment
+     * @param p1 the vertex point of the first angle
+     * @param p2 a point defining the first angle side
+     * @param p3 a point defining the other side of the first angle
+     * @param p4 the vertex point of the second angle
+     * @param p5 a point defining the second angle side
+     * @param p6 a point defining the other side of the second angle
+     */
     public void add_stct_at(int dr, int p1, int p2, int p3, int p4, int p5, int p6) {
 
         AngleT at1 = fd_at(p2, p1, p3);
@@ -2710,6 +3119,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Adjusts similar triangles by checking and adding structural relationships with adjacent triangles.
+     *
+     * @param st the simulated triangle whose adjacent configurations are to be adjusted
+     */
     public void adj_st(SimTri st) {
         SimTri st1 = all_st.nx;
         tri_type = 0;
@@ -2766,6 +3180,11 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Adjusts complementary triangles by checking and generating new configurations for triangle relationships.
+     *
+     * @param st the simulated triangle whose complementary relationships are being adjusted
+     */
     public void adj_ct(SimTri st) {
         SimTri st1 = all_ct.nx;
         tri_type = 1;
@@ -2822,6 +3241,11 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Searches for perpendicular congruent segments in a given congruent segment configuration.
+     *
+     * @param cg the congruent segment configuration to be analyzed
+     */
     public void search_tn_cg(CongSeg cg) {
         int o = 0;
         int p1 = cg.p1;
@@ -2868,7 +3292,11 @@ public class GDD extends GDDBase {
         }
     }
 
-
+    /**
+     * Searches the given line for valid configurations among congruent segments.
+     *
+     * @param ln the line to search through
+     */
     final void search_ln(LLine ln) {
 
         if (ln != null && ln.type != 0) {
@@ -2919,6 +3347,15 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Adjusts the angle subtraction configuration for the given point using four lines.
+     *
+     * @param p the reference point identifier
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     */
     public void adj_as0(int p, LLine l1, LLine l2, LLine l3, LLine l4) {
         if (p == 0) return;
 
@@ -2948,6 +3385,16 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Searches and verifies tangent-based angle relationships between two points using four lines.
+     *
+     * @param p1 the first point identifier
+     * @param p2 the second point identifier
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     */
     protected void search_as_tn_as(int p1, int p2, LLine l1, LLine l2, LLine l3, LLine l4) {
 
         if (this.isPFull() && d_base == 0) return;
@@ -3020,7 +3467,11 @@ public class GDD extends GDDBase {
         }
     }
 
-
+    /**
+     * Initiates a comprehensive search for angle congruence relationships.
+     *
+     * @param at the angle to be processed
+     */
     public void search_at(AngleT at) {
         search_at0(at);
         search_at1(at);
@@ -3029,6 +3480,11 @@ public class GDD extends GDDBase {
         adj_at(at);
     }
 
+    /**
+     * Searches for tangent-based angle configurations related to the specified angle.
+     *
+     * @param at the angle to be evaluated
+     */
     public void search_at_tn(AngleT at) {
         LLine l1 = at.l1;
         LLine l2 = at.l2;
@@ -3056,6 +3512,11 @@ public class GDD extends GDDBase {
             }
     }
 
+    /**
+     * Searches for angle relationships within a tangent line configuration.
+     *
+     * @param tn the tangent line configuration
+     */
     public void search_tn_at(TLine tn) {
         LLine l1 = tn.l1;
         LLine l2 = tn.l2;
@@ -3066,6 +3527,14 @@ public class GDD extends GDDBase {
         search_tn_ats(l2, l1, p, tn);
     }
 
+    /**
+     * Searches for tangent angles across two lines with respect to a common intersection point and a tangent line.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param p the intersection point identifier
+     * @param tn the tangent line configuration
+     */
     public void search_tn_ats(LLine l1, LLine l2, int p, TLine tn) {
         if (p == 0) return;
         AngleT at1;
@@ -3086,6 +3555,14 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Adds a triangle configuration based on tangent angle values.
+     *
+     * @param p the vertex point identifier
+     * @param p1 the first adjacent point identifier
+     * @param p2 the second adjacent point identifier
+     * @param v the angle value between points p1 and p2
+     */
     public void add_tri_tn_at(int p, int p1, int p2, int v) // pp1p2 = v;
     {
         int lm;
@@ -3125,6 +3602,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for direct angle congruence relationships starting from the provided angle.
+     *
+     * @param at the angle to be searched
+     */
     public void search_at0(AngleT at) {
         AngleT at1 = all_at.nx;
         while (at1 != null && ch_dep(at1.dep)) {
@@ -3134,7 +3616,11 @@ public class GDD extends GDDBase {
         }
     }
 
-
+    /**
+     * Searches for alternative angle configurations based on the given angle.
+     *
+     * @param at the angle instance to process
+     */
     public void search_at1(AngleT at) {
         LLine l1 = at.l1;
         LLine l2 = at.l2;
@@ -3161,6 +3647,12 @@ public class GDD extends GDDBase {
                     }
     }
 
+    /**
+     * Searches for angle relationships between two angle instances and creates corresponding configurations.
+     *
+     * @param at the first angle instance
+     * @param at1 the second angle instance to compare
+     */
     public void search_at_at(AngleT at, AngleT at1) {
         if (at == at1) return;
         LLine l1 = at.l1;
@@ -3235,6 +3727,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for angle configurations derived from a congruent segment.
+     *
+     * @param cg the congruent segment instance used for calculating angle relationships
+     */
     public void search_rg_at(CongSeg cg) {
         int t1 = cg.p1;
         int t2 = cg.p2;
@@ -3329,6 +3826,12 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for angle configurations by comparing the given angle with an angle structure.
+     *
+     * @param at the base angle instance
+     * @param as the angle structure to compare against
+     */
     public void search_at_as(AngleT at, Angles as) {
         LLine l1, l2, l3, l4;
         l1 = at.l1;
@@ -3367,6 +3870,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for associated angle structures related to the given angle.
+     *
+     * @param at the angle instance for which to search related angle associations
+     */
     public void search_at_ass(AngleT at) {
         Angles as = all_as.nx;
 
@@ -3380,43 +3888,11 @@ public class GDD extends GDDBase {
         }
     }
 
-    public void add_as_at(Angles as) {
-        LLine l1 = as.l1;
-        LLine l2 = as.l2;
-        LLine l3 = as.l3;
-        LLine l4 = as.l4;
-        if (l1 == l2 || xcoll_ln(l1, l2)) return;
-        if (l3 == l4 || xcoll_ln(l3, l4)) return;
-        AngleT at1 = fd_at(l1, l2);
-        AngleT at2 = fd_at(l3, l4);
-        if (at1 == at2) return;
-
-        AngleT at = null;
-        if (at1 != null && at2 == null && ch_dep(at1.dep)) {
-            if (at1.l1 == l1 && at1.l2 == l2)
-                at = add_at(0, l3, l4, at1.v);
-            else
-                at = add_at(0, l4, l3, at1.v);
-        } else if (at1 == null && at2 != null && ch_dep(at2.dep)) {
-            if (at2.l1 == l3 && at2.l2 == l4)
-                at = add_at(0, l1, l2, at2.v);
-            else
-                at = add_at(0, l2, l1, at2.v);
-        }
-        if (at != null) {
-            co_xy.nx = null;
-            Cond co = add_coxy(CO_TANG);
-            if (at1 != null)
-                co.u.at = at1;
-            else if (at2 != null)
-                co.u.at = at2;
-            co = add_coxy(CO_ACONG);
-            co.u.as = as;
-            at.co = co;
-        }
-    }
-
-
+    /**
+     * Adjusts the angle configuration using its defining lines.
+     *
+     * @param at the angle instance to adjust
+     */
     public void adj_at(AngleT at) {
         LLine l1 = at.l1;
         LLine l2 = at.l2;
@@ -3439,12 +3915,11 @@ public class GDD extends GDDBase {
         }
     }
 
-    public boolean ck_ateq(int a, int b) {
-        return a == b || Math.abs(a - b) == A_180;
-    }
-
-//////////////////////////////////////////////////////
-
+    /**
+     * Searches for tangent-based angle configurations associated with the given tangent line.
+     *
+     * @param tn the tangent line configuration instance to search within
+     */
     public void search_tn_atn(TLine tn) {
         if (tn.type == 0) return;
 
@@ -3486,6 +3961,11 @@ public class GDD extends GDDBase {
             }
     }
 
+    /**
+     * Searches for angle configurations based on the provided tangent angle instance.
+     *
+     * @param atn the tangent angle instance to process
+     */
     public void search_atn(AngTn atn) {
 
         if (atn.type == 0) return;
@@ -3496,7 +3976,12 @@ public class GDD extends GDDBase {
         search_atn_at(atn);
     }
 
-
+    /**
+     * Searches for equivalent tangent angle configurations by comparing the provided instance
+     * with existing tangent angle configurations.
+     *
+     * @param atn the tangent angle instance to compare
+     */
     public void search_atn_atn(AngTn atn) {
         AngTn a1 = all_atn.nx;
         LLine ln1, ln2, ln3, ln4;
@@ -3545,6 +4030,11 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Searches for angle structures associated with the given tangent angle configuration.
+     *
+     * @param atn the tangent angle instance for which to search associated angle structures
+     */
     public void search_atn_as(AngTn atn) {
         Angles as = all_as.nx;
         while (as != null && ch_dep(as.dep)) {
@@ -3558,21 +4048,12 @@ public class GDD extends GDDBase {
         }
     }
 
-    public void search_as_atn(Angles as) {
-        AngTn a1 = all_atn.nx;
-
-        while (a1 != null && ch_dep(a1.dep)) {
-            if (a1.type == 0) {
-                a1 = a1.nx;
-                continue;
-            }
-            search_atnas(a1, as.l1, as.l2, as.l3, as.l4, as);
-            search_atnas(a1, as.l3, as.l4, as.l1, as.l2, as);
-            a1 = a1.nx;
-        }
-    }
-
-
+    /**
+     * Searches through all angle instances and applies tangent angle evaluation with the given tangent angle instance.
+     * Continues until there are no more dependent angle instances.
+     *
+     * @param atn the tangent angle instance used for comparison
+     */
     public void search_atn_at(AngTn atn) {
         AngleT at = all_at.nx;
         while (at != null && ch_dep(at.dep)) {
@@ -3586,19 +4067,17 @@ public class GDD extends GDDBase {
 
     }
 
-    public void search_at_atn(AngleT at) {
-        AngTn a1 = all_atn.nx;
-        while (a1 != null && ch_dep(a1.dep)) {
-            if (a1.type == 0) {
-                a1 = a1.nx;
-                continue;
-            }
-            search_atatn(at, a1);
-            a1 = a1.nx;
-        }
-
-    }
-
+    /**
+     * Searches for associated tangent angle configurations by comparing the specified tangent angle instance with provided lines and an angles structure.
+     * Creates new tangent angle associations if the configuration meets criteria.
+     *
+     * @param atn the reference tangent angle instance
+     * @param l1 the first line of the primary configuration
+     * @param l2 the second line of the primary configuration
+     * @param l3 the first line of the secondary configuration
+     * @param l4 the second line of the secondary configuration
+     * @param as the angles structure used in association comparison
+     */
     public void search_atnas(AngTn atn, LLine l1, LLine l2, LLine l3, LLine l4, Angles as) {
 
         LLine ln1, ln2, ln3, ln4, s1, s2, s3, s4;
@@ -3665,6 +4144,13 @@ public class GDD extends GDDBase {
 
     }
 
+    /**
+     * Searches for tangent angle configurations that are complementary to the given angle instance.
+     * If a valid configuration is found, creates and associates a new angle instance with an adjusted value.
+     *
+     * @param at the base angle instance
+     * @param a1 the tangent angle configuration to compare against
+     */
     public void search_atatn(AngleT at, AngTn a1) {
         LLine l1 = at.l1;
         LLine l2 = at.l2;
@@ -3701,10 +4187,26 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Determines if the point p lies within the range defined by points o and o1.
+     *
+     * @param p the point to check
+     * @param o the first endpoint of the range
+     * @param o1 the second endpoint of the range
+     * @return true if p lies between o and o1, otherwise false
+     */
     public boolean ptdr(int p, int o, int o1) {
         return (x_inside(p, o, o1) || x_inside(o1, p, o));
     }
 
+    /**
+     * Splits the given line into segments based on the position of point p.
+     * Returns an array of line segments that are part of the original line and include point p.
+     *
+     * @param p the point used to split the line
+     * @param ln the line to be split
+     * @return an array of resulting line segments, or null if no valid segments exist
+     */
     LLine[] split_ln(int p, LLine ln) {
         int o1 = get_lpt1(ln, p);
         int o2 = get_anti_pt(ln, p, o1);
@@ -3751,7 +4253,18 @@ public class GDD extends GDDBase {
         return ls;
     }
 
-
+    /**
+     * Checks if the combined angles formed by the specified line segments at points p1 and p2 are approximately complementary.
+     * The method evaluates whether the sum of the absolute angles is close to 90 degrees.
+     *
+     * @param p1 the vertex point for the first pair of lines
+     * @param p2 the vertex point for the second pair of lines
+     * @param l1 the first line from p1
+     * @param l2 the second line from p1
+     * @param l3 the first line from p2
+     * @param l4 the second line from p2
+     * @return true if the summed angle values are approximately 90 degrees, otherwise false
+     */
     public boolean check_llatn(int p1, int p2, LLine l1, LLine l2, LLine l3, LLine l4) {
         int n1 = get_lpt1(l1, p1);
         int n2 = get_lpt1(l2, p1);
@@ -3765,19 +4278,33 @@ public class GDD extends GDDBase {
         return false;
     }
 
-///////////////////////////////////////////////////////////////////////////
-///// nodes;
-
-
+    /**
+     * Initiates the search for non-solved structures within the specified list.
+     * Skips the search if the last element has already been solved.
+     *
+     * @param ns the list of structures to search
+     */
     public void search_ns(LList ns) {
         if (last_ns.solved) return;
         search_bk(ns);
     }
 
+    /**
+     * Initiates a backup search process.
+     *
+     * @param ls the list of structures to search
+     */
     public void search_bk(LList ls) {
         search_bk_as(ls);
     }
 
+    /**
+     * Searches through the backup structures contained in the specified list.
+     *
+     * Iterates over each element in the list and applies transformation based on angle structures.
+     *
+     * @param ls the list of structures to process
+     */
     public void search_bk_as(LList ls) {
         LList last;
         LLine[] ln1, ln2;
@@ -3816,6 +4343,17 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Adds a new angle transformation node to the given list.
+     *
+     * Evaluates if the current transformation in the node matches the provided lines,
+     * and if not, creates a new node with the updated angle transformation.
+     *
+     * @param ls the current list of nodes
+     * @param l1 the first line segment for comparison
+     * @param l2 the second line segment for comparison
+     * @param n the index position used for the transformation
+     */
     public void add_ls_et(LList ls, LLine l1, LLine l2, int n) {
         AngTr tr = ls.md[n].tr;
         if (tr.l1 == l1 && tr.l2 == l2) return;
@@ -3836,6 +4374,15 @@ public class GDD extends GDDBase {
         }
     }
 
+    /**
+     * Creates and returns a rule representing an equal angle configuration.
+     *
+     * Constructs a new rule using the provided angle transformations.
+     *
+     * @param t1 the first angle transformation
+     * @param t2 the second angle transformation
+     * @return the constructed Rule object representing equal angles
+     */
     public Rule add_rule_eqag(AngTr t1, AngTr t2) {
         Rule r = new Rule(Rule.EQ_ANGLE);
         Mnde m1 = new Mnde();
@@ -3848,6 +4395,18 @@ public class GDD extends GDDBase {
         return r;
     }
 
+    /**
+     * Creates a new list node as a sub-structure of the existing list.
+     *
+     * Copies the given list, updates the angle transformation at the specified index,
+     * and links the new node to the backup chain.
+     *
+     * @param ls the original list of nodes
+     * @param t1 the original angle transformation
+     * @param t2 the new angle transformation to be applied
+     * @param n the index at which the transformation is updated
+     * @return the newly created list node with the updated transformation
+     */
     public LList add_ls_node_sub(LList ls, AngTr t1, AngTr t2, int n) {
         LList ls1 = new LList();
         ls1.cp(ls);
@@ -3857,12 +4416,14 @@ public class GDD extends GDDBase {
         return ls1;
     }
 
-    public LList cp_l_list(LList ls) {
-        LList ls1 = new LList();
-        ls1.type = LList.ANGLE;
-        return ls1;
-    }
-
+    /**
+     * Displays the angle transformation information.
+     *
+     * Depending on the available transformation details, prints the angle
+     * using the corresponding representation.
+     *
+     * @param tr the angle transformation to display
+     */
     void show_tr(AngTr tr) {
         if (tr == null) return;
         if (tr.t1 != 0 && tr.t2 != 0)
