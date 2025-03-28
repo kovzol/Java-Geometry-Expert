@@ -2914,7 +2914,3085 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         return true;
     }
 
-    // FIXME: 2500 lines is too large - extract handlers
+    /**
+     * Handles selection logic based on the provided x and y coordinates.
+     * Determines whether to select a smart point, display the rule panel, or update the catch list.
+     *
+     * @param x the x-coordinate for selection
+     * @param y the y-coordinate for selection
+     */
+    private void handleSelectCase(double x, double y) {
+        CPoint t = SelectAPoint(x, y);
+        boolean r = false;
+
+        if (gxInstance.isDialogProveVisible()) {
+            clearSelection();
+            if (t != null)
+                addToSelectList(t);
+            r = true;
+            gxInstance.getDialogProve().setSelect(SelectList);
+        }
+
+        if (t == null) {
+            if (cpfield != null) {
+                CProveText ct1 = cpfield.mouseMove(x, y);
+                if (ct1 == null) {
+                    r = true;
+                    CProveText ct = cpfield.select(x, y, false);
+                    if (ct != null) {
+                        UndoStruct un = ct.getUndoStruct();
+                        if (un != null) {
+                            this.setObjectListForFlash(un.getAllObjects(this));
+                        }
+                    }
+                } else {
+                    Point pt = ct1.getPopExLocation();
+                    gxInstance.showRulePanel("R1", (int) pt.getX(), (int) pt.getY());
+                }
+            }
+        } else {
+            if (gxInstance.hasMannualInputBar()) {
+                PanelProve pp = gxInstance.getpprove();
+                r = pp.selectAPoint(t);
+                if (r)
+                    this.setObjectListForFlash(t);
+            }
+            gxInstance.selectAPoint(t);
+        }
+
+        if (r == false) {
+            CatchList.clear();
+            this.SelectAllFromXY(CatchList, x, y, 0);
+            if (CatchList.size() == 0)
+                this.clearSelection();
+            else {
+                this.addToSelectList(CatchList.get(0));
+            }
+        } else {
+            this.clearSelection();
+        }
+        vx1 = x;
+        vy1 = y;
+    }
+
+    /**
+     * Handles the move case by selecting objects from the given coordinates.
+     * Clears the selection and updates the view of elements based on user interaction.
+     *
+     * @param x the x-coordinate for moving
+     * @param y the y-coordinate for moving
+     */
+    private void handleMoveCase(double x, double y) {
+        FirstPnt = this.CreateATempPoint(x, y);
+        Vector v = new Vector();
+
+        this.SelectAllFromXY(v, x, y, 0);
+        if (v.size() == 0) {
+            clearSelection();
+            if (cpfield != null) {
+                CProveText ct1 = cpfield.mouseMove(x, y);
+                if (ct1 == null) {
+                    CProveText ct = cpfield.select(x, y, false);
+                    if (ct != null) {
+                        UndoStruct un = ct.getUndoStruct();
+                        if (un != null) {
+                            this.setObjectListForFlash(un.getAllObjects(this));
+                        }
+
+                    }
+                } else {
+                    Point pt = ct1.getPopExLocation();
+                    gxInstance.showRulePanel(ct1.getRulePath(),
+                            (int) pt.getX(), (int) pt.getY());
+                }
+            }
+        } else if (v.size() == 1) {
+            clearSelection();
+            SelectList.addAll(v);
+            CClass cc = (CClass) v.get(0);
+            v.clear();
+            if (cc instanceof CPoint) {
+                if (gxInstance != null) {
+                    if (gxInstance.isconcVisible()) {
+                        gxInstance.getConcDialog().selectAPoint((CPoint) cc);
+                    }
+                    if (gxInstance.hasMannualInputBar()) {
+                        gxInstance.getMannalInputToolBar().selectAPoint((CPoint) cc);
+                    }
+                }
+            }
+        } else {
+            clearSelection();
+            addToSelectList(v.get(0));
+        }
+
+        if (SelectList.size() == 1) {
+            if (gxInstance != null) {
+                gxInstance.viewElementsAuto((CClass) SelectList.get(0));
+            }
+        }
+    }
+
+    /**
+     * Handles the point definition case.
+     * Clears the current selection, retrieves a smart point from the given coordinates, and adds it to the selection.
+     *
+     * @param x the x-coordinate for defining a point
+     * @param y the y-coordinate for defining a point
+     * @param p an initial point which may be replaced by a smart-detected point
+     */
+    private void handleDpointCase(double x, double y, CPoint p) {
+        clearSelection();
+        p = this.SmartgetApointFromXY(x, y);
+        if (p != null) {
+            addToSelectList(p);
+            this.UndoAdded(p.TypeString());
+        }
+    }
+
+    /**
+     * Handles the triangle creation process by selecting three distinct points.
+     * Manages state transitions for triangle construction and adds corresponding lines and constraints.
+     *
+     * @param x the x-coordinate used in triangle construction
+     * @param y the y-coordinate used in triangle construction
+     */
+    private void handleTriangleCase(double x, double y) {
+        if (STATUS == 0) {
+            CPoint pp = (CPoint) this.CatchList(pointlist, x, y);
+            if (pp == null) {
+                pp = SmartgetApointFromXY(x, y);
+            }
+
+            this.addToSelectList(pp);
+            FirstPnt = pp;
+            STATUS = 1;
+
+        } else if (STATUS == 1) {
+            CPoint pp = (CPoint) this.CatchList(pointlist, x, y);
+            if (pp == null) {
+                pp = SmartgetApointFromXY(x, y);
+            }
+
+            if (!SelectList.contains(pp)) {
+                addToSelectList(pp);
+                SecondPnt = pp;
+                STATUS = 2;
+            }
+
+        } else {
+            CPoint pp = (CPoint) this.CatchList(pointlist, x, y);
+            if (pp == null) {
+                pp = SmartgetApointFromXY(x, y);
+            }
+
+            if (!SelectList.contains(pp)) {
+                addToSelectList(pp);
+            } else {
+                return;
+            }
+
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            CPoint p3 = (CPoint) SelectList.get(2);
+            CLine line1 = new CLine(p1, p2);
+            CLine line2 = new CLine(p1, p3);
+            CLine line3 = new CLine(p2, p3);
+            this.addPointToList(p1);
+            this.addPointToList(p2);
+            this.addPointToList(p3);
+            this.addLineToList(line1);
+            this.addLineToList(line2);
+            this.addLineToList(line3);
+            Constraint cs = new Constraint(Constraint.TRIANGLE, p1, p2, p3);
+            this.addConstraintToList(cs);
+            this.UndoAdded("Triangle " + p1.m_name + p2.m_name + p3.m_name);
+            FirstPnt = SmartgetApointFromXY(x, y);
+            SecondPnt = this.CreateATempPoint(x, y);
+            clearSelection();
+            STATUS = 0;
+        }
+    }
+
+    /**
+     * Handles the vertical line case.
+     * Sets the first point and creates a temporary second point for further vertical line processing.
+     *
+     * @param x the x-coordinate for vertical line creation
+     * @param y the y-coordinate for vertical line creation
+     */
+    private void handleVLineCase(double x, double y) {
+        if (STATUS == 0) {
+            FirstPnt = SmartgetApointFromXY(x, y);
+            SecondPnt = this.CreateATempPoint(x, y);
+            STATUS = 1;
+        }
+    }
+
+    /**
+     * Handles the definition of a line by selecting two points.
+     * In the first stage, selects the starting point; in the second stage, completes the line, applies smart adjustments,
+     * adds the line to the list, and creates the associated constraint.
+     *
+     * @param x the x-coordinate for line definition
+     * @param y the y-coordinate for line definition
+     */
+    private void handleDLineCase(double x, double y) {
+        if (STATUS == 0) {
+            if ((FirstPnt = SmartgetApointFromXY(x, y)) != null) {
+                STATUS = 1;
+                addPointToList(FirstPnt);
+                this.addToSelectList(FirstPnt);
+            }
+        } else if (STATUS == 1) {
+            CPoint tp = FirstPnt;
+            if (this.isPointOnObject) {
+                x = mouseCatchX;
+                y = mouseCatchY;
+            }
+            CPoint pp = SmartgetApointFromXY(x, y);
+//                    pp.setXY(x, y);
+            getSmartPV(FirstPnt, pp);
+
+            if (tp != pp && tp != null && pp != null) {
+                setSmartPVLine(tp, pp);
+                addPointToList(pp);
+                CLine ln = new CLine(pp, tp, CLine.LLine);
+                this.addLineToList(ln);
+                Constraint cs = new Constraint(Constraint.LINE, tp, pp);
+                addConstraintToList(cs);
+                this.reCalculate();
+                this.UndoAdded(ln.getDescription());
+            }
+            clearSelection();
+            STATUS = 0;
+            FirstPnt = null;
+        }
+    }
+
+    /**
+     * Handles the polygon definition process by selecting multiple points.
+     * Adds points until the first point is re-selected, then constructs the polygon, creates connecting lines,
+     * and adds polygon constraints.
+     *
+     * @param x the x-coordinate for polygon definition
+     * @param y the y-coordinate for polygon definition
+     */
+    private void handleDPolygonCase(double x, double y) {
+        CPoint pt = SmartgetApointFromXY(x, y);
+        setSmartPVLine(FirstPnt, pt);
+        boolean finish = false;
+
+        if (SelectList.isEmpty()) {
+            this.addPointToList(pt);
+            addToSelectList(pt);
+            FirstPnt = pt;
+            SecondPnt = this.CreateATempPoint(x, y);
+        } else if (pt == SelectList.get(0)) {
+            finish = true;
+        } else if (SelectList.contains(pt)) {
+            return;
+        } else {
+            this.addPointToList(pt);
+            addToSelectList(pt);
+            if (SelectList.size() == STATUS) {
+                finish = true;
+            }
+            FirstPnt = pt;
+        }
+        if (finish) {
+            if (SelectList.size() <= 1) {
+                clearSelection();
+                return;
+            }
+            CPoint t1 = (CPoint) SelectList.get(0);
+            CPoint tp = t1;
+            for (int i = 1; i < SelectList.size(); i++) {
+                CPoint tt = (CPoint) SelectList.get(i);
+                if (this.fd_line(tt, tp) == null) {
+                    CLine ln = new CLine(tt, tp, CLine.LLine);
+                    this.addLineToList(ln);
+                }
+                tp = tt;
+            }
+            if (this.fd_line(t1, tp) == null) {
+                CLine ln = new CLine(t1, tp);
+                this.addLineToList(ln);
+            }
+
+            StringBuilder s = new StringBuilder();
+            int size = SelectList.size();
+            for (Object o : SelectList) {
+                CClass cc = (CClass) o;
+                s.append(cc.m_name);
+
+            }
+            if (size == 3) {
+                Constraint cs = new Constraint(Constraint.TRIANGLE, SelectList);
+                this.addConstraintToList(cs);
+
+                this.UndoAdded("triangle  " + s);
+            } else if (size == 4) {
+                Constraint cs = new Constraint(Constraint.QUADRANGLE, SelectList);
+                this.addConstraintToList(cs);
+                this.UndoAdded("quadrangle  " + s);
+            } else if (size == 5) {
+                Constraint cs = new Constraint(Constraint.PENTAGON, SelectList);
+                this.addConstraintToList(cs);
+                this.UndoAdded(GExpert.getTranslationViaGettext("Pentagon {0}", s.toString()));
+            } else {
+                Constraint cs = new Constraint(Constraint.POLYGON, SelectList);
+                this.addConstraintToList(cs);
+                this.UndoAdded(GExpert.getTranslationViaGettext("Polygon {0}", s.toString()));
+            }
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles the parallel line definition case.
+     * Selects an existing line and a point to create a new line that is parallel to the selected one,
+     * then adds the parallel constraint.
+     *
+     * @param x the x-coordinate for parallel line definition
+     * @param y the y-coordinate for parallel line definition
+     */
+    private void handleDPareLineCase(double x, double y) {
+        if (STATUS == 0) {
+            clearSelection();
+            CLine line = this.SmartPLine(CatchPoint);
+
+            if (line == null) {
+                return;
+            }
+            addToSelectList(line);
+            STATUS = 1;
+        } else if (STATUS == 1) {
+            if (SelectList.isEmpty()) {
+                return;
+            }
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+            CLine line = (CLine) SelectList.get(0);
+
+            CLine line1 = new CLine(pt, CLine.PLine);
+            Constraint cs = new Constraint(Constraint.PARALLEL, line1, line);
+            this.addConstraintToList(cs);
+            line1.addconstraint(cs);
+            clearSelection();
+            this.addLineToList(line1);
+            // UndoStruct u = this.UndoAdded(line1.TypeString() + " parallel " +
+            //         line.getDiscription() + " passing " +
+            //         pt.getname());
+            UndoStruct u = this.UndoAdded(line1.TypeString() + " " + GExpert.getTranslationViaGettext("parallel to {0} passing {1}",
+                    line.getDiscription(), pt.getname()));
+            u.addObject(line1);
+            u.addObject(line);
+            u.addObject(pt);
+            clearSelection();
+            STATUS = 0;
+
+        }
+
+    }
+
+    /**
+     * Handles the perpendicular line definition case.
+     * Selects an existing line and a point to create a new line perpendicular to the selected one,
+     * then adds the perpendicular constraint.
+     *
+     * @param x the x-coordinate for perpendicular line definition
+     * @param y the y-coordinate for perpendicular line definition
+     */
+    private void handleDPerpLineCase(double x, double y) {
+        if (STATUS == 0) {
+            clearSelection();
+            CLine line = this.SmartPLine(CatchPoint);
+            if (line == null)
+                return;
+
+            addToSelectList(line);
+            STATUS = 1;
+        } else if (STATUS == 1) {
+            if (SelectList.size() == 0) {
+                return;
+            }
+            CLine line = (CLine) SelectList.get(0);
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+
+            CLine line1 = new CLine(pt, CLine.TLine);
+            Constraint c = new Constraint(Constraint.PERPENDICULAR, line1, line);
+            this.addConstraintToList(c);
+            line1.addconstraint(c);
+            addLineToList(line1);
+            addCTMark(line, line1);
+            UndoStruct u = this.UndoAdded(line1.TypeString() + " perp " +
+                    // line.getDiscription() + " passing " +
+                    // pt.getname());
+                    line.getDescription() + " " +
+                    GExpert.getTranslationViaGettext("passing {0}", pt.getname()));
+            u.addObject(line1);
+            u.addObject(line);
+            u.addObject(pt);
+            STATUS = 0;
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles the A-line construction case based on existing selected lines.
+     * If fewer than three lines are selected, accumulates the selection; otherwise, creates a new A-line constrained
+     * by the intersection properties of the selected lines.
+     *
+     * @param x the x-coordinate used for A-line construction
+     * @param y the y-coordinate used for A-line construction
+     */
+    private void handleDAlineCase(double x, double y) {
+        int n = SelectList.size();
+        if (n < 3) {
+            CLine line = this.SmartPLine(CatchPoint);
+            if (line == null) {
+                return;
+            }
+            if (n == 1) {
+                CLine ln1 = (CLine) SelectList.get(0);
+                if (CLine.commonPoint(ln1, line) == null) {
+                    JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage("The selected two lines don't have intersected point"),
+                            GExpert.getLanguage("Warning"), JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+            addToSelectList(line);
+        } else {
+            CLine ln1 = (CLine) SelectList.get(0);
+            CLine ln2 = (CLine) SelectList.get(1);
+            CLine ln3 = (CLine) SelectList.get(2);
+            CPoint tt = null;
+            if (this.SmartPLine(CatchPoint) == ln3 || ((tt = this.SmartPoint(CatchPoint)) != null && ln3.containPT(tt))) {
+                CPoint p1 = this.SmartgetApointFromXY(x, y);
+                CLine ln = new CLine(CLine.ALine);
+                ln.addApoint(p1);
+                Constraint cs = new Constraint(Constraint.ALINE, ln1, ln2, ln3, ln);
+                cs.setPolyGenerate(false);
+
+                ln.addconstraint(cs);
+                this.addLineToList(ln);
+                this.addConstraintToList(cs);
+                clearSelection();
+                this.UndoAdded("ALine " + ln.getname());
+            }
+        }
+    }
+
+    /**
+     * Handles the DAB line case.
+     *
+     * <p>
+     * Depending on the current selection status, it selects points or lines and creates a line representing the angle bisector.
+     * In one case, it creates a new auxiliary point and line constraint; in the other, it directly creates the bisector.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     * @param p a context-dependent point parameter
+     */
+    private void handleDABlineCase(double x, double y, CPoint p) {
+        int n = SelectList.size();
+        if (STATUS == 0) {
+            p = this.SelectAPoint(x, y);
+            if (p != null) {
+                addToSelectList(p);
+                STATUS = 1;
+            } else {
+                CLine ln = SelectALine(x, y);
+                if (ln != null) {
+                    addToSelectList(ln);
+                    CatchPoint.setXY(x, y);
+                    ln.pointonline(CatchPoint);
+                    catchX = CatchPoint.getx();
+                    catchY = CatchPoint.gety();
+                }
+                STATUS = 2;
+            }
+        } else if (STATUS == 5) {
+            CLine ln = (CLine) SelectList.get(0);
+        } else {
+
+            if (n < 3 && STATUS == 1) {
+                addSelectPoint(x, y);
+            } else if (n < 2 && STATUS == 2) {
+                CLine ln = SelectALine(x, y);
+                if (ln != null) {
+                    if (SelectList.isEmpty())
+                        return;
+                    CLine ln0 = (CLine) SelectList.get(0);
+                    if (CLine.commonPoint(ln0, ln) != null)
+                        addToSelectList(ln);
+                    else
+                        JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage("The selected two lines don't have intersected point")
+                                , gxInstance.getLanguage("No intersected point"), JOptionPane.WARNING_MESSAGE);
+                }
+            }
+            n = SelectList.size();
+            {
+                CPoint p1, p2, p3;
+                boolean dd = true;
+                if (STATUS == 1 && n == 3) {
+                    p1 = (CPoint) SelectList.get(0);
+                    p2 = (CPoint) SelectList.get(1);
+                    p3 = (CPoint) SelectList.get(2);
+                } else if (STATUS == 2 && n == 2) {
+                    CLine ln1 = (CLine) SelectList.get(0);
+                    CLine ln2 = (CLine) SelectList.get(1);
+                    p2 = CLine.commonPoint(ln1, ln2);
+                    p1 = ln1.get_Lptv(p2, catchX, catchY);
+                    p3 = ln2.get_Lptv(p2, x, y);
+                    dd = false;
+                } else
+                    return;
+
+                if (p3 != null && p3 != p1 && p3 != p2) {
+                    CLine ln = new CLine(CLine.ABLine);
+                    ln.addApoint(p2);
+                    if (dd) {
+                        CPoint pt = this.CreateANewPoint(0, 0);
+                        ln.addApoint(pt);
+                        CLine ln1 = this.addALine(CLine.LLine, p1, p3);
+                        Constraint cs = new Constraint(Constraint.ANGLE_BISECTOR, p1, p2, p3, ln);
+                        Constraint cs1 = new Constraint(Constraint.PONLINE, pt, ln1);
+                        ln.addconstraint(cs);
+                        this.addPointToList(pt);
+                        this.addLineToList(ln);
+                        this.addConstraintToList(cs);
+                        this.charsetAndAddPoly(false);
+                        clearSelection();
+                        STATUS = 0;
+                        this.UndoAdded(ln.getSimpleName() + " is the bisector of angle " + p1 + p2 + p3, true, ln.getPtsSize() > 1);
+                    } else {
+                        Constraint cs = new Constraint(Constraint.ANGLE_BISECTOR, p1, p2, p3, ln);
+                        ln.addconstraint(cs);
+                        this.addLineToList(ln);
+                        this.addConstraintToList(cs);
+                        clearSelection();
+                        STATUS = 0;
+                        this.UndoAdded("Angle Bisector " + ln.getname(), true, ln.getPtsSize() > 1);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Handles the DP foot case.
+     *
+     * <p>
+     * Processes the creation of a perpendicular foot. Initially selects a point, then computes the foot point relative
+     * to an existing selected point, adds necessary constraints, and may create corresponding lines.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     * @param p a context-dependent point parameter
+     */
+    private void handleDPfootCase(double x, double y, CPoint p) {
+        if (STATUS == 0) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+            if (SelectList.size() == 1) {
+                CPoint pa = (CPoint) SelectList.get(0);
+                this.setSmartPVLine(pa, pt);
+                if (fd_line(pa, pt) == null) {
+                    CLine ln = new CLine(pa, pt);
+                    this.addLineToList(ln);
+                }
+            }
+            if (!SelectList.contains(pt)) {
+                addToSelectList(pt);
+            }
+            if (SelectList.size() == 2) {
+                STATUS = 2;
+            }
+        } else if (STATUS == 2) {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+
+            double[] r = get_pt_dmcr(p1.getx(), p1.gety(), p2.getx(), p2.gety(), x, y);
+            double xr = r[0];
+            double yr = r[1];
+            p = this.SmartgetApointFromXY(xr, yr);
+            if (p == p1 || p == p2) {
+                return;
+            }
+            CLine ln1, ln2;
+            ln1 = ln2 = null;
+            if ((ln1 = fd_line(p, p1)) == null) {
+                ln1 = new CLine(p1, p, CLine.LLine);
+                this.addLineToList(ln1);
+            }
+            if ((ln2 = fd_line(p, p2)) == null) {
+                ln2 = new CLine(p2, p, CLine.LLine);
+                this.addLineToList(ln2);
+            }
+            Constraint cs = new Constraint(Constraint.RIGHT_ANGLED_TRIANGLE, p, p1, p2);
+            this.addConstraintToList(cs);
+            this.charsetAndAddPoly(false);
+            if (!this.isLineExists(p1, p2)) {
+                CLine lp = new CLine(p1, p2, CLine.LLine);
+                this.addLineToList(lp);
+            }
+            clearSelection();
+            STATUS = 0;
+            addCTMark(ln1, ln2);
+            //this.otherlist.add(m);
+            // FIXME: use better keys
+            this.UndoAdded(GExpert.getLanguage("Right") + " triangle " + p1.getname() + p2.getname() + p.getname());
+        }
+    }
+
+    /**
+     * Handles the perpendicular with foot case.
+     *
+     * <p>
+     * Selects a point and then computes the perpendicular foot of a point on a line,
+     * creating a new point and linking it with a constraint.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     */
+    private void handlePerpWithFoot(double x, double y) {
+        if (STATUS == 0) {
+            FirstPnt = SmartgetApointFromXY(x, y);
+            STATUS = 1;
+        } else if (STATUS == 1) {
+            CPoint pt = this.SmartPoint(CatchPoint);
+            if (pt == FirstPnt) {
+                return;
+            }
+            CLine line = this.SmartPLine(CatchPoint);
+            if (line == null) {
+                return;
+            }
+            CPoint pp = this.CreateANewPoint(0, 0);
+            this.add_PFOOT(line, FirstPnt, pp);
+            STATUS = 0;
+        }
+    }
+
+    /**
+     * Handles the DCircle case.
+     *
+     * <p>
+     * In the first step, selects a point to be used as the circle's center. On the subsequent call,
+     * selects a second point that defines the radius, creates the circle, and sets the corresponding constraint.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     * @param p a context-dependent point parameter
+     */
+    private void handleDCircleCase(double x, double y, CPoint p) {
+        if (STATUS == 0) {
+            p = this.SmartgetApointFromXY(x, y);
+            if (p != null) {
+                FirstPnt = p;
+                addToSelectList(p);
+                addPointToList(p);
+                STATUS = 1;
+            }
+        } else if (STATUS == 1) {
+            p = SmartgetApointFromXY(x, y);
+            if (p == FirstPnt)
+                return;
+
+            Circle c = new Circle(FirstPnt, p);
+            addCircleToList(c);
+            Constraint cs = new Constraint(Constraint.CIRCLE, FirstPnt, p);
+            this.addConstraintToList(cs);
+            this.charsetAndAddPoly(false);
+            this.UndoAdded(c.getDescription());
+            STATUS = 0;
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles the DCircle By Radius case.
+     *
+     * <p>
+     * Waits until two points are selected and then uses a third point's coordinate (via the x and y parameters)
+     * in conjunction with the selected points to create a circle defined by a radius constraint.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     * @param p a context-dependent point parameter
+     */
+    private void handleDCircleByRadiusCase(double x, double y, CPoint p) {
+        if (SelectList.size() < 2) {
+            p = (CPoint) this.CatchList(pointlist, x, y);
+            if (p != null) {
+                this.addObjectToList(p, SelectList);
+            }
+        } else {
+            p = this.SmartgetApointFromXY(x, y);
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+
+            Circle cr = new Circle(Circle.RCircle, p);
+            Constraint cs = new Constraint(Constraint.RCIRCLE, p1, p2, cr);
+            cr.addConstraint(cs);
+            this.addConstraintToList(cs);
+            this.addCircleToList(cr);
+
+            STATUS = 0;
+            clearSelection();
+            FirstPnt = SecondPnt = null;
+            this.UndoAdded(cr.getDescription());
+        }
+    }
+
+    /**
+     * Handles the DPRatio case.
+     *
+     * <p>
+     * When two points are already selected, creates a new point based on the ratio parameters and applies a ratio constraint
+     * between the selected points, optionally adding an auxiliary line if needed.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     * @param p a context-dependent point parameter
+     */
+    private void handleDPRatioCase(double x,double y,CPoint p){
+        if (SelectList.size() < 2) {
+            p = this.SelectAPoint(x, y);
+            if (p != null) {
+                addObjectToList(p, SelectList);
+            } else
+                clearSelection();
+        } else {
+            CPoint px = this.SmartgetApointFromXY(x, y);
+            if (px != null) {
+                CPoint p1 = (CPoint) SelectList.get(0);
+                CPoint p2 = (CPoint) SelectList.get(1);
+
+                p = this.CreateANewPoint(x, y);
+                Constraint cs = new Constraint(Constraint.PRATIO, p, px, p1, p2, v1, v2);
+                CPoint pu = this.addADecidedPointWithUnite(p);
+                if (pu == null) {
+                    this.addConstraintToList(cs);
+                    this.addPointToList(p);
+                    CLine ln = fd_line(p1, p2);
+                    if (status && (ln == null || !ln.containPT(px))) {
+                        CLine ln1 = new CLine(px, p, CLine.LLine);
+                        this.addLineToList(ln1);
+                    } else {
+                        Constraint cs1 = new Constraint(Constraint.PONLINE);
+                        cs1.setPolyGenerate(false);
+                        cs1.addElement(p);
+                        cs1.addElement(ln);
+                        this.addConstraintToList(cs1);
+                        if (status && ln != null)
+                            ln.addApoint(p);
+                    }
+                    this.UndoAdded(cs.getMessage());
+                } else {
+                    p = pu;
+                }
+                clearSelection();
+            } else
+                clearSelection();
+        }
+    }
+
+    /**
+     * Handles the DTRatio case.
+     *
+     * <p>
+     * Applies a triangle ratio constraint between two selected points. A new point is created,
+     * and additional lines or constraints are generated to enforce the specified ratio.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     * @param p a context-dependent point parameter
+     */
+    private void handleDTRatioCase(double x, double y, CPoint p) {
+        if (SelectList.size() < 2) {
+            p = this.SelectAPoint(x, y);
+            if (p != null) {
+                this.addObjectToList(p, SelectList);
+            }
+        } else {
+            p = this.SmartgetApointFromXY(x, y);
+            if (SelectList.size() != 2) return;
+
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            CPoint px = p;
+            p = this.CreateANewPoint(x, y);
+            double dx = p2.getx() - p1.getx();
+            double dy = p2.gety() - p1.gety();
+
+            Constraint cs = new Constraint(Constraint.TRATIO, p, px, p1, p2, v1, v2);
+            CPoint pu = this.addADecidedPointWithUnite(p);
+            if (pu == null) {
+                addConstraintToList(cs);
+                addPointToList(p);
+                CLine ln = fd_line(p, px);
+                if (status && ln == null) {
+                    CLine ln1 = new CLine(px, p, CLine.LLine);
+                    this.addLineToList(ln1);
+                } else {
+                    Constraint cs1 = new Constraint(Constraint.PONLINE);
+                    cs1.setPolyGenerate(false);
+                    cs1.addElement(p);
+                    cs1.addElement(ln);
+                    this.addConstraintToList(cs1);
+                    if (status && ln != null)
+                        ln.addApoint(p);
+                }
+            } else {
+                p = pu;
+            }
+            clearSelection();
+            STATUS = 0;
+            this.UndoAdded(cs.getMessage());
+        }
+    }
+
+    /**
+     * Handles the DPTDistance case.
+     *
+     * <p>
+     * When three points are selected, this method enforces an equal distance relationship.
+     * Depending on whether a line or circle is selected next, it sets up the appropriate constraint and creates a new point.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     * @param p a context-dependent point parameter
+     */
+    private void handleDPTDistanceCase(double x, double y, CPoint p) {
+        if (SelectList.size() < 3) {
+            CPoint pt = this.CreateATempPoint(x, y);
+            p = this.SmartPoint(pt);
+//                    String s = null;
+            if (p != null) {
+                addToSelectList(p);
+//                        s = (p.m_name + "  selected");
+                this.setObjectListForFlash(p);
+            }
+//                    switch (SelectList.size()) {
+//                        case 0:
+//                            gxInstance.setTipText(s + ',' + " Please Select a Point");
+//                            break;
+//                        case 1:
+//                            gxInstance.setTipText("first point  " + s + ',' +
+//                                    "  please select the second point");
+//                            break;
+//                        case 2:
+//                            gxInstance.setTipText("second point  " + s + ',' +
+//                                    "  please select the third point");
+//                            break;
+//                        case 3:
+//                            gxInstance.setTipText("third point  " + s + ',' +
+//                                    "  select a line or a circle");
+//                    }
+        } else {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            CPoint p3 = (CPoint) SelectList.get(2);
+            Circle c = null;
+            CLine ln = SelectALine(x, y);
+            if (ln != null) {
+                double r = ln.distance(p3.getx(), p3.gety());
+                double r1 = sdistance(p1, p2);
+                if (r < r1) {
+                    CPoint pt = this.CreateANewPoint(x, y);
+                    this.AddPointToLine(pt, ln, false);
+                    Constraint cs = new Constraint(Constraint.EQDISTANCE, p1, p2, p3, pt);
+                    this.charsetAndAddPoly(true);
+                    this.addConstraintToList(cs);
+                    this.addPointToList(pt);
+                    this.UndoAdded(GExpert.getTranslationViaGettext(
+                            "Take a point {0} on line {1} such that {2}", pt.m_name,
+                            ln.getSimpleName(), p1.m_name + p2.m_name + " = " +
+                                    p3.m_name + pt.m_name));
+
+                } else
+                    JOptionPane.showMessageDialog(gxInstance, "Can not add a point", "No Solution", JOptionPane.ERROR_MESSAGE);
+
+            } else if ((c = this.SelectACircle(x, y)) != null) {
+                CPoint po = c.o;
+                double d = sdistance(po, p3);
+                double r = c.getRadius();
+                double s = sdistance(p1, p2);
+                double d1 = d + r;
+                double d2 = Math.abs(d - r);
+                if (s > d1 || s < d2) {
+                    JOptionPane.showMessageDialog(gxInstance, "Can not add a point", "No Solution", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    CPoint pt = this.CreateANewPoint(0, 0);
+                    Constraint cs = new Constraint(Constraint.EQDISTANCE, p1, p2, p3, pt);
+                    Constraint cs1 = new Constraint(Constraint.PONCIRCLE, pt, c);
+                    this.charsetAndAddPoly(true);
+                    if (this.mulSolutionSelect(pt)) {
+                        this.addConstraintToList(cs);
+                        this.addConstraintToList(cs1);
+                        this.addPointToList(pt);
+                        c.addPoint(pt);
+                                /*
+                                this.UndoAdded("Take a point "
+                                        + pt.m_name + "on " + c.getDescription() +
+                                        " st " + p1.m_name + p2.m_name + " = " +
+                                        p3.m_name + pt.m_name);
+                                 */
+                        this.UndoAdded(GExpert.getTranslationViaGettext(
+                                "Take a point {0} on circle {1} such that {2}",
+                                pt.m_name, c.getname(), p1.m_name + p2.m_name + " = " +
+                                        p3.m_name + pt.m_name));
+                    } else {
+                        this.ErasedADecidedPoint(pt);
+                        gxInstance.setTipText("Failed: can not find a point(P) on Circle " +
+                                " that satisfy |" + p1.m_name + p2.m_name +
+                                "| = |" + p3.m_name + "P|");
+                    }
+                }
+
+            }
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles the LRatio case.
+     *
+     * <p>
+     * Establishes a line ratio constraint. It creates a new point such that the ratio between the distances from the selected point
+     * is maintained according to provided values.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     * @param p a context-dependent point parameter
+     */
+    private void handleLRatioCase(double x, double y, CPoint p) {
+        CPoint pt = this.CreateATempPoint(x, y);
+        p = this.SmartPoint(pt);
+        if (p == null) {
+            return;
+        }
+        if (SelectList.isEmpty()) {
+            this.addObjectToList(p, SelectList);
+        } else {
+            if (p == SelectList.get(0)) {
+                return;
+            }
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint pp = this.CreateANewPoint(x, y);
+            Integer t1 = v1;
+            Integer t2 = v2;
+            Constraint cs = new Constraint(Constraint.LRATIO, pp, p1, p, t1, t2);
+            CPoint pu = this.addADecidedPointWithUnite(pp);
+            if (pu == null) {
+                this.addConstraintToList(cs);
+                this.addPointToList(pp);
+            } else {
+                pp = pu;
+                clearSelection();
+                this.resetUndo();
+                return;
+            }
+
+            CLine ln = null;
+            for (Object o : linelist) {
+                CLine t = (CLine) o;
+                if (t.sameLine(p1, p)) {
+                    ln = t;
+                    break;
+                }
+            }
+            if (ln != null) {
+                ln.addApoint(pp);
+            }
+            this.charsetAndAddPoly(false);
+            clearSelection();
+            this.UndoAdded(pp.TypeString() + ":  " + p1.m_name +
+                    pp.m_name + " / " + pp.m_name + p.m_name + " = " + t1 + "/" +
+                    t2);
+        }
+    }
+
+    /**
+     * Handles the meet case.
+     *
+     * <p>
+     * Selects geometric objects (lines or circles) and computes their intersection point.
+     * When two objects are selected, it finds and processes their meeting point.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     */
+    private void handleMeetCase(double x, double y) {
+        CClass cc = this.SelectALine(x, y);
+        if (cc == null)
+            cc = this.SelectACircle(x, y);
+
+        if (cc == null) {
+            clearSelection();
+            return;
+        }
+        addObjectToList(cc, SelectList);
+
+        if (SelectList.size() == 1) {
+            return;
+        } else if (SelectList.size() == 2) {
+            Object obj1 = SelectList.get(0);
+            Object obj2 = SelectList.get(1);
+            meetTwoObject(obj1, obj2, false, x, y);
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles the mirror case.
+     *
+     * <p>
+     * Creates mirrored objects based on the selected geometric entities. Depending on the types of the objects (points, lines, or circles),
+     * it generates mirror images and sets up the corresponding constraints.
+     * </p>
+     *
+     * @param x the x coordinate of the click
+     * @param y the y coordinate of the click
+     * @param p a context-dependent point parameter
+     */
+    private void handleMirrorCase(double x, double y, CPoint p) {
+        CatchPoint.setXY(x, y);
+        CLine ln = null;
+        p = this.SmartPoint(CatchPoint);
+        if (p == null) {
+            ln = this.SmartPLine(CatchPoint);
+            if (ln != null) {
+                this.addObjectToList(ln, SelectList);
+            } else {
+                Circle c = this.SmartPCircle(CatchPoint);
+                if (c != null) {
+                    this.addObjectToList(c, SelectList);
+                }
+            }
+        } else {
+            this.addObjectToList(p, SelectList);
+        }
+
+        if (SelectList.size() == 2) {
+            Object obj1, obj2;
+            obj1 = SelectList.get(0);
+            obj2 = SelectList.get(1);
+            if (obj1 instanceof CPoint && obj2 instanceof CPoint) {
+                CPoint p1 = (CPoint) obj1;
+                CPoint p2 = (CPoint) obj2;
+                CPoint pp = this.CreateANewPoint(0, 0);
+                Constraint cs = new Constraint(Constraint.PSYM, pp, p1, p2);
+                CPoint pu = this.addADecidedPointWithUnite(pp);
+                if (pu == null) {
+                    this.addPointToList(pp);
+                    this.addConstraintToList(cs);
+                    // this.UndoAdded(pp.TypeString() + " is reflection of " +
+                    //        p1.TypeString() + " wrt " +
+                    //        p2.TypeString());
+                    this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", pp.TypeString(),
+                            p1.TypeString(), p2.TypeString()));
+
+                } else {
+                    pp = pu;
+                }
+
+            } else if (obj1 instanceof CPoint && obj2 instanceof CLine) {
+                CPoint p1 = (CPoint) obj1;
+                CLine line = (CLine) obj2;
+
+                CPoint pp = this.CreateANewPoint(0, 0);
+                Constraint cs = new Constraint(Constraint.MIRROR, pp, p1, line);
+                CPoint pu = this.addADecidedPointWithUnite(pp);
+                if (pu == null) {
+                    this.addPointToList(pp);
+                    this.addConstraintToList(cs);
+                    // this.UndoAdded(pp.TypeString() + " is reflection of " +
+                    //        p1.TypeString() + " wrt " +
+                    //        line.getDiscription());
+                    this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", pp.TypeString(),
+                            p1.TypeString(), line.getDiscription()));
+
+                } else {
+                    pp = pu;
+                }
+
+            } else if (obj1 instanceof CLine && obj2 instanceof CPoint) {
+                CLine line = (CLine) obj1;
+                CPoint p1 = (CPoint) obj2;
+
+                int exist_point_number = 0;
+                Vector<CPoint> vp = new Vector<>();
+
+                for (int i = 0; i < line.points.size(); i++) {
+                    CPoint pu = null;
+                    CPoint pp = null;
+                    Constraint cs = null;
+
+                    CPoint pt = (CPoint) line.points.get(i);
+                    if (pt == p1) {
+                        pu = pt;
+                    } else {
+                        pp = this.CreateANewPoint(0, 0);
+                        cs = new Constraint(Constraint.PSYM, pp, pt, p1);
+                        pu = this.addADecidedPointWithUnite(pp);
+                    }
+                    if (pu == null) {
+                        this.addPointToList(pp);
+                        this.addConstraintToList(cs);
+                    } else {
+                        pp = pu;
+                        exist_point_number++;
+                    }
+                    vp.add(pp);
+                }
+
+                if (exist_point_number < line.points.size()) {
+                    if (line.points.contains(p1)) {
+                        for (CPoint cPoint : vp) {
+                            CPoint tt = (CPoint) cPoint;
+                            line.addApoint(tt);
+                        }
+                        this.UndoAdded("reflection");
+
+                    } else {
+                        CLine line2 = new CLine(line.type);
+                        line2.m_color = line.m_color;
+                        line2.m_dash = line.m_dash;
+                        line2.m_width = line.m_width;
+
+                        for (CPoint cPoint : vp) {
+                            line2.addApoint((CPoint) cPoint);
+                        }
+                        Constraint cs = new Constraint(Constraint.LINE, vp);
+                        this.addConstraintToList(cs);
+                        this.addLineToList(line2);
+                        // this.UndoAdded(line2.TypeString() +
+                        //        " is reflection of " +
+                        //        line.getDiscription() + " wrt " +
+                        //        p1.TypeString());
+                        this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", line2.TypeString(),
+                                line.getDiscription(), p1.TypeString()));
+
+
+                    }
+
+                } else {
+                    boolean exists = false;
+                    for (Object o : linelist) {
+                        CLine ll = (CLine) o;
+                        if (ll.points.containsAll(vp)) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        CLine line2 = new CLine(line.type);
+                        for (CPoint cPoint : vp) {
+                            line2.addApoint(cPoint);
+                        }
+                        line2.m_color = ln.m_color;
+                        line2.m_dash = ln.m_dash;
+                        line2.m_width = ln.m_width;
+                        Constraint cs = new Constraint(Constraint.LINE, vp);
+                        this.addConstraintToList(cs);
+                        this.addLineToList(line2);
+                        this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", line2.getDiscription(),
+                                line.getDescription(), p1.TypeString()));
+
+
+                    } else
+                        this.UndoAdded("reflection");
+                }
+            } else if (obj1 instanceof CLine && obj2 instanceof CLine) {
+                CLine line = (CLine) obj1;
+                CLine line2 = (CLine) obj2;
+                CPoint cp = CLine.commonPoint(line, line2);
+
+                CLine line3 = new CLine(line.type);
+                line3.m_color = line.m_color;
+                line3.m_dash = line.m_dash;
+                line3.m_width = line.m_width;
+
+                int exist_point_number = 0;
+                for (int i = 0; i < line.points.size(); i++) {
+                    CPoint pt = (CPoint) line.points.get(i);
+
+                    CPoint pp;
+                    if (pt == cp) {
+                        pp = cp;
+                        exist_point_number++;
+                    } else {
+                        pp = this.CreateANewPoint(0, 0);
+                        Constraint cs = new Constraint(Constraint.MIRROR, pp, pt, line2);
+                        CPoint pu = this.addADecidedPointWithUnite(pp);
+                        if (pu == null) {
+                            this.addPointToList(pp);
+                            this.addConstraintToList(cs);
+                        } else {
+                            pp = pu;
+                            exist_point_number++;
+                        }
+
+                    }
+                    line3.addApoint(pp);
+                }
+                Constraint cs = new Constraint(Constraint.LINE, line3.points);
+                addConstraintToList(cs);
+
+                if (exist_point_number < line.points.size()) {
+                    this.addLineToList(line3);
+
+                    // this.UndoAdded(line3.getDiscription() +
+                    //        " is reflection of " +
+                    //        line.getDiscription() + " wrt " +
+                    //        line2.getDiscription());
+                    this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", line3.getDiscription(),
+                            line.getDiscription(), line2.getDiscription()));
+
+
+                } else {
+                    boolean exists = false;
+                    for (Object o : linelist) {
+                        CLine ll = (CLine) o;
+                        if (ll.sameLine(line3)) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        this.addLineToList(line3);
+                        // this.UndoAdded(line3.getDiscription() +
+                        //        " is reflection of " +
+                        //        line.getDiscription() + " wrt " +
+                        //        line2.getDiscription());
+                        this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", line3.getDiscription(),
+                                line.getDiscription(), line2.getDiscription()));
+
+                    }
+                }
+
+            } else if (obj1 instanceof Circle && obj2 instanceof CPoint) {
+                int exist_point_number = 0;
+
+                Circle c1 = (Circle) obj1;
+                CPoint p1 = (CPoint) obj2;
+                CPoint pp = this.CreateANewPoint(0, 0);
+                Constraint cs = new Constraint(Constraint.PSYM, pp, c1.o, p1);
+                CPoint pu = this.addADecidedPointWithUnite(pp);
+                if (pu == null) {
+                    this.addPointToList(pp);
+                    this.addConstraintToList(cs);
+                } else {
+                    exist_point_number++;
+                    pp = pu;
+                }
+
+                Circle c = null;
+                for (int i = 0; i < c1.points.size(); i++) {
+                    CPoint pt = (CPoint) c1.points.get(i);
+                    p = this.CreateANewPoint(0, 0);
+                    cs = new Constraint(Constraint.PSYM, p, pt, p1);
+                    CPoint pu1 = this.addADecidedPointWithUnite(p);
+                    if (pu1 == null) {
+                        this.addPointToList(p);
+                        this.addConstraintToList(cs);
+                    } else {
+                        p = pu1;
+                        exist_point_number++;
+                    }
+
+                    if (i == 0) {
+                        c = new Circle(pp, p);
+                        c.m_color = c1.m_color;
+                        c.m_dash = c1.m_dash;
+                        c.m_width = c1.m_width;
+                    } else {
+                        c.addPoint(p);
+                    }
+                }
+                cs = new Constraint(Constraint.CIRCLE, c.o);
+                cs.addElement(c.points);
+                cs.PolyGenerate();
+
+                addConstraintToList(cs);
+
+                if (exist_point_number < c1.points.size() + 1) {
+                    this.addCircleToList(c);
+                    // this.UndoAdded(c.getDescription() +
+                    //         " is reflection of " + c1.getDescription() +
+                    //         " wrt " + p1.TypeString());
+                    this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", c.getDescription(),
+                            c1.getDescription(), p1.TypeString()));
+
+                }
+
+            } else if (obj1 instanceof Circle && obj2 instanceof CLine) {
+                int exist_point_number = 0;
+
+                Circle c1 = (Circle) obj1;
+                CLine line = (CLine) obj2;
+                CPoint pp = this.CreateANewPoint(0, 0);
+                Constraint cs = new Constraint(Constraint.MIRROR, pp, c1.o,
+                        line);
+                CPoint pu1 = this.addADecidedPointWithUnite(pp);
+                if (pu1 == null) {
+                    this.addPointToList(pp);
+                    this.addConstraintToList(cs);
+                } else {
+                    pp = pu1;
+                    exist_point_number++;
+                }
+
+                Circle c = null;
+                for (int i = 0; i < c1.points.size(); i++) {
+                    CPoint pt = (CPoint) c1.points.get(i);
+                    p = this.CreateANewPoint(0, 0);
+                    cs = new Constraint(Constraint.MIRROR, p, pt, line);
+                    CPoint pu2 = this.addADecidedPointWithUnite(p);
+                    if (pu2 == null) {
+                        this.addPointToList(p);
+                        this.addConstraintToList(cs);
+                    } else {
+                        p = pu1;
+                        exist_point_number++;
+                    }
+                    if (i == 0) {
+                        c = new Circle(pp, p);
+                        c.m_color = c1.m_color;
+                        c.m_dash = c1.m_dash;
+                        c.m_width = c1.m_width;
+                    } else {
+                        c.addPoint(p);
+                    }
+
+                }
+                assert c != null;
+                cs = new Constraint(Constraint.CIRCLE, c.o);
+                cs.addElement(c.points);
+                cs.PolyGenerate();
+                addConstraintToList(cs);
+                if (exist_point_number < c1.points.size() + 1) {
+                    this.addCircleToList(c);
+                    // this.UndoAdded(c.getDescription() +
+                    //         " is reflection of " + c1.getDescription() +
+                    //         " wrt " + line.getDescription());
+                    this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", c.getDescription(),
+                            c1.getDescription(), line.getDescription()));
+
+                }
+            } else {
+                CMisc.print("can not mirror by a circle");
+            }
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles the midpoint creation case.
+     * Selects a point by its coordinates to compute the midpoint between the selected point and a previously stored point.
+     *
+     * @param x the x-coordinate of the selected point.
+     * @param y the y-coordinate of the selected point.
+     */
+    private void handleDMidpointCase(double x, double y) {
+
+        CPoint tp = this.SelectAPoint(x, y);
+        if (tp != null) {
+            if (SelectList.size() == 1 && tp != SelectList.get(0)) {
+                CPoint tp1 = (CPoint) SelectList.get(0);
+
+                CPoint po = this.CreateANewPoint(0, 0);
+                Constraint cs = new Constraint(Constraint.MIDPOINT, po, tp, tp1);
+                CPoint pu = this.addADecidedPointWithUnite(po);
+                if (pu == null) {
+                    this.addConstraintToList(cs);
+                    this.addPointToList(po);
+                    CLine ln = fd_line(tp, tp1);
+                    if (ln != null) {
+                        ln.addApoint(po);
+                        Constraint cs2 = new Constraint(Constraint.PONLINE, po, ln, false);
+                        this.addConstraintToList(cs2);
+
+                    }
+                    // this.UndoAdded(po.getname() + ": the midpoint YYY of " + tp1.m_name + tp.m_name);
+                    this.UndoAdded(po.getname() + ": " + GExpert.getTranslationViaGettext("midpoint of {0}", tp1.m_name + tp.m_name));
+
+                } else {
+                    po = pu;
+                }
+                clearSelection();
+            } else {
+                this.addObjectToList(tp, SelectList);
+            }
+        }
+    }
+
+    /**
+     * Handles the 3-point circle creation case.
+     * Collects three points from user selections and creates a circle passing through them.
+     *
+     * @param x the x-coordinate for point selection.
+     * @param y the y-coordinate for point selection.
+     * @param p a temporary point used during the circle creation process.
+     */
+    private void handleD3PCircleCase(double x, double y, CPoint p) {
+        if (STATUS == 0) { // first click
+            clearSelection();
+            p = SmartgetApointFromXY(x, y);
+            this.addObjectToList(p, SelectList);
+            STATUS = 1;
+
+        } else if (STATUS == 1) {
+            p = SmartgetApointFromXY(x, y);
+            this.addObjectToList(p, SelectList);
+            if (SelectList.size() == 2) {
+                STATUS = 2;
+            }
+
+        } else { //third click
+            CPoint p1, p2, p3;
+            p1 = (CPoint) SelectList.get(0);
+            p2 = (CPoint) SelectList.get(1);
+
+            p3 = this.SelectAPoint(x, y);
+            if (p3 != null) {
+                if (DrawBase.check_Collinear(p1, p2, p3))
+                    return;
+            }
+
+            if (p3 == null)
+                p3 = SmartgetApointFromXY(x, y);
+            if (p3 == null) {
+                return;
+            }
+
+
+            if (SelectList.contains(p3)) {
+                return;
+            }
+
+            p = this.CreateANewPoint(0, 0);
+            Constraint cs = new Constraint(Constraint.CIRCLE3P, p, p1, p2, p3);
+            CPoint pu = this.addADecidedPointWithUnite(p);
+            if (pu == null) {
+                Circle c = new Circle(p, p1, p2, p3);
+                p.m_name = this.get_cir_center_name();
+                this.addPointToList(p);
+                this.addConstraintToList(cs);
+                addCircleToList(c);
+                this.UndoAdded(c.getDescription());
+
+            } else {
+                p = pu;
+                if (!this.isCircleExists(p1, p2, p3)) {
+                    Circle c = new Circle(p, p1, p2, p3);
+                    this.addCircleToList(c);
+                    this.UndoAdded(c.getDescription());
+                }
+            }
+
+            clearSelection();
+            STATUS = 0;
+        }
+    }
+
+    /**
+     * Handles the translate action case.
+     * Captures the starting point for a translation action based on the provided coordinates.
+     *
+     * @param x the x-coordinate of the translation start point.
+     * @param y the y-coordinate of the translation start point.
+     */
+    private void handleTranslateCase(double x, double y) {
+        FirstPnt = this.CreateATempPoint(x, y);
+    }
+
+    /**
+     * Handles the zoom in action.
+     * Zooms in at the specified coordinates and recalculates the drawing.
+     *
+     * @param x the x-coordinate for zooming in.
+     * @param y the y-coordinate for zooming in.
+     */
+    private void handleZoomInCase(double x, double y) {
+        zoom_in(x, y, 1);
+        reCalculate();
+    }
+
+    /**
+     * Handles the zoom out action.
+     * Zooms out from the specified coordinates and recalculates the drawing.
+     *
+     * @param x the x-coordinate for zooming out.
+     * @param y the y-coordinate for zooming out.
+     */
+    private void handleZoomOutCase(double x, double y) {
+        zoom_out(x, y, 1);
+        reCalculate();
+    }
+
+    /**
+     * Handles the animation case.
+     * Depending on the current selection and point detection, triggers an animation on a point, line, circle, or trace.
+     *
+     * @param x the x-coordinate used for triggering animation.
+     * @param y the y-coordinate used for triggering animation.
+     * @param p a temporary point used during the animation process.
+     */
+    private void handleAnimationCase(double x, double y, CPoint p) {
+        CatchPoint.setXY(x, y);
+        p = this.SmartPoint(CatchPoint);
+
+        if (SelectList.isEmpty()) {
+            if (p != null) {
+                addToSelectList(p);
+            }
+            return;
+        }
+        if (p != null)
+            return;
+
+        p = (CPoint) SelectList.get(0);
+        CLine line = SmartPLine(CatchPoint);
+        if (line != null && !check_animation(p, line))
+            return;
+
+        AnimatePanel af = gxInstance.getAnimateDialog();
+        if (line != null) {
+            clearSelection();
+            animate = new AnimateC(p, line, this.Width, this.Height);
+            af.setAttribute(animate);
+            gxInstance.showAnimatePane();
+            this.SetCurrentAction(MOVE);
+        } else {
+            Circle c = this.SmartPCircle(CatchPoint);
+            if (c != null) {
+                clearSelection();
+                animate = new AnimateC(p, c, this.Width, this.Height);
+                af.setAttribute(animate);
+                gxInstance.showAnimatePane();
+                this.SetCurrentAction(MOVE);
+            } else {
+                CTrace ct = (CTrace) this.SelectFromAList(tracelist, x, y);
+                if (ct != null) {
+                    clearSelection();
+                    animate = new AnimateC(p, ct, this.Width, this.Height);
+                    af.setAttribute(animate);
+                    gxInstance.showAnimatePane();
+                    this.SetCurrentAction(MOVE);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Handles the direct angle creation case.
+     * Based on the selection status, sets up an angle using a temporary point and/or a previously selected line.
+     *
+     * @param x the x-coordinate for angle creation.
+     * @param y the y-coordinate for angle creation.
+     */
+    private void handleDAngleCase(double x, double y) {
+
+        if (STATUS == 0 && SelectList.isEmpty()) {
+            FirstPnt = this.CreateATempPoint(x, y);
+
+            CLine line = SmartPLine(FirstPnt);
+            if (line != null) {
+                addToSelectList(line);
+            }
+        } else if (STATUS == 0 && SelectList.size() == 1) {
+            SecondPnt = this.CreateATempPoint(x, y);
+            CLine line = SmartPLine(SecondPnt);
+            if (line != null) {
+                CLine l2 = (CLine) SelectList.get(0);
+                if (line == l2) {
+                    return;
+                }
+
+                CAngle ag = new CAngle(l2, line, FirstPnt, SecondPnt);
+                addAngleToList(ag);
+                ag.move(x, y);
+                clearSelection();
+                addToSelectList(ag);
+                STATUS = 1;
+                this.UndoAdded(ag.getDescription(), false, false);
+            }
+        } else if (STATUS == 1) {
+            STATUS = 0;
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles the equal side setting case.
+     * Adds a constraint to set equal distances between points or sides based on the selection.
+     *
+     * @param x the x-coordinate used for setting equal sides.
+     * @param y the y-coordinate used for setting equal sides.
+     * @param p a temporary point involved in the constraint process.
+     */
+    private void handleSetEqSideCase(double x, double y, CPoint p) {
+        CPoint pt = (CPoint) this.CatchList(pointlist, x, y);
+        if (pt == null) {
+            clearSelection();
+            return;
+        }
+        if (SelectList.size() == 3) {
+            CPoint pt1 = (CPoint) SelectList.get(0);
+            CPoint pt2 = (CPoint) SelectList.get(1);
+            CPoint pt3 = (CPoint) SelectList.get(2);
+            if (STATUS == 1) {
+                Constraint cs = new Constraint(Constraint.EQDISTANCE, pt1, pt2, pt3, pt);
+                this.addConstraintToList(cs);
+                this.charsetAndAddPoly(false);
+                clearSelection();
+                this.UndoAdded(pt1.m_name + pt2.m_name + " = " + pt3.m_name +
+                        pt.m_name);
+            } else {
+                Constraint cs = new Constraint(Constraint.NRATIO, pt1, pt2, pt3, pt, v1, v2);
+                this.addConstraintToList(cs);
+                this.charsetAndAddPoly(false);
+                clearSelection();
+                this.UndoAdded(pt1.m_name + pt2.m_name + " = " + STATUS +
+                        " " + pt3.m_name + pt.m_name);
+
+            }
+        } else {
+            addToSelectList(pt);
+        }
+    }
+
+    /**
+     * Handles the equal angle setting case.
+     * Compares a selected angle with another angle determined from the coordinates and sets them equal if possible.
+     *
+     * @param x the x-coordinate used for setting equal angle.
+     * @param y the y-coordinate used for setting equal angle.
+     * @param p a temporary point or indicator used during the process.
+     */
+    private void handleSetEqAngleCase(double x, double y, CPoint p) {
+        if (SelectList.isEmpty()) {
+            CAngle ag = CatchAngle(x, y);
+            if (ag != null) {
+                addToSelectList(ag);
+            }
+        } else if (SelectList.size() == 1) {
+            CAngle ag = CatchAngle(x, y);
+            CAngle ag1 = (CAngle) SelectList.get(0);
+
+            if (ag == ag1) {
+                clearSelection();
+                return;
+            }
+
+            if (ag != null) {
+                CPoint pd = CAngle.canEqual(ag, ag1);
+                if (pd == null) {
+                    CMisc.print("the angle is decided,can not be set equal");
+                    clearSelection();
+                } else {
+                    clearSelection();
+                    Constraint cs = new Constraint(Constraint.EQANGLE, ag1, ag);
+                    this.addConstraintToList(cs);
+                    this.charsetAndAddPoly(false);
+//                            this.mulSolutionSelect(pd);
+//                            this.reCalculate();
+                    this.UndoAdded(ag.getDescription() + " = " +
+                            ag1.getDescription());
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Handles the equal angle constraint for three points.
+     * After selecting two angles, prompts for a specific angle parameter and applies a constraint to equalize them.
+     *
+     * @param x the x-coordinate for angle selection.
+     * @param y the y-coordinate for angle selection.
+     * @param p a temporary point used during the constraint process.
+     */
+    private void handleSetEqAngle3PCase(double x, double y, CPoint p) {
+        CAngle ag = (CAngle) this.SelectFromAList(anglelist, x, y);
+        if (ag == null) {
+            return;
+        }
+        if (SelectList.size() == 2) {
+            CAngle ag1 = (CAngle) SelectList.get(0);
+            CAngle ag2 = (CAngle) SelectList.get(1);
+
+            Vector alist = this.getSpecificAngleList();
+            SpecificAngleDialog dlg = new SpecificAngleDialog(gxInstance, 2, alist);
+            dlg.setLocation(400, 400);
+            dlg.setTitle("Please select an specific angle");
+            dlg.setVisible(true);
+
+            Vector v = dlg.getSpecificAngle();
+            if (v.size() == 1) {
+                Integer in = (Integer) v.get(0);
+                int va = in.intValue();
+                Param pm = this.getParaForSpecificAngle(va);
+
+                Constraint cs = new Constraint(Constraint.EQANGLE3P, ag1, ag2, ag, pm, va);
+                this.addConstraintToList(cs);
+                this.charsetAndAddPoly(false);
+                clearSelection();
+                this.UndoAdded(ag1.getDescription() + " + " +
+                        ag2.getDescription() + " + " +
+                        ag.getDescription() + " = " +
+                        ag.getDescription());
+            } else {
+                clearSelection();
+            }
+        } else {
+            addToSelectList(ag);
+        }
+    }
+
+    /**
+     * Handles the circle-to-circle tangent constraint case.
+     * When one circle is already selected, selects another circle to set a tangent constraint between them.
+     *
+     * @param x the x-coordinate used for tangent detection.
+     * @param y the y-coordinate used for tangent detection.
+     * @param p a temporary point used during the process.
+     */
+    private void handleSetCCTangentCase(double x, double y, CPoint p) {
+        Circle c = (Circle) this.SelectFromAList(circlelist, x, y);
+        if (c == null) {
+            return;
+        }
+        if (SelectList.size() == 1) {
+            Circle c0 = (Circle) SelectList.get(0);
+            Constraint cs = new Constraint(Constraint.CCTANGENT, c0, c);
+            this.charsetAndAddPoly(false);
+            this.addConstraintToList(cs);
+            this.UndoAdded(c0.getDescription() + " tangent to " +
+                    c.getDescription());
+        } else {
+            addToSelectList(c);
+        }
+    }
+
+    /**
+     * Handles the square construction case.
+     * Determines two points for the construction of a square and invokes square creation logic.
+     *
+     * @param x the x-coordinate used for square construction.
+     * @param y the y-coordinate used for square construction.
+     */
+    private void handleDSquareCase(double x, double y) {
+        if (STATUS == 0) {
+            CPoint pt = this.SmartPoint(CatchPoint);
+            if (pt == null) {
+                if (SelectList.isEmpty()) {
+                    CLine line = this.SmartPLine(CatchPoint);
+                    if (line != null) {
+                        addToSelectList(line);
+                        STATUS = 1;
+                        return;
+                    }
+                }
+                pt = this.SmartgetApointFromXY(x, y);
+            }
+
+            if (SelectList.size() == 1) {
+                CPoint pa = (CPoint) SelectList.get(0);
+                this.setSmartPVLine(pa, pt);
+            }
+            if (!SelectList.contains(pt)) {
+                addToSelectList(pt);
+            }
+            if (SelectList.size() == 2) {
+                STATUS = 2;
+            }
+        } else if (STATUS == 2) {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            addsquare(p1, p2, CatchPoint);
+            clearSelection();
+            STATUS = 0;
+
+        }
+    }
+
+    /**
+     * Handles the circle-circle line (radical axis) construction case.
+     * Selects two circles based on the provided coordinates and creates a line representing their radical axis.
+     *
+     * @param x the x-coordinate used for circle selection.
+     * @param y the y-coordinate used for circle selection.
+     */
+    private void handleDCCLineCase(double x, double y) {
+        if (SelectList.isEmpty()) {
+            Circle c = this.SmartPCircle(CatchPoint);
+            if (c != null) {
+                this.addObjectToList(c, SelectList);
+            }
+        } else if (SelectList.size() == 1) {
+            Circle c = this.SmartPCircle(CatchPoint);
+            if (c != null) {
+                Circle c0 = (Circle) SelectList.get(0);
+                if (c0.o == c.o) {
+                    clearSelection();
+                    return;
+                }
+
+                CLine line = new CLine(CLine.CCLine);
+                this.addLineToList(line);
+
+                Constraint cs = new Constraint(Constraint.CCLine, line, c0,
+                        c);
+                this.addConstraintToList(cs);
+                line.addconstraint(cs);
+                clearSelection();
+                this.UndoAdded(line.TypeString() + ": " + GExpert.getTranslationViaGettext(
+                        "Radical of {0} and {1}", c0.getDescription(), c.getDescription()));
+            }
+        }
+
+    }
+
+    /**
+     * Handles drawing of an isosceles triangle based on the current selection.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     */
+    private void handleDIOSTriCase(double x, double y) {
+        if (SelectList.size() < 2) {
+            CPoint pt = SmartgetApointFromXY(x, y);
+            if (SelectList.size() == 1) {
+                CPoint pa = (CPoint) SelectList.get(0);
+                setSmartPVLine(pa, pt);
+            }
+            if (SelectList.isEmpty()) {
+                addToSelectList(pt);
+            } else if (pt == SelectList.get(0)) {
+                clearSelection();
+            } else {
+                addToSelectList(pt);
+            }
+        } else {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            addisoAngle(p1, p2, CatchPoint, 0);
+            clearSelection();
+            STATUS = 0;
+        }
+    }
+
+    /**
+     * Handles drawing of an equilateral triangle in three user interaction steps.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     */
+    private void handleDrawTriAllCase(double x, double y) {
+        if (STATUS == 0) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+            addToSelectList(pt);
+            STATUS = 1;
+        } else if (STATUS == 1) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+            if (pt == SelectList.get(0)) {
+                STATUS = 0;
+                clearSelection();
+                return;
+            }
+            if (SelectList.size() == 1) {
+                CPoint pa = (CPoint) SelectList.get(0);
+                this.setSmartPVLine(pa, pt);
+            }
+            CPoint p1 = (CPoint) SelectList.get(0);
+            addToSelectList(pt);
+            if (fd_line(p1, pt) == null) {
+                CLine line = new CLine(p1, pt, CLine.LLine);
+                this.addLineToList(line);
+            }
+            STATUS = 2;
+        } else {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            CPoint pt = CreateANewPoint(x, y);
+
+            Constraint cs = new Constraint(Constraint.PETRIANGLE, pt, p1, p2);
+            CPoint pu = this.addADecidedPointWithUnite(pt);
+            if (pu == null) {
+                addConstraintToList(cs);
+                addPointToList(pt);
+            } else {
+                pt = pu;
+            }
+            addALine(CLine.LLine, pt, p1);
+            addALine(CLine.LLine, pt, p2);
+            clearSelection();
+            STATUS = 0;
+            // FIXME: use a translation key for triangle and substitute the image later for all translations
+            UndoAdded(GExpert.getLanguage("Equilateral") + " triangle " + pt.m_name + p1.m_name + p2.m_name);
+        }
+    }
+
+    /**
+     * Handles drawing of a right-angled trapezoid by capturing two points and a new transient point.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     */
+    private void handleRATrapezoidCase(double x, double y) {
+        if (STATUS == 0) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+
+            if (!SelectList.isEmpty()) {
+                CPoint pa = (CPoint) SelectList.get(SelectList.size() - 1);
+                this.setSmartPVLine(pa, pt);
+            }
+
+            if (!SelectList.contains(pt)) {
+                addToSelectList(pt);
+            }
+            if (SelectList.size() == 2) {
+                STATUS = 1;
+            }
+        } else {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            CPoint p3 = this.SmartgetApointFromXY(x, y);
+            CPoint p4 = this.CreateANewPoint(x, y);
+            Constraint cs = new Constraint(Constraint.RIGHT_ANGLE_TRAPEZOID, p1, p2, p3, p4);
+            CPoint pu = this.addADecidedPointWithUnite(p4);
+            if (pu == null) {
+                this.addALine(CLine.LLine, p1, p2);
+                this.addALine(CLine.LLine, p2, p3);
+                this.addALine(CLine.LLine, p3, p4);
+                this.addALine(CLine.LLine, p1, p4);
+                this.addPointToList(p4);
+                this.addConstraintToList(cs);
+                this.charsetAndAddPoly(false);
+            } else
+                p4 = pu;
+            // FIXME: use better keys
+            this.UndoAdded(GExpert.getLanguage("Right") + " trapezoid " + p1.m_name + p2.m_name + p3.m_name + p4.m_name);
+            STATUS = 0;
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles drawing of a trapezoid by computing a fourth point via coordinate calculations.
+     *
+     * @param x the x-coordinate from the current catch point
+     * @param y the y-coordinate computed based on the selected points
+     */
+    private void handleTrapezoide(double x, double y) {
+        if (STATUS == 0) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+            if (!SelectList.isEmpty()) {
+                CPoint pa = (CPoint) SelectList.get(SelectList.size() - 1);
+                this.setSmartPVLine(pa, pt);
+            }
+            if (!SelectList.contains(pt)) {
+                addToSelectList(pt);
+            } else {
+                return;
+            }
+            if (SelectList.size() == 3) {
+                STATUS = 1;
+            }
+        } else {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            CPoint p3 = (CPoint) SelectList.get(2);
+            x = CatchPoint.getx();
+            y = (p1.gety() - p2.gety()) * (x - p3.getx()) /
+                    (p1.getx() - p3.getx()) + p3.gety();
+            // y = (p1.gety() - p2.gety()) * (x - p3.getx()) / (p1.getx() - p2.getx()) + p3.gety();
+            CPoint p4 = this.SmartgetApointFromXY(x, y);
+            Constraint cs1 = new Constraint(Constraint.TRAPEZOID, p1, p2, p3, p4);
+            CPoint pu = this.addADecidedPointWithUnite(p4);
+            p4.setXY(x, y);
+            if (pu == null) {
+                this.addALine(CLine.LLine, p1, p2);
+                this.addALine(CLine.LLine, p2, p3);
+                this.addALine(CLine.LLine, p3, p4);
+                this.addALine(CLine.LLine, p1, p4);
+                this.addPointToList(p4);
+                this.addConstraintToList(cs1);
+                this.charsetAndAddPoly(false);
+            } else
+                p4 = pu;
+            this.reCalculate();
+            this.UndoAdded("trapezoid " + p1.m_name + p2.m_name + p3.m_name + p4.m_name);
+            STATUS = 0;
+            clearSelection();
+
+        }
+    }
+
+    /**
+     * Handles drawing of a parallelogram by collecting points and creating the missing vertex.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     */
+    private void handleParallelogram(double x, double y) {
+        if (STATUS == 0) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+            addToSelectList(pt);
+            STATUS = 1;
+        } else if (STATUS == 1) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+            if (pt == SelectList.get(0)) {
+                STATUS = 0;
+                clearSelection();
+                return;
+            }
+            if (SelectList.size() == 1) {
+                CPoint pa = (CPoint) SelectList.get(0);
+                this.setSmartPVLine(pa, pt);
+            }
+            addToSelectList(pt);
+            STATUS = 2;
+        } else {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            CPoint p3 = this.SmartgetApointFromXY(x, y);
+            CPoint p4 = this.CreateANewPoint(x, y);
+            Constraint cs = new Constraint(Constraint.PARALLELOGRAM, p1, p2, p3, p4);
+            CPoint pu = this.addADecidedPointWithUnite(p4);
+            if (pu == null) {
+                this.addPointToList(p4);
+                addALine(CLine.LLine, p1, p2);
+                addALine(CLine.LLine, p1, p4);
+                addALine(CLine.LLine, p2, p3);
+                addALine(CLine.LLine, p3, p4);
+                this.addConstraintToList(cs);
+                this.charsetAndAddPoly(false);
+            } else
+                p4 = pu;
+            this.UndoAdded("parallelogram " + p1.m_name + p2.m_name + p3.m_name + p4.m_name);
+            STATUS = 0;
+            clearSelection();
+        }
+
+    }
+
+    /**
+     * Handles drawing of a rectangle by using two selected points to compute the remaining vertices.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     */
+    private void handleRectangle(double x, double y) {
+        if (STATUS == 0) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+
+            addToSelectList(pt);
+            STATUS = 1;
+        } else if (STATUS == 1) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+            if (pt == SelectList.get(0)) {
+                STATUS = 0;
+                clearSelection();
+                return;
+            }
+            if (SelectList.size() == 1) {
+                CPoint pa = (CPoint) SelectList.get(0);
+                this.setSmartPVLine(pa, pt);
+            }
+            addToSelectList(pt);
+            STATUS = 2;
+        } else {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+
+            double x1 = p1.getx();
+            double y1 = p1.gety();
+            double x2 = p2.getx();
+            double y2 = p2.gety();
+
+            double xc = CatchPoint.getx();
+            double yc = CatchPoint.gety();
+
+            double dlx = x2 - x1;
+            double dly = y2 - y1;
+            double dl = dlx * dlx + dly * dly;
+
+            double xx = ((y2 - yc) * dlx * dly + dly * dly * xc +
+                    dlx * dlx * x2) / dl;
+            double yy = ((x2 - xc) * dlx * dly + dlx * dlx * yc +
+                    dly * dly * y2) / dl;
+
+            CPoint p3 = this.SmartgetApointFromXY(xx, yy);
+            double xt = x + p1.getx() - p2.getx();
+            double yt = y + p1.gety() - p2.gety();
+            CPoint p4 = this.CreateANewPoint(xt, yt);
+            Constraint cs1 = new Constraint(Constraint.RECTANGLE, p1, p2, p3, p4);
+            CPoint pu = this.addADecidedPointWithUnite(p4);
+            if (pu == null) {
+                this.addPointToList(p4);
+                CLine tl1 = addALine(CLine.LLine, p1, p2);
+                CLine tl2 = addALine(CLine.LLine, p1, p4);
+                addALine(CLine.LLine, p2, p3);
+                addALine(CLine.LLine, p3, p4);
+                addCTMark(tl1, tl2);
+                this.addConstraintToList(cs1);
+                this.charsetAndAddPoly(false);
+            } else
+                p4 = pu;
+            this.UndoAdded("rectangle " + p1.m_name + p2.m_name + p3.m_name + p4.m_name);
+            STATUS = 0;
+            clearSelection();
+
+        }
+    }
+
+    /**
+     * Handles drawing of an isosceles right triangle by capturing base points and computing the apex.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     */
+    private void handleDrawTriSqIsoCase(double x, double y) {
+        if (STATUS == 0) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+            addToSelectList(pt);
+            STATUS = 1;
+        } else if (STATUS == 1) {
+            CPoint pt = this.SmartgetApointFromXY(x, y);
+            if (pt == SelectList.get(0)) {
+                STATUS = 0;
+                clearSelection();
+                return;
+            }
+            CPoint p1 = (CPoint) SelectList.get(0);
+            addALine(CLine.LLine, p1, pt);
+            addToSelectList(pt);
+            STATUS = 2;
+        } else {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            CPoint pt = this.CreateANewPoint(x, y);
+            CLine ln1 = new CLine(pt, p1, CLine.LLine);
+            CLine ln2 = new CLine(pt, p2, CLine.LLine);
+            Constraint cs = new Constraint(Constraint.PERPBISECT, pt, p1, p2);
+            Constraint cs1 = new Constraint(Constraint.PERPENDICULAR, ln1, ln2);
+            CPoint pu = this.addADecidedPointWithUnite(pt);
+            if (pu == null) {
+                this.addPointToList(pt);
+                this.charsetAndAddPoly(false);
+                this.addConstraintToList(cs1);
+                this.addConstraintToList(cs);
+                this.addLineToList(ln1);
+                this.addLineToList(ln2);
+            }
+
+            clearSelection();
+            STATUS = 0;
+            this.UndoAdded("isoceles-right triangle " + pt.m_name + p1.m_name + p2.m_name);
+        }
+    }
+
+    /**
+     * Handles definition of a polygon by either selecting a circle or accumulating points from user input.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     * @param p a reference point used in the polygon definition process
+     */
+    private void handleDefinePolyCase(double x, double y, CPoint p) {
+        if (this.SelectAPoint(x, y) == null && SelectList.isEmpty()) {
+            Circle c = SelectACircle(x, y);
+            if (c != null) {
+                for (Object o : polygonlist) {
+                    CPolygon px = (CPolygon) o;
+                    if (px.isEqual(c)) break;
+                }
+                if (this.fd_polygon(c) == null) {
+                    CPolygon px = new CPolygon(c);
+                    this.addPolygonToList(px);
+                    clearSelection();
+                    this.UndoAdded(px.getDescription());
+                }
+            }
+        } else {
+            FirstPnt = this.CreateATempPoint(x, y);
+            p = this.SmartPoint(FirstPnt);
+            if (p != null) {
+                if (STATUS == 0) {
+                    CPolygon cp = new CPolygon();
+                    cp.addAPoint(p);
+                    addToSelectList(cp);
+                    STATUS = 1;
+                } else {
+                    CPolygon cp = (CPolygon) SelectList.get(0);
+                    if (cp.addAPoint(p)) {
+                        STATUS = 0;
+                        addPolygonToList(cp);
+                        clearSelection();
+                        this.UndoAdded(cp.getDescription());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Handles text editing by showing a dialog for a selected text object.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     */
+    private void handleDTextCase(double x, double y) {
+        CText tc = (CText) this.SelectFromAList(textlist, x, y);
+        dialog_addText(tc, (int) x, (int) y);
+    }
+
+    /**
+     * Handles multiple solution selection by checking proximity of solution points to the user input.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     * @param p a reference point used for comparison
+     */
+    private void handleMulSelectSolutionCase(double x, double y, CPoint p) {
+        for (int i = 0; i < solutionlist.size(); i++) {
+            p = (CPoint) solutionlist.get(i);
+            if (Math.pow(p.getx() - x, 2) + Math.pow(p.gety() - y, 2) < 18 * 18) {
+                pSolution.setXY(p.getx(), p.gety());
+                solutionlist.clear();
+                pSolution = null;
+                SetCurrentAction(PreviousAction);
+            }
+        }
+    }
+
+    /**
+     * Handles setting a track point and adds a trace if the point is not already traced.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     */
+    private void handleSetTrackCase(double x, double y) {
+        CTrackPt = this.SelectAPoint(x, y);
+        boolean r = false;
+
+        for (Object o : tracelist) {
+            CTrace tr = (CTrace) o;
+            if (tr.isTracePt(CTrackPt)) {
+                r = true;
+                break;
+
+            }
+        }
+        if (!r) {
+            CTrace t = new CTrace(CTrackPt);
+            this.addObjectToList(t, tracelist);
+            this.UndoAdded(t.toString());
+            if (gxInstance != null)
+                gxInstance.setActionMove();
+        }
+    }
+
+    /**
+     * Handles locus creation by selecting one or two points and then a line or circle to define the locus.
+     *
+     * @param x the x-coordinate of the user input
+     * @param y the y-coordinate of the user input
+     */
+    private void handleLocusCase(double x, double y) {
+        int n = SelectList.size();
+        if (n <= 1) {
+            CPoint pt = this.SelectAPoint(x, y);
+            if (pt != null) {
+                if (n == 0 && !pt.isAFixedPoint()) {
+                    JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage("The point should be a fix point."),
+                            GExpert.getLanguage("Warning"),
+                            JOptionPane.WARNING_MESSAGE);
+                } else
+                    this.addObjectToList(pt, SelectList);
+                int k = SelectList.size();
+                if (k == 1)
+                    gxInstance.setTipText(GExpert.getLanguage("Please select the second point."));
+                else if (k == 2)
+                    gxInstance.setTipText(GExpert.getLanguage("Please select a line or a circle."));
+            }
+        } else {
+            CPoint pt = (CPoint) SelectList.get(0);
+            CPoint pt1 = (CPoint) SelectList.get(1);
+            CLine ln = this.SelectALine(x, y);
+
+            if (ln != null) {
+                CTrace t = new CTrace(pt, pt1, ln);
+                this.addObjectToList(t, tracelist);
+                this.UndoAdded(t.toString());
+            } else {
+                Circle c = this.SelectACircle(x, y);
+                if (c != null) {
+                    CTrace t = new CTrace(pt, pt1, c);
+                    this.addObjectToList(t, tracelist);
+                    this.UndoAdded(t.toString());
+                }
+            }
+            clearSelection();
+            this.reCalculate();
+        }
+    }
+
+    /**
+     * Handles the computation and addition of a circumcenter, barycenter, orthocenter,
+     * or incenter based on the current action. It creates a new point and adds the corresponding
+     * constraint if three points have been selected.
+     *
+     * @param x the x-coordinate of the temporary point
+     * @param y the y-coordinate of the temporary point
+     * @param p a CPoint object used in the calculation (may be updated)
+     */
+    private void handleCircumCenter(double x, double y, CPoint p) {
+        CPoint pt = this.CreateATempPoint(x, y);
+        CPoint tp = this.SmartPoint(pt);
+        if (tp != null) {
+            this.addObjectToList(tp, SelectList);
+        }
+        if (SelectList.size() == 3) {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            CPoint p3 = (CPoint) SelectList.get(2);
+            CPoint pp = this.CreateANewPoint(x, y);
+            Constraint cs = null;
+            String s = null;
+            if (CurrentAction == BARYCENTER) {
+                cs = new Constraint(Constraint.BARYCENTER, pp, p1, p2, p3);
+                s = "barycenter";
+            } else if (CurrentAction == CIRCUMCENTER) {
+                cs = new Constraint(Constraint.CIRCUMCENTER, pp, p1, p2, p3);
+                s = "circumcenter";
+            } else if (CurrentAction == ORTHOCENTER) {
+                cs = new Constraint(Constraint.ORTHOCENTER, pp, p1, p2, p3);
+                s = "orthocenter";
+            } else if (CurrentAction == INCENTER) {
+                cs = new Constraint(Constraint.INCENTER, pp, p1, p2, p3);
+                s = "incenter";
+                pp.addcstoPoint(cs);
+            } else {
+                return;
+            }
+
+            CPoint pu = this.addADecidedPointWithUnite(pp);
+            if (pu == null) {
+                this.addPointToList(pp);
+                this.addConstraintToList(cs);
+                // Here we construct the translation key from s:
+                this.UndoAdded(pp.TypeString() + ": " + GExpert.getTranslationViaGettext(
+                        s + " of {0}", p1.m_name + p2.m_name + p3.m_name));
+
+            } else {
+                p = pu;
+            }
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles the NT Angle case.
+     * <p>
+     * If STATUS is 0, selects a line from the linelist and flashes the step.
+     * If STATUS is 1, creates a new NT Angle line using a selected point and adds its constraints.
+     * </p>
+     *
+     * @param x the x-coordinate of the event
+     * @param y the y-coordinate of the event
+     */
+    private void handleNTangleCase(double x, double y) {
+        if (STATUS == 0) {
+            CLine ln = (CLine) this.SelectFromAList(linelist, x, y);
+            if (ln != null) {
+                addToSelectList(ln);
+            }
+            if (SelectList.size() == 3) {
+                STATUS = 1;
+                Vector v = new Vector();
+                v.add(ln);
+                this.flashStep(v);
+            }
+        } else if (STATUS == 1) {
+            CPoint pt = this.SelectAPoint(x, y);
+            if (pt != null) {
+                CLine ln = new CLine(CLine.NTALine);
+                ln.addApoint(pt);
+                addToSelectList(ln);
+                Constraint cs = new Constraint(Constraint.NTANGLE,
+                        SelectList);
+                clearSelection();
+                Constraint cs1 = new Constraint(Constraint.PONLINE, pt, ln, false);
+                ln.addconstraint(cs);
+                this.addLineToList(ln);
+                this.addConstraintToList(cs1);
+                this.addConstraintToList(cs);
+                this.UndoAdded("eqanle added");
+            }
+        }
+
+    }
+
+    /**
+     * Handles viewing an element based on the given coordinates.
+     *
+     * @param x the x-coordinate of the view event
+     * @param y the y-coordinate of the view event
+     */
+    private void handleViewElementCase(double x, double y) {
+        viewElementFromXY(x, y);
+    }
+
+    /**
+     * Handles the arrow creation case.
+     * <p>
+     * If no object is currently selected, adds a point to the selection.
+     * Otherwise, creates an arrow between the first selected point and the newly selected point.
+     * </p>
+     *
+     * @param x the x-coordinate of the event
+     * @param y the y-coordinate of the event
+     */
+    private void handleArrowCase(double x, double y) {
+        CPoint pt = (CPoint) this.SmartgetApointFromXY(x, y);
+        if (pt == null) {
+            return;
+        }
+        if (SelectList.isEmpty()) {
+            this.addObjectToList(pt, SelectList);
+        } else {
+            CPoint tp = (CPoint) SelectList.get(0);
+            if (tp == pt) {
+                return;
+            }
+            CArrow ar = new CArrow(pt, tp);
+            otherlist.add(ar);
+            clearSelection();
+            this.UndoAdded("Arrow " + ar.getDescription());
+        }
+    }
+
+    /**
+     * Handles the distance measurement case.
+     * <p>
+     * Selects a point from the pointlist; if one is already selected, measures the distance between the two points.
+     * </p>
+     *
+     * @param x the x-coordinate for distance measurement
+     * @param y the y-coordinate for distance measurement
+     */
+    private void handleDistanceCase(double x, double y){
+
+        CPoint pt = (CPoint) this.SelectFromAList(pointlist, x, y);
+        if (pt == null) {
+            return;
+        }
+        if (SelectList.size() == 0) {
+            if (pt != null) {
+                this.addObjectToList(pt, SelectList);
+            }
+        } else {
+            CPoint tp = (CPoint) SelectList.get(0);
+            if (tp == pt) {
+                return;
+            }
+            CDistance dis = new CDistance(pt, tp);
+            distancelist.add(dis);
+            clearSelection();
+            this.UndoAdded("measure " + dis.getDescription());
+        }
+
+    }
+
+    /**
+     * Handles the equality mark case.
+     * <p>
+     * Selects a point; if another point is already selected, creates an equality mark between them.
+     * </p>
+     *
+     * @param x the x-coordinate of the event
+     * @param y the y-coordinate of the event
+     */
+    private void handleEqMark(double x, double y) {
+        CPoint pt = (CPoint) this.SelectFromAList(pointlist, x, y);
+        if (pt == null) {
+            return;
+        }
+        if (SelectList.size() == 0) {
+            if (pt != null) {
+                this.addObjectToList(pt, SelectList);
+            }
+        } else {
+            CPoint tp = (CPoint) SelectList.get(0);
+            if (tp == pt)
+                return;
+
+            Cedmark ce = new Cedmark(pt, tp, STATUS);
+            otherlist.add(ce);
+            clearSelection();
+            this.UndoAdded("mark of " + pt.m_name + tp.m_name);
+        }
+    }
+
+    /**
+     * Handles the right angle mark case.
+     * <p>
+     * Selects a line; if another line is already selected, adds a right angle mark between them.
+     * </p>
+     *
+     * @param x the x-coordinate of the event
+     * @param y the y-coordinate of the event
+     */
+    private void handleRaMark(double x, double y) {
+        CLine ln = (CLine) this.SelectFromAList(linelist, x, y);
+        if (ln == null)
+            return;
+        if (SelectList.size() == 0)
+            this.addObjectToList(ln, SelectList);
+        else {
+            CLine ln1 = (CLine) SelectList.get(0);
+            if (ln == ln1)
+                return;
+            addCTMark(ln, ln1);
+            clearSelection();
+            this.UndoAdded("Right Angle Mark of " + ln.getDescription() + " and " + ln1.getDescription());
+        }
+    }
+
+    /**
+     * Handles hiding an object.
+     * <p>
+     * Selects an object at the given coordinates, adds an invisible constraint, and sets it as not visible.
+     * </p>
+     *
+     * @param x the x-coordinate of the hide event
+     * @param y the y-coordinate of the hide event
+     */
+    private void handleHideObject(double x, double y) {
+        CClass cc = this.SelectOneFromXY(x, y, 0);
+        if (cc != null) {
+            Constraint cs = new Constraint(Constraint.INVISIBLE, cc);
+            this.addConstraintToList(cs);
+            cc.setVisible(false);
+            UndoStruct un = this.UndoAdded("Hide " + cc.getDescription());
+            if (un != null) {
+                un.addRelatedObject(cc);
+            }
+        }
+    }
+
+    /**
+     * Handles showing an object.
+     * <p>
+     * Iterates through constraints to find an invisible object, restores its visibility, and flashes it.
+     * </p>
+     *
+     * @param x the x-coordinate of the show event
+     * @param y the y-coordinate of the show event
+     */
+    private void handleShowObject(double x, double y) {
+        CClass cc = null;
+        for (int i = 0; i < constraintlist.size(); i++) {
+            Constraint cs = (Constraint) constraintlist.get(i);
+            if (cs.GetConstraintType() != Constraint.INVISIBLE) {
+                continue;
+            }
+            CClass c1 = (CClass) cs.getelement(0);
+            if (c1.visible == false) {
+                c1.setVisible(true);
+                if (c1.select(x, y)) {
+                    cc = c1;
+                    Constraint cs1 = new Constraint(Constraint.VISIBLE, cc);
+                    this.addConstraintToList(cs1);
+                    UndoStruct un = this.UndoAdded("Show " +
+                            cc.getDescription());
+                    Vector v = new Vector();
+                    v.add(cc);
+                    this.setObjectListForFlash(v);
+                    break;
+                } else {
+                    c1.setVisible(false);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Handles the SAngle action using the coordinate (x, y) and a point.
+     * <p>
+     * If no element is selected, attempts to select a line from the catch point.
+     * If one element is selected, selects a point if it lies on the selected line.
+     * With two elements selected, calculates two slope candidates and chooses one based on proximity,
+     * then adds a new angle constraint and performs related updates.
+     *
+     * @param x the x-coordinate of the mouse event
+     * @param y the y-coordinate of the mouse event
+     * @param p the point parameter used in processing
+     */
+    private void handleSAngle(double x, double y, CPoint p) {
+        int n = SelectList.size();
+        if (n == 0) {
+            CLine line = this.SmartPLine(CatchPoint);
+            if (line != null && line.points.size() >= 2) {
+                addToSelectList(line);
+            }
+        } else if (n == 1) {
+            p = SelectAPoint(x, y);
+            CLine ln1 = (CLine) SelectList.get(0);
+            if (p != null && ln1.pointOnLine(p))
+                addToSelectList(p);
+
+        } else if (n == 2) {
+            CLine ln1 = (CLine) SelectList.get(0);
+            p = (CPoint) SelectList.get(1);
+
+
+            double k = ln1.getK();
+            double k1 = Constraint.get_sp_ag_value(STATUS);
+            double kx1 = (k + k1) / (1 - k * k1);
+            double kx2 = (k - k1) / (1 + k * k1);
+
+            double r1 = CLine.distanceToPoint(p.getx(), p.gety(), kx1, x, y);
+            double r2 = CLine.distanceToPoint(p.getx(), p.gety(), kx2, x, y);
+
+
+            Integer I = null;
+            int id = 0;
+
+            if (r1 <= r2) {
+                I = -STATUS;
+                id = add_sp_angle_value(-STATUS);
+            } else {
+                I = STATUS;
+                id = add_sp_angle_value(STATUS);
+            }
+            CLine ln = new CLine(CLine.SALine);
+            ln.addApoint(p);
+            Constraint cs = new Constraint(Constraint.SANGLE, ln1, ln, I);
+            cs.proportion = id;
+
+            ln.addconstraint(cs);
+            addConstraintToList(cs);
+            this.addLineToList(ln);
+            this.UndoAdded(ln.getDescription());
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles the double boundary line action using the coordinate (x, y).
+     * <p>
+     * Adds a point based on the mouse event and, if two distinct points are collected,
+     * creates a boundary line between them along with its associated constraint.
+     *
+     * @param x the x-coordinate of the mouse event
+     * @param y the y-coordinate of the mouse event
+     */
+    private void handleDBLine(double x, double y){
+        addSelectPoint(x, y);
+        if (SelectList.size() == 2) {
+            CPoint p1 = (CPoint) SelectList.get(0);
+            CPoint p2 = (CPoint) SelectList.get(1);
+            if (p1 != p2) {
+                CLine ln = new CLine(CLine.BLine);
+                Constraint cs = new Constraint(Constraint.BLINE, ln, p1, p2);
+                ln.addconstraint(cs);
+                this.addLineToList(ln);
+                this.addConstraintToList(cs);
+                clearSelection();
+                this.UndoAdded("BLine " + ln.getDescription());
+            }
+        }
+    }
+
+    /**
+     * Handles drawing a tangent line to a circle using the coordinate (x, y).
+     * <p>
+     * If no object is selected, identifies a circle based on the catch point.
+     * Otherwise, if the coordinates lie on the selected circle,
+     * calculates a point on the circle and creates a tangent line with an associated constraint.
+     *
+     * @param x the x-coordinate of the mouse event
+     * @param y the y-coordinate of the mouse event
+     */
+    private void handleDTCLine(double x, double y) {
+        CatchPoint.setXY(x, y);
+
+        if (SelectList.size() == 0) {
+            Circle c = SmartPCircle(CatchPoint);
+            if (c != null)
+                addToSelectList(c);
+        } else {
+            Circle c = (Circle) SelectList.get(0);
+            if (c.on_circle(x, y)) {
+                CPoint p1 = SmartgetApointFromXY(x, y);
+                CLine ln = new CLine(p1, CLine.TCLine);
+                Constraint cs = new Constraint(Constraint.TCLINE, c, ln, p1);
+                this.addConstraintToList(cs);
+                ln.addconstraint(cs);
+                this.addLineToList(ln);
+            }
+        }
+    }
+
+    /**
+     * Handles the creation of a common tangent line between two circles using the coordinate (x, y).
+     * <p>
+     * If one circle is already selected and the new circle is distinct and non-overlapping,
+     * creates new points and adds a tangent constraint between the circles.
+     *
+     * @param x the x-coordinate of the mouse event
+     * @param y the y-coordinate of the mouse event
+     */
+    private void handleCCTANGent(double x, double y) {
+        Circle c = this.SelectACircle(x, y);
+        if (c != null) {
+            int n = SelectList.size();
+            if (n == 1) {
+                Circle c1 = (Circle) SelectList.get(0);
+                if (c != c1 && c.o != c1.o) {
+                    CPoint p1 = this.CreateANewPoint(0, 0);
+                    CPoint p2 = this.CreateANewPoint(x, y);
+                    c1.addPoint(p1);
+                    c.addPoint(p2);
+                    Constraint cs = new Constraint(Constraint.CCTANGENT_LINE, p1, p2, c1, c);
+                    this.addPointToList(p1);
+                    this.addPointToList(p2);
+                    this.addConstraintToList(cs);
+                    this.charsetAndAddPoly(false);
+                    this.UndoAdded("TANGENT LINE");
+                }
+            } else
+                this.addObjectToList(c, SelectList);
+        }
+    }
+
+    /**
+     * Handles the ratio constraint action using the coordinate (x, y) and a point.
+     * <p>
+     * Selects a point based on the provided coordinates and avoids duplicate successive selections.
+     * When eight points are collected, creates a ratio constraint and updates relevant lists.
+     *
+     * @param x the x-coordinate of the mouse event
+     * @param y the y-coordinate of the mouse event
+     * @param p the point parameter used in processing
+     */
+    private void handleRatio(double x, double y, CPoint p) {
+        int n = SelectList.size();
+        p = SelectAPoint(x, y);
+        if (p != null) {
+            if (n % 2 != 0 && p == SelectList.get(n - 1))
+                return;
+            addToSelectList(p);
+            setObjectListForFlash(p);
+        }
+        if (SelectList.size() == 8) {
+            Constraint cs = new Constraint(Constraint.RATIO, SelectList);
+            this.addConstraintToList(cs);
+            this.charsetAndAddPoly(false);
+            this.UndoAdded("RATIO");
+            clearSelection();
+        }
+    }
+
+    /**
+     * Handles the equivalence (area-preserving transformation) action using the coordinate (x, y) and a point.
+     * <p>
+     * Depending on the current status, selects a polygon and then a point or line segment.
+     * Creates a new polygon with an appropriate equivalence constraint to record the transformation.
+     *
+     * @param x the x-coordinate of the mouse event
+     * @param y the y-coordinate of the mouse event
+     * @param p the point parameter used in processing
+     */
+    private void handleEquivalence(double x, double y, CPoint p) {
+        if (STATUS == 0) {
+            CPolygon g = (CPolygon) this.SelectFromAList(polygonlist, x, y);
+            if (g != null) {
+                addObjectToList(g, SelectList);
+                STATUS = 1;
+            }
+        } else if (STATUS == 1) {
+            CPoint pt = this.SelectAPoint(x, y);
+            if (pt != null) {
+                addToSelectList(pt);
+                STATUS = 2;
+            } else {
+                CPolygon g = (CPolygon) SelectList.get(0);
+                int n = g.getPtn();
+
+                for (int i = 0; i < n - 1; i++) {
+                    CPoint p1 = g.getPoint(i);
+                    CPoint p2 = g.getPoint(i + 1);
+                    if (CLine.mouse_on_line(x, y, p1.getx(), p1.gety(), p2.getx(), p2.gety())) {
+                        addToSelectList(p1);
+                        addToSelectList(p2);
+                        vx1 = x;
+                        vy1 = y;
+                        STATUS = 3;
+                        break;
+                    }
+                }
+            }
+            if (STATUS == 1) {
+                STATUS = 0;
+                clearSelection();
+            }
+
+        } else if (STATUS == 2) {
+            CPolygon g = (CPolygon) SelectList.get(0);
+            CPoint p1 = (CPoint) SelectList.get(1);
+            CPoint t1 = g.getPreviousePoint(p1);
+            CPoint t2 = g.getNextPoint(p1);
+            double[] r = getPTInterSection(x, y, p1.getx(), p1.gety()
+                    , t1.getx(), t1.gety(), t2.getx(), t2.gety());
+            CPoint pt = this.SelectAPoint(r[0], r[1]);
+
+            if (pt != null && pt != t1) {
+                CPolygon poly = new CPolygon();
+                poly.copy(g);
+                int t = g.getPtn();
+
+                for (int i = 0; i < t; i++) {
+                    CPoint m = g.getPoint(i);
+                    if (m == p1)
+                        m = pt;
+                    poly.addAPoint(m);
+                }
+                if (this.findPolygon(poly.pointlist) != g) {
+                    g.setVisible(false);
+                    Constraint cs = new Constraint(Constraint.EQUIVALENCE1, g, poly);
+                    this.addConstraintToList(cs);
+                    this.addObjectToList(poly, polygonlist);
+                    this.UndoAdded("Area-Preserving");//+ g.getDescription() + " transformed to " + poly.getDescription());
+                }
+            }
+            STATUS = 0;
+            clearSelection();
+            g.setDraggedPoints(null, null, 0, 0);
+
+        } else if (STATUS == 3) {
+            CPolygon g = (CPolygon) SelectList.get(0);
+            CPoint t1 = (CPoint) SelectList.get(1);
+            CPoint t2 = (CPoint) SelectList.get(2);
+            double dx = x - vx1;
+            double dy = y - vy1;
+
+            CPoint pt1 = this.SelectAPoint(t1.getx() + dx, t1.gety() + dy);
+            CPoint pt2 = this.SelectAPoint(t2.getx() + dx, t2.gety() + dy);
+            if (pt1 != null && pt2 != null && (pt1 != t1 || pt2 != t2)) {
+                CPolygon poly = new CPolygon();
+                poly.copy(g);
+                int t = g.getPtn();
+
+                for (int i = 0; i < t; i++) {
+                    CPoint m = g.getPoint(i);
+                    if (m == t1)
+                        m = pt1;
+                    else if (m == t2)
+                        m = pt2;
+
+                    poly.addAPoint(m);
+                }
+                if (this.findPolygon(poly.pointlist) != g) {
+                    g.setVisible(false);
+                    Constraint cs = new Constraint(Constraint.EQUIVALENCE2, g, poly);
+                    this.addConstraintToList(cs);
+                    this.addObjectToList(poly, polygonlist);
+                    this.UndoAdded("Area-Preserving");//g.getDescription() + " transformed to " + poly.getDescription());
+                }
+            }
+
+            STATUS = 0;
+            clearSelection();
+            g.setDraggedPoints(null, null, 0, 0);
+        }
+    }
+
+    /**
+     * Handles the free transformation of a polygon using the coordinate (x, y).
+     * <p>
+     * If no polygon is selected, attempts to select one based on the coordinates.
+     * Otherwise, adds the selected point to the transformation sequence of the polygon,
+     * and once all required points are gathered, applies and finalizes the free transform.
+     *
+     * @param x the x-coordinate of the mouse event
+     * @param y the y-coordinate of the mouse event
+     */
+    private void handleFreeTransform(double x, double y) {
+        if (STATUS == 0) {
+            CPolygon g = (CPolygon) this.SelectAPolygon(x, y);//SelectFromAList(polygonlist, x, y);
+            if (g != null) {
+                this.addObjectToList(g, SelectList);
+                STATUS = 1;
+            }
+        } else {
+            CPoint pt = this.SelectAPoint(x, y);
+            CPolygon poly = (CPolygon) SelectList.get(0);
+
+            if (pt == null) {
+                STATUS = 0;
+                clearSelection();
+                poly.setDraggedPointsNull();
+            } else {
+                if (SelectList.size() == 1) {
+                    Vector v = poly.getDraggedPoints();
+                    boolean already = false;
+                    for (int i = 0; i < v.size() / 2; i++) {
+                        if (v.get(i * 2) == pt) {
+                            already = true;
+                            break;
+                        }
+                    }
+                    if (!already)
+                        addToSelectList(pt);
+                } else {
+                    CPoint t1 = (CPoint) SelectList.get(1);
+                    poly.addDraggedPoints(t1, pt);
+                    SelectList.remove(t1);
+                    if (poly.allDragged()) {
+                        add_free_transform();
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    /**
+     * Handles the transformation (rotation and/or translation) of a polygon using the coordinate (x, y).
+     * <p>
+     * On initial selection, stores the starting point and enables transformation mode.
+     * In subsequent steps, captures additional points, computes new positions for the polygon,
+     * applies the transformation, and creates a constraint to record the change.
+     *
+     * @param x the x-coordinate of the mouse event
+     * @param y the y-coordinate of the mouse event
+     */
+    private void handleTransform(double x, double y) {
+        if (STATUS == 0) {
+            CPolygon g = (CPolygon) this.SelectAPolygon(x, y); // SelectFromAList(polygonlist, x, y);
+            if (g != null) {
+                this.addObjectToList(g, SelectList);
+                catchX = x;
+                catchY = y;
+                STATUS = 1;
+                FirstPnt = SecondPnt = ThirdPnt = null;
+            }
+        } else if (STATUS == 1 || STATUS == 2) {
+            if (STATUS == 2 && (FirstPnt == null || ThirdPnt == null)) {
+                CPoint pt = this.SelectAPoint(x - vx1, y - vy1);
+                if (pt != null) {
+                    x = pt.getx() + vx1;
+                    y = pt.gety() + vy1;
+                }
+                if (FirstPnt == null) {
+                    FirstPnt = this.CreateATempPoint(x, y);
+                    SecondPnt = pt;
+                    catchX = x - vx1;
+                    catchY = y - vy1;
+                } else {
+                    ThirdPnt = this.CreateATempPoint(x - vx1, y - vy1);
+                }
+            } else {
+                CPolygon poly = (CPolygon) SelectList.get(0);
+                clearSelection();
+                STATUS = 0;
+
+                int n = poly.getPtn();
+                double cx = catchX + vx1;
+                double cy = catchY + vy1;
+                double sin = Math.sin(vangle);
+                double cos = Math.cos(vangle);
+
+                if (Math.abs(vangle) < CMisc.ZERO) {
+                    PolygonTransPointsCreated(poly);
+                }
+
+                for (int i = 0; i < n; i++) {
+                    CPoint t = poly.getPoint(i);
+                    double tx = (t.getx() + vx1);
+                    double ty = (t.gety() + vy1);
+
+                    tx -= cx;
+                    ty -= cy;
+                    double mx = (tx) * cos - (ty) * sin;
+                    double my = (tx) * sin + (ty) * cos;
+                    tx = mx + cx;
+                    ty = my + cy;
+                    CPoint t1 = this.SelectAPoint(tx, ty);
+                    if (t1 == null) {
+                        clearSelection();
+                        break;
+                    }
+                    addToSelectList(t1);
+                }
+                if (!SelectList.isEmpty()) {
+                    CPolygon poly1 = new CPolygon();
+                    poly1.setPoints(SelectList);
+                    if (this.findPolygon(SelectList) != poly) {
+                        Constraint cs = new Constraint(Constraint.TRANSFORM, poly, poly1, SecondPnt);
+
+                        int r = -1;
+
+                        if (CMisc.TransComfirmed) {
+                            String s1 = poly.getDescription() + " is transformed to " + poly1.getDescription();
+                            String s2 = "Do you want to keep the original polygon visible?";
+                            TransformConfirmDialog dlg = new TransformConfirmDialog(gxInstance.getFrame(), s1, s2);
+                            gxInstance.centerDialog(dlg);
+                            dlg.setVisible(true);
+                            r = dlg.getResult();
+                        } else
+                            r = 1;
+
+                        if (r == 0) {//JOptionPane.YES_OPTION) {
+                            cs.proportion = 0;
+                        } else if (r == 1) {
+                            poly.setVisible(false);
+                            cs.proportion = 1;
+                        }
+                        if (r != 2) {
+                            this.addObjectToList(poly1, polygonlist);
+                            poly1.copy(poly);
+                            this.addConstraintToList(cs);
+//                                    String s = "Isometry Transforming";
+//                                    if (Math.abs(vangle) < CMisc.ZERO)
+//                                        s = "Transforming";
+//                                    else if (SecondPnt != null)
+//                                        s = "Rotating";
+
+                            String s = poly.getDescription() + " = " + poly1.getDescription();
+                            this.UndoAdded(s);//);
+                        }
+                    }
+
+                }
+                STATUS = 0;
+                clearSelection();
+                vtrx = vtry = vx1 = vy1 = vangle = 0.0;
+                FirstPnt = SecondPnt = ThirdPnt = null;
+            }
+        }
+    }
 
     /**
      * Handles the "mouse down" (button press) event within the drawing canvas.
@@ -2929,8 +6007,6 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @param x The x-coordinate of the mouse click, in screen or canvas coordinates
      * @param y The y-coordinate of the mouse click, in screen or canvas coordinates
-     * @note This method contains a large switch statement and is a candidate
-     * for major refactoring to improve maintainability and testability.
      * @see #CurrentAction
      * @see #SelectList
      * @see #CatchPoint
@@ -2948,2600 +6024,198 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         CatchPoint.setXY(x, y);
 
         switch (this.CurrentAction) {
-            case SELECT: {
-                CPoint t = SelectAPoint(x, y);
-                boolean r = false;
-
-                if (gxInstance.isDialogProveVisible()) {
-                    clearSelection();
-                    if (t != null)
-                        addToSelectList(t);
-                    r = true;
-                    gxInstance.getDialogProve().setSelect(SelectList);
-                }
-
-                if (t == null) {
-                    if (cpfield != null) {
-                        CProveText ct1 = cpfield.mouseMove(x, y);
-                        if (ct1 == null) {
-                            r = true;
-                            CProveText ct = cpfield.select(x, y, false);
-                            if (ct != null) {
-                                UndoStruct un = ct.getUndoStruct();
-                                if (un != null) {
-                                    this.setObjectListForFlash(un.getAllObjects(this));
-                                }
-                            }
-                        } else {
-                            Point pt = ct1.getPopExLocation();
-                            gxInstance.showRulePanel("R1", (int) pt.getX(), (int) pt.getY());
-                        }
-                    }
-
-                } else {
-                    if (gxInstance.hasMannualInputBar()) {
-                        PanelProve pp = gxInstance.getpprove();
-                        r = pp.selectAPoint((CPoint) t);
-                        if (r)
-                            this.setObjectListForFlash(t);
-                    }
-                    gxInstance.selectAPoint((CPoint) t);
-                }
-
-                if (r == false) {
-                    CatchList.clear();
-                    this.SelectAllFromXY(CatchList, x, y, 0);
-                    if (CatchList.size() == 0)
-                        this.clearSelection();
-                    else {
-                        this.addToSelectList(CatchList.get(0));
-                    }
-                } else
-                    this.clearSelection();
-                vx1 = x;
-                vy1 = y;
-            }
-            break;
-            case MOVE: {
-                FirstPnt = this.CreateATempPoint(x, y);
-                Vector v = new Vector();
-
-                this.SelectAllFromXY(v, x, y, 0);
-                if (v.size() == 0) {
-                    clearSelection();
-                    if (cpfield != null) {
-                        CProveText ct1 = cpfield.mouseMove(x, y);
-                        if (ct1 == null) {
-                            CProveText ct = cpfield.select(x, y, false);
-                            if (ct != null) {
-                                UndoStruct un = ct.getUndoStruct();
-                                if (un != null) {
-                                    this.setObjectListForFlash(un.getAllObjects(this));
-                                }
-
-                            }
-                        } else {
-                            Point pt = ct1.getPopExLocation();
-                            gxInstance.showRulePanel(ct1.getRulePath(),
-                                    (int) pt.getX(), (int) pt.getY());
-                        }
-                    }
-                } else if (v.size() == 1) {
-                    clearSelection();
-                    SelectList.addAll(v);
-                    CClass cc = (CClass) v.get(0);
-                    v.clear();
-                    if (cc instanceof CPoint) {
-                        if (gxInstance != null) {
-                            if (gxInstance.isconcVisible()) {
-                                gxInstance.getConcDialog().selectAPoint((CPoint) cc);
-                            }
-                            if (gxInstance.hasMannualInputBar()) {
-                                gxInstance.getMannalInputToolBar().selectAPoint((CPoint) cc);
-                            }
-                        }
-                    }
-                } else {
-                    clearSelection();
-                    addToSelectList(v.get(0));
-                }
-
-                if (SelectList.size() == 1) {
-                    if (gxInstance != null) {
-                        gxInstance.viewElementsAuto((CClass) SelectList.get(0));
-                    }
-                }
-            }
-            break;
-            case D_POINT: {
-                clearSelection();
-                p = this.SmartgetApointFromXY(x, y);
-                if (p != null) {
-                    addToSelectList(p);
-                    this.UndoAdded(p.TypeString());
-                }
-            }
-            break;
-            case TRIANGLE: {
-
-                if (STATUS == 0) {
-                    CPoint pp = (CPoint) this.CatchList(pointlist, x, y);
-                    if (pp == null) {
-                        pp = SmartgetApointFromXY(x, y);
-                    }
-
-                    this.addToSelectList(pp);
-                    FirstPnt = pp;
-                    STATUS = 1;
-
-                } else if (STATUS == 1) {
-                    CPoint pp = (CPoint) this.CatchList(pointlist, x, y);
-                    if (pp == null) {
-                        pp = SmartgetApointFromXY(x, y);
-                    }
-
-                    if (!SelectList.contains(pp)) {
-                        addToSelectList(pp);
-                        SecondPnt = pp;
-                        STATUS = 2;
-                    }
-
-                } else {
-                    CPoint pp = (CPoint) this.CatchList(pointlist, x, y);
-                    if (pp == null) {
-                        pp = SmartgetApointFromXY(x, y);
-                    }
-
-                    if (!SelectList.contains(pp)) {
-                        addToSelectList(pp);
-                    } else {
-                        break;
-                    }
-
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    CPoint p3 = (CPoint) SelectList.get(2);
-                    CLine line1 = new CLine(p1, p2);
-                    CLine line2 = new CLine(p1, p3);
-                    CLine line3 = new CLine(p2, p3);
-                    this.addPointToList(p1);
-                    this.addPointToList(p2);
-                    this.addPointToList(p3);
-                    this.addLineToList(line1);
-                    this.addLineToList(line2);
-                    this.addLineToList(line3);
-                    Constraint cs = new Constraint(Constraint.TRIANGLE, p1, p2, p3);
-                    this.addConstraintToList(cs);
-                    this.UndoAdded("Triangle " + p1.m_name + p2.m_name + p3.m_name);
-                    FirstPnt = SmartgetApointFromXY(x, y);
-                    SecondPnt = this.CreateATempPoint(x, y);
-                    clearSelection();
-                    STATUS = 0;
-                }
-            }
-            break;
-            case H_LINE:
-            case V_LINE:
-                if (STATUS == 0) {
-                    FirstPnt = SmartgetApointFromXY(x, y);
-                    SecondPnt = this.CreateATempPoint(x, y);
-                    STATUS = 1;
-                }
+            case SELECT:
+                handleSelectCase(x, y);
                 break;
-            case D_LINE: {
-                if (STATUS == 0) {
-                    if ((FirstPnt = SmartgetApointFromXY(x, y)) != null) {
-                        STATUS = 1;
-                        addPointToList(FirstPnt);
-                        this.addToSelectList(FirstPnt);
-                    }
-                } else if (STATUS == 1) {
-                    CPoint tp = FirstPnt;
-                    if (this.isPointOnObject) {
-                        x = mouseCatchX;
-                        y = mouseCatchY;
-                    }
-                    CPoint pp = SmartgetApointFromXY(x, y);
-//                    pp.setXY(x, y);
-                    getSmartPV(FirstPnt, pp);
-
-                    if (tp != pp && tp != null && pp != null) {
-                        setSmartPVLine(tp, pp);
-                        addPointToList(pp);
-                        CLine ln = new CLine(pp, tp, CLine.LLine);
-                        this.addLineToList(ln);
-                        Constraint cs = new Constraint(Constraint.LINE, tp, pp);
-                        addConstraintToList(cs);
-                        this.reCalculate();
-                        this.UndoAdded(ln.getDescription());
-                    }
-                    clearSelection();
-                    STATUS = 0;
-                    FirstPnt = null;
-                }
-            }
-            break;
-            case D_POLYGON: {
-                CPoint pt = SmartgetApointFromXY(x, y);
-                setSmartPVLine(FirstPnt, pt);
-                boolean finish = false;
-
-                if (SelectList.size() == 0) {
-                    this.addPointToList(pt);
-                    addToSelectList(pt);
-                    FirstPnt = pt;
-                    SecondPnt = this.CreateATempPoint(x, y);
-                } else if (pt == SelectList.get(0)) {
-                    finish = true;
-                } else if (SelectList.contains(pt)) {
-                    break;
-                } else {
-                    this.addPointToList(pt);
-                    addToSelectList(pt);
-                    if (SelectList.size() == STATUS) {
-                        finish = true;
-                    }
-                    FirstPnt = pt;
-                }
-                if (finish) {
-                    if (SelectList.size() <= 1) {
-                        clearSelection();
-                        return;
-                    }
-                    CPoint t1 = (CPoint) SelectList.get(0);
-                    CPoint tp = t1;
-                    for (int i = 1; i < SelectList.size(); i++) {
-                        CPoint tt = (CPoint) SelectList.get(i);
-                        if (this.fd_line(tt, tp) == null) {
-                            CLine ln = new CLine(tt, tp, CLine.LLine);
-                            this.addLineToList(ln);
-                        }
-                        tp = tt;
-                    }
-                    if (this.fd_line(t1, tp) == null) {
-                        CLine ln = new CLine(t1, tp);
-                        this.addLineToList(ln);
-                    }
-
-                    String s = "";
-                    int size = SelectList.size();
-                    for (int i = 0; i < size; i++) {
-                        CClass cc = (CClass) SelectList.get(i);
-                        s += cc.m_name;
-
-                    }
-                    if (size == 3) {
-                        Constraint cs = new Constraint(Constraint.TRIANGLE, SelectList);
-                        this.addConstraintToList(cs);
-
-                        this.UndoAdded("triangle  " + s);
-                    } else if (size == 4) {
-                        Constraint cs = new Constraint(Constraint.QUADRANGLE, SelectList);
-                        this.addConstraintToList(cs);
-                        this.UndoAdded("quadrangle  " + s);
-                    } else if (size == 5) {
-                        Constraint cs = new Constraint(Constraint.PENTAGON, SelectList);
-                        this.addConstraintToList(cs);
-                        this.UndoAdded(GExpert.getTranslationViaGettext("Pentagon {0}", s));
-                    } else {
-                        Constraint cs = new Constraint(Constraint.POLYGON, SelectList);
-                        this.addConstraintToList(cs);
-                        this.UndoAdded(GExpert.getTranslationViaGettext("Polygon {0}", s));
-                    }
-                    clearSelection();
-                }
-            }
-            break;
-            case D_PARELINE: {
-                if (STATUS == 0) {
-                    clearSelection();
-                    CLine line = this.SmartPLine(CatchPoint);
-
-                    if (line == null) {
-                        break;
-                    }
-                    addToSelectList(line);
-                    STATUS = 1;
-                } else if (STATUS == 1) {
-                    if (SelectList.size() == 0) {
-                        break;
-                    }
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-                    CLine line = (CLine) SelectList.get(0);
-
-                    CLine line1 = new CLine(pt, CLine.PLine);
-                    Constraint cs = new Constraint(Constraint.PARALLEL, line1, line);
-                    this.addConstraintToList(cs);
-                    line1.addconstraint(cs);
-                    clearSelection();
-                    this.addLineToList(line1);
-                    // UndoStruct u = this.UndoAdded(line1.TypeString() + " parallel " +
-                    //         line.getDiscription() + " passing " +
-                    //         pt.getname());
-                    UndoStruct u = this.UndoAdded(line1.TypeString() + " " + GExpert.getTranslationViaGettext("parallel to {0} passing {1}",
-                            line.getDiscription(), pt.getname()));
-                    u.addObject(line1);
-                    u.addObject(line);
-                    u.addObject(pt);
-                    clearSelection();
-                    STATUS = 0;
-
-                }
-
-            }
-            break;
-
-            case D_PERPLINE: {
-                if (STATUS == 0) {
-                    clearSelection();
-                    CLine line = this.SmartPLine(CatchPoint);
-                    if (line == null)
-                        break;
-
-                    addToSelectList(line);
-                    STATUS = 1;
-                } else if (STATUS == 1) {
-                    if (SelectList.size() == 0) {
-                        break;
-                    }
-                    CLine line = (CLine) SelectList.get(0);
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-
-                    CLine line1 = new CLine(pt, CLine.TLine);
-                    Constraint c = new Constraint(Constraint.PERPENDICULAR, line1, line);
-                    this.addConstraintToList(c);
-                    line1.addconstraint(c);
-                    addLineToList(line1);
-                    addCTMark(line, line1);
-                    // this.otherlist.add(m);
-                    UndoStruct u = this.UndoAdded(line1.TypeString() + " perp " +
-                            // line.getDiscription() + " passing " +
-                            // pt.getname());
-                            line.getDescription() + " " +
-                            GExpert.getTranslationViaGettext("passing {0}", pt.getname()));
-                    u.addObject(line1);
-                    u.addObject(line);
-                    u.addObject(pt);
-                    STATUS = 0;
-                    clearSelection();
-                }
-            }
-            break;
-            case D_ALINE: {
-                int n = SelectList.size();
-                if (n < 3) {
-                    CLine line = this.SmartPLine(CatchPoint);
-                    if (line == null) {
-                        break;
-                    }
-                    if (n == 1) {
-                        CLine ln1 = (CLine) SelectList.get(0);
-                        if (CLine.commonPoint(ln1, line) == null) {
-                            JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage("The selected two lines don't have intersected point"),
-                                    GExpert.getLanguage("Warning"), JOptionPane.WARNING_MESSAGE);
-                            break;
-                        }
-                    }
-                    addToSelectList(line);
-                } else {
-                    CLine ln1 = (CLine) SelectList.get(0);
-                    CLine ln2 = (CLine) SelectList.get(1);
-                    CLine ln3 = (CLine) SelectList.get(2);
-                    CPoint tt = null;
-                    if (this.SmartPLine(CatchPoint) == ln3 || ((tt = this.SmartPoint(CatchPoint)) != null && ln3.containPT(tt))) {
-                        CPoint p1 = this.SmartgetApointFromXY(x, y);
-                        CLine ln = new CLine(CLine.ALine);
-                        ln.addApoint(p1);
-                        Constraint cs = new Constraint(Constraint.ALINE, ln1, ln2, ln3, ln);
-                        cs.setPolyGenerate(false);
-
-                        ln.addconstraint(cs);
-                        this.addLineToList(ln);
-                        this.addConstraintToList(cs);
-                        clearSelection();
-                        this.UndoAdded("ALine " + ln.getname());
-                    }
-                }
-            }
-            break;
-            case D_ABLINE: {
-                int n = SelectList.size();
-                if (STATUS == 0) {
-                    p = this.SelectAPoint(x, y);
-                    if (p != null) {
-                        addToSelectList(p);
-                        STATUS = 1;
-                    } else {
-                        CLine ln = SelectALine(x, y);
-                        if (ln != null) {
-                            addToSelectList(ln);
-                            CatchPoint.setXY(x, y);
-                            ln.pointonline(CatchPoint);
-                            catchX = CatchPoint.getx();
-                            catchY = CatchPoint.gety();
-                        }
-                        STATUS = 2;
-                    }
-                } else if (STATUS == 5) {
-                    CLine ln = (CLine) SelectList.get(0);
-                } else {
-
-                    if (n < 3 && STATUS == 1) {
-                        addSelectPoint(x, y);
-                    } else if (n < 2 && STATUS == 2) {
-                        CLine ln = SelectALine(x, y);
-                        if (ln != null) {
-                            if (SelectList.size() < 1)
-                                break;
-                            CLine ln0 = (CLine) SelectList.get(0);
-                            if (CLine.commonPoint(ln0, ln) != null)
-                                addToSelectList(ln);
-                            else
-                                JOptionPane.showMessageDialog(gxInstance, gxInstance.getLanguage("The selected two lines don't have intersected point")
-                                        , gxInstance.getLanguage("No intersected point"), JOptionPane.WARNING_MESSAGE);
-                        }
-                    }
-                    n = SelectList.size();
-                    {
-                        CPoint p1, p2, p3;
-                        boolean dd = true;
-                        if (STATUS == 1 && n == 3) {
-                            p1 = (CPoint) SelectList.get(0);
-                            p2 = (CPoint) SelectList.get(1);
-                            p3 = (CPoint) SelectList.get(2);
-                        } else if (STATUS == 2 && n == 2) {
-                            CLine ln1 = (CLine) SelectList.get(0);
-                            CLine ln2 = (CLine) SelectList.get(1);
-                            p2 = CLine.commonPoint(ln1, ln2);
-                            p1 = ln1.get_Lptv(p2, catchX, catchY);
-                            p3 = ln2.get_Lptv(p2, x, y);
-                            dd = false;
-                        } else
-                            break;
-
-                        if (p3 != null && p3 != p1 && p3 != p2) {
-                            CLine ln = new CLine(CLine.ABLine);
-                            ln.addApoint(p2);
-                            if (dd) {
-                                CPoint pt = this.CreateANewPoint(0, 0);
-                                ln.addApoint(pt);
-                                CLine ln1 = this.addALine(CLine.LLine, p1, p3);
-                                Constraint cs = new Constraint(Constraint.ANGLE_BISECTOR, p1, p2, p3, ln);
-                                Constraint cs1 = new Constraint(Constraint.PONLINE, pt, ln1);
-                                ln.addconstraint(cs);
-                                this.addPointToList(pt);
-                                this.addLineToList(ln);
-                                this.addConstraintToList(cs);
-                                this.charsetAndAddPoly(false);
-                                clearSelection();
-                                STATUS = 0;
-                                this.UndoAdded(ln.getSimpleName() + " is the bisector of angle " + p1 + p2 + p3, true, ln.getPtsSize() > 1);
-                            } else {
-                                Constraint cs = new Constraint(Constraint.ANGLE_BISECTOR, p1, p2, p3, ln);
-                                ln.addconstraint(cs);
-                                this.addLineToList(ln);
-                                this.addConstraintToList(cs);
-                                clearSelection();
-                                STATUS = 0;
-                                this.UndoAdded("Angle Bisector " + ln.getname(), true, ln.getPtsSize() > 1);
-                            }
-                        }
-                    }
-                }
-            }
-            break;
-            case D_PFOOT: {
-                if (STATUS == 0) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-                    if (SelectList.size() == 1) {
-                        CPoint pa = (CPoint) SelectList.get(0);
-                        this.setSmartPVLine(pa, pt);
-                        if (fd_line(pa, pt) == null) {
-                            CLine ln = new CLine(pa, pt);
-                            this.addLineToList(ln);
-                        }
-                    }
-                    if (!SelectList.contains(pt)) {
-                        addToSelectList(pt);
-                    }
-                    if (SelectList.size() == 2) {
-                        STATUS = 2;
-                    }
-                } else if (STATUS == 2) {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-
-                    double[] r = get_pt_dmcr(p1.getx(), p1.gety(), p2.getx(), p2.gety(), x, y);
-                    double xr = r[0];
-                    double yr = r[1];
-                    p = this.SmartgetApointFromXY(xr, yr);
-                    if (p == p1 || p == p2) {
-                        break;
-                    }
-                    CLine ln1, ln2;
-                    ln1 = ln2 = null;
-                    if ((ln1 = fd_line(p, p1)) == null) {
-                        ln1 = new CLine(p1, p, CLine.LLine);
-                        this.addLineToList(ln1);
-                    }
-                    if ((ln2 = fd_line(p, p2)) == null) {
-                        ln2 = new CLine(p2, p, CLine.LLine);
-                        this.addLineToList(ln2);
-                    }
-                    Constraint cs = new Constraint(Constraint.RIGHT_ANGLED_TRIANGLE, p, p1, p2);
-                    this.addConstraintToList(cs);
-                    this.charsetAndAddPoly(false);
-                    if (!this.isLineExists(p1, p2)) {
-                        CLine lp = new CLine(p1, p2, CLine.LLine);
-                        this.addLineToList(lp);
-                    }
-                    clearSelection();
-                    STATUS = 0;
-                    addCTMark(ln1, ln2);
-                    //this.otherlist.add(m);
-                    // FIXME: use better keys
-                    this.UndoAdded(GExpert.getLanguage("Right") + " triangle " + p1.getname() + p2.getname() + p.getname());
-                }
-            }
-            break;
-
-            case PERPWITHFOOT: {
-                if (STATUS == 0) {
-                    CPoint tp = SmartgetApointFromXY(x, y);
-                    FirstPnt = tp;
-                    STATUS = 1;
-                } else if (STATUS == 1) {
-                    CPoint pt = this.SmartPoint(CatchPoint);
-                    if (pt == FirstPnt) {
-                        break;
-                    }
-                    CLine line = this.SmartPLine(CatchPoint);
-                    if (line == null) {
-                        break;
-                    }
-                    CPoint pp = this.CreateANewPoint(0, 0);
-                    this.add_PFOOT(line, FirstPnt, pp);
-                    STATUS = 0;
-                }
-            }
-            break;
-            case D_CIRCLE: {
-                if (STATUS == 0) {
-                    p = this.SmartgetApointFromXY(x, y);
-                    if (p != null) {
-                        FirstPnt = p;
-                        addToSelectList(p);
-                        addPointToList(p);
-                        STATUS = 1;
-                    }
-                } else if (STATUS == 1) {
-                    p = SmartgetApointFromXY(x, y);
-                    if (p == FirstPnt)
-                        break;
-
-                    Circle c = new Circle(FirstPnt, p);
-                    addCircleToList(c);
-                    Constraint cs = new Constraint(Constraint.CIRCLE, FirstPnt, p);
-                    this.addConstraintToList(cs);
-                    this.charsetAndAddPoly(false);
-                    this.UndoAdded(c.getDescription());
-                    STATUS = 0;
-                    clearSelection();
-                }
-            }
-            break;
-            case D_CIR_BY_DIM: {
-
-            }
-            break;
-            case D_CIRCLEBYRADIUS: {
-                if (SelectList.size() < 2) {
-                    p = (CPoint) this.CatchList(pointlist, x, y);
-                    if (p != null) {
-                        this.addObjectToList(p, SelectList);
-                    }
-                } else {
-                    p = this.SmartgetApointFromXY(x, y);
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-
-                    Circle cr = new Circle(Circle.RCircle, p);
-                    Constraint cs = new Constraint(Constraint.RCIRCLE, p1, p2, cr);
-                    cr.addConstraint(cs);
-                    this.addConstraintToList(cs);
-                    this.addCircleToList(cr);
-
-                    STATUS = 0;
-                    clearSelection();
-                    FirstPnt = SecondPnt = null;
-                    this.UndoAdded(cr.getDescription());
-                }
-            }
-            break;
-            case D_PRATIO: {
-                if (SelectList.size() < 2) {
-                    p = this.SelectAPoint(x, y);
-                    if (p != null) {
-                        addObjectToList(p, SelectList);
-                    } else
-                        clearSelection();
-                } else {
-                    CPoint px = this.SmartgetApointFromXY(x, y);
-                    if (px != null) {
-                        CPoint p1 = (CPoint) SelectList.get(0);
-                        CPoint p2 = (CPoint) SelectList.get(1);
-
-                        p = this.CreateANewPoint(x, y);
-                        Constraint cs = new Constraint(Constraint.PRATIO, p, px, p1, p2, v1, v2);
-                        CPoint pu = this.addADecidedPointWithUnite(p);
-                        if (pu == null) {
-                            this.addConstraintToList(cs);
-                            this.addPointToList(p);
-                            if (true) {
-                                CLine ln = fd_line(p1, p2);
-                                if (status && (ln == null || !ln.containPT(px))) {
-                                    CLine ln1 = new CLine(px, p, CLine.LLine);
-                                    this.addLineToList(ln1);
-                                } else {
-                                    Constraint cs1 = new Constraint(Constraint.PONLINE);
-                                    cs1.setPolyGenerate(false);
-                                    cs1.addElement(p);
-                                    cs1.addElement(ln);
-                                    this.addConstraintToList(cs1);
-                                    if (status && ln != null)
-                                        ln.addApoint(p);
-                                }
-                            }
-                            this.UndoAdded(cs.getMessage());
-                        } else {
-                            p = pu;
-                        }
-                        clearSelection();
-                    } else
-                        clearSelection();
-                }
-            }
-            break;
-            case D_TRATIO: {
-                if (SelectList.size() < 2) {
-                    p = this.SelectAPoint(x, y);
-                    if (p != null) {
-                        this.addObjectToList(p, SelectList);
-                    }
-                } else {
-                    p = this.SmartgetApointFromXY(x, y);
-                    if (SelectList.size() != 2) break;
-
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    CPoint px = p;
-                    p = this.CreateANewPoint(x, y);
-                    double dx = p2.getx() - p1.getx();
-                    double dy = p2.gety() - p1.gety();
-
-                    Constraint cs = new Constraint(Constraint.TRATIO, p, px, p1, p2, v1, v2);
-                    CPoint pu = this.addADecidedPointWithUnite(p);
-                    if (pu == null) {
-                        addConstraintToList(cs);
-                        addPointToList(p);
-                        if (true) {
-                            CLine ln = fd_line(p, px);
-                            if (status && ln == null) {
-                                CLine ln1 = new CLine(px, p, CLine.LLine);
-                                this.addLineToList(ln1);
-                            } else {
-                                Constraint cs1 = new Constraint(Constraint.PONLINE);
-                                cs1.setPolyGenerate(false);
-                                cs1.addElement(p);
-                                cs1.addElement(ln);
-                                this.addConstraintToList(cs1);
-                                if (status && ln != null)
-                                    ln.addApoint(p);
-                            }
-                        }
-                    } else {
-                        p = pu;
-                    }
-                    clearSelection();
-                    STATUS = 0;
-                    this.UndoAdded(cs.getMessage());
-                }
-            }
-            break;
-            case D_PTDISTANCE: {
-                if (SelectList.size() < 3) {
-                    CPoint pt = this.CreateATempPoint(x, y);
-                    p = this.SmartPoint(pt);
-//                    String s = null;
-                    if (p != null) {
-                        addToSelectList(p);
-//                        s = (p.m_name + "  selected");
-                        this.setObjectListForFlash(p);
-                    }
-//                    switch (SelectList.size()) {
-//                        case 0:
-//                            gxInstance.setTipText(s + ',' + " Please Select a Point");
-//                            break;
-//                        case 1:
-//                            gxInstance.setTipText("first point  " + s + ',' +
-//                                    "  please select the second point");
-//                            break;
-//                        case 2:
-//                            gxInstance.setTipText("second point  " + s + ',' +
-//                                    "  please select the third point");
-//                            break;
-//                        case 3:
-//                            gxInstance.setTipText("third point  " + s + ',' +
-//                                    "  select a line or a circle");
-//                    }
-                } else {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    CPoint p3 = (CPoint) SelectList.get(2);
-                    Circle c = null;
-                    CLine ln = SelectALine(x, y);
-                    if (ln != null) {
-                        double r = ln.distance(p3.getx(), p3.gety());
-                        double r1 = sdistance(p1, p2);
-                        if (r < r1) {
-                            CPoint pt = this.CreateANewPoint(x, y);
-                            this.AddPointToLine(pt, ln, false);
-                            Constraint cs = new Constraint(Constraint.EQDISTANCE, p1, p2, p3, pt);
-                            this.charsetAndAddPoly(true);
-                            if (true || this.mulSolutionSelect(pt)) {
-                                this.addConstraintToList(cs);
-                                this.addPointToList(pt);
-                                /*
-                                this.UndoAdded("Take a point "
-                                        + pt.m_name + " on " + ln.getDescription() +
-                                        " st " + p1.m_name + p2.m_name + " = " +
-                                        p3.m_name + pt.m_name);
-                                 */
-                                this.UndoAdded(GExpert.getTranslationViaGettext(
-                                        "Take a point {0} on line {1} such that {2}", pt.m_name,
-                                        ln.getSimpleName(), p1.m_name + p2.m_name + " = " +
-                                                p3.m_name + pt.m_name));
-
-                            } else {
-                                this.ErasedADecidedPoint(pt);
-                                ln.points.remove(pt);
-                            }
-                        } else
-                            JOptionPane.showMessageDialog(gxInstance, "Can not add a point", "No Solution", JOptionPane.ERROR_MESSAGE);
-
-                    } else if ((c = this.SelectACircle(x, y)) != null) {
-                        CPoint po = c.o;
-                        double d = sdistance(po, p3);
-                        double r = c.getRadius();
-                        double s = sdistance(p1, p2);
-                        double d1 = d + r;
-                        double d2 = Math.abs(d - r);
-                        if (s > d1 || s < d2) {
-                            JOptionPane.showMessageDialog(gxInstance, "Can not add a point", "No Solution", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            CPoint pt = this.CreateANewPoint(0, 0);
-                            Constraint cs = new Constraint(Constraint.EQDISTANCE, p1, p2, p3, pt);
-                            Constraint cs1 = new Constraint(Constraint.PONCIRCLE, pt, c);
-                            this.charsetAndAddPoly(true);
-                            if (this.mulSolutionSelect(pt)) {
-                                this.addConstraintToList(cs);
-                                this.addConstraintToList(cs1);
-                                this.addPointToList(pt);
-                                c.addPoint(pt);
-                                /*
-                                this.UndoAdded("Take a point "
-                                        + pt.m_name + "on " + c.getDescription() +
-                                        " st " + p1.m_name + p2.m_name + " = " +
-                                        p3.m_name + pt.m_name);
-                                 */
-                                this.UndoAdded(GExpert.getTranslationViaGettext(
-                                        "Take a point {0} on circle {1} such that {2}",
-                                        pt.m_name, c.getname(), p1.m_name + p2.m_name + " = " +
-                                                p3.m_name + pt.m_name));
-                            } else {
-                                this.ErasedADecidedPoint(pt);
-                                gxInstance.setTipText("Failed: can not find a point(P) on Circle " +
-                                        " that satisfy |" + p1.m_name + p2.m_name +
-                                        "| = |" + p3.m_name + "P|");
-                            }
-                        }
-
-                    } else {
-                    }
-                    clearSelection();
-                }
-            }
-            break;
-            case LRATIO: {
-                CPoint pt = this.CreateATempPoint(x, y);
-                p = this.SmartPoint(pt);
-                if (p == null) {
-                    break;
-                }
-                if (SelectList.size() == 0) {
-                    this.addObjectToList(p, SelectList);
-                } else {
-                    if (p == SelectList.get(0)) {
-                        break;
-                    }
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint pp = this.CreateANewPoint(x, y);
-                    Integer t1 = v1;
-                    Integer t2 = v2;
-                    Constraint cs = new Constraint(Constraint.LRATIO, pp, p1, p, t1, t2);
-                    CPoint pu = this.addADecidedPointWithUnite(pp);
-                    if (pu == null) {
-                        this.addConstraintToList(cs);
-                        this.addPointToList(pp);
-                    } else {
-                        pp = pu;
-                        clearSelection();
-                        this.resetUndo();
-                        break;
-                    }
-
-                    CLine ln = null;
-                    for (int i = 0; i < linelist.size(); i++) {
-                        CLine t = (CLine) linelist.get(i);
-                        if (t.sameLine(p1, p)) {
-                            ln = t;
-                            break;
-                        }
-                    }
-                    if (ln != null) {
-                        ln.addApoint(pp);
-                    }
-                    this.charsetAndAddPoly(false);
-                    clearSelection();
-                    this.UndoAdded(pp.TypeString() + ":  " + p1.m_name +
-                            pp.m_name + " / " + pp.m_name + p.m_name + " = " + t1 + "/" +
-                            t2);
-                }
-            }
-            break;
-            case MEET: {
-                CClass cc = this.SelectALine(x, y);
-                if (cc == null)
-                    cc = this.SelectACircle(x, y);
-
-                if (cc == null) {
-                    clearSelection();
-                    break;
-                }
-                addObjectToList(cc, SelectList);
-
-                if (SelectList.size() == 1) {
-                    break;
-                } else if (SelectList.size() == 2) {
-                    Object obj1 = SelectList.get(0);
-                    Object obj2 = SelectList.get(1);
-                    meetTwoObject(obj1, obj2, false, x, y);
-                    clearSelection();
-                }
-            }
-            break;
-            case MIRROR: {
-                CatchPoint.setXY(x, y);
-                CLine ln = null;
-                p = this.SmartPoint(CatchPoint);
-                if (p == null) {
-                    ln = this.SmartPLine(CatchPoint);
-                    if (ln != null) {
-                        this.addObjectToList(ln, SelectList);
-                    } else {
-                        Circle c = this.SmartPCircle(CatchPoint);
-                        if (c != null) {
-                            this.addObjectToList(c, SelectList);
-                        }
-                    }
-                } else {
-                    this.addObjectToList(p, SelectList);
-                }
-
-                if (SelectList.size() == 2) {
-                    Object obj1, obj2;
-                    obj1 = SelectList.get(0);
-                    obj2 = SelectList.get(1);
-                    if (obj1 instanceof CPoint && obj2 instanceof CPoint) {
-                        CPoint p1 = (CPoint) obj1;
-                        CPoint p2 = (CPoint) obj2;
-                        CPoint pp = this.CreateANewPoint(0, 0);
-                        Constraint cs = new Constraint(Constraint.PSYM, pp, p1, p2);
-                        CPoint pu = this.addADecidedPointWithUnite(pp);
-                        if (pu == null) {
-                            this.addPointToList(pp);
-                            this.addConstraintToList(cs);
-                            // this.UndoAdded(pp.TypeString() + " is reflection of " +
-                            //        p1.TypeString() + " wrt " +
-                            //        p2.TypeString());
-                            this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", pp.TypeString(),
-                                    p1.TypeString(), p2.TypeString()));
-
-                        } else {
-                            pp = pu;
-                        }
-
-                    } else if (obj1 instanceof CPoint && obj2 instanceof CLine) {
-                        CPoint p1 = (CPoint) obj1;
-                        CLine line = (CLine) obj2;
-
-                        CPoint pp = this.CreateANewPoint(0, 0);
-                        Constraint cs = new Constraint(Constraint.MIRROR, pp, p1, line);
-                        CPoint pu = this.addADecidedPointWithUnite(pp);
-                        if (pu == null) {
-                            this.addPointToList(pp);
-                            this.addConstraintToList(cs);
-                            // this.UndoAdded(pp.TypeString() + " is reflection of " +
-                            //        p1.TypeString() + " wrt " +
-                            //        line.getDiscription());
-                            this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", pp.TypeString(),
-                                    p1.TypeString(), line.getDiscription()));
-
-                        } else {
-                            pp = pu;
-                        }
-
-                    } else if (obj1 instanceof CLine && obj2 instanceof CPoint) {
-                        CLine line = (CLine) obj1;
-                        CPoint p1 = (CPoint) obj2;
-
-                        int exist_point_number = 0;
-                        Vector vp = new Vector();
-
-                        for (int i = 0; i < line.points.size(); i++) {
-                            CPoint pu = null;
-                            CPoint pp = null;
-                            Constraint cs = null;
-
-                            CPoint pt = (CPoint) line.points.get(i);
-                            if (pt == p1) {
-                                pu = pt;
-                            } else {
-                                pp = this.CreateANewPoint(0, 0);
-                                cs = new Constraint(Constraint.PSYM, pp, pt, p1);
-                                pu = this.addADecidedPointWithUnite(pp);
-                            }
-                            if (pu == null) {
-                                this.addPointToList(pp);
-                                this.addConstraintToList(cs);
-                            } else {
-                                pp = pu;
-                                exist_point_number++;
-                            }
-                            vp.add(pp);
-                        }
-
-                        if (exist_point_number < line.points.size()) {
-                            if (line.points.contains(p1)) {
-                                for (int i = 0; i < vp.size(); i++) {
-                                    CPoint tt = (CPoint) vp.get(i);
-                                    line.addApoint(tt);
-                                }
-                                this.UndoAdded("reflection");
-
-                            } else {
-                                CLine line2 = new CLine(line.type);
-                                line2.m_color = line.m_color;
-                                line2.m_dash = line.m_dash;
-                                line2.m_width = line.m_width;
-
-                                for (int i = 0; i < vp.size(); i++) {
-                                    CPoint tt = (CPoint) vp.get(i);
-                                    line2.addApoint(tt);
-                                }
-                                Constraint cs = new Constraint(Constraint.LINE, vp);
-                                this.addConstraintToList(cs);
-                                this.addLineToList(line2);
-                                // this.UndoAdded(line2.TypeString() +
-                                //        " is reflection of " +
-                                //        line.getDiscription() + " wrt " +
-                                //        p1.TypeString());
-                                this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", line2.TypeString(),
-                                        line.getDiscription(), p1.TypeString()));
-
-
-                            }
-
-                        } else {
-                            boolean exists = false;
-                            for (int i = 0; i < linelist.size(); i++) {
-                                CLine ll = (CLine) linelist.get(i);
-                                if (ll.points.containsAll(vp)) {
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            if (exists == false) {
-                                CLine line2 = new CLine(line.type);
-                                for (int i = 0; i < vp.size(); i++) {
-                                    CPoint tt = (CPoint) vp.get(i);
-                                    line2.addApoint(tt);
-                                }
-                                line2.m_color = ln.m_color;
-                                line2.m_dash = ln.m_dash;
-                                line2.m_width = ln.m_width;
-                                Constraint cs = new Constraint(Constraint.LINE, vp);
-                                this.addConstraintToList(cs);
-                                this.addLineToList(line2);
-                                // this.UndoAdded(line2.getDiscription() +
-                                //        " is reflection of " +
-                                //        line.getDiscription() + " wrt " +
-                                //        p1.TypeString());
-                                this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", line2.getDiscription(),
-                                        line.getDescription(), p1.TypeString()));
-
-
-                            } else
-                                this.UndoAdded("reflection");
-                        }
-                    } else if (obj1 instanceof CLine && obj2 instanceof CLine) {
-                        CLine line = (CLine) obj1;
-                        CLine line2 = (CLine) obj2;
-                        CPoint cp = CLine.commonPoint(line, line2);
-
-                        CLine line3 = new CLine(line.type);
-                        line3.m_color = line.m_color;
-                        line3.m_dash = line.m_dash;
-                        line3.m_width = line.m_width;
-
-                        int exist_point_number = 0;
-                        for (int i = 0; i < line.points.size(); i++) {
-                            CPoint pt = (CPoint) line.points.get(i);
-
-                            CPoint pp;
-                            if (pt == cp) {
-                                pp = cp;
-                                exist_point_number++;
-                            } else {
-                                pp = this.CreateANewPoint(0, 0);
-                                Constraint cs = new Constraint(Constraint.MIRROR, pp, pt, line2);
-                                CPoint pu = this.addADecidedPointWithUnite(pp);
-                                if (pu == null) {
-                                    this.addPointToList(pp);
-                                    this.addConstraintToList(cs);
-                                } else {
-                                    pp = pu;
-                                    exist_point_number++;
-                                }
-
-                            }
-                            line3.addApoint(pp);
-                        }
-                        Constraint cs = new Constraint(Constraint.LINE, line3.points);
-                        addConstraintToList(cs);
-
-                        if (exist_point_number < line.points.size()) {
-                            this.addLineToList(line3);
-
-                            // this.UndoAdded(line3.getDiscription() +
-                            //        " is reflection of " +
-                            //        line.getDiscription() + " wrt " +
-                            //        line2.getDiscription());
-                            this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", line3.getDiscription(),
-                                    line.getDiscription(), line2.getDiscription()));
-
-
-                        } else {
-                            boolean exists = false;
-                            for (int i = 0; i < linelist.size(); i++) {
-                                CLine ll = (CLine) linelist.get(i);
-                                if (ll.sameLine(line3)) {
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            if (exists == false) {
-                                this.addLineToList(line3);
-                                // this.UndoAdded(line3.getDiscription() +
-                                //        " is reflection of " +
-                                //        line.getDiscription() + " wrt " +
-                                //        line2.getDiscription());
-                                this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", line3.getDiscription(),
-                                        line.getDiscription(), line2.getDiscription()));
-
-                            }
-                        }
-
-                    } else if (obj1 instanceof Circle && obj2 instanceof CPoint) {
-                        int exist_point_number = 0;
-
-                        Circle c1 = (Circle) obj1;
-                        CPoint p1 = (CPoint) obj2;
-                        CPoint pp = this.CreateANewPoint(0, 0);
-                        Constraint cs = new Constraint(Constraint.PSYM, pp, c1.o, p1);
-                        CPoint pu = this.addADecidedPointWithUnite(pp);
-                        if (pu == null) {
-                            this.addPointToList(pp);
-                            this.addConstraintToList(cs);
-                        } else {
-                            exist_point_number++;
-                            pp = pu;
-                        }
-
-                        Circle c = null;
-                        for (int i = 0; i < c1.points.size(); i++) {
-                            CPoint pt = (CPoint) c1.points.get(i);
-                            p = this.CreateANewPoint(0, 0);
-                            cs = new Constraint(Constraint.PSYM, p, pt, p1);
-                            CPoint pu1 = this.addADecidedPointWithUnite(p);
-                            if (pu1 == null) {
-                                this.addPointToList(p);
-                                this.addConstraintToList(cs);
-                            } else {
-                                p = pu1;
-                                exist_point_number++;
-                            }
-
-                            if (i == 0) {
-                                c = new Circle(pp, p);
-                                c.m_color = c1.m_color;
-                                c.m_dash = c1.m_dash;
-                                c.m_width = c1.m_width;
-                            } else {
-                                c.addPoint(p);
-                            }
-                        }
-                        cs = new Constraint(Constraint.CIRCLE, c.o);
-                        cs.addElement(c.points);
-                        cs.PolyGenerate();
-
-                        addConstraintToList(cs);
-
-                        if (exist_point_number < c1.points.size() + 1) {
-                            this.addCircleToList(c);
-                            // this.UndoAdded(c.getDescription() +
-                            //         " is reflection of " + c1.getDescription() +
-                            //         " wrt " + p1.TypeString());
-                            this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", c.getDescription(),
-                                    c1.getDescription(), p1.TypeString()));
-
-                        }
-
-                    } else if (obj1 instanceof Circle && obj2 instanceof CLine) {
-                        int exist_point_number = 0;
-
-                        Circle c1 = (Circle) obj1;
-                        CLine line = (CLine) obj2;
-                        CPoint pp = this.CreateANewPoint(0, 0);
-                        Constraint cs = new Constraint(Constraint.MIRROR, pp, c1.o,
-                                line);
-                        CPoint pu1 = this.addADecidedPointWithUnite(pp);
-                        if (pu1 == null) {
-                            this.addPointToList(pp);
-                            this.addConstraintToList(cs);
-                        } else {
-                            pp = pu1;
-                            exist_point_number++;
-                        }
-
-                        Circle c = null;
-                        for (int i = 0; i < c1.points.size(); i++) {
-                            CPoint pt = (CPoint) c1.points.get(i);
-                            p = this.CreateANewPoint(0, 0);
-                            cs = new Constraint(Constraint.MIRROR, p, pt, line);
-                            CPoint pu2 = this.addADecidedPointWithUnite(p);
-                            if (pu2 == null) {
-                                this.addPointToList(p);
-                                this.addConstraintToList(cs);
-                            } else {
-                                p = pu1;
-                                exist_point_number++;
-                            }
-                            if (i == 0) {
-                                c = new Circle(pp, p);
-                                c.m_color = c1.m_color;
-                                c.m_dash = c1.m_dash;
-                                c.m_width = c1.m_width;
-                            } else {
-                                c.addPoint(p);
-                            }
-
-                        }
-                        cs = new Constraint(Constraint.CIRCLE, c.o);
-                        cs.addElement(c.points);
-                        cs.PolyGenerate();
-                        addConstraintToList(cs);
-                        if (exist_point_number < c1.points.size() + 1) {
-                            this.addCircleToList(c);
-                            // this.UndoAdded(c.getDescription() +
-                            //         " is reflection of " + c1.getDescription() +
-                            //         " wrt " + line.getDescription());
-                            this.UndoAdded(GExpert.getTranslationViaGettext("{0} is the reflection of {1} wrt {2}", c.getDescription(),
-                                    c1.getDescription(), line.getDescription()));
-
-                        }
-                    } else {
-                        CMisc.print("can not mirror by a circle");
-                    }
-                    clearSelection();
-                }
-            }
-            break;
-            case D_MIDPOINT: {
-
-                CPoint tp = this.SelectAPoint(x, y);
-                if (tp != null) {
-                    if (SelectList.size() == 1 && tp != SelectList.get(0)) {
-                        CPoint tp1 = (CPoint) SelectList.get(0);
-
-                        CPoint po = this.CreateANewPoint(0, 0);
-                        Constraint cs = new Constraint(Constraint.MIDPOINT, po, tp, tp1);
-                        CPoint pu = this.addADecidedPointWithUnite(po);
-                        if (pu == null) {
-                            this.addConstraintToList(cs);
-                            this.addPointToList(po);
-                            CLine ln = fd_line(tp, tp1);
-                            if (ln != null) {
-                                ln.addApoint(po);
-                                Constraint cs2 = new Constraint(Constraint.PONLINE, po, ln, false);
-                                this.addConstraintToList(cs2);
-
-                            }
-                            // this.UndoAdded(po.getname() + ": the midpoint YYY of " + tp1.m_name + tp.m_name);
-                            this.UndoAdded(po.getname() + ": " + GExpert.getTranslationViaGettext("midpoint of {0}", tp1.m_name + tp.m_name));
-
-                        } else {
-                            po = pu;
-                        }
-                        clearSelection();
-                    } else {
-                        this.addObjectToList(tp, SelectList);
-                    }
-                }
-            }
-            break;
-            case D_3PCIRCLE: {
-                if (STATUS == 0) { // first click
-                    clearSelection();
-                    p = SmartgetApointFromXY(x, y);
-                    this.addObjectToList(p, SelectList);
-                    STATUS = 1;
-
-                } else if (STATUS == 1) {
-                    p = SmartgetApointFromXY(x, y);
-                    this.addObjectToList(p, SelectList);
-                    if (SelectList.size() == 2) {
-                        STATUS = 2;
-                    }
-
-                } else { //third click
-                    CPoint p1, p2, p3;
-                    p1 = (CPoint) SelectList.get(0);
-                    p2 = (CPoint) SelectList.get(1);
-
-                    p3 = this.SelectAPoint(x, y);
-                    if (p3 != null) {
-                        if (DrawBase.check_Collinear(p1, p2, p3))
-                            break;
-                    }
-
-                    if (p3 == null)
-                        p3 = SmartgetApointFromXY(x, y);
-                    if (p3 == null) {
-                        break;
-                    }
-
-
-                    if (SelectList.contains(p3)) {
-                        break;
-                    }
-
-                    p = this.CreateANewPoint(0, 0);
-                    Constraint cs = new Constraint(Constraint.CIRCLE3P, p, p1, p2, p3);
-                    CPoint pu = this.addADecidedPointWithUnite(p);
-                    if (pu == null) {
-                        Circle c = new Circle(p, p1, p2, p3);
-                        p.m_name = this.get_cir_center_name();
-                        this.addPointToList(p);
-                        this.addConstraintToList(cs);
-                        addCircleToList(c);
-                        this.UndoAdded(c.getDescription());
-
-                    } else {
-                        p = pu;
-                        if (!this.isCircleExists(p1, p2, p3)) {
-                            Circle c = new Circle(p, p1, p2, p3);
-                            this.addCircleToList(c);
-                            this.UndoAdded(c.getDescription());
-                        }
-                    }
-
-                    clearSelection();
-                    STATUS = 0;
-                }
-            }
-            break;
-
-            case TRANSLATE: {
-                FirstPnt = this.CreateATempPoint(x, y);
-            }
-            break;
+            case MOVE:
+                handleMoveCase(x, y);
+                break;
+            case D_POINT:
+                handleDpointCase(x, y, p);
+                break;
+            case TRIANGLE:
+                handleTriangleCase(x, y);
+                break;
+            case V_LINE:
+                handleVLineCase(x, y);
+                break;
+            case D_LINE:
+                handleDLineCase(x, y);
+                break;
+            case D_POLYGON:
+                handleDPolygonCase(x,y);
+                break;
+            case D_PARELINE:
+                handleDPareLineCase(x,y);
+                break;
+            case D_PERPLINE:
+                handleDPerpLineCase(x,y);
+                break;
+            case D_ALINE:
+                handleDAlineCase(x,y);
+                break;
+            case D_ABLINE:
+                handleDABlineCase(x,y,p);
+                break;
+            case D_PFOOT:
+                handleDPfootCase(x,y,p);
+                break;
+            case PERPWITHFOOT:
+                handlePerpWithFoot(x,y);
+                break;
+            case D_CIRCLE:
+                handleDCircleCase(x,y,p);
+                break;
+            case D_CIRCLEBYRADIUS:
+                handleDCircleByRadiusCase(x,y,p);
+                break;
+            case D_PRATIO:
+                handleDPRatioCase(x,y,p);
+                break;
+            case D_TRATIO:
+                handleDTRatioCase(x,y,p);
+                break;
+            case D_PTDISTANCE:
+                handleDPTDistanceCase(x,y,p);
+                break;
+            case LRATIO:
+                handleLRatioCase(x,y,p);
+                break;
+            case MEET:
+                handleMeetCase(x,y);
+                break;
+            case MIRROR:
+                handleMirrorCase(x,y,p);
+                break;
+            case D_MIDPOINT:
+                handleDMidpointCase(x,y);
+                break;
+            case D_3PCIRCLE:
+                handleD3PCircleCase(x,y,p);
+                break;
+            case TRANSLATE:
+                handleTranslateCase(x,y);
+                break;
             case ZOOM_IN:
-                zoom_in(x, y, 1);
-                reCalculate();
+                handleZoomInCase(x,y);
                 break;
             case ZOOM_OUT:
-                zoom_out(x, y, 1);
-                reCalculate();
+                handleZoomOutCase(x,y);
                 break;
-            case ANIMATION: {
-                CatchPoint.setXY(x, y);
-                p = this.SmartPoint(CatchPoint);
-
-                if (SelectList.size() == 0) {
-                    if (p != null) {
-                        addToSelectList(p);
-                    }
-                    break;
-                }
-                if (p != null)
-                    break;
-
-                p = (CPoint) SelectList.get(0);
-                CLine line = SmartPLine(CatchPoint);
-                if (line != null && !check_animation(p, line))
-                    break;
-
-                AnimatePanel af = gxInstance.getAnimateDialog();
-                if (line != null) {
-                    clearSelection();
-                    animate = new AnimateC(p, line, this.Width, this.Height);
-                    af.setAttribute(animate);
-                    gxInstance.showAnimatePane();
-                    this.SetCurrentAction(MOVE);
-                } else {
-                    Circle c = this.SmartPCircle(CatchPoint);
-                    if (c != null) {
-                        clearSelection();
-                        animate = new AnimateC(p, c, this.Width, this.Height);
-                        af.setAttribute(animate);
-                        gxInstance.showAnimatePane();
-                        this.SetCurrentAction(MOVE);
-                    } else {
-                        CTrace ct = (CTrace) this.SelectFromAList(tracelist, x, y);
-                        if (ct != null) {
-                            clearSelection();
-                            animate = new AnimateC(p, ct, this.Width, this.Height);
-                            af.setAttribute(animate);
-                            gxInstance.showAnimatePane();
-                            this.SetCurrentAction(MOVE);
-                        }
-                    }
-                }
-
-            }
-            break;
-            case D_ANGLE: {
-
-                if (STATUS == 0 && SelectList.size() == 0) {
-                    FirstPnt = this.CreateATempPoint(x, y);
-
-                    CLine line = SmartPLine(FirstPnt);
-                    if (line != null) {
-                        addToSelectList(line);
-                    }
-                } else if (STATUS == 0 && SelectList.size() == 1) {
-                    SecondPnt = this.CreateATempPoint(x, y);
-                    CLine line = SmartPLine(SecondPnt);
-                    if (line != null) {
-                        CLine l2 = (CLine) SelectList.get(0);
-                        if (line == l2) {
-                            break;
-                        }
-
-                        CAngle ag = new CAngle(l2, line, FirstPnt, SecondPnt);
-                        addAngleToList(ag);
-                        ag.move(x, y);
-                        clearSelection();
-                        addToSelectList(ag);
-                        STATUS = 1;
-                        this.UndoAdded(ag.getDescription(), false, false);
-                    }
-                } else if (STATUS == 1) {
-                    STATUS = 0;
-                    clearSelection();
-                }
-            }
-            break;
-            case SETEQSIDE: {
-                CPoint pt = (CPoint) this.CatchList(pointlist, x, y);
-                if (pt == null) {
-                    clearSelection();
-                    break;
-                }
-                if (SelectList.size() == 3) {
-                    CPoint pt1 = (CPoint) SelectList.get(0);
-                    CPoint pt2 = (CPoint) SelectList.get(1);
-                    CPoint pt3 = (CPoint) SelectList.get(2);
-                    if (STATUS == 1) {
-                        Constraint cs = new Constraint(Constraint.EQDISTANCE, pt1, pt2, pt3, pt);
-                        this.addConstraintToList(cs);
-                        this.charsetAndAddPoly(false);
-                        clearSelection();
-                        this.UndoAdded(pt1.m_name + pt2.m_name + " = " + pt3.m_name +
-                                pt.m_name);
-                    } else {
-                        Constraint cs = new Constraint(Constraint.NRATIO, pt1, pt2, pt3, pt, v1, v2);
-                        this.addConstraintToList(cs);
-                        this.charsetAndAddPoly(false);
-                        clearSelection();
-                        this.UndoAdded(pt1.m_name + pt2.m_name + " = " + STATUS +
-                                " " + pt3.m_name + pt.m_name);
-
-                    }
-                } else {
-                    addToSelectList(pt);
-                }
-            }
-            break;
-
-            case SETEQANGLE: {
-                if (SelectList.size() == 0) {
-                    CAngle ag = CatchAngle(x, y);
-                    if (ag != null) {
-                        addToSelectList(ag);
-                    }
-                } else if (SelectList.size() == 1) {
-                    CAngle ag = CatchAngle(x, y);
-                    CAngle ag1 = (CAngle) SelectList.get(0);
-
-                    if (ag == ag1) {
-                        clearSelection();
-                        break;
-                    }
-
-                    if (ag != null && ag != ag1) {
-                        CPoint pd = CAngle.canEqual(ag, ag1);
-                        if (pd == null) {
-                            CMisc.print("the angle is decided,can not be set equal");
-                            clearSelection();
-                        } else {
-                            clearSelection();
-                            Constraint cs = new Constraint(Constraint.EQANGLE, ag1, ag);
-                            this.addConstraintToList(cs);
-                            this.charsetAndAddPoly(false);
-//                            this.mulSolutionSelect(pd);
-//                            this.reCalculate();
-                            this.UndoAdded(ag.getDescription() + " = " +
-                                    ag1.getDescription());
-                        }
-                    }
-                }
-
-            }
-            break;
-
-            case SETEQANGLE3P: {
-                CAngle ag = (CAngle) this.SelectFromAList(anglelist, x, y);
-                if (ag == null) {
-                    break;
-                }
-                if (SelectList.size() == 2) {
-                    CAngle ag1 = (CAngle) SelectList.get(0);
-                    CAngle ag2 = (CAngle) SelectList.get(1);
-
-                    Vector alist = this.getSpecificAngleList();
-                    SpecificAngleDialog dlg = new SpecificAngleDialog(gxInstance, 2, alist);
-                    dlg.setLocation(400, 400);
-                    dlg.setTitle("Please select an specific angle");
-                    dlg.setVisible(true);
-
-                    Vector v = dlg.getSpecificAngle();
-                    if (v.size() == 1) {
-                        Integer in = (Integer) v.get(0);
-                        int va = in.intValue();
-                        Param pm = this.getParaForSpecificAngle(va);
-
-                        Constraint cs = new Constraint(Constraint.EQANGLE3P, ag1, ag2, ag, pm, va);
-                        this.addConstraintToList(cs);
-                        this.charsetAndAddPoly(false);
-                        clearSelection();
-                        this.UndoAdded(ag1.getDescription() + " + " +
-                                ag2.getDescription() + " + " +
-                                ag.getDescription() + " = " +
-                                ag.getDescription());
-                    } else {
-                        clearSelection();
-                        break;
-                    }
-                } else {
-                    addToSelectList(ag);
-                }
-            }
-            break;
-            case SETCCTANGENT: {
-                Circle c = (Circle) this.SelectFromAList(circlelist, x, y);
-                if (c == null) {
-                    break;
-                }
-                if (SelectList.size() == 1) {
-                    Circle c0 = (Circle) SelectList.get(0);
-                    Constraint cs = new Constraint(Constraint.CCTANGENT, c0, c);
-                    this.charsetAndAddPoly(false);
-                    this.addConstraintToList(cs);
-                    this.UndoAdded(c0.getDescription() + " tangent to " +
-                            c.getDescription());
-                } else {
-                    addToSelectList(c);
-                }
-            }
-            break;
-            case D_SQUARE: {
-                if (STATUS == 0) {
-                    CPoint pt = this.SmartPoint(CatchPoint);
-                    if (pt == null) {
-                        if (SelectList.size() == 0) {
-                            CLine line = this.SmartPLine(CatchPoint);
-                            if (line != null) {
-                                addToSelectList(line);
-                                STATUS = 1;
-                                break;
-                            }
-                        }
-                        pt = this.SmartgetApointFromXY(x, y);
-                    }
-
-                    if (SelectList.size() == 1) {
-                        CPoint pa = (CPoint) SelectList.get(0);
-                        this.setSmartPVLine(pa, pt);
-                    }
-                    if (!SelectList.contains(pt)) {
-                        addToSelectList(pt);
-                    }
-                    if (SelectList.size() == 2) {
-                        STATUS = 2;
-                    }
-                } else if (STATUS == 2) {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    addsquare(p1, p2, CatchPoint);
-                    clearSelection();
-                    STATUS = 0;
-
-                }
-            }
-            break;
-            case D_CCLINE: {
-                if (SelectList.size() == 0) {
-                    Circle c = this.SmartPCircle(CatchPoint);
-                    if (c != null) {
-                        this.addObjectToList(c, SelectList);
-                    }
-                } else if (SelectList.size() == 1) {
-                    Circle c = this.SmartPCircle(CatchPoint);
-                    if (c != null) {
-                        Circle c0 = (Circle) SelectList.get(0);
-                        if (c0.o == c.o) {
-                            clearSelection();
-                            break;
-                        }
-
-                        CLine line = new CLine(CLine.CCLine);
-                        this.addLineToList(line);
-
-                        Constraint cs = new Constraint(Constraint.CCLine, line, c0,
-                                c);
-                        this.addConstraintToList(cs);
-                        line.addconstraint(cs);
-                        clearSelection();
-                        this.UndoAdded(line.TypeString() + ": " + GExpert.getTranslationViaGettext(
-                                "Radical of {0} and {1}", c0.getDescription(), c.getDescription()));
-                    }
-                }
-
-            }
-            break;
-            case D_IOSTRI: {
-                if (SelectList.size() < 2) {
-                    CPoint pt = SmartgetApointFromXY(x, y);
-                    if (SelectList.size() == 1) {
-                        CPoint pa = (CPoint) SelectList.get(0);
-                        setSmartPVLine(pa, pt);
-                    }
-                    if (SelectList.size() == 0) {
-                        addToSelectList(pt);
-                    } else if (pt == SelectList.get(0)) {
-                        clearSelection();
-                    } else {
-                        addToSelectList(pt);
-                    }
-                } else {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    addisoAngle(p1, p2, CatchPoint, 0);
-                    clearSelection();
-                    STATUS = 0;
-                }
-            }
-            break;
-            case DRAWTRIALL: {
-                if (STATUS == 0) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-                    addToSelectList(pt);
-                    STATUS = 1;
-                } else if (STATUS == 1) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-                    if (pt == SelectList.get(0)) {
-                        STATUS = 0;
-                        clearSelection();
-                        break;
-                    }
-                    if (SelectList.size() == 1) {
-                        CPoint pa = (CPoint) SelectList.get(0);
-                        this.setSmartPVLine(pa, pt);
-                    }
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    addToSelectList(pt);
-                    if (fd_line(p1, pt) == null) {
-                        CLine line = new CLine(p1, pt, CLine.LLine);
-                        this.addLineToList(line);
-                    }
-                    STATUS = 2;
-                } else {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    CPoint pt = CreateANewPoint(x, y);
-
-                    Constraint cs = new Constraint(Constraint.PETRIANGLE, pt, p1, p2);
-                    CPoint pu = this.addADecidedPointWithUnite(pt);
-                    if (pu == null) {
-                        addConstraintToList(cs);
-                        addPointToList(pt);
-                    } else {
-                        pt = pu;
-                    }
-                    addALine(CLine.LLine, pt, p1);
-                    addALine(CLine.LLine, pt, p2);
-                    clearSelection();
-                    STATUS = 0;
-                    // FIXME: use a translation key for triangle and substitute the image later for all translations
-                    UndoAdded(GExpert.getLanguage("Equilateral") + " triangle " + pt.m_name + p1.m_name + p2.m_name);
-                }
-            }
-            break;
-            case RA_TRAPEZOID: {
-                if (STATUS == 0) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-
-                    if (SelectList.size() > 0) {
-                        CPoint pa = (CPoint) SelectList.get(SelectList.size() - 1);
-                        this.setSmartPVLine(pa, pt);
-                    }
-
-                    if (!SelectList.contains(pt)) {
-                        addToSelectList(pt);
-                    }
-                    if (SelectList.size() == 2) {
-                        STATUS = 1;
-                    }
-                } else {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    CPoint p3 = this.SmartgetApointFromXY(x, y);
-                    CPoint p4 = this.CreateANewPoint(x, y);
-                    Constraint cs = new Constraint(Constraint.RIGHT_ANGLE_TRAPEZOID, p1, p2, p3, p4);
-                    CPoint pu = this.addADecidedPointWithUnite(p4);
-                    if (pu == null) {
-                        this.addALine(CLine.LLine, p1, p2);
-                        this.addALine(CLine.LLine, p2, p3);
-                        this.addALine(CLine.LLine, p3, p4);
-                        this.addALine(CLine.LLine, p1, p4);
-                        this.addPointToList(p4);
-                        this.addConstraintToList(cs);
-                        this.charsetAndAddPoly(false);
-                    } else
-                        p4 = pu;
-                    // FIXME: use better keys
-                    this.UndoAdded(GExpert.getLanguage("Right") + " trapezoid " + p1.m_name + p2.m_name + p3.m_name + p4.m_name);
-                    STATUS = 0;
-                    clearSelection();
-                }
-            }
-            break;
-            case TRAPEZOID: {
-                if (STATUS == 0) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-                    if (SelectList.size() > 0) {
-                        CPoint pa = (CPoint) SelectList.get(SelectList.size() - 1);
-                        this.setSmartPVLine(pa, pt);
-                    }
-                    if (!SelectList.contains(pt)) {
-                        addToSelectList(pt);
-                    } else {
-                        break;
-                    }
-                    if (SelectList.size() == 3) {
-                        STATUS = 1;
-                    }
-                } else {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    CPoint p3 = (CPoint) SelectList.get(2);
-                    x = CatchPoint.getx();
-                    y = (p1.gety() - p2.gety()) * (x - p3.getx()) /
-                            (p1.getx() - p3.getx()) + p3.gety();
-                    // y = (p1.gety() - p2.gety()) * (x - p3.getx()) / (p1.getx() - p2.getx()) + p3.gety();
-                    CPoint p4 = this.SmartgetApointFromXY(x, y);
-                    Constraint cs1 = new Constraint(Constraint.TRAPEZOID, p1, p2, p3, p4);
-                    CPoint pu = this.addADecidedPointWithUnite(p4);
-                    p4.setXY(x, y);
-                    if (pu == null) {
-                        this.addALine(CLine.LLine, p1, p2);
-                        this.addALine(CLine.LLine, p2, p3);
-                        this.addALine(CLine.LLine, p3, p4);
-                        this.addALine(CLine.LLine, p1, p4);
-                        this.addPointToList(p4);
-                        this.addConstraintToList(cs1);
-                        this.charsetAndAddPoly(false);
-                    } else
-                        p4 = pu;
-                    this.reCalculate();
-                    this.UndoAdded("trapezoid " + p1.m_name + p2.m_name + p3.m_name + p4.m_name);
-                    STATUS = 0;
-                    clearSelection();
-
-                }
-
-            }
-            break;
-            case PARALLELOGRAM: {
-                if (STATUS == 0) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-                    addToSelectList(pt);
-                    STATUS = 1;
-                } else if (STATUS == 1) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-                    if (pt == SelectList.get(0)) {
-                        STATUS = 0;
-                        clearSelection();
-                        break;
-                    }
-                    if (SelectList.size() == 1) {
-                        CPoint pa = (CPoint) SelectList.get(0);
-                        this.setSmartPVLine(pa, pt);
-                    }
-                    addToSelectList(pt);
-                    STATUS = 2;
-                } else {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    CPoint p3 = this.SmartgetApointFromXY(x, y);
-                    CPoint p4 = this.CreateANewPoint(x, y);
-                    Constraint cs = new Constraint(Constraint.PARALLELOGRAM, p1, p2, p3, p4);
-                    CPoint pu = this.addADecidedPointWithUnite(p4);
-                    if (pu == null) {
-                        this.addPointToList(p4);
-                        addALine(CLine.LLine, p1, p2);
-                        addALine(CLine.LLine, p1, p4);
-                        addALine(CLine.LLine, p2, p3);
-                        addALine(CLine.LLine, p3, p4);
-                        this.addConstraintToList(cs);
-                        this.charsetAndAddPoly(false);
-                    } else
-                        p4 = pu;
-                    this.UndoAdded("parallelogram " + p1.m_name + p2.m_name + p3.m_name + p4.m_name);
-                    STATUS = 0;
-                    clearSelection();
-                }
-
-            }
-            break;
-            case RECTANGLE: {
-                if (STATUS == 0) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-
-                    addToSelectList(pt);
-                    STATUS = 1;
-                } else if (STATUS == 1) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-                    if (pt == SelectList.get(0)) {
-                        STATUS = 0;
-                        clearSelection();
-                        break;
-                    }
-                    if (SelectList.size() == 1) {
-                        CPoint pa = (CPoint) SelectList.get(0);
-                        this.setSmartPVLine(pa, pt);
-                    }
-                    addToSelectList(pt);
-                    STATUS = 2;
-                } else {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-
-                    double x1 = p1.getx();
-                    double y1 = p1.gety();
-                    double x2 = p2.getx();
-                    double y2 = p2.gety();
-
-                    double xc = CatchPoint.getx();
-                    double yc = CatchPoint.gety();
-
-                    double dlx = x2 - x1;
-                    double dly = y2 - y1;
-                    double dl = dlx * dlx + dly * dly;
-
-                    double xx = ((y2 - yc) * dlx * dly + dly * dly * xc +
-                            dlx * dlx * x2) / dl;
-                    double yy = ((x2 - xc) * dlx * dly + dlx * dlx * yc +
-                            dly * dly * y2) / dl;
-
-                    CPoint p3 = this.SmartgetApointFromXY(xx, yy);
-                    double xt = x + p1.getx() - p2.getx();
-                    double yt = y + p1.gety() - p2.gety();
-                    CPoint p4 = this.CreateANewPoint(xt, yt);
-                    Constraint cs1 = new Constraint(Constraint.RECTANGLE, p1, p2, p3, p4);
-                    CPoint pu = this.addADecidedPointWithUnite(p4);
-                    if (pu == null) {
-                        this.addPointToList(p4);
-                        CLine tl1 = addALine(CLine.LLine, p1, p2);
-                        CLine tl2 = addALine(CLine.LLine, p1, p4);
-                        addALine(CLine.LLine, p2, p3);
-                        addALine(CLine.LLine, p3, p4);
-                        addCTMark(tl1, tl2);
-                        this.addConstraintToList(cs1);
-                        this.charsetAndAddPoly(false);
-                    } else
-                        p4 = pu;
-                    this.UndoAdded("rectangle " + p1.m_name + p2.m_name + p3.m_name + p4.m_name);
-                    STATUS = 0;
-                    clearSelection();
-
-                }
-            }
-            break;
-            case DRAWTRISQISO: {
-                if (STATUS == 0) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-                    addToSelectList(pt);
-                    STATUS = 1;
-                } else if (STATUS == 1) {
-                    CPoint pt = this.SmartgetApointFromXY(x, y);
-                    if (pt == SelectList.get(0)) {
-                        STATUS = 0;
-                        clearSelection();
-                        break;
-                    }
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    addALine(CLine.LLine, p1, pt);
-                    addToSelectList(pt);
-                    STATUS = 2;
-                } else {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    CPoint pt = this.CreateANewPoint(x, y);
-                    CLine ln1 = new CLine(pt, p1, CLine.LLine);
-                    CLine ln2 = new CLine(pt, p2, CLine.LLine);
-                    Constraint cs = new Constraint(Constraint.PERPBISECT, pt, p1, p2);
-                    Constraint cs1 = new Constraint(Constraint.PERPENDICULAR, ln1, ln2);
-                    CPoint pu = this.addADecidedPointWithUnite(pt);
-                    if (pu == null) {
-                        this.addPointToList(pt);
-                        this.charsetAndAddPoly(false);
-                        this.addConstraintToList(cs1);
-                        this.addConstraintToList(cs);
-                        this.addLineToList(ln1);
-                        this.addLineToList(ln2);
-                    }
-
-                    clearSelection();
-                    STATUS = 0;
-                    this.UndoAdded("isoceles-right triangle " + pt.m_name + p1.m_name + p2.m_name);
-                }
-            }
-            break;
-
-            case DEFINEPOLY: {
-
-                if (this.SelectAPoint(x, y) == null && SelectList.size() == 0) {
-                    Circle c = SelectACircle(x, y);
-                    if (c != null) {
-                        for (int i = 0; i < polygonlist.size(); i++) {
-                            CPolygon px = (CPolygon) polygonlist.get(i);
-                            if (px.isEqual(c)) break;
-                        }
-                        if (this.fd_polygon(c) == null) {
-                            CPolygon px = new CPolygon(c);
-                            this.addPolygonToList(px);
-                            clearSelection();
-                            this.UndoAdded(px.getDescription());
-                        }
-                        break;
-                    }
-                } else {
-                    FirstPnt = this.CreateATempPoint(x, y);
-                    p = this.SmartPoint(FirstPnt);
-                    if (p != null) {
-                        if (STATUS == 0) {
-                            CPolygon cp = new CPolygon();
-                            cp.addAPoint(p);
-                            addToSelectList(cp);
-                            STATUS = 1;
-                        } else {
-                            CPolygon cp = (CPolygon) SelectList.get(0);
-                            if (cp.addAPoint(p)) {
-                                STATUS = 0;
-                                addPolygonToList(cp);
-                                clearSelection();
-                                this.UndoAdded(cp.getDescription());
-                            }
-                        }
-                    }
-                }
-            }
-            break;
-            case D_TEXT: {
-                CText tc = (CText) this.SelectFromAList(textlist, x, y);
-                dialog_addText(tc, (int) x, (int) y);
-            }
-            break;
-            case MULSELECTSOLUTION: {
-                for (int i = 0; i < solutionlist.size(); i++) {
-                    p = (CPoint) solutionlist.get(i);
-                    if (Math.pow(p.getx() - x, 2) + Math.pow(p.gety() - y, 2) < 18 * 18) {
-                        pSolution.setXY(p.getx(), p.gety());
-                        solutionlist.clear();
-                        pSolution = null;
-                        SetCurrentAction(PreviousAction);
-                    }
-                }
-            }
-            break;
-
-            case SETTRACK: {
-                CTrackPt = this.SelectAPoint(x, y);
-                boolean r = false;
-
-                for (int i = 0; i < tracelist.size(); i++) {
-                    CTrace tr = (CTrace) tracelist.get(i);
-                    if (tr.isTracePt(CTrackPt)) {
-                        r = true;
-                        break;
-
-                    }
-                }
-                if (!r) {
-                    CTrace t = new CTrace(CTrackPt);
-                    this.addObjectToList(t, tracelist);
-                    this.UndoAdded(t.toString());
-                    if (gxInstance != null)
-                        gxInstance.setActionMove();
-                }
+            case ANIMATION:
+                handleAnimationCase(x,y,p);
                 break;
-            }
-
-            case LOCUS: {
-                int n = SelectList.size();
-                if (n <= 1) {
-                    CPoint pt = this.SelectAPoint(x, y);
-                    if (pt != null) {
-                        if (n == 0 && !pt.isAFixedPoint()) {
-                            JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage("The point should be a fix point."),
-                                    GExpert.getLanguage("Warning"),
-                                    JOptionPane.WARNING_MESSAGE);
-                        } else
-                            this.addObjectToList(pt, SelectList);
-                        int k = SelectList.size();
-                        if (k == 1)
-                            gxInstance.setTipText(GExpert.getLanguage("Please select the second point."));
-                        else if (k == 2)
-                            gxInstance.setTipText(GExpert.getLanguage("Please select a line or a circle."));
-                    }
-                } else {
-                    CPoint pt = (CPoint) SelectList.get(0);
-                    CPoint pt1 = (CPoint) SelectList.get(1);
-                    CLine ln = this.SelectALine(x, y);
-
-                    if (ln != null) {
-                        CTrace t = new CTrace(pt, pt1, ln);
-                        this.addObjectToList(t, tracelist);
-                        this.UndoAdded(t.toString());
-                    } else {
-                        Circle c = this.SelectACircle(x, y);
-                        if (c != null) {
-                            CTrace t = new CTrace(pt, pt1, c);
-                            this.addObjectToList(t, tracelist);
-                            this.UndoAdded(t.toString());
-                        } else {
-                        }
-                    }
-                    clearSelection();
-                    this.reCalculate();
-                }
-            }
-            break;
-            case INCENTER:
-            case BARYCENTER:
-            case ORTHOCENTER:
-            case CIRCUMCENTER: {
-                CPoint pt = this.CreateATempPoint(x, y);
-                CPoint tp = this.SmartPoint(pt);
-                if (tp != null) {
-                    this.addObjectToList(tp, SelectList);
-                }
-                if (SelectList.size() == 3) {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    CPoint p3 = (CPoint) SelectList.get(2);
-                    CPoint pp = this.CreateANewPoint(x, y);
-                    Constraint cs = null;
-                    String s = null;
-                    if (CurrentAction == BARYCENTER) {
-                        cs = new Constraint(Constraint.BARYCENTER, pp, p1, p2, p3);
-                        s = "barycenter";
-                    } else if (CurrentAction == CIRCUMCENTER) {
-                        cs = new Constraint(Constraint.CIRCUMCENTER, pp, p1, p2, p3);
-                        s = "circumcenter";
-                    } else if (CurrentAction == ORTHOCENTER) {
-                        cs = new Constraint(Constraint.ORTHOCENTER, pp, p1, p2, p3);
-                        s = "orthocenter";
-                    } else if (CurrentAction == INCENTER) {
-                        cs = new Constraint(Constraint.INCENTER, pp, p1, p2, p3);
-                        s = "incenter";
-                        pp.addcstoPoint(cs);
-                    } else {
-                        return;
-                    }
-
-                    CPoint pu = this.addADecidedPointWithUnite(pp);
-                    if (pu == null) {
-                        this.addPointToList(pp);
-                        this.addConstraintToList(cs);
-                        // Here we construct the translation key from s:
-                        this.UndoAdded(pp.TypeString() + ": " + GExpert.getTranslationViaGettext(
-                                s + " of {0}", p1.m_name + p2.m_name + p3.m_name));
-
-                    } else {
-                        p = pu;
-                    }
-                    clearSelection();
-                }
-            }
-            break;
-
-            case NTANGLE: {
-                if (STATUS == 0) {
-                    CLine ln = (CLine) this.SelectFromAList(linelist, x, y);
-                    if (ln != null) {
-                        addToSelectList(ln);
-                    }
-                    if (SelectList.size() == 3) {
-                        STATUS = 1;
-                        Vector v = new Vector();
-                        v.add(ln);
-                        this.flashStep(v);
-                    }
-                } else if (STATUS == 1) {
-                    CPoint pt = this.SelectAPoint(x, y);
-                    if (pt != null) {
-                        CLine ln = new CLine(CLine.NTALine);
-                        ln.addApoint(pt);
-                        addToSelectList(ln);
-                        Constraint cs = new Constraint(Constraint.NTANGLE,
-                                SelectList);
-                        clearSelection();
-                        Constraint cs1 = new Constraint(Constraint.PONLINE, pt, ln, false);
-                        ln.addconstraint(cs);
-                        this.addLineToList(ln);
-                        this.addConstraintToList(cs1);
-                        this.addConstraintToList(cs);
-                        this.UndoAdded("eqanle added");
-                    }
-                }
-
-            }
-            break;
-
-            case VIEWELEMENT: {
-                viewElementFromXY(x, y);
-            }
-            break;
-            case ARROW: {
-                CPoint pt = (CPoint) this.SmartgetApointFromXY(x, y);
-                if (pt == null) {
-                    break;
-                }
-                if (SelectList.size() == 0) {
-                    if (pt != null) {
-                        this.addObjectToList(pt, SelectList);
-                    }
-                } else {
-                    CPoint tp = (CPoint) SelectList.get(0);
-                    if (tp == pt) {
-                        break;
-                    }
-                    CArrow ar = new CArrow(pt, tp);
-                    otherlist.add(ar);
-                    clearSelection();
-                    this.UndoAdded("Arrow " + ar.getDescription());
-                }
-            }
-            case DISTANCE: {
-
-                CPoint pt = (CPoint) this.SelectFromAList(pointlist, x, y);
-                if (pt == null) {
-                    break;
-                }
-                if (SelectList.size() == 0) {
-                    if (pt != null) {
-                        this.addObjectToList(pt, SelectList);
-                    }
-                } else {
-                    CPoint tp = (CPoint) SelectList.get(0);
-                    if (tp == pt) {
-                        break;
-                    }
-                    CDistance dis = new CDistance(pt, tp);
-                    distancelist.add(dis);
-                    clearSelection();
-                    this.UndoAdded("measure " + dis.getDescription());
-                }
-
-            }
-            break;
-            case EQMARK: {
-                CPoint pt = (CPoint) this.SelectFromAList(pointlist, x, y);
-                if (pt == null) {
-                    break;
-                }
-                if (SelectList.size() == 0) {
-                    if (pt != null) {
-                        this.addObjectToList(pt, SelectList);
-                    }
-                } else {
-                    CPoint tp = (CPoint) SelectList.get(0);
-                    if (tp == pt)
-                        break;
-
-                    Cedmark ce = new Cedmark(pt, tp, STATUS);
-                    otherlist.add(ce);
-                    clearSelection();
-                    this.UndoAdded("mark of " + pt.m_name + tp.m_name);
-                }
-            }
-            break;
-            case RAMARK: {
-                CLine ln = (CLine) this.SelectFromAList(linelist, x, y);
-                if (ln == null)
-                    break;
-                if (SelectList.size() == 0)
-                    this.addObjectToList(ln, SelectList);
-                else {
-                    CLine ln1 = (CLine) SelectList.get(0);
-                    if (ln == ln1)
-                        break;
-                    addCTMark(ln, ln1);
-                    // this.addObjectToList(m, otherlist);
-                    clearSelection();
-                    this.UndoAdded("Right Angle Mark of " + ln.getDescription() + " and " + ln1.getDescription());
-                }
-            }
-            break;
-            case HIDEOBJECT: {
-                CClass cc = this.SelectOneFromXY(x, y, 0);
-                if (cc != null) {
-                    Constraint cs = new Constraint(Constraint.INVISIBLE, cc);
-                    this.addConstraintToList(cs);
-                    cc.setVisible(false);
-                    UndoStruct un = this.UndoAdded("Hide " + cc.getDescription());
-                    if (un != null) {
-                        un.addRelatedObject(cc);
-                    }
-                }
-            }
-            break;
-            case SHOWOBJECT: {
-                CClass cc = null;
-                for (int i = 0; i < constraintlist.size(); i++) {
-                    Constraint cs = (Constraint) constraintlist.get(i);
-                    if (cs.GetConstraintType() != Constraint.INVISIBLE) {
-                        continue;
-                    }
-                    CClass c1 = (CClass) cs.getelement(0);
-                    if (c1.visible == false) {
-                        c1.setVisible(true);
-                        if (c1.select(x, y)) {
-                            cc = c1;
-                            Constraint cs1 = new Constraint(Constraint.VISIBLE, cc);
-                            this.addConstraintToList(cs1);
-                            UndoStruct un = this.UndoAdded("Show " +
-                                    cc.getDescription());
-                            Vector v = new Vector();
-                            v.add(cc);
-                            this.setObjectListForFlash(v);
-                            break;
-                        } else {
-                            c1.setVisible(false);
-                        }
-                    }
-                }
-
-            }
-            break;
-
-            case SANGLE: {
-                int n = SelectList.size();
-                if (n == 0) {
-                    CLine line = this.SmartPLine(CatchPoint);
-                    if (line != null && line.points.size() >= 2) {
-                        addToSelectList(line);
-                    }
-                } else if (n == 1) {
-                    p = SelectAPoint(x, y);
-                    CLine ln1 = (CLine) SelectList.get(0);
-                    if (p != null && ln1.pointOnLine(p))
-                        addToSelectList(p);
-
-                } else if (n == 2) {
-                    CLine ln1 = (CLine) SelectList.get(0);
-                    p = (CPoint) SelectList.get(1);
-
-
-                    double k = ln1.getK();
-                    double k1 = Constraint.get_sp_ag_value(STATUS);
-                    double kx1 = (k + k1) / (1 - k * k1);
-                    double kx2 = (k - k1) / (1 + k * k1);
-
-                    double r1 = CLine.distanceToPoint(p.getx(), p.gety(), kx1, x, y);
-                    double r2 = CLine.distanceToPoint(p.getx(), p.gety(), kx2, x, y);
-
-
-                    Integer I = null;
-                    int id = 0;
-
-                    if (r1 <= r2) {
-                        I = -STATUS;
-                        id = add_sp_angle_value(-STATUS);
-                    } else {
-                        I = STATUS;
-                        id = add_sp_angle_value(STATUS);
-                    }
-                    CLine ln = new CLine(CLine.SALine);
-                    ln.addApoint(p);
-                    Constraint cs = new Constraint(Constraint.SANGLE, ln1, ln, I);
-                    cs.proportion = id;
-
-                    ln.addconstraint(cs);
-                    addConstraintToList(cs);
-                    this.addLineToList(ln);
-                    this.UndoAdded(ln.getDescription());
-                    clearSelection();
-                }
-            }
-            break;
-            case D_BLINE: {
-                addSelectPoint(x, y);
-                if (SelectList.size() == 2) {
-                    CPoint p1 = (CPoint) SelectList.get(0);
-                    CPoint p2 = (CPoint) SelectList.get(1);
-                    if (p1 != p2) {
-                        CLine ln = new CLine(CLine.BLine);
-                        Constraint cs = new Constraint(Constraint.BLINE, ln, p1, p2);
-                        ln.addconstraint(cs);
-                        this.addLineToList(ln);
-                        this.addConstraintToList(cs);
-                        clearSelection();
-                        this.UndoAdded("BLine " + ln.getDescription());
-                    }
-                }
-            }
-            break;
-            case D_TCLINE: {
-                CatchPoint.setXY(x, y);
-
-                if (SelectList.size() == 0) {
-                    Circle c = SmartPCircle(CatchPoint);
-                    if (c != null)
-                        addToSelectList(c);
-                } else {
-                    Circle c = (Circle) SelectList.get(0);
-                    if (c.on_circle(x, y)) {
-                        CPoint p1 = SmartgetApointFromXY(x, y);
-                        CLine ln = new CLine(p1, CLine.TCLine);
-                        Constraint cs = new Constraint(Constraint.TCLINE, c, ln, p1);
-                        this.addConstraintToList(cs);
-                        ln.addconstraint(cs);
-                        this.addLineToList(ln);
-                    }
-                }
-            }
-            break;
-            case CCTANGENT: {
-                Circle c = this.SelectACircle(x, y);
-                if (c != null) {
-                    int n = SelectList.size();
-                    if (n == 1) {
-                        Circle c1 = (Circle) SelectList.get(0);
-                        if (c != c1 && c.o != c1.o) {
-                            CPoint p1 = this.CreateANewPoint(0, 0);
-                            CPoint p2 = this.CreateANewPoint(x, y);
-                            c1.addPoint(p1);
-                            c.addPoint(p2);
-                            Constraint cs = new Constraint(Constraint.CCTANGENT_LINE, p1, p2, c1, c);
-                            this.addPointToList(p1);
-                            this.addPointToList(p2);
-                            this.addConstraintToList(cs);
-                            this.charsetAndAddPoly(false);
-                            this.UndoAdded("TANGENT LINE");
-                        }
-                    } else
-                        this.addObjectToList(c, SelectList);
-                }
-            }
-            break;
-            case RATIO: {
-                int n = SelectList.size();
-                p = SelectAPoint(x, y);
-                if (p != null) {
-                    if (n % 2 != 0 && p == SelectList.get(n - 1))
-                        break;
-                    addToSelectList(p);
-                    setObjectListForFlash(p);
-                }
-                if (SelectList.size() == 8) {
-                    Constraint cs = new Constraint(Constraint.RATIO, SelectList);
-                    this.addConstraintToList(cs);
-                    this.charsetAndAddPoly(false);
-                    this.UndoAdded("RATIO");
-                    clearSelection();
-                }
-            }
-            break;
-            case EQUIVALENCE: {
-                if (STATUS == 0) {
-                    CPolygon g = (CPolygon) this.SelectFromAList(polygonlist, x, y);
-                    if (g != null) {
-                        addObjectToList(g, SelectList);
-                        STATUS = 1;
-                    }
-                } else if (STATUS == 1) {
-                    CPoint pt = this.SelectAPoint(x, y);
-                    if (pt != null) {
-                        addToSelectList(pt);
-                        STATUS = 2;
-                    } else {
-                        CPolygon g = (CPolygon) SelectList.get(0);
-                        int n = g.getPtn();
-
-                        for (int i = 0; i < n - 1; i++) {
-                            CPoint p1 = g.getPoint(i);
-                            CPoint p2 = g.getPoint(i + 1);
-                            if (CLine.mouse_on_line(x, y, p1.getx(), p1.gety(), p2.getx(), p2.gety())) {
-                                addToSelectList(p1);
-                                addToSelectList(p2);
-                                vx1 = x;
-                                vy1 = y;
-                                STATUS = 3;
-                                break;
-                            }
-                        }
-                    }
-                    if (STATUS == 1) {
-                        STATUS = 0;
-                        clearSelection();
-                    }
-
-                } else if (STATUS == 2) {
-                    CPolygon g = (CPolygon) SelectList.get(0);
-                    CPoint p1 = (CPoint) SelectList.get(1);
-                    CPoint t1 = g.getPreviousePoint(p1);
-                    CPoint t2 = g.getNextPoint(p1);
-                    double[] r = getPTInterSection(x, y, p1.getx(), p1.gety()
-                            , t1.getx(), t1.gety(), t2.getx(), t2.gety());
-                    CPoint pt = this.SelectAPoint(r[0], r[1]);
-
-                    if (pt != null && pt != t1) {
-                        CPolygon poly = new CPolygon();
-                        poly.copy(g);
-                        int t = g.getPtn();
-
-                        for (int i = 0; i < t; i++) {
-                            CPoint m = g.getPoint(i);
-                            if (m == p1)
-                                m = pt;
-                            poly.addAPoint(m);
-                        }
-                        if (this.findPolygon(poly.pointlist) != g) {
-                            g.setVisible(false);
-                            Constraint cs = new Constraint(Constraint.EQUIVALENCE1, g, poly);
-                            this.addConstraintToList(cs);
-                            this.addObjectToList(poly, polygonlist);
-                            this.UndoAdded("Area-Preserving");//+ g.getDescription() + " transformed to " + poly.getDescription());
-                        }
-                    }
-                    STATUS = 0;
-                    clearSelection();
-                    g.setDraggedPoints(null, null, 0, 0);
-
-                } else if (STATUS == 3) {
-                    CPolygon g = (CPolygon) SelectList.get(0);
-                    CPoint t1 = (CPoint) SelectList.get(1);
-                    CPoint t2 = (CPoint) SelectList.get(2);
-                    double dx = x - vx1;
-                    double dy = y - vy1;
-
-                    CPoint pt1 = this.SelectAPoint(t1.getx() + dx, t1.gety() + dy);
-                    CPoint pt2 = this.SelectAPoint(t2.getx() + dx, t2.gety() + dy);
-                    if (pt1 != null && pt2 != null && (pt1 != t1 || pt2 != t2)) {
-                        CPolygon poly = new CPolygon();
-                        poly.copy(g);
-                        int t = g.getPtn();
-
-                        for (int i = 0; i < t; i++) {
-                            CPoint m = g.getPoint(i);
-                            if (m == t1)
-                                m = pt1;
-                            else if (m == t2)
-                                m = pt2;
-
-                            poly.addAPoint(m);
-                        }
-                        if (this.findPolygon(poly.pointlist) != g) {
-                            g.setVisible(false);
-                            Constraint cs = new Constraint(Constraint.EQUIVALENCE2, g, poly);
-                            this.addConstraintToList(cs);
-                            this.addObjectToList(poly, polygonlist);
-                            this.UndoAdded("Area-Preserving");//g.getDescription() + " transformed to " + poly.getDescription());
-                        }
-                    }
-
-                    STATUS = 0;
-                    clearSelection();
-                    g.setDraggedPoints(null, null, 0, 0);
-                }
-            }
-            break;
-            case FREE_TRANSFORM: {
-                if (STATUS == 0) {
-                    CPolygon g = (CPolygon) this.SelectAPolygon(x, y);//SelectFromAList(polygonlist, x, y);
-                    if (g != null) {
-                        this.addObjectToList(g, SelectList);
-                        STATUS = 1;
-                    }
-                } else {
-                    CPoint pt = this.SelectAPoint(x, y);
-                    CPolygon poly = (CPolygon) SelectList.get(0);
-
-                    if (pt == null) {
-                        STATUS = 0;
-                        clearSelection();
-                        poly.setDraggedPointsNull();
-                    } else {
-                        if (SelectList.size() == 1) {
-                            Vector v = poly.getDraggedPoints();
-                            boolean already = false;
-                            for (int i = 0; i < v.size() / 2; i++) {
-                                if (v.get(i * 2) == pt) {
-                                    already = true;
-                                    break;
-                                }
-                            }
-                            if (!already)
-                                addToSelectList(pt);
-                        } else {
-                            CPoint t1 = (CPoint) SelectList.get(1);
-                            poly.addDraggedPoints(t1, pt);
-                            SelectList.remove(t1);
-                            if (poly.allDragged()) {
-                                add_free_transform();
-                            }
-                        }
-                    }
-
-                }
-
-            }
-            break;
-            case TRANSFORM: {
-                if (STATUS == 0) {
-                    CPolygon g = (CPolygon) this.SelectAPolygon(x, y); // SelectFromAList(polygonlist, x, y);
-                    if (g != null) {
-                        this.addObjectToList(g, SelectList);
-                        catchX = x;
-                        catchY = y;
-                        STATUS = 1;
-                        FirstPnt = SecondPnt = ThirdPnt = null;
-                    }
-                } else if (STATUS == 1 || STATUS == 2) {
-                    if (STATUS == 2 && (FirstPnt == null || ThirdPnt == null)) {
-                        CPoint pt = this.SelectAPoint(x - vx1, y - vy1);
-                        if (pt != null) {
-                            x = pt.getx() + vx1;
-                            y = pt.gety() + vy1;
-                        }
-                        if (FirstPnt == null) {
-                            FirstPnt = this.CreateATempPoint(x, y);
-                            SecondPnt = pt;
-                            catchX = x - vx1;
-                            catchY = y - vy1;
-                        } else {
-                            ThirdPnt = this.CreateATempPoint(x - vx1, y - vy1);
-                        }
-                    } else {
-                        CPolygon poly = (CPolygon) SelectList.get(0);
-                        clearSelection();
-                        STATUS = 0;
-
-                        int n = poly.getPtn();
-                        double cx = catchX + vx1;
-                        double cy = catchY + vy1;
-                        double sin = Math.sin(vangle);
-                        double cos = Math.cos(vangle);
-
-                        if (Math.abs(vangle) < CMisc.ZERO) {
-                            PolygonTransPointsCreated(poly);
-                        }
-
-                        for (int i = 0; i < n; i++) {
-                            CPoint t = poly.getPoint(i);
-                            double tx = (t.getx() + vx1);
-                            double ty = (t.gety() + vy1);
-
-                            tx -= cx;
-                            ty -= cy;
-                            double mx = (tx) * cos - (ty) * sin;
-                            double my = (tx) * sin + (ty) * cos;
-                            tx = mx + cx;
-                            ty = my + cy;
-                            CPoint t1 = this.SelectAPoint(tx, ty);
-                            if (t1 == null) {
-                                clearSelection();
-                                break;
-                            }
-                            addToSelectList(t1);
-                        }
-                        if (SelectList.size() != 0) {
-                            CPolygon poly1 = new CPolygon();
-                            poly1.setPoints(SelectList);
-                            if (this.findPolygon(SelectList) != poly) {
-                                Constraint cs = new Constraint(Constraint.TRANSFORM, poly, poly1, SecondPnt);
-
-                                int r = -1;
-
-                                if (CMisc.TransComfirmed) {
-                                    String s1 = poly.getDescription() + " is transformed to " + poly1.getDescription();
-                                    String s2 = "Do you want to keep the original polygon visible?";
-                                    TransformConfirmDialog dlg = new TransformConfirmDialog(gxInstance.getFrame(), s1, s2);
-                                    gxInstance.centerDialog(dlg);
-                                    dlg.setVisible(true);
-                                    r = dlg.getResult();
-                                } else
-                                    r = 1;
-
-                                if (r == 0) {//JOptionPane.YES_OPTION) {
-                                    cs.proportion = 0;
-                                } else if (r == 1) {
-                                    poly.setVisible(false);
-                                    cs.proportion = 1;
-                                } else {
-                                }
-                                if (r != 2) {
-                                    this.addObjectToList(poly1, polygonlist);
-                                    poly1.copy(poly);
-                                    this.addConstraintToList(cs);
-//                                    String s = "Isometry Transforming";
-//                                    if (Math.abs(vangle) < CMisc.ZERO)
-//                                        s = "Transforming";
-//                                    else if (SecondPnt != null)
-//                                        s = "Rotating";
-
-                                    String s = poly.getDescription() + " = " + poly1.getDescription();
-                                    this.UndoAdded(s);//);
-                                }
-                            }
-
-                        }
-                        STATUS = 0;
-                        clearSelection();
-                        vtrx = vtry = vx1 = vy1 = vangle = 0.0;
-                        FirstPnt = SecondPnt = ThirdPnt = null;
-                    }
-                }
-            }
-            break;
-
+            case D_ANGLE:
+                handleDAngleCase(x,y);
+                break;
+            case SETEQSIDE:
+                handleSetEqSideCase(x,y,p);
+                break;
+            case SETEQANGLE:
+                handleSetEqAngleCase(x,y,p);
+                break;
+            case SETEQANGLE3P:
+                handleSetEqAngle3PCase(x,y,p);
+                break;
+            case SETCCTANGENT:
+                handleSetCCTangentCase(x,y,p);
+                break;
+            case D_SQUARE:
+                handleDSquareCase(x,y);
+                break;
+            case D_CCLINE:
+                handleDCCLineCase(x,y);
+                break;
+            case D_IOSTRI:
+                handleDIOSTriCase(x,y);
+                break;
+            case DRAWTRIALL:
+                handleDrawTriAllCase(x,y);
+                break;
+            case RA_TRAPEZOID:
+                handleRATrapezoidCase(x,y);
+                break;
+            case TRAPEZOID:
+                handleTrapezoide(x,y);
+                break;
+            case PARALLELOGRAM:
+                handleParallelogram(x,y);
+                break;
+            case RECTANGLE:
+                handleRectangle(x,y);
+                break;
+            case DRAWTRISQISO:
+                handleDrawTriSqIsoCase(x,y);
+                break;
+            case DEFINEPOLY:
+                handleDefinePolyCase(x,y,p);
+                break;
+            case D_TEXT:
+                handleDTextCase(x,y);
+                break;
+            case MULSELECTSOLUTION:
+                handleMulSelectSolutionCase(x,y,p);
+                break;
+            case SETTRACK:
+                handleSetTrackCase(x,y);
+                break;
+            case LOCUS:
+                handleLocusCase(x,y);
+                break;
+            case CIRCUMCENTER:
+                handleCircumCenter(x,y,p);
+                break;
+            case NTANGLE:
+                handleNTangleCase(x,y);
+                break;
+            case VIEWELEMENT:
+                handleViewElementCase(x,y);
+                break;
+            case ARROW:
+                handleArrowCase(x,y);
+                break;
+            case DISTANCE:
+                handleDistanceCase(x,y);
+                break;
+            case EQMARK:
+                handleEqMark(x,y);
+                break;
+            case RAMARK:
+                handleRaMark(x,y);
+                break;
+            case HIDEOBJECT:
+                handleHideObject(x,y);
+                break;
+            case SHOWOBJECT:
+                handleShowObject(x,y);
+                break;
+            case SANGLE:
+                handleSAngle(x,y,p);
+                break;
+            case D_BLINE:
+                handleDBLine(x,y);
+                break;
+            case D_TCLINE:
+                handleDTCLine(x,y);
+                break;
+            case CCTANGENT:
+                handleCCTANGent(x,y);
+                break;
+            case RATIO:
+                handleRatio(x,y,p);
+                break;
+            case EQUIVALENCE:
+                handleEquivalence(x,y,p);
+                break;
+            case FREE_TRANSFORM:
+                handleFreeTransform(x,y);
+                break;
+            case TRANSFORM:
+                handleTransform(x,y);
+                break;
+            default:
+                break;
         }
-
     }
 
     /**
@@ -13072,5 +13746,4 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         }
         return new int[]{p1, q1};
     }
-
 }
