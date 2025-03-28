@@ -29,7 +29,7 @@ public class AuxPt {
      * @return the constructed point as a string
      */
     public String getConstructedPoint() {
-        return vptlist.getFirst().toString();
+        return vptlist.get(0).toString();
     }
 
     /**
