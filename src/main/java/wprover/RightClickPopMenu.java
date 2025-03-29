@@ -5,24 +5,32 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * RightClickPopMenu is a class that extends JPopupMenu and implements ActionListener.
+ * It is used to create a context menu for right-click actions on graphical elements.
+ */
 public class RightClickPopMenu extends JPopupMenu implements ActionListener {
 
     private GExpert gxInstance;
     private CClass cc;
+    JRadioButtonMenuItem t1, t2;
 
+    /**
+     * Constructs a new RightClickPopMenu with the specified CClass and GExpert instances.
+     *
+     * @param c  the CClass instance to associate with this menu
+     * @param gx the GExpert instance to associate with this menu
+     */
     public RightClickPopMenu(CClass c, GExpert gx) {
         this.gxInstance = gx;
         this.cc = c;
         this.setForeground(Color.white);
-
 
         JMenuItem item = addAMenuItem(GExpert.getLanguage("Cancel Action"), true);
         item.setActionCommand("Cancel Action");
         item.setMnemonic(KeyEvent.VK_ESCAPE);
         KeyStroke ctrlP = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         item.setAccelerator(ctrlP);
-//        item = addAMenuItem(getLanguage(10, "Move"), true);
-//        item.setActionCommand("Move");
 
         addFreezeMenu();
         this.addSeparator();
@@ -38,6 +46,11 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         item.setActionCommand("Properties");
     }
 
+    /**
+     * Adds specific menu items based on the type of the given CClass instance.
+     *
+     * @param c the CClass instance to determine the specific menu items
+     */
     public void addSpecificMenu(CClass c) {
         if (c == null) return;
 
@@ -94,6 +107,11 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         }
     }
 
+    /**
+     * Handles action events for the menu items.
+     *
+     * @param e the ActionEvent triggered by the menu items
+     */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("Properties"))
@@ -124,9 +142,7 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
             gxInstance.dp.addCalculationPX((CPoint) cc);
         } else if (command.equals("Y Coordinate")) {
             gxInstance.dp.addCalculationPY((CPoint) cc);
-
         } else if (command.equals("Area")) {
-
             if (cc instanceof Circle)
                 gxInstance.dp.addCalculationCircle((Circle) cc, 0);
             else {
@@ -139,20 +155,23 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
                     gxInstance.dp.addCalculationPolygon((CPolygon) cc);
                 }
             }
-
         } else if (command.equals("Girth")) {
             gxInstance.dp.addCalculationCircle((Circle) cc, 1);
-
         } else if (command.equals("Radius")) {
             gxInstance.dp.addCalculationCircle((Circle) cc, 2);
         } else if (command.equals("Slope")) {
             gxInstance.dp.addLineSlope((CLine) cc);
         } else if (command.equals("Unfreeze All Points"))
             gxInstance.dp.unfreezeAllPoints();
-
-
     }
 
+    /**
+     * Adds a menu item with the specified label and enabled state.
+     *
+     * @param s the label of the menu item
+     * @param t the enabled state of the menu item
+     * @return the created JMenuItem
+     */
     private JMenuItem addAMenuItem(String s, boolean t) {
         JMenuItem item = new JMenuItem(s);
         item.setEnabled(t);
@@ -161,8 +180,11 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         return item;
     }
 
-    JRadioButtonMenuItem t1, t2;
-
+    /**
+     * Adds font size menu items for the specified CText instance.
+     *
+     * @param t the CText instance to add font size menu items for
+     */
     private void addFontSizeMenuItem(CText t) {
         int f = t.getFontSize();
         int[] fz = CMisc.getFontSizePool();
@@ -212,6 +234,9 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         this.add(m);
     }
 
+    /**
+     * Adds a menu item to unfreeze all points if there are any frozen points.
+     */
     private void addFreezeMenu() {
         if (gxInstance.dp.containFreezedPoint()) {
             JMenuItem item = new JMenuItem(GExpert.getLanguage("Unfreeze All Points"));
@@ -222,6 +247,13 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         }
     }
 
+    /**
+     * Adds a color menu item with the specified label, enabled state, and default color index.
+     *
+     * @param s the label of the color menu item
+     * @param t the enabled state of the color menu item
+     * @param d the default color index
+     */
     private void addAColorMenuItem(String s, boolean t, int d) {
         JMenu item = new JMenu(s);
         item.setEnabled(t);
@@ -251,6 +283,10 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         }
     }
 
+    /**
+     * A custom JPanel class that represents a color panel.
+     * It sets the foreground and background color to the specified color.
+     */
     class colorPanel extends JPanel {
         public colorPanel(Color c) {
             this.setForeground(c);

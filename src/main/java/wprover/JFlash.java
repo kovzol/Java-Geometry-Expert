@@ -6,13 +6,10 @@ import javax.swing.*;
 import javax.swing.Timer;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2006-4-5
- * Time: 13:33:53
- * To change this template use File | Settings | File Templates.
+ * JFlash is an abstract class that provides methods for creating and managing
+ * graphical flash effects in a JPanel. It includes methods for drawing angles,
+ * setting colors, and managing timers.
  */
-
 public abstract class JFlash {
 
     protected Timer timer;
@@ -43,52 +40,77 @@ public abstract class JFlash {
     protected int TIME_INTERVAL = CMisc.getFlashInterval();
 
 
+    /**
+     * Updates the timer delay to the flash interval defined in CMisc.
+     */
     public void updateTimer() {
         if (timer != null)
             timer.setDelay(CMisc.getFlashInterval());
     }
 
-    public void setFlashFb(boolean f) {
-        fb = f;
-    }
-
+    /**
+     * Sets the delay for the timer.
+     *
+     * @param n the delay in milliseconds
+     */
     public void setDealy(int n) {
         if (timer != null)
             timer.setDelay(n);
     }
 
-    public boolean getFlashFb() {
-        return fb;
-    }
-
+    /**
+     * Constructs a new JFlash with the specified JPanel.
+     *
+     * @param p the JPanel to associate with this JFlash
+     */
     public JFlash(JPanel p) {
         panel = p;
     }
 
-    public void setvisibleType(boolean t) {
-        vType = t;
-    }
-
+    /**
+     * Gets the visibility type of the flash.
+     *
+     * @return true if the flash is visible, false otherwise
+     */
     public boolean getvisibleType() {
         return vType;
     }
 
+    /**
+     * Sets the color of the flash.
+     *
+     * @param c the color to set
+     */
     public void setColor(Color c) {
         color = c;
     }
 
+    /**
+     * Gets the color of the flash.
+     *
+     * @return the color of the flash
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * Draws the flash effect on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     * @return true if the drawing was successful, false otherwise
+     */
     public abstract boolean draw(Graphics2D g2);
 
+    /**
+     * Recalculates the flash effect. This method is intended to be overridden by subclasses.
+     */
     public void recalculate() {
     }
 
-    public void createTimer(int n) {
-    }
-
+    /**
+     * Starts the flash effect.
+     */
     public void start() {
         if (timer != null) {
             finished = false;
@@ -97,6 +119,9 @@ public abstract class JFlash {
         }
     }
 
+    /**
+     * Stops the flash effect.
+     */
     public void stop() {
         if (timer != null) {
             timer.stop();
@@ -104,28 +129,39 @@ public abstract class JFlash {
         }
     }
 
+    /**
+     * Checks if the flash effect is finished.
+     *
+     * @return true if the flash effect is finished, false otherwise
+     */
     public boolean isfinished() {
         return this.finished;
     }
 
+    /**
+     * Checks if the timer is running.
+     *
+     * @return true if the timer is running, false otherwise
+     */
     public boolean isrRunning() {
         return timer.isRunning();
     }
 
+    /**
+     * Sets the drawing stroke to a dashed line with a red color.
+     *
+     * @param g2 the Graphics2D context to set the stroke on
+     */
     final public void setDrawDash(Graphics2D g2) {
         g2.setColor(Color.red);
         g2.setStroke(DASH1);
     }
 
-    final public void setDrawDashFb(Graphics2D g2) {
-        if (fb) {
-            g2.setStroke(BStroke);
-        } else {
-            g2.setStroke(Dash);
-        }
-        g2.setColor(Color.red);
-    }
-
+    /**
+     * Sets the drawing stroke to either a bold or dashed line with a red color based on the fb flag.
+     *
+     * @param g2 the Graphics2D context to set the stroke on
+     */
     final public void setDrawDashFb2(Graphics2D g2) {
         if (fb) {
             g2.setStroke(BStroke2);
@@ -135,10 +171,29 @@ public abstract class JFlash {
         g2.setColor(Color.red);
     }
 
+    /**
+     * Checks if the given value is approximately zero.
+     *
+     * @param d the value to check
+     * @return true if the value is approximately zero, false otherwise
+     */
     final public boolean isZero(double d) {
         return Math.abs(d) < ZERO;
     }
 
+    /**
+     * Calculates the intersection point of two lines defined by their endpoints.
+     *
+     * @param x1 the x-coordinate of the first point of the first line
+     * @param y1 the y-coordinate of the first point of the first line
+     * @param x2 the x-coordinate of the second point of the first line
+     * @param y2 the y-coordinate of the second point of the first line
+     * @param x3 the x-coordinate of the first point of the second line
+     * @param y3 the y-coordinate of the first point of the second line
+     * @param x4 the x-coordinate of the second point of the second line
+     * @param y4 the y-coordinate of the second point of the second line
+     * @return an array containing the x and y coordinates of the intersection point, or null if the lines are parallel
+     */
     final static double[] interect_LL(double x1, double y1, double x2,
                                       double y2, double x3, double y3,
                                       double x4, double y4) {
@@ -170,168 +225,29 @@ public abstract class JFlash {
         return result;
     }
 
-    final public static void drawAngle(double x1, double y1, double x2, double y2,
-                                       double x3, double y3, double x4, double y4,
-                                       int rad, Graphics2D g2) {
-        double r[] = interect_LL(x1, y1, x2, y2, x3, y3, x4, y4);
-        if (r == null) {
-            return;
-        }
-        if (Math.abs(r[0]) > 10000 || Math.abs(r[1]) > 10000) {
-            return;
-        }
-        int radius = rad;
-        double psx, psy;
-        double pex, pey;
-        psx = psy = pex = pey = 0;
-        if (spt(x1, y1, r[0], r[1])) {
-            psx = x2;
-            psy = y2;
-
-        } else {
-            psx = x1;
-            psy = y1;
-        }
-
-        if (spt(x3, y3, r[0], r[1])) {
-            pex = x4;
-            pey = y4;
-
-        } else {
-            pex = x3;
-            pey = y3;
-        }
-
-        double dx1 = psx - r[0];
-        double dy1 = psy - r[1];
-        dy1 = (-1) * dy1;
-
-        double k1 = dy1 / dx1;
-        double r1 = Math.atan(k1);
-        if (dx1 < 0) {
-            r1 += Math.PI;
-        }
-
-        double t = Math.sqrt(dx1 * dx1 + dy1 * dy1);
-        dx1 = dx1 / t;
-        dy1 = dy1 / t;
-
-        double dx2 = pex - r[0];
-        double dy2 = pey - r[1];
-
-        dy2 = (-1) * dy2;
-        double k2 = dy2 / dx2;
-        double r2 = Math.atan(k2);
-
-        if (dx2 < 0) {
-            r2 += Math.PI;
-        }
-
-        t = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-        dx2 = dx2 / t;
-        dy2 = dy2 / t;
-
-        double jx = dx2 * radius + r[0];
-        double jy = (-1) * dy2 * radius + r[1];
-
-        int ri1 = (int) (180 * r1 / Math.PI);
-        double dr = (180 * (r2 - r1) / Math.PI);
-        double tr = dr;
-
-
-        if (dr > 180) {
-            dr = dr - 360;
-        } else if (dr < -180) {
-            dr = dr + 360;
-        }
-
-
-        double rc = dr * Math.PI / (360);
-        double cx = (dx1 * Math.cos(rc) - dy1 * Math.sin(rc)) * (radius + 6) + r[0];
-        double cy = -(dy1 * Math.cos(rc) + dx1 * Math.sin(rc)) * (radius + 6) + r[1];
-
-
-        double dr1 = dr;
-        double k = dr1;
-        k = Math.abs(k);
-
-        if (CMisc.ANGLE_TYPE == 1) {
-
-            double lr = 12.0;
-
-            double alpha = -Math.PI / 3;
-            if (dr > 0) {
-                alpha = -alpha;
-                dr = (dr - 180 * Math.cos(Math.PI / 2.0 - alpha) * lr * 1 /
-                        (3 * Math.PI * radius));
-                if (dr < 0) {
-                    dr = 0;
-                }
-            } else {
-                dr = (dr + 180 * Math.cos(Math.PI / 2.0 + alpha) * lr * 1 /
-                        (3 * Math.PI * radius));
-                if (dr > 0) {
-                    dr = 0;
-                }
-            }
-            dy2 = -dy2;
-
-            double c1 = Math.cos(alpha);
-            double s1 = Math.sin(alpha);
-            double c2 = Math.cos(Math.PI - alpha);
-            double s2 = Math.sin(Math.PI - alpha);
-
-            double jx1 = (dx2 * c1 - dy2 * s1) * lr + jx;
-            double jy1 = (dy2 * c1 + dx2 * s1) * lr + jy;
-            double jx2 = (dx2 * c2 - dy2 * s2) * lr + jx;
-            double jy2 = (dy2 * c2 + dx2 * s2) * lr + jy;
-
-            if (dr >= 0) {
-                dr += 1.5;
-            } else {
-                dr -= 1.5;
-            }
-
-            int[] xp = new int[4];
-            int[] yp = new int[4];
-            xp[0] = (int) jx;
-            xp[1] = (int) jx1;
-            xp[2] = (int) (jx1 / 3 + jx2 / 3 + jx / 3);
-            xp[3] = (int) jx2;
-            yp[0] = (int) jy;
-            yp[1] = (int) jy1;
-            yp[2] = (int) (jy1 / 3 + jy2 / 3 + jy / 3);
-            yp[3] = (int) jy2;
-            g2.fillPolygon(xp, yp, 4);
-        }
-
-        g2.drawArc((int) r[0] - radius, (int) r[1] - radius, radius * 2, radius * 2, ri1, (int) dr);
-        g2.setColor(Color.black);
-        g2.setFont(CMisc.font);
-        if (CMisc.show_angle_text) {
-            if (k > 0) {
-                k = k * 100 + 50;
-            } else {
-                k = k * 100 - 50;
-            }
-            g2.drawString(((int) ((k) / 100)) + "", (int) cx, (int) cy);
-        }
-
-    }
-
-    public static void drawAngle(CPoint p1, CPoint p2, CPoint p3, CPoint p4,
-                                 int rad, Graphics2D g2) {
-        if (p1 != null && p2 != null && p3 != null && p4 != null) {
-            drawAngle(p1.getx(), p1.gety(), p2.getx(), p2.gety(), p3.getx(),
-                    p3.gety(), p4.getx(), p4.gety(), rad, g2);
-        }
-    }
-
+    /**
+     * Checks if the distance between two points is less than a small threshold.
+     *
+     * @param x0 the x-coordinate of the first point
+     * @param y0 the y-coordinate of the first point
+     * @param x  the x-coordinate of the second point
+     * @param y  the y-coordinate of the second point
+     * @return true if the distance between the points is less than the threshold, false otherwise
+     */
     static boolean spt(double x0, double y0, double x, double y) {
         return Math.pow(x0 - x, 2) + Math.pow(y0 - y, 2) <
                 CMisc.ZERO * CMisc.ZERO;
     }
 
+    /**
+     * Draws a line segment between a point and the closer of two other points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param x  the x-coordinate of the third point
+     * @param y  the y-coordinate of the third point
+     * @param g2 the Graphics2D context to draw on
+     */
     static public void drawALine3Short(CPoint p1, CPoint p2, double x, double y,
                                        Graphics2D g2) {
 
@@ -349,6 +265,16 @@ public abstract class JFlash {
 
     }
 
+    /**
+     * Draws a line segment between a point and the closer of two other points, with optional line drawing.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param x  the x-coordinate of the third point
+     * @param y  the y-coordinate of the third point
+     * @param ln whether to draw the line segment between p1 and p2
+     * @param g2 the Graphics2D context to draw on
+     */
     static public void drawALine3(CPoint p1, CPoint p2, double x, double y,
                                   boolean ln, Graphics2D g2) {
         if (Math.abs(x) > 10000 || Math.abs(y) > 10000) {
@@ -397,15 +323,14 @@ public abstract class JFlash {
         }
     }
 
-    static double getcircleDr(double x1, double y1) {
-        double k = y1 / x1;
-        double r = Math.atan(k);
-        if (x1 < 0) {
-            r += Math.PI;
-        }
-        return r;
-    }
-
+    /**
+     * Gets a color that is a blend of two colors based on a ratio.
+     *
+     * @param c1 the first color index
+     * @param c2 the second color index
+     * @param ra the ratio for blending the colors
+     * @return the blended color
+     */
     protected static Color getRatioColor(int c1, int c2, double ra) {
         Color o1 = DrawData.getColor(c1);
         Color o2 = DrawData.getColor(c2);

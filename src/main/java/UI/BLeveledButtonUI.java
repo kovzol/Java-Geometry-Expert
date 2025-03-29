@@ -7,22 +7,29 @@ import javax.swing.border.BevelBorder;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-7-22
- * Time: 15:25:17
- * To change this template use File | Settings | File Templates.
+ * BLeveledButtonUI.java
+ * This class extends BasicButtonUI to create a custom button UI with leveled borders.
+ * It changes the button's border based on its rollover state.
  */
-
 public class BLeveledButtonUI extends BasicButtonUI {
 
     private static Border border1 = BorderFactory.createRaisedBevelBorder();
     private static Border border2 = BorderFactory.createEtchedBorder();//createEtchedBorder(Color.white,Color.gray.brighter());//.createMatteBorder(2,2,2,2,Color.LIGHT_GRAY);//.createEmptyBorder(2, 2, 2, 2);
 
+    /**
+     * Constructs a BLeveledButtonUI.
+     * Calls the superclass constructor.
+     */
     public BLeveledButtonUI() {
         super();
     }
 
+    /**
+     * Installs the UI for a specified component.
+     * Sets the rollover enabled and applies the default border.
+     *
+     * @param c the component where this UI will be installed
+     */
     public void installUI(JComponent c) {
         super.installUI(c);
         AbstractButton button = (AbstractButton) c;
@@ -30,15 +37,21 @@ public class BLeveledButtonUI extends BasicButtonUI {
         button.setBorder(border2);
     }
 
+    /**
+     * Paints the specified component.
+     * Changes the border based on the rollover state of the button.
+     *
+     * @param g the Graphics context in which to paint
+     * @param c the component being painted
+     */
     public void paint(Graphics g, JComponent c) {
         AbstractButton button = (AbstractButton) c;
         boolean b1 = button.getModel().isRollover();
-        boolean b2 = button.getModel().isArmed();
-        boolean b3 = button.getModel().isSelected();
         if (b1) {
-            //border1.paintBorder(button,g,button.getX(),button.getY(),button.getWidth(),button.getHeight());
             button.setBorder(border1);
-        }else button.setBorder(border2);
+        } else {
+            button.setBorder(border2);
+        }
 
         super.paint(g, c);
     }

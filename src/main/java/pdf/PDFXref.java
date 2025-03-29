@@ -87,6 +87,7 @@ public class PDFXref
   /**
    * @return The xref in the format of the xref section in the PDF file
    */
+  @Override
   public String toString()
   {
     String of = Integer.toString(offset);

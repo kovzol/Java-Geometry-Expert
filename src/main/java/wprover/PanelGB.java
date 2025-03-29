@@ -25,6 +25,12 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
     private static long TIME = 1000000;
     private JPopupMenu menu;
 
+    /**
+     * Constructs a new PanelGB with the specified DrawProcess and WuTextPane.
+     *
+     * @param dp    the DrawProcess instance to associate with this panel
+     * @param tpane the WuTextPane instance to associate with this panel
+     */
     public PanelGB(DrawProcess dp, WuTextPane tpane) {
         super(dp, tpane);
         menu = new JPopupMenu();
@@ -38,17 +44,23 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         tpane.addMouseListener(this);
     }
 
-
+    /**
+     * Stops the running process and updates the status.
+     */
     public void stopRunning() {
         running = false;
         PolyBasic.setbbStop(true);
         this.addString("\n");
         this.addString("icon4", "icon4");
         this.addString(GExpert.getLanguage("The Process Is Stopped By The User."));
-
     }
 
-
+    /**
+     * Initiates the proving process with the given GTerm and DrawProcess.
+     *
+     * @param tm the GTerm instance representing the term to prove
+     * @param dp the DrawProcess instance to use for proving
+     */
     public void prove(GTerm tm, DrawProcess dp) {
         if (running)
             return;
@@ -62,6 +74,9 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         startTimer();
     }
 
+    /**
+     * Starts a timer to monitor the running process.
+     */
     public void startTimer() {
         if (gxInstance != null) {
             Timer t = new Timer(1000, new ActionListener() {
@@ -77,10 +92,15 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
 
             t.start();
         }
-
     }
 
-
+    /**
+     * Divides the given polynomial by the terms in the specified TPoly.
+     *
+     * @param m1 the polynomial to divide
+     * @param p1 the TPoly containing the terms to divide by
+     * @return 0 if the division is successful, 1 if the process is interrupted
+     */
     protected int div(TMono m1, TPoly p1) {
         if (poly.pzerop(m1))
             return 0;
@@ -109,7 +129,6 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
                 int k = 0;
             }
             long t1 = System.currentTimeMillis();
-//            addDiv(--index, m1, m.x, t1 - time);
             time = t1;
             if (poly.pzerop(m1))
                 return 0;
@@ -122,68 +141,20 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         return 1;
     }
 
+    /**
+     * Retrieves the TMono representation of the specified construction.
+     *
+     * @param c the construction
+     * @return the TMono representation of the construction
+     */
     protected TMono getTMono(Cons c) {
         return dp.getTMono(c);
     }
 
-    public int addMM(TMono m, Vector v, int param) {
-        GeoPoly gp = GeoPoly.getPoly();
-
-        if (gp.plength(m) == 1) {
-            while (m != null && m.deg > 0 && m.x > 0) {
-                TMono m1 = gp.pth(m.x, 1, 1);
-                m1 = gp.n_ndg(m1, param--);
-                v.add(m1);
-                m = m.coef;
-            }
-        } else {
-            m = gp.n_ndg(m, param--);
-            v.add(m);
-        }
-
-        return param;
-
-    }
-
-    private boolean is_ndg_set() {
-        return gt != null && gt.getNcons().size() > 0;
-    }
-
-    public void getNDGS(Vector v3) {
-        int t = 3;
-        int param = -1;
-        GeoPoly gp = GeoPoly.getPoly();
-
-        if (t == 3) {
-            vndgs = gt.getNcons();
-        }
-
-
-        if (t == 0 || t == 3) {     // from FULL
-            for (int i = 0; i < vndgs.size(); i++) {
-                CNdg nd = (CNdg) vndgs.get(i);
-                TMono m = gp.mm_poly(nd, dp);
-                addString1(nd.toString() + "\n");
-                if (m != null) {
-                    param = addMM(m, v3, param);
-
-
-                }
-            }
-        } else if (t == 1) { // from DB
-            Vector v = dp.getNDGS();
-            for (int i = 0; i < v.size(); i++) {
-                TMono m = (TMono) v.get(i);
-                if (m != null) {
-                    param = addMM(m, v3, param);
-                }
-            }
-        }
-    }
-
-
+    /**
+     * Runs the main process for computing the Groebner basis.
+     */
     public void run() {
-
         if (gt == null) {
             running = false;
             if (rund != null)
@@ -191,9 +162,6 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
             return;
         }
 
-//        /if (is_ndg_set())
-//            this.gbasis1();
-//        else
         gbasis();
 
         PolyBasic.setbbStop(false);
@@ -202,148 +170,11 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
             rund.stopTimer();
     }
 
-    public void gbasis1() {
-
-        String sc = gt.getConcText();
-        Cons cc = gt.getConclusion();
-
-        TMono mc = getTMono(cc);
-        if (mc == null) {
-            running = false;
-            return;
-        }
-
-
-        addAlgebraicForm();
-        addString2("The equational hypotheses:");
-
-        Vector vc = dp.getAllConstraint();
-        int n = 1;
-        Vector pp = new Vector();
-
-
-        for (int i = 0; i < vc.size(); i++) {
-            Constraint c = (Constraint) vc.get(i);
-            if (c.is_poly_genereate) {
-                c.PolyGenerate();
-                TPoly p1 = Constraint.getPolyListAndSetNull();
-                if (p1 != null)
-                    addString1(n++ + ": " + c.toString() + "\n");
-                while (p1 != null) {
-                    TMono m = p1.getPoly();
-                    if (m != null) {
-                        poly.ppush(m, pp);
-                        addString("  " + poly.printSPoly(m));
-                    }
-                    p1 = p1.next;
-                }
-            }
-        }
-
-
-        addString2("Nondegenerate Conditions");
-        Vector v3 = new Vector();
-        this.getNDGS(v3);
-        Vector p = v3;
-        printTP(p);
-
-
-        for (int i = 0; i < p.size(); i++) {
-            TMono m = (TMono) p.get(i);
-            poly.ppush(m, pp);
-        }
-
-        if (prs) {
-            addString2("Poly set before gbasis");
-            printTP(pp);
-        }
-
-        int dx = p.size() + 2;
-        poly.upValueTM(pp, dx);
-
-        int index = 1;
-        long t = System.currentTimeMillis();
-
-        boolean r1 = false;
-//        if (true) {
-//            sbasis();
-//            return;
-//        }
-
-        while (true) {
-            if (index == 2) {
-                int k = 0;
-            }
-
-            if (!prs) {
-                addString2(index + ": Poly set before bb-reduce");
-                printTP(pp);
-            }
-            r1 = true;
-
-
-            pp = poly.bb_reduce(pp, t);
-            //           if (System.currentTimeMillis() - t > 10000)
-            //             break;
-
-            if (!prs) {
-                addString2(index++ + ": Poly set after bb-reduce");
-                printTP(pp);
-            }
-//            }
-            if (gb_finished(pp))
-                break;
-            //       if (pp.size() > 30)
-            //            break;
-
-            Vector tp = poly.s_polys(pp);
-            if (tp.size() != 0) {
-                tp = poly.bb_reduce(tp, t);
-                if (!prs) {
-                    addString2("S - Polynomials");
-                    printTP(tp);
-                }
-//                }
-                for (int i = 0; i < tp.size(); i++)
-                    poly.ppush((TMono) tp.get(i), pp);
-            } else {
-                break;
-            }
-            if (!running)
-                return;
-        }
-
-
-        String s1 = poly.printSPoly(mc);
-        poly.upValueTM(mc, dx);
-        mc = poly.b_reduce(mc, pp);
-        poly.upValueTM(mc, -dx);
-        poly.upValueTM(pp, -dx);
-        String s2 = poly.printSPoly(mc);
-
-        if (prs) {
-            addString2("Poly set after gbasis");
-            printTP(pp);
-        }
-
-
-        addString2("The conclusion: ");
-        addString1(sc + "\n");
-
-        addString(s1);
-        addString2("The conclusion after reduce:");
-        addString(s2);
-
-        if (mc == null) {
-            addString("icon1", "icon1");
-            addString1("The conclusion is true");
-        } else {
-            addString("icon2", "icon2");
-            addString1("The conclusion is false");
-        }
-        running = false;
-    }
-
+    /**
+     * Prints the terms in the specified vector to the text pane.
+     *
+     * @param v the vector containing the terms to print
+     */
     public void printTP(Vector v) {
         for (int i = 0; i < v.size(); i++) {
             TMono m = (TMono) v.get(i);
@@ -352,6 +183,12 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         }
     }
 
+    /**
+     * Checks if the Groebner basis computation is finished.
+     *
+     * @param v the vector containing the terms to check
+     * @return true if the computation is finished, false otherwise
+     */
     public boolean gb_finished(Vector v) {
         for (int i = 0; i < v.size(); i++) {
             TMono m = (TMono) v.get(i);
@@ -361,9 +198,14 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         return false;
     }
 
+    /**
+     * Tests the Groebner basis computation with the specified polynomial vector and index.
+     *
+     * @param pp the vector containing the polynomial terms
+     * @param dx the index value for the computation
+     */
     public void test(Vector pp, int dx) {
         int size = pp.size();
-
 
         if (size < 2) return;
 
@@ -371,7 +213,6 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         Vector vp = new Vector();
         for (int i = size - 2; i < size; i++)
             vp.add(pp.get(i));
-
 
         for (int i = index; i >= 0; i--) {
             addString2(i + "GBASIS");
@@ -384,14 +225,14 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         addString2(-1 + "GBASIS");
         poly.upValueTM(vp, -dx);
         printTP(vp);
-
-
     }
 
-
+    /**
+     * Computes the Groebner basis for the specified polynomial vector.
+     *
+     * @param pp the vector containing the polynomial terms
+     */
     public void gbasis(Vector pp) {
-//        long t = System.currentTimeMillis();
-
         while (true) {
             pp = poly.bb_reduce(pp, 10000);
             if (!isRunning())
@@ -400,63 +241,30 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
             if (gb_finished(pp))
                 break;
 
-
             Vector tp = poly.s_polys(pp);
 
             if (tp.size() != 0) {
                 for (int i = 0; i < tp.size(); i++)
                     poly.ppush((TMono) tp.get(i), pp);
-
             } else {
                 break;
             }
         }
     }
 
-    public void dbasis(Vector pp) {
-
-        GeoPoly basic = GeoPoly.getPoly();
-
-        Vector v = new Vector();
-        int size = pp.size();
-        for (int i = 0; i < size - 1; i++) {
-            TMono m1 = (TMono) pp.get(i);
-            for (int j = i + 1; j < size; j++) {
-                TMono m2 = (TMono) pp.get(j);
-                v.clear();
-                v.add(basic.p_copy(m1));
-                v.add(basic.p_copy(m2));
-
-                basic.printVpoly(v);
-                while (true) {
-                    v = poly.bb_reduce(v, -1);
-
-                    if (gb_finished(v))
-                        break;
-
-
-                    Vector tp = poly.s_polys(v);
-
-                    if (v.size() >= 1) {
-                        basic.printVpoly(v);
-                        basic.printVpoly(tp);
-                    }
-                    tp = poly.bb_reduce(tp, -1);
-
-
-                    if (tp.size() != 0) {
-                        for (int k = 0; k < tp.size(); k++)
-                            poly.ppush((TMono) tp.get(k), v);
-                    } else {
-                        break;
-                    }
-                }
-                basic.printVpoly(v);
-            }
-        }
-    }
-
-
+    /**
+     * Computes a modified Groebner basis (SBasis) for the given polynomial vector and conclusion.
+     *
+     * <p>This method selects and removes polynomial terms from the vector based on the provided index,
+     * computes intermediate deltas and nondegenerate conditions, and applies a series of polynomial
+     * updates and reductions. It modifies the input vector with updated terms and returns the reduced
+     * conclusion polynomial.</p>
+     *
+     * @param x  the maximum index value controlling term selection and iterations
+     * @param v  the vector of polynomial terms (TMono objects) to be processed and updated
+     * @param mc the conclusion polynomial term (TMono) to be reduced
+     * @return the reduced conclusion polynomial or {@code null} if the process is interrupted
+     */
     public TMono sbasis(int x, Vector v, TMono mc) {
 
         Vector vg = new Vector();
@@ -601,28 +409,16 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         return mc;
     }
 
-    public void printVectorExpanded(Vector vrs, int dx) {
-        GeoPoly basic = GeoPoly.getPoly();
-
-        basic.upValueTM(vrs, -dx);
-        for (int i = 0; i < vrs.size(); i++) {
-            TMono ma = (TMono) vrs.get(i);
-            String st = basic.getExpandedPrint(ma);
-            if (st.endsWith("*"))
-                st = st.substring(0, st.length() - 1);
-            else if (st.endsWith("-") || st.endsWith("+"))
-                st += "1";
-            System.out.println(st);
-        }
-        basic.upValueTM(vrs, dx);
-    }
-
+    /**
+     * Adds the non-degenerate conditions to the text pane.
+     *
+     * @param v the vector containing the non-degenerate conditions
+     */
     public void addSVdd(Vector v) {
         GeoPoly basic = GeoPoly.getPoly();
 
         addString2(GExpert.getLanguage("The Nondegenerate Conditions:"));
         for (int i = 0; i < v.size(); i++) {
-//            TDono d = (TDono) v.get(i);
             TMono m = (TMono) v.get(i);
             basic.coefgcd(m);
             TMono mf = basic.get_factor1(m);
@@ -638,32 +434,13 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
                 }
                 String s = basic.printNPoly(ff, m);
                 this.addString(s);
-
             }
         }
-
     }
 
-    public void printVDD(Vector v) {
-        GeoPoly basic = GeoPoly.getPoly();
-
-        for (int i = 0; i < v.size(); i++) {
-
-            TDono d = (TDono) v.get(i);
-            basic.sprint(d.p1);
-            System.out.print("*( ");
-            basic.sprint(d.p2);
-            System.out.print(" )");
-            if (d.c.value() > 0)
-                System.out.print(" + ");
-            basic.sprint(d.c);
-            System.out.print("\n");
-
-
-        }
-
-    }
-
+    /**
+     * Computes the Groebner basis for the current set of constraints and updates the text pane.
+     */
     public void gbasis() {
         GeoPoly basic = GeoPoly.getPoly();
         String sc = gt.getConcText();
@@ -674,14 +451,12 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
             return;
         }
 
-
         addAlgebraicForm();
         addString2(GExpert.getLanguage("The equational hypotheses:"));
 
         Vector vc = dp.getAllConstraint();
         int n = 1;
         Vector pp = new Vector();
-
 
         for (int i = 0; i < vc.size(); i++) {
             Constraint c = (Constraint) vc.get(i);
@@ -706,8 +481,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
 
         String s1 = poly.printSPoly(mc);
 
-        addString2(GExpert.getLanguage("The Groebner basis:") /* + "GB = " */);
-//        addString2("GB = ");
+        addString2(GExpert.getLanguage("The Groebner basis:"));
         Vector v = dp.getPBMono();
 
         int x = basic.getMaxX(v);
@@ -742,8 +516,11 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         running = false;
     }
 
-
-    ////////////////////////////////////////////////////////////
+    /**
+     * Handles mouse click events to show the popup menu.
+     *
+     * @param e the mouse event
+     */
     public void mouseClicked(MouseEvent e) {
         menu.show((JComponent) e.getSource(), e.getX(), e.getY());
     }
@@ -760,6 +537,12 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
     public void mouseExited(MouseEvent e) {
     }
 
+    /**
+     * Saves the current data in Maple format.
+     * Opens a file chooser dialog to select the save location.
+     * If the file exists, it will be overwritten.
+     * If the file does not exist, it will be created.
+     */
     public void saveAsMaple() {
         JFileChooser filechooser1 = new JFileChooser();
         String dr = GExpert.getUserDir();
@@ -785,10 +568,15 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
                 JOptionPane.showMessageDialog(this, ee.getMessage(),
                         "Save Failed", JOptionPane.ERROR_MESSAGE);
             }
-
         }
     }
 
+    /**
+     * Writes the current data in Maple format to the specified output stream.
+     *
+     * @param out the output stream to write the data to
+     * @throws IOException if an I/O error occurs
+     */
     public void writeMaple(FileOutputStream out) throws IOException {
         GeoPoly basic = GeoPoly.getPoly();
         Cons cc = gt.getConclusion();
@@ -812,7 +600,6 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
             } else out.write(", ".getBytes());
             out.write((s2 + ", " + s1).getBytes());
         }
-
 
         Vector v = dp.getPBMono();
         int x = basic.getMaxX(v);
@@ -855,15 +642,13 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         }
         out.write("];".getBytes());
 
-// Part 2: All polynomials.
-//        out.write(("\n" + vg.size()).getBytes());
+        // Part 2: All polynomials.
         for (int i = 0; i < vg.size(); i++) {
             TMono m = (TMono) vg.get(i);
             out.write("\n".getBytes());
-            out.write(("P" + i + " := " + poly.getExpandedPrint(m) +" ;").getBytes());
+            out.write(("P" + i + " := " + poly.getExpandedPrint(m) + " ;").getBytes());
         }
         String st = poly.getExpandedPrint(mc);
-        out.write(("\n C := " + st +" ;").getBytes());
-
+        out.write(("\n C := " + st + " ;").getBytes());
     }
 }

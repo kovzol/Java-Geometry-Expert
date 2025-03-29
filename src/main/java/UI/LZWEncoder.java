@@ -4,10 +4,11 @@ package UI;
 import java.io.OutputStream;
 import java.io.IOException;
 
-//==============================================================================
-//  Adapted from Jef Poskanzer's Java port by way of J. M. G. Elliott.
-//  K Weiner 12/00
-
+/**
+ * LZWEncoder.java
+ * This class implements the Lempel-Ziv-Welch (LZW) compression algorithm for encoding images.
+ * It is used to compress image data for GIF format.
+ */
 class LZWEncoder {
 
 	private static final int EOF = -1;
@@ -118,24 +119,45 @@ class LZWEncoder {
 	byte[] accum = new byte[256];
 
 	//----------------------------------------------------------------------------
+	/**
+	 * Initializes a new LZWEncoder with the specified image dimensions, pixel data, and color depth.
+	 *
+	 * @param width the width of the image
+	 * @param height the height of the image
+	 * @param pixels the image pixels array
+	 * @param color_depth the color depth for the image
+	 */
 	LZWEncoder(int width, int height, byte[] pixels, int color_depth) {
 		imgW = width;
 		imgH = height;
 		pixAry = pixels;
 		initCodeSize = Math.max(2, color_depth);
 	}
-	
+
 	// Add a character to the end of the current packet, and if it is 254
 	// characters, flush the packet to disk.
+	/**
+	 * Adds a character to the current packet. Flushes the packet to the output stream if the packet reaches 254 characters.
+	 *
+	 * @param c the byte to add to the packet
+	 * @param outs the output stream to write to
+	 * @throws IOException if an I\/O error occurs while writing
+	 */
 	void char_out(byte c, OutputStream outs) throws IOException {
 		accum[a_count++] = c;
 		if (a_count >= 254)
 			flush_char(outs);
 	}
-	
+
 	// Clear out the hash table
 
 	// table clear for block compress
+	/**
+	 * Clears the hash table used for block compression, resets free entry counter and writes the clear code to the output stream.
+	 *
+	 * @param outs the output stream to write to
+	 * @throws IOException if an I\/O error occurs while writing
+	 */
 	void cl_block(OutputStream outs) throws IOException {
 		cl_hash(hsize);
 		free_ent = ClearCode + 2;
@@ -143,13 +165,25 @@ class LZWEncoder {
 
 		output(ClearCode, outs);
 	}
-	
+
 	// reset code table
+	/**
+	 * Resets the hash table by setting all entries to -1.
+	 *
+	 * @param hsize the size of the hash table
+	 */
 	void cl_hash(int hsize) {
 		for (int i = 0; i < hsize; ++i)
 			htab[i] = -1;
 	}
-	
+
+	/**
+	 * Compresses the image pixel data using the LZW compression algorithm and writes the resulting codes to the output stream.
+	 *
+	 * @param init_bits the initial number of bits for encoding
+	 * @param outs the output stream to write to
+	 * @throws IOException if an I\/O error occurs during compression
+	 */
 	void compress(int init_bits, OutputStream outs) throws IOException {
 		int fcode;
 		int i /* = 0 */;
@@ -219,8 +253,13 @@ class LZWEncoder {
 		output(ent, outs);
 		output(EOFCode, outs);
 	}
-	
-	//----------------------------------------------------------------------------
+
+	/**
+	 * Encodes the image by writing the initial code size, compressing the pixel data, and writing the block terminator.
+	 *
+	 * @param os the output stream to write to
+	 * @throws IOException if an I\/O error occurs while writing
+	 */
 	void encode(OutputStream os) throws IOException {
 		os.write(initCodeSize); // write "initial code size" byte
 
@@ -231,8 +270,14 @@ class LZWEncoder {
 
 		os.write(0); // write block terminator
 	}
-	
+
 	// Flush the packet to disk, and reset the accumulator
+	/**
+	 * Flushes the packet accumulator to the output stream and resets the accumulator.
+	 *
+	 * @param outs the output stream to write to
+	 * @throws IOException if an I\/O error occurs during flushing
+	 */
 	void flush_char(OutputStream outs) throws IOException {
 		if (a_count > 0) {
 			outs.write(a_count);
@@ -240,14 +285,25 @@ class LZWEncoder {
 			a_count = 0;
 		}
 	}
-	
+
+	/**
+	 * Returns the maximum code value given the current number of bits.
+	 *
+	 * @param n_bits the number of bits
+	 * @return the maximum code value allowable with n_bits
+	 */
 	final int MAXCODE(int n_bits) {
 		return (1 << n_bits) - 1;
 	}
-	
+
 	//----------------------------------------------------------------------------
 	// Return the next pixel from the image
 	//----------------------------------------------------------------------------
+	/**
+	 * Retrieves the next pixel from the image data. Returns EOF (-1) when no more pixels are available.
+	 *
+	 * @return the next pixel value or EOF if no pixels remain
+	 */
 	private int nextPixel() {
 		if (remaining == 0)
 			return EOF;
@@ -258,7 +314,14 @@ class LZWEncoder {
 
 		return pix & 0xff;
 	}
-	
+
+	/**
+	 * Outputs the given code to the output stream, managing the bit accumulator and the current bit count.
+	 *
+	 * @param code the code to output
+	 * @param outs the output stream to write to
+	 * @throws IOException if an I\/O error occurs while writing
+	 */
 	void output(int code, OutputStream outs) throws IOException {
 		cur_accum &= masks[cur_bits];
 

@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 
 import static wprover.GExpert.commandlineCommand;
 
+/**
+ * The GProver class implements the Runnable interface and is responsible for
+ * managing the proving process in GeoGebra.
+ */
 public class GProver implements Runnable {
 
     GExpert gxInstance;
@@ -20,26 +24,40 @@ public class GProver implements Runnable {
     int number = 0;
     long ftime = 0;
 
+    /**
+     * Constructs a new GProver with the specified PanelProve and GExpert instances.
+     *
+     * @param p  the PanelProve instance
+     * @param fr the GExpert instance
+     */
     public GProver(PanelProve p, GExpert fr) {
         pprove = p;
         gxInstance = fr;
     }
 
+    /**
+     * Sets the status to fix mode.
+     */
     public void setFix() {
         Status = 0;
     }
 
+    /**
+     * Sets the status to prove mode.
+     */
     public void setProve() {
         Status = 1;
     }
 
+    /**
+     * Starts the timer for the proving process.
+     */
     public void startTimer() {
         number = 0;
         ftime = System.currentTimeMillis();
 
         timer = new Timer(100, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               // int n = Prover.getNumberofProperties();
                 if (!isRunning)
                     timer.stop();
                 else {
@@ -53,6 +71,9 @@ public class GProver implements Runnable {
         timer.start();
     }
 
+    /**
+     * Runs the proving process in a separate thread.
+     */
     public void run() {
         isRunning = true;
         try {
@@ -93,10 +114,12 @@ public class GProver implements Runnable {
             gxInstance.stopTimer();
 
         isRunning = false;
-        // Do the remaining steps from the command line request...
         GExpert.performCommandLineRequests(gxInstance, false);
-        }
+    }
 
+    /**
+     * Starts the proving process in a new thread.
+     */
     public void start() {
         if (isRunning) return;
         main = new Thread(this, "Prover");
@@ -104,6 +127,11 @@ public class GProver implements Runnable {
         startTimer();
     }
 
+    /**
+     * Checks if the proving process is currently running.
+     *
+     * @return true if the proving process is running, false otherwise
+     */
     public boolean isRunning() {
         return isRunning;
     }

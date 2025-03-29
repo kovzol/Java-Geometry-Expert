@@ -10,13 +10,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-6-28
- * Time: 14:58:12
- * To change this template use File | Settings | File Templates.
+ * A dialog for processing GIF creation in GeoGebra.
  */
-
 public class GIFProcessDialog extends JBaseDialog implements ActionListener {
 
     JProgressBar progress;
@@ -29,7 +24,11 @@ public class GIFProcessDialog extends JBaseDialog implements ActionListener {
     public Rectangle rect;
     public GifEncoder en;
 
-
+    /**
+     * Constructs a new GIFProcessDialog with the specified frame.
+     *
+     * @param f the frame to associate with this dialog
+     */
     public GIFProcessDialog(Frame f) {
         super(f, false);
         this.setTitle(GExpert.getLanguage("Building GIF File"));
@@ -65,6 +64,9 @@ public class GIFProcessDialog extends JBaseDialog implements ActionListener {
 
     boolean finished = false;
 
+    /**
+     * Starts the GIF creation process in a new thread.
+     */
     public void setRun() {
         Saver sv = new Saver();
         Thread t = new Thread(sv, "Progress");
@@ -72,15 +74,18 @@ public class GIFProcessDialog extends JBaseDialog implements ActionListener {
         t.start();
     }
 
+    /**
+     * A runnable class for saving the GIF frames.
+     */
     class Saver implements Runnable {
 
         public void run() {
-            double []r = dp.getParameter();
-            
-            am.minwd = rect.getX() +5;
-            am.minht = rect.getY() +5;
-            am.width = rect.getX() + rect.getWidth() -5;
-            am.height = rect.getY() + rect.getHeight() -5;
+            double[] r = dp.getParameter();
+
+            am.minwd = rect.getX() + 5;
+            am.minht = rect.getY() + 5;
+            am.width = rect.getX() + rect.getWidth() - 5;
+            am.height = rect.getY() + rect.getHeight() - 5;
 
             am.reClaclulate();
             total = am.getRounds();
@@ -112,16 +117,30 @@ public class GIFProcessDialog extends JBaseDialog implements ActionListener {
         }
     }
 
+    /**
+     * Sets the total number of frames to be processed.
+     *
+     * @param n the total number of frames
+     */
     public void setTotal(int n) {
         this.total = n;
     }
 
+    /**
+     * Updates the progress bar and label with the current frame count.
+     *
+     * @param n the current frame count
+     */
     public void setValue(int n) {
         progress.setValue(n * 100 / total);
         label.setText(n + " frame(s) added");
     }
 
-
+    /**
+     * Handles action events for the Cancel button.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         finished = true;
         this.setVisible(false);

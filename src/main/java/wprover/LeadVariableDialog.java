@@ -15,6 +15,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.*;
 
+/**
+ * LeadVariableDialog is a class that extends JBaseDialog and implements MouseListener and ActionListener.
+ * It is used to display and manipulate lead variables in a graphical user interface.
+ */
 public class LeadVariableDialog extends JBaseDialog implements MouseListener, ActionListener {
 
     private JTabbedPane tpane;
@@ -27,6 +31,11 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
     protected static GeoPoly poly = GeoPoly.getPoly();
     protected static CharSet charset = CharSet.getinstance();
 
+    /**
+     * Constructs a new LeadVariableDialog with the specified GExpert instance.
+     *
+     * @param f the GExpert instance to associate with this LeadVariableDialog
+     */
     public LeadVariableDialog(GExpert f) {
 
         super(f.getFrame());
@@ -52,7 +61,6 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
                     bdtail.setEnabled(true);
                 else bdtail.setEnabled(false);
             }
-
         });
         tpane = new JTabbedPane(JTabbedPane.BOTTOM);
         tpane.addTab(getLanguage("Variables"), pane);
@@ -87,24 +95,27 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         b.setEnabled(false);
         panel.add(p2);
 
-//        tpane.addTab(getLanguage(244, "NDGs"), new JScrollPane(new ndgPanel(),
-//                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
-
         setSize(600, 420);
         this.setLocation(f.getX(), f.getY());
         this.getContentPane().add(panel);
     }
 
-
+    /**
+     * Gets the language string for the specified key.
+     *
+     * @param s the key for the language string
+     * @return the language string associated with the key
+     */
     String getLanguage(String s) {
         return GExpert.getLanguage(s);
-        /*
-        if (gxInstance != null)
-            return gxInstance.getLanguage(s);
-        return s;
-         */
     }
 
+    /**
+     * Loads variables from the specified vector and updates the table.
+     *
+     * @param s the vector containing the variables to load
+     * @param r a boolean indicating whether to reduce the variables
+     */
     public void loadVariable(Vector s, boolean r) {
         try {
             loadAllPoints(s, r);
@@ -112,12 +123,15 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
             JOptionPane.showMessageDialog(gxInstance, ee.getMessage() + "\n" + "Out of Memory");
             return;
         }
-
-
     }
 
+    /**
+     * Loads all points from the specified vector and updates the table.
+     *
+     * @param v the vector containing the points to load
+     * @param r a boolean indicating whether to reduce the points
+     */
     public void loadAllPoints(Vector v, boolean r) {
-//        vdata.clear();
         Vector vdata = new Vector();
 
         for (int i = 0; i < v.size(); i++) {
@@ -150,7 +164,6 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
                     if (p2.m != null)
                         o2.add(poly.printSPoly(poly.reduce(poly.pcopy(p2.m), pm)));
                     else o2.add("");
-//                    o2.add(poly.printSPoly(p2.m));
                 }
                 vdata.add(o1);
                 vdata.add(o2);
@@ -161,7 +174,11 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         model.setDataList(vdata);
     }
 
-
+    /**
+     * Handles action events for the dialog.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
         if (s.equals("Reload")) {
@@ -178,6 +195,11 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         }
     }
 
+    /**
+     * Handles mouse click events for the table.
+     *
+     * @param e the mouse event
+     */
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == table) {
             if (e.getClickCount() >= 2)
@@ -197,7 +219,9 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
     public void mouseExited(MouseEvent e) {
     }
 
-
+    /**
+     * Inspects the selected term in the table and displays its details.
+     */
     public void inspectTerm() {
 
         if (tpane.getTabCount() > 1) {
@@ -221,6 +245,12 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         tpane.setSelectedIndex(1);
     }
 
+    /**
+     * Gets the points associated with the specified row index.
+     *
+     * @param n the row index
+     * @return the points associated with the row index
+     */
     public Object getPoints(int n) {
         if (n % 2 != 0)
             n -= 1;
@@ -228,6 +258,10 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         return v1.get(0);
     }
 
+    /**
+     * LVTableModel is a custom table model for displaying lead variables in a JTable.
+     * It extends DefaultTableModel and provides methods to manage the data displayed in the table.
+     */
     class LVTableModel extends DefaultTableModel {
         Vector vlist = new Vector();
         Vector vdlist = new Vector();
@@ -278,6 +312,10 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         }
     }
 
+    /**
+     * InspectPanel is a custom JPanel that displays the details of a selected lead variable.
+     * It contains a JTable and a JEditorPane for displaying the variable's properties and polynomial.
+     */
     class InspectPanel extends JPanel {
         private JTable table1;
         private JEditorPane pane;
@@ -412,7 +450,10 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         }
     }
 
-
+    /**
+     * inspectTableModel is a custom table model for displaying the details of a lead variable.
+     * It extends AbstractTableModel and provides methods to manage the data displayed in the table.
+     */
     class inspectTableModel extends AbstractTableModel {
         private String[] names = {"", ""};
         private Object[][] data = {
@@ -455,77 +496,10 @@ public class LeadVariableDialog extends JBaseDialog implements MouseListener, Ac
         }
     }
 
-
-    class ndgPanel extends JPanel {
-        private JTable tablen;
-        private ndgModel modeln;
-        private Vector vndgs = new Vector();
-
-        public ndgPanel() {
-            super();
-
-            this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-            tablen = new JTable((modeln = new ndgModel()));
-            TableColumn b = tablen.getColumnModel().getColumn(0);
-            b.setPreferredWidth(30);
-            b.setWidth(30);
-            b.setMaxWidth(30);
-            this.setBorder(BorderFactory.createEmptyBorder(2, 1, 2, 1));
-            this.add(tablen);
-
-            TPoly poly = gxInstance.dp.getPBList();
-            PolyBasic basic = GeoPoly.getInstance();
-
-            TMono m1, m2;
-            m1 = m2 = null;
-
-            if (poly == null)
-                return;
-            int nn = poly.getPoly().x;
-
-            Vector v = new Vector();
-            while (poly != null) {
-                m1 = poly.getPoly();
-                if (m1 != null)
-                    v.add(0, basic.p_copy(m1));
-                poly = poly.next;
-            }
-
-            Vector vlist = new Vector();
-
-            for (int n = 1; n < nn / 2 + 1; n++) {
-                m1 = m2 = null;
-
-                for (int i = 0; i < v.size(); i++) {
-                    TMono m = (TMono) v.get(i);
-                    if (m.x == 2 * n || m.x == 2 * n - 1) {
-                        if (m1 == null)
-                            m1 = m;
-                        else m2 = m;
-                    }
-                }
-
-                if (m1 != null && m2 != null) {
-                    TMono t = basic.ll_delta(2 * n, m1, m2);
-                    t = gxInstance.dp.reduce(t);
-                    vlist.add(t);
-                }
-                if (m1 != null)
-                    v.remove(m1);
-                if (m2 != null)
-                    v.remove(m2);
-            }
-            basic.ndg_reduce(vlist);
-            for (int i = 0; i < vlist.size(); i++) {
-                TMono t = (TMono) vlist.get(i);
-                modeln.addData(" " + basic.getExpandedPrint(t));
-            }
-        }
-
-
-    }
-
-
+    /**
+     * ndgModel is a custom table model for displaying NDG (Non-Deterministic Graph) data.
+     * It extends DefaultTableModel and provides methods to manage the data displayed in the table.
+     */
     class ndgModel extends DefaultTableModel {
         private Vector vlist = new Vector();
 

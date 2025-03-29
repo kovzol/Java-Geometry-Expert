@@ -7,11 +7,8 @@ import java.awt.*;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: Mar 19, 2007
- * Time: 12:40:56 AM
- * To change this template use File | Settings | File Templates.
+ * JPolygonFlash is a class that extends JFlash and implements ActionListener.
+ * It is used to create a flashing polygon effect on a JPanel.
  */
 public class JPolygonFlash extends JFlash implements ActionListener {
     private int c1, c2;
@@ -25,7 +22,20 @@ public class JPolygonFlash extends JFlash implements ActionListener {
     private boolean R_Center = false;
     private double xc, yc;
 
-    public JPolygonFlash(JPanel p, CPolygon poly1, CPolygon poly2, boolean oc, double xc, double yc, int c1, int c2, int tt) {  // A B C D ....A
+    /**
+     * Constructs a new JPolygonFlash with the specified parameters.
+     *
+     * @param p     the JPanel to associate with this JPolygonFlash
+     * @param poly1 the first CPolygon to be used in the flashing effect
+     * @param poly2 the second CPolygon to be used in the flashing effect
+     * @param oc    a boolean indicating whether to use the specified center coordinates
+     * @param xc    the x-coordinate of the center
+     * @param yc    the y-coordinate of the center
+     * @param c1    the first color index for the flashing effect
+     * @param c2    the second color index for the flashing effect
+     * @param tt    the type of flashing effect
+     */
+    public JPolygonFlash(JPanel p, CPolygon poly1, CPolygon poly2, boolean oc, double xc, double yc, int c1, int c2, int tt) {
         super(p);
 
         vlist = new Vector();
@@ -49,11 +59,13 @@ public class JPolygonFlash extends JFlash implements ActionListener {
 
         this.poly1 = poly1;
         this.poly2 = poly2;
-  //      poly1.setVisible(false);
         poly2.setVisible(false);
     }
 
-
+    /**
+     * Initializes the flashing effect by calculating the number of steps required
+     * based on the distance between corresponding points in the two polygons.
+     */
     private void init1() {
         int len = vlist.size();
         if (len == 0) return;
@@ -74,6 +86,10 @@ public class JPolygonFlash extends JFlash implements ActionListener {
         this.nd = 0;
     }
 
+    /**
+     * Initializes the flashing effect by calculating the centroid and the number of steps required
+     * based on the distance and angle between the centroids of the two polygons.
+     */
     private void init() {
         int len = vlist.size();
         if (len == 0) return;
@@ -100,7 +116,6 @@ public class JPolygonFlash extends JFlash implements ActionListener {
             dy2 = getCentroidY(vlist1);
         }
 
-
         double x = dx2 - dx1;
         double y = dy2 - dy1;
 
@@ -110,7 +125,6 @@ public class JPolygonFlash extends JFlash implements ActionListener {
         p3 = (CPoint) vlist.get(1);
         p4 = (CPoint) vlist1.get(1);
 
-//        double r = CAngle.get4pAngle(p1.getx() + x, p1.gety() + y, dx2, dy2, p2.getx(), p2.gety());
         double r = CAngle.get4pAngle(p1.getx(), p1.gety(), p3.getx(), p3.gety(), p2.getx(), p2.gety(), p4.getx(), p4.gety());
         int s1 = (int) Math.abs(r / ASTEP);
         n = Math.max(s, s1);
@@ -126,6 +140,12 @@ public class JPolygonFlash extends JFlash implements ActionListener {
         this.nd = 0;
     }
 
+    /**
+     * Calculates the x-coordinate of the centroid of the given vector of points.
+     *
+     * @param v the vector of points
+     * @return the x-coordinate of the centroid
+     */
     public double getCentroidX(Vector v) {
         double dx1 = 0;
         int n = v.size();
@@ -137,6 +157,12 @@ public class JPolygonFlash extends JFlash implements ActionListener {
         return dx1;
     }
 
+    /**
+     * Calculates the y-coordinate of the centroid of the given vector of points.
+     *
+     * @param v the vector of points
+     * @return the y-coordinate of the centroid
+     */
     public double getCentroidY(Vector v) {
         double dy1 = 0;
         int n = v.size();
@@ -148,6 +174,11 @@ public class JPolygonFlash extends JFlash implements ActionListener {
         return dy1;
     }
 
+    /**
+     * Handles the action event for the timer, updating the animation state and repainting the panel.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         if (nd <= n)
             nd++;
@@ -158,23 +189,48 @@ public class JPolygonFlash extends JFlash implements ActionListener {
         panel.repaint();
     }
 
+    /**
+     * Stops the flashing effect and makes the second polygon visible.
+     */
     public void stop() {
         poly2.setVisible(true);
         super.stop();
     }
 
+    /**
+     * Starts the flashing effect and makes the second polygon invisible.
+     */
     public void start() {
         poly2.setVisible(false);
         super.start();
     }
 
-
+    /**
+     * Recalculates the flashing effect by reinitializing the animation state.
+     */
     public void recalculate() {
         int t = nd;
         nd = t;
         this.init();
     }
 
+    /**
+     * Draws the flashing polygon effect based on the current animation state.
+     *
+     * <p>
+     * This method computes the polygon's vertex positions by either applying a rotation
+     * and translation transformation or by linearly interpolating between two sets of points,
+     * depending on the current flashing type. It then fills the polygon with an interpolated
+     * color and draws its outline.
+     * </p>
+     *
+     * <p>
+     * The method returns false if the animation is not running or has finished.
+     * </p>
+     *
+     * @param g2 the Graphics2D context used for drawing
+     * @return true if the polygon is successfully drawn; false otherwise
+     */
     public boolean draw(Graphics2D g2) {
 
         int ln = vlist.size();
@@ -234,12 +290,4 @@ public class JPolygonFlash extends JFlash implements ActionListener {
         g2.drawPolygon(mx, my, ln);
         return true;
     }
-
-
-    public void drawColoredTriangle(int[] p1, int[] p2, Graphics2D g2) {
-        g2.setStroke(new BasicStroke(1.0f));
-        g2.setColor(Color.black);
-        g2.drawPolygon(p1, p2, 3);
-    }
-
 }

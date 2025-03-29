@@ -14,11 +14,10 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-2-27
- * Time: 21:05:35
- * To change this template use File | Settings | File Templates.
+ * TextFrame.java
+ * This class represents a dialog for editing text properties in a drawing application.
+ * It allows users to set font, size, style, and color for the text.
+ * The class also provides functionality for cut, copy, paste, delete, and select all operations.
  */
 public class TextFrame extends JBaseDialog implements ItemListener,
         ActionListener, FocusListener, MouseListener {
@@ -37,6 +36,11 @@ public class TextFrame extends JBaseDialog implements ItemListener,
 
     int x, y;
 
+
+    /**
+     * Initializes the TextFrame with font, size, style, and color options.
+     * Sets up the layout and components for the text editing toolbar.
+     */
     public void init() {
 
         Font tf = new Font("Dialog", Font.PLAIN, 12);
@@ -54,16 +58,8 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         String envfonts[] = gEnv.getAvailableFontFamilyNames();
 
-        Font cfont = null;
-//        for (int i = 0; i < envfonts.length; i++) {
-//            if (envfonts[i].equalsIgnoreCase("Dialog")) {
-//                cfont = new Font("Dialog", Font.PLAIN, 16);
-//                break;
-//            }
-//        }
-        if (cfont == null)
-            cfont = new Font("Dialog", Font.PLAIN, 16);
-        
+        Font cfont = new Font("Dialog", Font.PLAIN, 16);
+
         fontfamily = new Vector();
         for (int i = 1; i < envfonts.length; i++)
             fontfamily.addElement(envfonts[i]);
@@ -135,6 +131,11 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         getContentPane().add(BorderLayout.SOUTH, tb);
     }
 
+    /**
+     * Sets the current font for the text pane and updates the font, size, and style selections.
+     *
+     * @param f the Font to set as the current font
+     */
     public void setCurrentFont(Font f) {
         if (f == null) return;
         int size = f.getSize();
@@ -161,6 +162,13 @@ public class TextFrame extends JBaseDialog implements ItemListener,
 
     }
 
+    /**
+     * Constructs a new TextFrame with the specified GExpert instance and coordinates.
+     *
+     * @param gx the GExpert instance to associate with this frame
+     * @param xt the x-coordinate for the frame
+     * @param yt the y-coordinate for the frame
+     */
     public TextFrame(GExpert gx, double xt, double yt) {
         super(gx.getFrame());
         this.gxInstance = gx;
@@ -173,16 +181,16 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         this.init();
         this.getContentPane().add(new JScrollPane(textpane));
         text = null;
- //       setCurrentFont(gxInstance.getDefaultFont());
+        //       setCurrentFont(gxInstance.getDefaultFont());
         this.setSize(550, 200);
 
     }
 
-    void setTextLocation(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
+    /**
+     * Sets the text and font for the text pane based on the provided CText object.
+     *
+     * @param tx the CText object containing the text and font to set
+     */
     void setText(CText tx) {
         if (tx != null) {
             text = tx;
@@ -199,35 +207,30 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         }
     }
 
+    /**
+     * Returns the preferred size of the TextFrame.
+     *
+     * @return the preferred Dimension of the TextFrame
+     */
     public Dimension getPreferredSize() {
         Dimension dm = super.getPreferredSize();
         dm.setSize(dm.getWidth(), 200);
         return dm;
     }
 
-    CText getText() {
-
-        String s = (String) fonts.getSelectedItem();
-        int size = ((Integer) sizes.getSelectedItem()).intValue();
-        int type = styles.getSelectedIndex();
-        Font f = new Font(s, type, size);
-
-        if (text != null) {
-            text.setText(textpane.getText());
-            text.setFont(f);
-            return text;
-        } else {
-            return null;
-        }
-    }
-
-    String getString() {
-        return textpane.getText();
-    }
-
+    /**
+     * Handles item state change events for the combo boxes.
+     *
+     * @param e the ItemEvent triggered by selecting an item in a combo box
+     */
     public void itemStateChanged(ItemEvent e) {
     }
 
+    /**
+     * Handles action events for the OK and Cancel buttons, and updates the text pane font and color.
+     *
+     * @param e the ActionEvent triggered by clicking a button
+     */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == bok) {
             String str = textpane.getText();
@@ -275,27 +278,11 @@ public class TextFrame extends JBaseDialog implements ItemListener,
     public void focusLost(FocusEvent e) {
     }
 
-    public void windowOpened(WindowEvent e) {
-    }
-
-    public void windowClosing(WindowEvent e) {
-    }
-
-    public void windowClosed(WindowEvent e) {
-    }
-
-    public void windowIconified(WindowEvent e) {
-    }
-
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    public void windowActivated(WindowEvent e) {
-    }
-
-    public void windowDeactivated(WindowEvent e) {
-    }
-
+    /**
+     * Handles the mouse clicked event.
+     *
+     * @param e the MouseEvent triggered by clicking the mouse
+     */
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3) {
             new TextPopupMenu(textpane.getSelectionStart()
@@ -315,7 +302,16 @@ public class TextFrame extends JBaseDialog implements ItemListener,
     public void mouseExited(MouseEvent e) {
     }
 
+    /**
+     * TextPopupMenu is a class that extends JPopupMenu and implements ActionListener and ClipboardOwner.
+     * It provides a context menu for text editing operations such as Cut, Copy, Paste, Delete, and Select All.
+     */
     class TextPopupMenu extends JPopupMenu implements ActionListener, ClipboardOwner {
+        /**
+         * Constructs a new TextPopupMenu with the specified selection state.
+         *
+         * @param selected whether the menu items should be enabled based on selection
+         */
         public TextPopupMenu(boolean selected) {
             this.addMenuItem("Cut", selected);
             this.addMenuItem("Copy", selected);
@@ -325,6 +321,12 @@ public class TextFrame extends JBaseDialog implements ItemListener,
             this.addMenuItem("Select All", true);
         }
 
+        /**
+         * Adds a menu item to the popup menu.
+         *
+         * @param s        the name of the menu item
+         * @param selected whether the menu item should be enabled
+         */
         public void addMenuItem(String s, boolean selected) {
             JMenuItem item = new JMenuItem(s);
             item.addActionListener(TextPopupMenu.this);
@@ -332,11 +334,21 @@ public class TextFrame extends JBaseDialog implements ItemListener,
             this.add(item);
         }
 
+        /**
+         * Handles the loss of ownership of the clipboard.
+         *
+         * @param aClipboard the clipboard that this owner has lost ownership of
+         * @param aContents  the contents which this owner had placed on the clipboard
+         */
         public void lostOwnership(Clipboard aClipboard, Transferable aContents) {
-            //do nothing
+            // do nothing
         }
 
-
+        /**
+         * Handles action events for the popup menu items.
+         *
+         * @param e the ActionEvent triggered by selecting a menu item
+         */
         public void actionPerformed(ActionEvent e) {
             String s = e.getActionCommand();
             if (s.equalsIgnoreCase("Cut")) {
@@ -368,32 +380,31 @@ public class TextFrame extends JBaseDialog implements ItemListener,
             }
         }
 
+        /**
+         * Retrieves the contents of the system clipboard as a string.
+         *
+         * @return the clipboard contents as a string
+         */
         public String getClipboardContents() {
             String result = "";
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            //odd: the Object param of getContents is not currently used
             Transferable contents = clipboard.getContents(TextPopupMenu.this);
-            Object oobs[] = clipboard.getAvailableDataFlavors();
             boolean hasTransferableText =
                     (contents != null) &&
                             contents.isDataFlavorSupported(DataFlavor.stringFlavor);
             if (hasTransferableText) {
                 try {
                     result = (String) contents.getTransferData(DataFlavor.stringFlavor);
-                }
-                catch (UnsupportedFlavorException ex) {
-                    //highly unlikely since we are using a standard DataFlavor
+                } catch (UnsupportedFlavorException ex) {
+                    // highly unlikely since we are using a standard DataFlavor
                     System.out.println(ex);
                     ex.printStackTrace();
-                }
-                catch (IOException ex) {
+                } catch (IOException ex) {
                     System.out.println(ex);
                     ex.printStackTrace();
                 }
             }
             return result;
         }
-
     }
-
 }

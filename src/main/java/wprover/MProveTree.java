@@ -10,7 +10,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.DataOutputStream;
 
-
+/**
+ * MProveTree is a custom JTree implementation that represents a tree structure
+ * for mathematical objects and their associated undo structures.
+ */
 public class MProveTree extends JTree implements ActionListener {
     private GExpert gxInstance;
     private DPanel dpane;
@@ -824,7 +827,10 @@ public class MProveTree extends JTree implements ActionListener {
     }
 }
 
-
+/**
+ * MNode is a class that represents a node in a tree structure, specifically for
+ * managing mathematical objects and their associated undo structures.
+ */
 class MNode extends Vector {
     private int index = -1;
 
@@ -993,7 +999,11 @@ class MNode extends Vector {
 
 }
 
-
+/**
+ * MSymbol is a class that represents a mathematical symbol in a tree structure.
+ * It extends the MObject class and provides methods to load, save, and manage
+ * the symbol's type and associated image icon.
+ */
 class MSymbol extends MObject {
     final static ImageIcon EQQ = GExpert.createImageIcon("images/symbol/eqq.gif");
     final static ImageIcon EQ = GExpert.createImageIcon("images/symbol/eq.gif");
@@ -1060,7 +1070,11 @@ class MSymbol extends MObject {
     }
 }
 
-
+/**
+ * MPrefix is a class that represents a prefix in a mathematical proof tree.
+ * It extends the MObject class and provides methods to manage the prefix type
+ * and associated text.
+ */
 class MPrefix extends MObject {
 
     public static int GIVEN = 0;
@@ -1114,7 +1128,11 @@ class MPrefix extends MObject {
     }
 }
 
-
+/**
+ * MDraw is a class that represents a drawing object in a mathematical proof tree.
+ * It extends the MObject class and provides methods to manage the drawing's
+ * associated undo structures and text.
+ */
 class MDraw extends MObject {
 
     private Vector vunlist = new Vector();
@@ -1198,7 +1216,10 @@ class MDraw extends MObject {
     }
 }
 
-
+/**
+ * MText is a class that represents a text object in a mathematical proof tree.
+ * It extends the MObject class and provides methods to manage the text string.
+ */
 class MText extends MObject {
     private String str = "";
 
@@ -1230,7 +1251,11 @@ class MText extends MObject {
     }
 }
 
-
+/**
+ * MDrObj is a class that represents a mathematical object in a proof tree.
+ * It extends the MObject class and provides methods to manage the object's
+ * type, associated points, and validation checks.
+ */
 class MDrObj extends MObject {
     final public static int LINE = 0;
     final public static int TRIANGLE = 1;
@@ -1511,7 +1536,12 @@ class MDrObj extends MObject {
     }
 }
 
-
+/**
+ * MObject is a base class for representing various types of mathematical objects.
+ * It encapsulates basic properties such as the object type and provides methods for
+ * creating, loading, saving, and managing object data. Subclasses should extend this
+ * class to implement specialized behavior appropriate to their specific object type.
+ */
 class MObject {
     static String[] pStrings = {"Text", "Keywords", "Symbol", "Assertion",
             "Object", "Draw", "Construction", "Equation",
@@ -1665,6 +1695,11 @@ class MObject {
 }
 
 // TODO. This seems to be unfinished.
+/**
+ * MRule is a class that represents a rule in the GExpert system.
+ * It extends the MObject class and provides functionality to load and save
+ * rule data, as well as to manage the rule index and name.
+ */
 class MRule extends MObject {
     int rindex;
     public static String[] cStrings = {"Rule1", "Rule2", "Rule3", "SAS", /* "AAS", */ "SSS", "ASA"}; // FIXME. AAS is missing among the files.
@@ -1708,7 +1743,11 @@ class MRule extends MObject {
 
 }
 
-
+/**
+ * MEquation is a class that represents an equation in the GExpert system.
+ * It extends the MObject class and provides functionality to manage terms
+ * in the equation, as well as to load and save the equation data.
+ */
 class MEquation extends MObject {
     private Vector vlist = new Vector();
 
@@ -1752,7 +1791,10 @@ class MEquation extends MObject {
     }
 }
 
-
+/**
+ * MEqTerm is a class that represents a term in an equation in the GExpert system.
+ * It provides functionality to manage the type of the term and the associated object.
+ */
 class MEqTerm {
     public static String[] cStrings = {" + ", " - ", " * ", " / ", " = ", " > ",
             " >= ", " < ", " <= ", " //= "};
@@ -1810,7 +1852,11 @@ class MEqTerm {
 
 }
 
-
+/**
+ * MAssertion is a class that represents an assertion in the GExpert system.
+ * It extends the MObject class and provides functionality to manage the
+ * assertion type and associated objects.
+ */
 class MAssertion extends MObject {
     public static String[] cStrings = {"Collinear", "Parallel", "Perpendicular",
             "Midpoint", "Eqdistant", "Cyclic",

@@ -12,11 +12,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-6-17
- * Time: 13:17:09
- * To change this template use File | Settings | File Templates.
+ * MProveInputPanel is a class that represents a panel for manual input in a
+ * graphical user interface. It provides various components for user interaction
+ * and input handling.
  */
 public class MProveInputPanel extends JToolBar implements ActionListener {
     public static ImageIcon icon_Right = GExpert.createImageIcon("images/dtree/right.gif");
@@ -56,11 +54,16 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
     private JPanel topPanel;
 
 
+    /**
+     * Sets the node value and updates the panel based on the provided MObject.
+     *
+     * @param node the DefaultMutableTreeNode to set
+     * @param obj  the MObject to associate with the node
+     */
     public void setNodeValue(DefaultMutableTreeNode node, MObject obj) {
         tnode = node;
         this.node = (MNode) node.getUserObject();
         this.obj = obj;
-
 
         if (obj != null && obj.getType() != 0) {
             int d = obj.getType() - 1;
@@ -86,21 +89,34 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
     }
 
+    /**
+     * Gets the language string for the specified key.
+     *
+     * @param s the key for the language string
+     * @return the language string associated with the key
+     */
     String getLanguage(String s) {
         if (gxInstance != null)
             return GExpert.getLanguage(s);
         return s;
     }
 
+    /**
+     * Gets the maximum size of the component.
+     *
+     * @return the maximum size of the component
+     */
     public Dimension getMaximumSize() {
         Dimension dm = super.getPreferredSize();
         dm.setSize(Integer.MAX_VALUE, dm.getHeight());
         return dm;
     }
 
-    private void setTypeSelection(int d, int d1) {
-    }
-
+    /**
+     * Changes the state of the buttons based on the provided boolean value.
+     *
+     * @param r a boolean indicating whether to enable or disable the buttons
+     */
     private void stateButtonChange(boolean r) {
         bok.setEnabled(r);
         badd.setEnabled(r);
@@ -109,13 +125,23 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         bcancel.setEnabled(r);
     }
 
+    /**
+     * Gets the preferred size of the component.
+     *
+     * @return the preferred size of the component
+     */
     public Dimension getPreferredSize() {
         Dimension dm = super.getPreferredSize();
         return dm;
     }
 
+    /**
+     * Handles menu selection and updates the panel based on the selected item.
+     *
+     * @param id  the ID of the selected item
+     * @param id2 the secondary ID of the selected item
+     */
     private void onMenuSelected(int id, int id2) {
-
         int t = id;
         if (t == -1) return;
         type = t + 1;
@@ -197,6 +223,14 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         mdPanel.repaint();
     }
 
+    /**
+     * Constructs a new MProveInputPanel with the specified GExpert instance, DPanel, DrawTextProcess, and JTree.
+     *
+     * @param gx   the GExpert instance to associate with this MProveInputPanel
+     * @param pp   the DPanel instance to associate with this MProveInputPanel
+     * @param dp   the DrawTextProcess instance to associate with this MProveInputPanel
+     * @param tree the JTree instance to associate with this MProveInputPanel
+     */
     public MProveInputPanel(GExpert gx, DPanel pp, DrawTextProcess dp, JTree tree) {
         super("Manual Input Toolbar");
         super.setVisible(true);
@@ -205,7 +239,6 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         gxInstance = gx;
         this.dpane = pp;
         this.dp = dp;
-
 
         this.tree = (MProveTree) tree;
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -292,6 +325,11 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         createPopMain();
     }
 
+    /**
+     * Sets the state of the buttons in the panel.
+     *
+     * @param f a boolean indicating whether to enable or disable the buttons
+     */
     public void setBState(boolean f) {
         if (f) {
             bok.setEnabled(true);
@@ -307,19 +345,16 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
     }
 
+    /**
+     * Creates the pop-up menu for selection.
+     */
     private void createPopMain() {
         popSelect = new popSelectMenu1();
     }
 
-    public Object getDefinedNode() {
-        if (type == 1) {
-            return new MText(textPane.getText());
-        } else if (type == 2) {
-
-        }
-        return null;
-    }
-
+    /**
+     * Handles the OK button action.
+     */
     public void buttonOK() {
         if (type == MObject.TEXT) {
             if (obj instanceof MText)
@@ -364,6 +399,11 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         tree.reload();
     }
 
+    /**
+     * Handles action events for the panel.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
         JToggleButton b = (JToggleButton) e.getSource();
@@ -400,7 +440,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
             boolean r = b.isSelected();
             tree.setEditable(r);
             topPanel.setVisible(r);
-            this.stateButtonChange(r); 
+            this.stateButtonChange(r);
         } else if (s.equals("Step")) {
             b.setSelected(false);
             if (gxInstance != null)
@@ -409,6 +449,12 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
 
     }
 
+    /**
+     * Selects a point in the panel.
+     *
+     * @param p the point to select
+     * @return true if the point was selected, false otherwise
+     */
     public boolean selectAPoint(CPoint p) {
         if (type == MObject.DOBJECT) {
             objectPane.selectAPoint(p);
@@ -421,6 +467,12 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         return true;
     }
 
+    /**
+     * Adds an undo step to the panel.
+     *
+     * @param un  the UndoStruct to add
+     * @param tip the tip associated with the undo step
+     */
     public void addUndo(UndoStruct un, Object tip) {
 
         if (type == MObject.DRAW) {
@@ -432,10 +484,18 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         tree.addUndoObject(un);
     }
 
+    /**
+     * Undoes the specified step in the panel.
+     *
+     * @param u the UndoStruct representing the step to undo
+     */
     public void undoStep(UndoStruct u) {
         tree.undoStep(u);
     }
 
+    /**
+     * A class representing a text panel for user input.
+     */
     class textPanel extends JPanel {
 
         JTextField tpane;
@@ -474,6 +534,9 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
     }
 
+    /**
+     * A class representing a prefix panel for user input.
+     */
     class prefixPanel extends JPanel {
         JComboBox box;
         MPrefix pfix = null;
@@ -523,6 +586,9 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
     }
 
+    /**
+     * A class representing a symbol panel for user input.
+     */
     class symbolPanel extends JPanel implements ItemListener {
         JComboBox box;
         MSymbol sym = null;
@@ -570,6 +636,9 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
     }
 
+    /**
+     * A class representing a drawing panel for user input.
+     */
     class drawPanel extends JPanel {
         private MDraw draw;
         private JTextPane field;
@@ -645,7 +714,9 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
 
     }
 
-
+    /**
+     * A class representing a panel for user input of objects.
+     */
     class dobjPanel extends JPanel implements ActionListener, ItemListener {
 
         private JComboBox box;
@@ -847,6 +918,9 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
     }
 
+    /**
+     * A class representing a panel for user input of equations.
+     */
     class rulePanel extends JPanel {
         private JComboBox box;
         private MRule rule;
@@ -881,6 +955,9 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
 
     }
 
+    /**
+     * A class representing a panel for user input of common equations.
+     */
     class CommonEquationPanel extends JPanel implements ActionListener {
 
         private Vector vlist = new Vector();
@@ -1036,6 +1113,9 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
     private static Border border1 = BorderFactory.createRaisedBevelBorder();
     private static Border border2 = BorderFactory.createEmptyBorder(2, 2, 2, 2);
 
+    /**
+     * This class is used to show the select menu
+     */
     class selectLabel extends JLabel implements MouseListener, MouseMotionListener {
 
         public selectLabel() {
@@ -1072,6 +1152,9 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
     }
 
+    /**
+     * This class is used to show the select menu
+     */
     class popSelectMenu1 extends JPopupMenu implements ActionListener {
         private int type;
 
@@ -1217,6 +1300,9 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
 
     }
 
+    /**
+     * This class is used to show the select menu
+     */
     class popSelectMenuItem extends JMenuItem {
         int m_id1, m_id2;
 
@@ -1243,6 +1329,9 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
     }
 
 
+    /**
+     * This method is used to set the node value
+     */
     private void mselected(String s, int t1, int t2) {
         onMenuSelected(t1, t2);
         slabel.setText(s);

@@ -10,25 +10,31 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-5-3
- * Time: 12:12:16
- * To change this template use File | Settings | File Templates.
+ * JCirFlash is a class that extends JFlash and implements ActionListener.
+ * It is used to create a circular flashing effect on a JPanel.
  */
 public class JCirFlash extends JFlash implements ActionListener {
 
     CPoint o;
     Vector vlist = new Vector();
 
+    /**
+     * Constructs a new JCirFlash with the specified JPanel.
+     *
+     * @param p the JPanel to associate with this JCirFlash
+     */
     public JCirFlash(JPanel p) {
         super(p);
         timer = new Timer(TIME_INTERVAL, this);
     }
 
+    /**
+     * Draws the circular flashing effect on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     * @return true if the drawing was successful, false otherwise
+     */
     public boolean draw(Graphics2D g2) {
-
-
         if (o != null && vlist.size() >= 1) {
             CPoint p1 = (CPoint) vlist.get(0);
             double radius = Math.sqrt(Math.pow(o.getx() - p1.getx(), 2) + Math.pow(o.gety() - p1.gety(), 2));
@@ -39,7 +45,6 @@ public class JCirFlash extends JFlash implements ActionListener {
                 super.setDrawDashFb2(g2);
                 g2.drawOval((int) (o.getx() - radius), (int) (o.gety() - radius), (int) (2 * radius), (int) (2 * radius));
             }
-
         } else if (vlist.size() >= 3) {
             CPoint p1 = (CPoint) vlist.get(0);
             CPoint p2 = (CPoint) vlist.get(1);
@@ -84,7 +89,6 @@ public class JCirFlash extends JFlash implements ActionListener {
             }
         }
 
-
         if (n % 2 == 0) {
             if (o != null)
                 o.draw(g2);
@@ -96,23 +100,32 @@ public class JCirFlash extends JFlash implements ActionListener {
         return true;
     }
 
+    /**
+     * Sets the center point of the circular flashing effect.
+     *
+     * @param t the center point to set
+     */
     public void setCenter(CPoint t) {
         if (t == null) return;
         if (t != null)
             this.o = (CPoint) t;
     }
 
-//    public void addAPoint(CPoint pt) {
-//
-//        if (pt != null && !vlist.contains(pt))
-//            vlist.add(pt);
-//    }
-
+    /**
+     * Adds a point to the list of points defining the circular flashing effect.
+     *
+     * @param pt the point to add
+     */
     public void addAPoint(CPoint pt) {
         if (pt != null && !vlist.contains(pt))
             vlist.add(pt);
     }
 
+    /**
+     * Handles action events for the timer.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         n--;
         if (n <= 0) super.stop();
@@ -128,6 +141,9 @@ public class JCirFlash extends JFlash implements ActionListener {
         panel.repaint();
     }
 
+    /**
+     * Stops the circular flashing effect.
+     */
     public void stop() {
         super.stop();
         for (int i = 0; i < vlist.size(); i++) {

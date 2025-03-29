@@ -17,11 +17,9 @@ import java.util.Vector;
 import static wprover.GExpert.getLanguage;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-5-23
- * Time: 13:50:22
- * To change this template use File | Settings | File Templates.
+ * VcellRender is a custom JPanel that serves as a base class for rendering
+ * tree cells in a JTree. It provides a custom painting mechanism and handles
+ * selection and background colors.
  */
 class VcellRender extends JPanel {
     protected static Border eborder = BorderFactory.createEmptyBorder(1, 1, 1, 1);
@@ -51,12 +49,21 @@ class VcellRender extends JPanel {
         super.paintComponent(g);
     }
 }
-                     
 
+/**
+ * BookCellRenderer is a custom cell renderer for a tree structure, allowing
+ * for the rendering of tree nodes with specific content and behavior.
+ */
 class BookCellRenderer extends VcellRender implements TreeCellRenderer {
     Vector renderlist = new Vector();
     Vector renderlist1 = new Vector();
 
+    /**
+     * Constructs a BookCellRenderer with the specified number of labels.
+     * Initializes the renderer and adds labels to the render lists.
+     *
+     * @param n the number of labels to initialize
+     */
     public BookCellRenderer(int n) {
         super();
         for (int i = 1; i <= n; i++) {
@@ -69,6 +76,11 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
         }
     }
 
+    /**
+     * Sets the font for all labels in the renderer.
+     *
+     * @param f the font to set for the labels
+     */
     public void setCellFont(Font f) {
         for (int i = 0; i < renderlist.size(); i++) {
             ItemLabel lb = (ItemLabel) renderlist.get(i);
@@ -81,22 +93,46 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
         }
     }
 
+    /**
+     * Sets the user object and type for a label at the specified index in the primary list.
+     *
+     * @param index the index of the label to set
+     * @param t     the type of the label
+     * @param obj   the user object to associate with the label
+     */
     public void setLabelObject(int index, int t, Object obj) {
         if (obj == null) return;
 
-        ItemLabel label = null;
-        label = (ItemLabel) renderlist.get(index);
+        ItemLabel label = (ItemLabel) renderlist.get(index);
         label.setUserObject(t, obj);
         this.add(label);
     }
 
+    /**
+     * Sets the user object and type for a label at the specified index in the secondary list.
+     *
+     * @param index the index of the label to set
+     * @param t     the type of the label
+     * @param obj   the user object to associate with the label
+     */
     public void setLabelObject1(int index, int t, Object obj) {
-        ItemLabel label = null;
-        label = (ItemLabel) renderlist1.get(index);
+        ItemLabel label = (ItemLabel) renderlist1.get(index);
         label.setUserObject(t, obj);
         this.add(label);
     }
 
+    /**
+     * Returns the tree cell renderer component for the specified tree node.
+     *
+     * @param tree     the JTree that is asking the renderer to render
+     * @param value    the value of the cell to be rendered
+     * @param selected whether the cell is selected
+     * @param expanded whether the node is expanded
+     * @param leaf     whether the node is a leaf node
+     * @param row      the row index of the node
+     * @param hasFocus whether the node has focus
+     * @return the component for rendering the tree cell
+     */
     public Component getTreeCellRendererComponent(JTree tree, Object value,
                                                   boolean selected,
                                                   boolean expanded,
@@ -174,7 +210,7 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
                     if (n != 0) {
                         setLabelObject1(k++, 0, "   (" + getLanguage("by HYP") + ")");
                     } else if (c.getNo() == 0) {
-                        setLabelObject1(k++, 0, "   (" + getLanguage("in GIB") +  ")");
+                        setLabelObject1(k++, 0, "   (" + getLanguage("in GIB") + ")");
                     }
 
                 }
@@ -185,7 +221,6 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
                 Rule ls = (Rule) userObject;
                 setLabelObject(0, 7, ls);
             } else {
-                //cell = null;
                 setLabelObject(0, 9999, userObject);
             }
 
@@ -206,12 +241,21 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
         return returnValue;
     }
 
- 
+
 }
 
-
+/**
+ * BookCellEditor is a custom cell editor for a tree structure, allowing
+ * for the editing of tree nodes with specific rendering and behavior.
+ */
 class BookCellEditor extends BasicCellEditor implements MouseListener {
 
+    /**
+     * Constructs a BookCellEditor with the specified number of labels.
+     * Initializes the editor and adds mouse listeners to all labels.
+     *
+     * @param n the number of labels to initialize
+     */
     public BookCellEditor(int n) {
         init(n);
 
@@ -228,6 +272,12 @@ class BookCellEditor extends BasicCellEditor implements MouseListener {
     public void mouseClicked(MouseEvent e) {
     }
 
+    /**
+     * Handles the mouse pressed event. Deselects the previously selected label,
+     * selects the new label, and repaints the cell.
+     *
+     * @param e the MouseEvent that triggered this method
+     */
     public void mousePressed(MouseEvent e) {
         if (selectLabel != null) {
             selectLabel.setSelected(false);
@@ -248,7 +298,10 @@ class BookCellEditor extends BasicCellEditor implements MouseListener {
 
 }
 
-                 
+/**
+ * BasicCellEditor is a custom cell editor for a tree structure, allowing
+ * for the editing of tree nodes with specific rendering and behavior.
+ */
 class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
     public static int cond_no = 0;
 
@@ -258,12 +311,15 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
     ItemLabel selectLabel = null;
 
 
+    /**
+     * Initializes the editor with the specified number of labels.
+     *
+     * @param n the number of labels to initialize
+     */
     public void init(int n) {
-
         for (int i = 1; i <= n; i++) {
             ItemLabel lb = new ItemLabel(false, false);
             lb.setRenderT(false);
-
             renderlist.add(lb);
         }
         for (int i = 1; i <= n; i++) {
@@ -275,6 +331,11 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
         cell.setBorder(new LineBorder(cell.backgroundSelectionColor.darker(), 1));
     }
 
+    /**
+     * Sets the font for the editor labels.
+     *
+     * @param f the font to set for the labels
+     */
     public void setEditorFont(Font f) {
         for (int i = 0; i < renderlist.size(); i++) {
             ItemLabel lb = (ItemLabel) renderlist.get(i);
@@ -287,20 +348,37 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
         }
     }
 
+    /**
+     * Sets the user object and type for a label at the specified index.
+     *
+     * @param index the index of the label to set
+     * @param t     the type of the label
+     * @param obj   the user object to associate with the label
+     */
     public void setLabelObject(int index, int t, Object obj) {
-        ItemLabel label = null;
-        label = (ItemLabel) renderlist.get(index);
+        ItemLabel label = (ItemLabel) renderlist.get(index);
         label.setUserObject(t, obj);
         cell.add(label);
     }
 
+    /**
+     * Sets the user object and type for a label at the specified index in the secondary list.
+     *
+     * @param index the index of the label to set
+     * @param t     the type of the label
+     * @param obj   the user object to associate with the label
+     */
     public void setLabelObject1(int index, int t, Object obj) {
-        ItemLabel label = null;
-        label = (ItemLabel) renderlist1.get(index);
+        ItemLabel label = (ItemLabel) renderlist1.get(index);
         label.setUserObject(t, obj);
         cell.add(label);
     }
 
+    /**
+     * Adds a mouse listener to all labels.
+     *
+     * @param listener the mouse listener to add
+     */
     public void addListenerToAllLabel(MouseListener listener) {
         for (int i = 0; i < renderlist.size(); i++) {
             ItemLabel label = (ItemLabel) renderlist.get(i);
@@ -312,6 +390,17 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
         }
     }
 
+    /**
+     * Returns the tree cell editor component for the specified tree node.
+     *
+     * @param tree       the JTree that is asking the editor to edit
+     * @param value      the value of the cell to be edited
+     * @param isSelected whether the cell is selected
+     * @param expanded   whether the node is expanded
+     * @param leaf       whether the node is a leaf node
+     * @param row        the row index of the node
+     * @return the component for editing the tree cell
+     */
     public Component getTreeCellEditorComponent(JTree tree, Object value,
                                                 boolean isSelected,
                                                 boolean expanded,
@@ -369,8 +458,6 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
                 if (el.getEType() > 0)
                     setLabelObject1(k++, 2, el);
                 setLabelObject1(k++, 5, el);
-//                if (node.getParent() != null)
-//                    setLabelObject1(k++, 0, " )");
             } else if (userObject instanceof DTerm) {
             } else if (userObject instanceof Cond) {
                 Cond c = (Cond) userObject;
@@ -395,7 +482,6 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
                     }
                 }
             } else {
-                //cell = null;
                 setLabelObject(0, 9999, userObject);
             }
 
@@ -411,21 +497,30 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
                             value, isSelected, expanded, leaf, row, true);
         }
         return returnValue;
-
     }
 
-
+    /**
+     * Cancels the cell editing process.
+     */
     public void cancelCellEditing() {
         super.cancelCellEditing();
         cond_no = 0;
     }
 
+    /**
+     * Returns the value contained in the editor.
+     *
+     * @return the value contained in the editor
+     */
     public Object getCellEditorValue() {
         return null;
     }
 }
 
-
+/**
+ * ItemLabel is a custom JLabel that can display different types of content
+ * and handle mouse events.
+ */
 class ItemLabel extends JLabel {
     public static ImageIcon icon = GExpert.createImageIcon("images/dtree/detail.gif");
     private static ImageIcon icon_bc = GExpert.createImageIcon("images/dtree/because.gif");
@@ -444,19 +539,30 @@ class ItemLabel extends JLabel {
 
     boolean selected = false;
 
+    /**
+     * Returns the type of the item label.
+     *
+     * @return the type of the item label
+     */
     public int getType() {
         return type;
     }
 
-
-    public static int getItemLabelFontSize() {
-        return font.getSize();
-    }
-
+    /**
+     * Returns the user object associated with the item label.
+     *
+     * @return the user object associated with the item label
+     */
     public Object getUserObject() {
         return userValue;
     }
 
+    /**
+     * Constructs an ItemLabel with the specified render and element flags.
+     *
+     * @param r whether the label should be rendered
+     * @param e whether the label is an element
+     */
     public ItemLabel(boolean r, boolean e) {
         super();
         isrender = r;
@@ -497,11 +603,20 @@ class ItemLabel extends JLabel {
         });
     }
 
-
+    /**
+     * Sets whether the label should be rendered.
+     *
+     * @param r true if the label should be rendered, false otherwise
+     */
     public void setRenderT(boolean r) {
         this.isrender = r;
     }
 
+    /**
+     * Sets whether the label is selected.
+     *
+     * @param s true if the label is selected, false otherwise
+     */
     public void setSelected(boolean s) {
         selected = s;
         if (iselm) {
@@ -516,10 +631,21 @@ class ItemLabel extends JLabel {
         this.repaint();
     }
 
+    /**
+     * Returns whether the label is selected.
+     *
+     * @return true if the label is selected, false otherwise
+     */
     public boolean isSelected() {
         return selected;
     }
 
+    /**
+     * Sets the user object and type for the label.
+     *
+     * @param type the type of the label
+     * @param obj  the user object to associate with the label
+     */
     public void setUserObject(int type, Object obj) {
         this.type = type;
         userValue = obj;
@@ -564,6 +690,11 @@ class ItemLabel extends JLabel {
         }
     }
 
+    /**
+     * Paints the component.
+     *
+     * @param g the Graphics object to protect
+     */
     public void paint(Graphics g) {
         if (isrender) {
         } else {

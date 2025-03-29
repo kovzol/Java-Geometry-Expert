@@ -9,6 +9,10 @@ import java.awt.event.*;
 import java.io.*;
 
 
+/**
+ * MiscDialog is a class that extends JBaseDialog and implements FocusListener and ActionListener.
+ * It provides a dialog for setting various preferences in the GExpert application.
+ */
 public class MiscDialog extends JBaseDialog implements FocusListener, ActionListener {
     private GExpert gxInstance;
     private String lan;
@@ -22,24 +26,24 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
     private boolean onSetting = false;
 
 
+    /**
+     * Constructs a new MiscDialog with the specified GExpert instance.
+     *
+     * @param gx the GExpert instance to associate with this MiscDialog
+     */
     public MiscDialog(GExpert gx) {
         super(gx.getFrame(), ("Preferences"), false);
         gxInstance = gx;
         lan = CMisc.lan;
 
-
         String s = GExpert.getLanguage("Preferences");
         this.setTitle(s);
 
         gxInstance = gx;
-//        if (gxInstance != null)
-//            gxInstance.addDependentDialog(this);
 
         JTabbedPane pane = new JTabbedPane(JTabbedPane.TOP);
         pane.addTab(GExpert.getLanguage("Display"), pane1 = createPanelDisply());
-
         pane.addTab(GExpert.getLanguage("Mode"), pane2 = new modePanel());
-
         pane.addTab(GExpert.getLanguage("Color"), panelc = new colorPanel());
         pane.addTab(GExpert.getLanguage("Font"), pane3 = new FontPanel());
         pane.addTab(GExpert.getLanguage("Other"), pane4 = new AnglePanel());
@@ -47,7 +51,6 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
         panel.add(pane);
 
         JPanel p2 = new JPanel(new FlowLayout());
@@ -73,17 +76,23 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
         p2.add(b2);
         panel.add(p2);
 
-
         this.addFocusListener(this);
         this.getContentPane().add(panel);
-        this.setSize(550, 600); //Changed the size of the window, so 'Save Preferences' was visible. TODO: Modify the height automatically to the chosen appearance.
-
+        this.setSize(550, 600); // Changed the size of the window, so 'Save Preferences' was visible. TODO: Modify the height automatically to the chosen appearance.
     }
 
+    /**
+     * Sets the selected tab in the tabbed pane.
+     *
+     * @param n the index of the tab to select
+     */
     public void setSelectedTabbedPane(int n) {
         tpane.setSelectedIndex(n);
     }
 
+    /**
+     * Initializes the panels in the dialog.
+     */
     public void init() {
         pane1.init();
         pane2.init();
@@ -91,57 +100,52 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
         pane4.init();
     }
 
+    /**
+     * Handles action events for the dialog.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("OK")) {
             this.setVisible(false);
-
         } else if (command.equals("Default")) {
             onSetting = true;
             CMisc.Reset();
             init();
             onSetting = false;
         } else if (command.equals("Save Preferences")) {
-
             String s1 = GExpert.getUserHome();
             String s2 = GExpert.getFileSeparator();
 
             try {
                 OutputStreamWriter writer = new OutputStreamWriter(
                         new FileOutputStream(new File(s1 + s2 + "jgex.cfg")), "UTF-8");
-
                 CMisc.SaveProperty(writer);
             } catch (IOException ee) {
                 JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage("Can not save Preferences"),
                         GExpert.getLanguage("Fail"), JOptionPane.WARNING_MESSAGE);
             }
             JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage("Preferences have been successfully saved.") + "\n" +
-                    GExpert.getLanguage("Please restart the program."),
+                            GExpert.getLanguage("Please restart the program."),
                     GExpert.getLanguage("Saved"), JOptionPane.WARNING_MESSAGE);
-
-            /* We don't try to restart the program, since it requires different strategies on different systems.
-               Instead, we leave the restart to the user.
-
-            try {
-                ProcessBuilder pb = new ProcessBuilder("java", "-jar",
-                        GExpert.getUserDir() + GExpert.getFileSeparator() + "jgex.jar");
-                pb.directory(new File(GExpert.getUserDir()));
-                Map<String, String> map = pb.environment();
-                Process p = pb.start();
-                System.exit(0);
-            } catch (IOException e0) {
-            }
-             */
         }
-
     }
 
-
+    /**
+     * Creates and returns a new DisplayPanel.
+     *
+     * @return a new DisplayPanel
+     */
     private DisplayPanel createPanelDisply() {
         return new DisplayPanel();
     }
 
 
+    /**
+     * DisplayPanel is a JPanel that provides various display settings for the GExpert application.
+     * It includes sliders, checkboxes, and radio buttons for configuring the display options.
+     */
     class DisplayPanel extends JPanel {
 
         private JLabel text;
@@ -366,6 +370,10 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
     }
 
+    /**
+     * AnglePanel is a JPanel that provides options for configuring angles in the GExpert application.
+     * It includes radio buttons for different angle types and a slider for adjusting the polygon moving interval.
+     */
     class AnglePanel extends JPanel implements ItemListener {
         JRadioButton ba, bwa, bma, bfill;
         JSlider slider;
@@ -453,13 +461,27 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
     }
 
 
+    /**
+     * Invoked when the component gains the keyboard focus.
+     *
+     * @param e the focus event
+     */
     public void focusGained(FocusEvent e) {
     }
 
+    /**
+     * Invoked when the component loses the keyboard focus.
+     *
+     * @param e the focus event
+     */
     public void focusLost(FocusEvent e) {
         this.setVisible(false);
     }
 
+    /**
+     * This class represents a panel for selecting fonts in the GExpert application.
+     * It extends JPanel and provides buttons to choose different fonts for various elements.
+     */
     class FontPanel extends JPanel {
 
 
@@ -608,6 +630,10 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
     }
 
+    /**
+     * colorPanel is a JPanel that allows the user to select colors for the background and grid.
+     * It includes radio buttons for different color modes and color selection panels.
+     */
     class colorPanel extends JPanel implements ItemListener, MouseListener {
 
         private JRadioButton b1, b2, b3;
@@ -741,6 +767,10 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
 
     }
 
+    /**
+     * ColorPane is a JPanel that represents a color selection area.
+     * It is used in the colorPanel class to display the selected background and grid colors.
+     */
     class ColorPane extends JPanel {
         int w, h;
 
@@ -756,6 +786,10 @@ public class MiscDialog extends JBaseDialog implements FocusListener, ActionList
         }
     }
 
+    /**
+     * modePanel is a JPanel that allows the user to select various modes and settings.
+     * It includes options for anti-aliasing, language selection, and look-and-feel selection.
+     */
     class modePanel extends JPanel implements ItemListener {
         private JRadioButton r1, r2;
         private JComboBox blanguage, blook;

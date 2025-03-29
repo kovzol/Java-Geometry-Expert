@@ -7,58 +7,72 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-7-24
- * Time: 16:32:16
- * To change this template use File | Settings | File Templates.
+ * JAreaFlash is a class that extends JFlash and implements ActionListener.
+ * It is used to create a flashing area effect on a JPanel.
  */
-public class JAreaFlash extends JFlash implements ActionListener{
+public class JAreaFlash extends JFlash implements ActionListener {
     private Vector vlist = new Vector();
     private int color = DrawData.LIGHTCOLOR;
 
-    public JAreaFlash(JPanel p,int cindex)
-    {
+    /**
+     * Constructs a new JAreaFlash with the specified JPanel and color index.
+     *
+     * @param p      the JPanel to associate with this JAreaFlash
+     * @param cindex the color index to use for the flashing area
+     */
+    public JAreaFlash(JPanel p, int cindex) {
         super(p);
 
         color = DrawData.LIGHTCOLOR + cindex-1;
         timer = new Timer(TIME_INTERVAL, this);
     }
-    public  boolean draw(Graphics2D g2)
-    {
+
+    /**
+     * Draws the flashing area on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     * @return true if the drawing was successful, false otherwise
+     */
+    public boolean draw(Graphics2D g2) {
         if (n % 2 != 0) return true;
 
         int n = vlist.size();
         Composite ac = g2.getComposite();
         g2.setComposite(CMisc.getFillComposite());
-        if(n == 0) return true;
-        
-        int []x = new int[n];
-        int []y = new int[n];
-        for(int i=0; i <n; i++)
-        {
-            CPoint p1 = (CPoint)vlist.get(i);
-            x[i] = (int)p1.getx();
-            y[i] = (int)p1.gety();
+        if (n == 0) return true;
+
+        int[] x = new int[n];
+        int[] y = new int[n];
+        for (int i = 0; i < n; i++) {
+            CPoint p1 = (CPoint) vlist.get(i);
+            x[i] = (int) p1.getx();
+            y[i] = (int) p1.gety();
         }
         g2.setColor(Color.black);
-        g2.drawPolygon(x,y,n);
+        g2.drawPolygon(x, y, n);
         g2.setColor(DrawData.getColor(color));
-        g2.fillPolygon(x,y,n);
+        g2.fillPolygon(x, y, n);
         g2.setComposite(ac);
         return true;
     }
 
-    public void addAPoint(CPoint p)
-    {
-        if(p != null) vlist.add(p);
+    /**
+     * Adds a point to the list of points defining the flashing area.
+     *
+     * @param p the point to add
+     */
+    public void addAPoint(CPoint p) {
+        if (p != null) vlist.add(p);
     }
-    public void actionPerformed(ActionEvent e)
-    {
+
+    /**
+     * Handles action events for the timer.
+     *
+     * @param e the action event
+     */
+    public void actionPerformed(ActionEvent e) {
         n--;
         if (n <= 0) super.stop();
         panel.repaint();
     }
-
-
 }

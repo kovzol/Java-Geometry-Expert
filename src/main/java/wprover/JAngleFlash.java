@@ -6,11 +6,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-5-3
- * Time: 12:22:53
- * To change this template use File | Settings | File Templates.
+ * JAngleFlash is a class that extends JFlash and implements ActionListener.
+ * It is used to create a flashing angle effect between two lines in a JPanel.
  */
 public class JAngleFlash extends JFlash implements ActionListener {
     private int radius = RAD;
@@ -20,24 +17,49 @@ public class JAngleFlash extends JFlash implements ActionListener {
     private int value1 = 1;
 
 
+    /**
+     * Constructs a new JAngleFlash with the specified JPanel.
+     *
+     * @param p the JPanel to associate with this JAngleFlash
+     */
     public JAngleFlash(JPanel p) {
         super(p);
         timer = new Timer(TIME_INTERVAL, this);
         inter = dl1 = dl2 = true;
     }
 
+    /**
+     * Sets whether the angle is formed by the intersection of two lines.
+     *
+     * @param r true if the angle is formed by intersecting lines, false otherwise
+     */
     public void setAngleTwoLineIntersected(boolean r) {
         inter = r;
     }
 
+    /**
+     * Sets whether the first line should be drawn.
+     *
+     * @param r true if the first line should be drawn, false otherwise
+     */
     public void setDrawLine1(boolean r) {
         dl1 = r;
     }
 
+    /**
+     * Sets whether the second line should be drawn.
+     *
+     * @param r true if the second line should be drawn, false otherwise
+     */
     public void setDrawLine2(boolean r) {
         dl2 = r;
     }
 
+    /**
+     * Gets the common point between the two lines forming the angle.
+     *
+     * @return the common point if it exists, null otherwise
+     */
     public CPoint getCommonPoint() {
         if (p1 == p3 || p1 == p4) {
             return p1;
@@ -48,6 +70,15 @@ public class JAngleFlash extends JFlash implements ActionListener {
         return null;
     }
 
+    /**
+     * Constructs a new JAngleFlash with the specified JPanel and points.
+     *
+     * @param p  the JPanel to associate with this JAngleFlash
+     * @param p1 the first point of the first line
+     * @param p2 the second point of the first line
+     * @param p3 the first point of the second line
+     * @param p4 the second point of the second line
+     */
     public JAngleFlash(JPanel p, CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         super(p);
         timer = new Timer(TIME_INTERVAL, this);
@@ -58,19 +89,39 @@ public class JAngleFlash extends JFlash implements ActionListener {
         dl1 = dl2 = true;
     }
 
+    /**
+     * Sets the type of the angle flash.
+     *
+     * @param t the type of the angle flash
+     */
     public void setFtype(int t) {
         ftype = t;
     }
 
-
+    /**
+     * Set the radius value.
+     *
+     * @param r the new radius value
+     */
     public void setRadius(int r) {
         radius = r;
     }
 
+    /**
+     * Get the current radius.
+     *
+     * @return the current radius value
+     */
     public int getRadius() {
         return radius;
     }
 
+    /**
+     * Handle action events.
+     * Decrements the counter, stops the animation if necessary, and repaints the panel.
+     *
+     * @param e the action event triggering this method
+     */
     public void actionPerformed(ActionEvent e) {
         n--;
         if (n <= 0) {
@@ -79,6 +130,13 @@ public class JAngleFlash extends JFlash implements ActionListener {
         panel.repaint();
     }
 
+    /**
+     * Draw the graphical elements.
+     * Draws either the provided lines or a modified angle based on the current state.
+     *
+     * @param g2 the graphics context used for drawing
+     * @return true if drawing succeeded
+     */
     public boolean draw(Graphics2D g2) {
         if (n % 2 == 0) {
             g2.setColor(color);
@@ -98,6 +156,21 @@ public class JAngleFlash extends JFlash implements ActionListener {
         return true;
     }
 
+    /**
+     * Draw a modified angle between two lines.
+     * Calculates the intersection point and draws arcs representing the angle.
+     *
+     * @param x1  the start x-coordinate of the first line
+     * @param y1  the start y-coordinate of the first line
+     * @param x2  the end x-coordinate of the first line
+     * @param y2  the end y-coordinate of the first line
+     * @param x3  the start x-coordinate of the second line
+     * @param y3  the start y-coordinate of the second line
+     * @param x4  the end x-coordinate of the second line
+     * @param y4  the end y-coordinate of the second line
+     * @param rad the radius used for the angle arc
+     * @param g2  the graphics context for drawing
+     */
     public void drawMAngle(double x1, double y1, double x2, double y2,
                            double x3, double y3, double x4, double y4,
                            int rad, Graphics2D g2) {
@@ -269,6 +342,13 @@ public class JAngleFlash extends JFlash implements ActionListener {
 
     }
 
+    /**
+     * Draw all lines with proper styling.
+     * Draws dashed or solid lines based on the internal configuration and available points.
+     *
+     * @param g2 the graphics context used for drawing
+     * @return true if drawing succeeded; false if required points are missing
+     */
     public boolean drawAllLine(Graphics2D g2) {
         if (p1 == null || p2 == null || p3 == null || p4 == null) {
             this.stop();

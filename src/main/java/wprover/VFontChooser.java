@@ -46,14 +46,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-6-28
- * Time: 22:01:58
- * To change this template use File | Settings | File Templates.
+ * VFontChooser is a class that extends JBaseDialog and provides a font chooser
+ * dialog for selecting fonts, sizes, and styles. It includes checkboxes for
+ * various font effects and a color picker.
  */
-
-
 public class VFontChooser extends JBaseDialog {
     protected int Closed_Option = JOptionPane.CLOSED_OPTION;
 
@@ -88,6 +84,12 @@ public class VFontChooser extends JBaseDialog {
     private GExpert gxInstance;
 
 
+    /**
+     * Constructs a VFontChooser dialog with the specified owner.
+     * Initializes the dialog components and sets up the layout.
+     *
+     * @param owner the GExpert instance that owns this dialog
+     */
     private VFontChooser(GExpert owner) {
         super(owner.getFrame(), "Font Chooser", true);
         gxInstance = owner;
@@ -228,12 +230,23 @@ public class VFontChooser extends JBaseDialog {
     }
 
 
+    /**
+     * Returns the language-specific string for the given key.
+     *
+     * @param s the key for the language string
+     * @return the language-specific string
+     */
     String getLanguage(String s) {
         if (gxInstance != null)
             return gxInstance.getLanguage(s);
         return s;
     }
 
+    /**
+     * Sets the attributes for the font chooser based on the given AttributeSet.
+     *
+     * @param a the AttributeSet containing font attributes
+     */
     private void setAttributes(AttributeSet a) {
         attributes = new SimpleAttributeSet(a);
         String name = StyleConstants.getFontFamily(a);
@@ -250,29 +263,38 @@ public class VFontChooser extends JBaseDialog {
         updatePreview();
     }
 
+    /**
+     * Retrieves the current font attributes from the font chooser.
+     *
+     * @return the AttributeSet containing the current font attributes
+     */
     private AttributeSet getAttributes() {
         if (attributes == null)
             return null;
-        StyleConstants.setFontFamily(attributes, fontNameInputList
-                .getSelected());
-        StyleConstants.setFontSize(attributes, fontSizeInputList
-                .getSelectedInt());
+        StyleConstants.setFontFamily(attributes, fontNameInputList.getSelected());
+        StyleConstants.setFontSize(attributes, fontSizeInputList.getSelectedInt());
         StyleConstants.setBold(attributes, boldCheckBox.isSelected());
         StyleConstants.setItalic(attributes, italicCheckBox.isSelected());
         StyleConstants.setUnderline(attributes, underlineCheckBox.isSelected());
-        StyleConstants.setStrikeThrough(attributes, strikethroughCheckBox
-                .isSelected());
+        StyleConstants.setStrikeThrough(attributes, strikethroughCheckBox.isSelected());
         StyleConstants.setSubscript(attributes, subscriptCheckBox.isSelected());
-        StyleConstants.setSuperscript(attributes, superscriptCheckBox
-                .isSelected());
+        StyleConstants.setSuperscript(attributes, superscriptCheckBox.isSelected());
         StyleConstants.setForeground(attributes, (Color) colorComboBox.getSelectedItem());
         return attributes;
     }
 
+    /**
+     * Returns the option selected by the user in the font chooser dialog.
+     *
+     * @return the selected option
+     */
     private int getOption() {
         return Closed_Option;
     }
 
+    /**
+     * Updates the font preview based on the current selections in the font chooser.
+     */
     protected void updatePreview() {
         StringBuilder previewText = new StringBuilder(PREVIEW_TEXT);
         String name = fontNameInputList.getSelected();
@@ -285,7 +307,7 @@ public class VFontChooser extends JBaseDialog {
         attributes.put(FAMILY, name);
         attributes.put(SIZE, (float) size);
 
-        // Using HTML to force JLabel manage natively unsupported attributes
+        // Using HTML to force JLabel to manage natively unsupported attributes
         if (underlineCheckBox.isSelected() || strikethroughCheckBox.isSelected()) {
             previewText.insert(0, "<html>");
             previewText.append("</html>");
@@ -302,7 +324,6 @@ public class VFontChooser extends JBaseDialog {
             previewText.insert(previewText.length() - 7, "</strike>");
         }
 
-
         if (boldCheckBox.isSelected())
             attributes.put(WEIGHT, WEIGHT_BOLD);
         if (italicCheckBox.isSelected())
@@ -317,7 +338,6 @@ public class VFontChooser extends JBaseDialog {
         superscriptCheckBox.setEnabled(!subscriptCheckBox.isSelected());
         subscriptCheckBox.setEnabled(!superscriptCheckBox.isSelected());
 
-
         Font fn = new Font(attributes);
 
         previewLabel.setText(previewText.toString());
@@ -328,9 +348,16 @@ public class VFontChooser extends JBaseDialog {
         previewLabel.repaint();
     }
 
-
+    /**
+     * Displays the font chooser dialog and returns the selected option.
+     *
+     * @param frame the parent frame
+     * @param f     the initial font
+     * @param title the title of the dialog
+     * @param c     the initial color
+     * @return the selected option
+     */
     public static int showDialog(GExpert frame, Font f, String title, Color c) {
-
         if (chooser == null) {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             fontNames = ge.getAvailableFontFamilyNames();
@@ -344,8 +371,6 @@ public class VFontChooser extends JBaseDialog {
         StyleConstants.setItalic(a, f.isItalic());
         StyleConstants.setFontFamily(a, f.getFamily());
         chooser.setAttributes(a);
-//        if (title != null)
-//            chooser.setTitle(title);
         int x = frame.getX() + frame.getWidth() / 2 - 350 / 2;
         int y = frame.getY() + frame.getHeight() / 2 - 450 / 2;
         chooser.setLocation(x, y);
@@ -354,10 +379,23 @@ public class VFontChooser extends JBaseDialog {
         return chooser.getOption();
     }
 
+    /**
+     * Displays the font chooser dialog and returns the selected option.
+     *
+     * @param frame the parent frame
+     * @param f     the initial font
+     * @param c     the initial color
+     * @return the selected option
+     */
     public static int showDialog(GExpert frame, Font f, Color c) {
         return showDialog(frame, f, "Font Chooser", c);
     }
 
+    /**
+     * Returns the selected font from the font chooser dialog.
+     *
+     * @return the selected font
+     */
     public static Font getReturnFont() {
         SimpleAttributeSet a = (SimpleAttributeSet) chooser.getAttributes();
 
@@ -374,13 +412,14 @@ public class VFontChooser extends JBaseDialog {
         else
             style = Font.PLAIN;
 
-
         Font f = new Font(s1, style, size);
-        //a.getAttribute()
         return f;
-
     }
 
+    /**
+     * InputList is a custom JPanel that contains a label, a text field, and a list.
+     * It allows the user to select an item from the list and displays it in the text field.
+     */
     class InputList extends JPanel implements ListSelectionListener, ActionListener {
         protected JLabel label = new JLabel();
 
@@ -591,6 +630,10 @@ public class VFontChooser extends JBaseDialog {
         }
     }
 
+    /**
+     * FontLabel is a custom JLabel that displays a font preview. It sets the
+     * background, foreground, and border properties for the label.
+     */
     class FontLabel extends JLabel {
         public FontLabel(String text) {
             super(text, JLabel.CENTER);
@@ -602,6 +645,10 @@ public class VFontChooser extends JBaseDialog {
         }
     }
 
+    /**
+     * ColorComboBox is a custom JComboBox that displays a list of colors. It uses a
+     * custom renderer to display the colors in the combo box.
+     */
     class ColorComboBox extends JComboBox {
 
         public ColorComboBox() {

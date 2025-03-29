@@ -4,7 +4,13 @@ import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
 
-
+/**
+ * GifEncoder.java
+ * This class is used to create GIF images. It provides methods to set the
+ * size, delay, repeat count, and transparency of the GIF images. It also
+ * allows adding frames to the GIF and writing the final output to a file or
+ * output stream.
+ */
 public class GifEncoder {
 
 	protected int width; // image size

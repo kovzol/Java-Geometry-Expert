@@ -1,11 +1,9 @@
 package wprover;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2005-8-12
- * Time: 11:06:53
- * To change this template use File | Settings | File Templates.
+ * ListTree.java
+ * This class represents a tabbed pane containing two tabs: "Construct History" and "Objects".
+ * It displays a list of undo structures and objects, allowing the user to select and view their properties.
  */
 
 import javax.swing.*;
@@ -25,6 +23,11 @@ public class ListTree extends JTabbedPane
     private CProperty prop;
 
 
+    /**
+     * Constructs a new ListTree with the specified GExpert instance.
+     *
+     * @param gx the GExpert instance to associate with this ListTree
+     */
     public ListTree(GExpert gx) {
         super(JTabbedPane.BOTTOM);
 
@@ -34,9 +37,8 @@ public class ListTree extends JTabbedPane
         undolist = new Vector();
         model = new DefaultListModel();
         list = new JList(model);
-        list.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        list.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         pane1.add(new JScrollPane(list));
-//        list.setCellRenderer();
 
         ListCellRenderer rener = new DefaultListCellRenderer() {
             public Component getListCellRendererComponent(
@@ -50,7 +52,6 @@ public class ListTree extends JTabbedPane
                 d.setText((1 + index) + ". \t" + value.toString());
                 return d;
             }
-
         };
         list.setCellRenderer(rener);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -68,7 +69,7 @@ public class ListTree extends JTabbedPane
                 return dm;
             }
         };
-        listx.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        listx.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         ListCellRenderer rener1 = new DefaultListCellRenderer() {
             public Component getListCellRendererComponent(
@@ -84,11 +85,10 @@ public class ListTree extends JTabbedPane
                 d.setText(c.getDescription());
                 return d;
             }
-
         };
 
         prop = new CProperty(gx.d, gx.getLan());
-        prop.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        prop.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         JSplitPane pane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         pane2.setLeftComponent(new JScrollPane(listx));
         listx.setCellRenderer(rener1);
@@ -97,13 +97,18 @@ public class ListTree extends JTabbedPane
         this.addTab(GExpert.getLanguage("Objects"), pane2);
     }
 
-
+    /**
+     * Handles action events for the ListTree.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
     }
 
-
     /**
-     * Remove the currently selected node.
+     * Handles value change events for the list selections.
+     *
+     * @param e the list selection event
      */
     public void valueChanged(ListSelectionEvent e) {
         if (e.getSource() == list)
@@ -115,41 +120,60 @@ public class ListTree extends JTabbedPane
                 gxInstance.dp.setObjectListForFlash(c);
             }
         }
-
     }
 
-
+    /**
+     * Handles mouse click events for the ListTree.
+     *
+     * @param e the mouse event
+     */
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == 3) {
-
-
         } else {
-
         }
     }
 
-
+    /**
+     * Handles mouse press events for the ListTree.
+     *
+     * @param e the mouse event
+     */
     public void mousePressed(MouseEvent e) {
-
     }
 
+    /**
+     * Handles mouse release events for the ListTree.
+     *
+     * @param e the mouse event
+     */
     public void mouseReleased(MouseEvent e) {
-
     }
 
+    /**
+     * Handles mouse enter events for the ListTree.
+     *
+     * @param e the mouse event
+     */
     public void mouseEntered(MouseEvent e) {
-
     }
 
+    /**
+     * Handles mouse exit events for the ListTree.
+     *
+     * @param e the mouse event
+     */
     public void mouseExited(MouseEvent e) {
-
     }
 
+    /**
+     * Clears all trees in the ListTree.
+     */
     public void clearAllTrees() {
-
-
     }
 
+    /**
+     * Reloads the ListTree with the current undo list and solid objects.
+     */
     public void reload() {
         undolist.clear();
         model.removeAllElements();
@@ -169,7 +193,6 @@ public class ListTree extends JTabbedPane
             if (o != null)
                 modelx.addElement(o);
         }
-
     }
 
 }

@@ -4,7 +4,11 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 
-
+/**
+ * EntityButtonUI is a custom button UI that provides a specific look and feel for buttons.
+ * It extends the BasicButtonUI class and overrides the paint method to customize the button's appearance.
+ * The button can have different styles based on its state (hovered, selected, etc.).
+ */
 public class EntityButtonUI extends BasicButtonUI {
 
     private static Color BackgroundOver = new Color(224, 232, 246);
@@ -16,19 +20,40 @@ public class EntityButtonUI extends BasicButtonUI {
 
     private int type = 0; // 0. all, 1. left, 2. right, 3. top, 4, bottom.
 
+    /**
+     * Constructs an EntityButtonUI with default settings.
+     * Calls the superclass constructor.
+     */
     public EntityButtonUI() {
         super();
     }
 
+    /**
+     * Constructs an EntityButtonUI with a specified type.
+     * Calls the superclass constructor and sets the type.
+     *
+     * @param t the type of the button UI
+     */
     public EntityButtonUI(int t) {
         super();
         type = t;
     }
 
+    /**
+     * Sets the type of the button UI.
+     *
+     * @param t the type to set
+     */
     public void setType(int t) {
         type = t;
     }
 
+    /**
+     * Installs the UI for a specified component.
+     * Sets the rollover enabled and applies an empty border.
+     *
+     * @param c the component where this UI will be installed
+     */
     public void installUI(JComponent c) {
         super.installUI(c);
         AbstractButton button = (AbstractButton) c;
@@ -36,6 +61,13 @@ public class EntityButtonUI extends BasicButtonUI {
         button.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     }
 
+    /**
+     * Paints the specified component.
+     * Changes the background and border colors based on the button's state.
+     *
+     * @param g the Graphics context in which to paint
+     * @param c the component being painted
+     */
     public void paint(Graphics g, JComponent c) {
         AbstractButton button = (AbstractButton) c;
         ButtonModel model = button.getModel();

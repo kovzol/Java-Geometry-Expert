@@ -9,11 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2006-4-5
- * Time: 13:12:36
- * To change this template use File | Settings | File Templates.
+ * JTriFlash is a class that extends JFlash and implements ActionListener.
+ * It is used to create a triangular flashing effect on a JPanel.
  */
 public class JTriFlash extends JFlash implements ActionListener {
 
@@ -269,6 +266,11 @@ public class JTriFlash extends JFlash implements ActionListener {
 
     }
 
+    /**
+     * Handles the action event by updating the animation state and repainting the panel.
+     *
+     * @param e the action event triggering the update
+     */
     public void actionPerformed(ActionEvent e) {
         if (nd < n)
             nd++;
@@ -281,14 +283,12 @@ public class JTriFlash extends JFlash implements ActionListener {
         panel.repaint();
     }
 
-
-    public void setColorIndex(int c) {
-        color = c;
-    }
-
     int[] p1 = new int[3];
     int[] p2 = new int[3];
 
+    /**
+     * Recalculates the flash animation by reinitializing its state based on the current direction.
+     */
     public void recalculate() {
         boolean dir = checkDirection();
         init(dir);
@@ -296,6 +296,12 @@ public class JTriFlash extends JFlash implements ActionListener {
 
     }
 
+    /**
+     * Draws the triangular flash effect onto the provided graphics context.
+     *
+     * @param g2 the graphics context to draw the flash effect on
+     * @return true if drawing was successful; false otherwise
+     */
     public boolean draw(Graphics2D g2) {
 
         int index = nd;
@@ -330,6 +336,11 @@ public class JTriFlash extends JFlash implements ActionListener {
         return true;
     }
 
+    /**
+     * Draws the first triangle of the flash animation using the initial set of coordinates.
+     *
+     * @param g2 the graphics context to draw the triangle on
+     */
     public void drawFirstTriangle(Graphics2D g2) {
         p1[0] = dax[0];
         p1[1] = dbx[0];
@@ -342,7 +353,12 @@ public class JTriFlash extends JFlash implements ActionListener {
         drawColoredTriangle(p1, p2, g2);
     }
 
-
+    /**
+     * Draws a colored line between specific vertices of the triangle based on the flash state.
+     *
+     * @param index determines which side of the triangle to draw
+     * @param g2 the graphics context used for drawing
+     */
     private void drawColoredTriangleLine(int index, Graphics2D g2) {
 
         if (fn == 0) return;
@@ -386,18 +402,36 @@ public class JTriFlash extends JFlash implements ActionListener {
         }
     }
 
+    /**
+     * Draws an outline of the triangle using the specified vertex coordinates.
+     *
+     * @param p1 an array containing the x-coordinates of the triangle's vertices
+     * @param p2 an array containing the y-coordinates of the triangle's vertices
+     * @param g2 the graphics context for drawing the triangle outline
+     */
     public void drawColoredTriangle(int[] p1, int[] p2, Graphics2D g2) {
         g2.setStroke(new BasicStroke(1.0f));
         g2.setColor(Color.black);
         g2.drawPolygon(p1, p2, 3);
     }
 
+    /**
+     * Draws the final triangle of the flash effect using the last computed set of coordinates.
+     *
+     * @param g2 the graphics context on which to draw the triangle
+     */
     public void drawLastTriangle(Graphics2D g2) {
         int index = n - 1;
         drawTiangle(g2, index);
 
     }
 
+    /**
+     * Draws a triangle at the specified index from the precomputed coordinate arrays.
+     *
+     * @param g2 the graphics context used for drawing the triangle
+     * @param index the index of the coordinate arrays to use for drawing
+     */
     public void drawTiangle(Graphics2D g2, int index) {
         p1[0] = dax[index];
         p1[1] = dbx[index];

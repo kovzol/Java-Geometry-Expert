@@ -9,11 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-4-10
- * Time: 13:30:36
- * To change this template use File | Settings | File Templates.
+ * RunningDialog is a class that extends JPopupMenu and implements ActionListener.
+ * It provides a dialog to show the progress of a running process in a graphical user interface.
  */
 public class RunningDialog extends JPopupMenu implements ActionListener {
     public static Timer timer = null;
@@ -27,6 +24,12 @@ public class RunningDialog extends JPopupMenu implements ActionListener {
     private static Color color = new Color(206, 223, 242);
 
 
+    /**
+     * Constructs a new RunningDialog with the specified GExpert instance and message string.
+     *
+     * @param gx the GExpert instance to associate with this dialog
+     * @param s  the message string to display in the dialog
+     */
     public RunningDialog(GExpert gx, String s) {
         this.setBorder(BorderFactory.createCompoundBorder(
                 new DropShadowBorder(), BorderFactory.createLineBorder(color, 10)));
@@ -55,30 +58,59 @@ public class RunningDialog extends JPopupMenu implements ActionListener {
         panel.add(Box.createHorizontalGlue());
         panel.add(labelt);
         this.add(panel);
-
     }
 
+    /**
+     * Called when the menu selection changes.
+     *
+     * @param isIncluded whether the menu is included in the selection
+     */
     public void menuSelectionChanged(boolean isIncluded) {
     }
 
+    /**
+     * Sets the PanelGB instance associated with this dialog.
+     *
+     * @param gb the PanelGB instance to set
+     */
     public void setPanelGB(PanelGB gb) {
         panegb = gb;
     }
 
+    /**
+     * Returns the preferred size of this component.
+     *
+     * @return the preferred size of this component
+     */
     public Dimension getPreferredSize() {
         Dimension d = super.getPreferredSize();
         d.setSize(300, d.getHeight());
         return d;
     }
 
+    /**
+     * Sets the string to be shown in the dialog.
+     *
+     * @param s the string to set
+     */
     public void setShownString(String s) {
         str = s;
     }
 
+    /**
+     * Starts the timer count by recording the current time.
+     */
     public void startCount() {
         start_time = System.currentTimeMillis();
     }
 
+    /**
+     * Starts the timer and displays the RunningDialog.
+     *
+     * @param gx the GExpert instance to associate with this dialog
+     * @param s  the message string to display in the dialog
+     * @return the RunningDialog instance if the timer is not already running, null otherwise
+     */
     public static RunningDialog startTimer(GExpert gx, String s) {
         if (timer != null && timer.isRunning())
             return null;
@@ -104,6 +136,9 @@ public class RunningDialog extends JPopupMenu implements ActionListener {
         return r;
     }
 
+    /**
+     * Stops the timer and hides the RunningDialog.
+     */
     public void stopTimer() {
         if (timer != null)
             timer.stop();
@@ -111,6 +146,11 @@ public class RunningDialog extends JPopupMenu implements ActionListener {
         this.setVisible(false);
     }
 
+    /**
+     * Handles action events for the timer and stop button.
+     *
+     * @param e the ActionEvent triggered by the timer or stop button
+     */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == timer) {
             counter++;

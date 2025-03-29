@@ -3,17 +3,21 @@ package wprover;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2009-1-22
- * Time: 16:59:07
- * To change this template use File | Settings | File Templates.
+ * The HelpMode class provides methods to manage and retrieve help items in GeoGebra.
  */
 public class HelpMode {
 
-
+    /**
+     * A vector to store help items.
+     */
     public static Vector items = new Vector();
 
+    /**
+     * Retrieves the help mode filename for the given command.
+     *
+     * @param comd the command to look up
+     * @return the filename associated with the command, or null if not found
+     */
     public static String getHelpMode(String comd) {
         buildItems();
         for (int i = 0; i < items.size(); i++) {
@@ -24,6 +28,9 @@ public class HelpMode {
         return null;
     }
 
+    /**
+     * Builds the list of help items if it is not already built.
+     */
     public static void buildItems() {
         if (items.size() != 0)
             return;
@@ -84,7 +91,7 @@ public class HelpMode {
         addItem("Square", "polygon.html");
         addItem("Pentagon", "polygon.html");
         addItem("Polygon", "polygon.html");
-        addItem("sangle", "special angle.html");
+        addItem("sangle", "special_angle.html");
 
         addItem("Eqangle", "constraint.html");
         addItem("Eqangle3p", "constraint.html");
@@ -93,7 +100,6 @@ public class HelpMode {
         addItem("Equal Distance", "constraint.html");
         addItem("Ratio Distance", "constraint.html");
         addItem("CCtangent", "constraint.html");
-
 
         addItem("Trace", "trace.html");
         addItem("Locus", "locus.html");
@@ -121,7 +127,6 @@ public class HelpMode {
         addItem("Show Step Bar", "index.html");
         addItem("Style Dialog", "index.html");
 
-
         addItem("Help", "index.html");
         addItem("Online Help", "index.html");
         addItem("Help on Mode", "index.html");
@@ -129,22 +134,33 @@ public class HelpMode {
         addItem("Contact Us", "index.html");
         addItem("Check for Update", "index.html");
         addItem("About JGEX", "index.html");
-
-
     }
 
+    /**
+     * Adds a help item to the list.
+     *
+     * @param comd the command associated with the help item
+     * @param name the filename of the help item
+     */
     public static void addItem(String comd, String name) {
         HelpItemAtom it = new HelpItemAtom(comd, name);
         items.add(it);
     }
-
-
 }
 
+/**
+ * Represents a help item with a command and a filename.
+ */
 class HelpItemAtom {
     String comd;
     String filename;
 
+    /**
+     * Constructs a new HelpItemAtom with the specified command and filename.
+     *
+     * @param s1 the command associated with the help item
+     * @param s2 the filename of the help item
+     */
     public HelpItemAtom(String s1, String s2) {
         comd = s1;
         filename = s2;

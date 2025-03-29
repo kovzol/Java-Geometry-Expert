@@ -8,11 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: Mar 18, 2007
- * Time: 7:57:14 PM
- * To change this template use File | Settings | File Templates.
+ * RightTransformPopupMenu is a class that extends JPopupMenu and implements ItemListener and ActionListener.
+ * It provides a context menu for transforming graphical objects in a drawing application.
  */
 public class RightTransformPopupMenu extends JPopupMenu implements ItemListener, ActionListener {
 
@@ -21,6 +18,11 @@ public class RightTransformPopupMenu extends JPopupMenu implements ItemListener,
     private JMenuItem m;
     private int xx, yy;
 
+    /**
+     * Constructs a new RightTransformPopupMenu with the specified DrawProcess instance.
+     *
+     * @param d the DrawProcess instance to associate with this menu
+     */
     public RightTransformPopupMenu(DrawProcess d) {
         dp = d;
 
@@ -49,6 +51,11 @@ public class RightTransformPopupMenu extends JPopupMenu implements ItemListener,
         this.add(m);
     }
 
+    /**
+     * Handles action events for the menu items.
+     *
+     * @param e the ActionEvent triggered by the menu items
+     */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == m) {
             dp.setTransformStatus(0);
@@ -56,19 +63,29 @@ public class RightTransformPopupMenu extends JPopupMenu implements ItemListener,
         }
     }
 
+    /**
+     * Displays the popup menu at the specified location.
+     *
+     * @param invoker the component in which the popup menu is displayed
+     * @param x       the x-coordinate of the popup menu's location
+     * @param y       the y-coordinate of the popup menu's location
+     */
     public void show(Component invoker, int x, int y) {
         super.show(invoker, x, y);
         xx = x;
         yy = y;
     }
 
+    /**
+     * Handles item state change events for the radio buttons.
+     *
+     * @param e the ItemEvent triggered by the radio buttons
+     */
     public void itemStateChanged(ItemEvent e) {
 
         if (m1.isSelected()) {
             dp.setTransformStatus(1);
-
             dp.setFirstPnt(xx, yy);
-
         } else if (m2.isSelected())
             dp.setTransformStatus(2);
         else

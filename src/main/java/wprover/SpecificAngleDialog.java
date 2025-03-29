@@ -9,14 +9,11 @@ import java.awt.event.ItemEvent;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2005-11-3
- * Time: 10:05:14
- * To change this template use File | Settings | File Templates.
+ * SpecificAngleDialog is a class that extends JBaseDialog and implements ActionListener and ItemListener.
+ * It provides a dialog for selecting specific angles in a graphical application.
  */
 public class SpecificAngleDialog extends JBaseDialog implements ActionListener, ItemListener {
-    JCheckBox cb1, cb2, cb3, cb4, cb5,cb6; // 30,45,60,75,120
+    JCheckBox cb1, cb2, cb3, cb4, cb5, cb6; // 30,45,60,75,120
     JButton bok, bca;
 
     int type; // 0: define, 1 alread define 2 setangle.
@@ -24,6 +21,13 @@ public class SpecificAngleDialog extends JBaseDialog implements ActionListener, 
     int rtype = 0;
     GExpert gxInstance;
 
+    /**
+     * Constructs a new SpecificAngleDialog with the specified GExpert instance, type, and vector of angles.
+     *
+     * @param owner the GExpert instance to associate with this dialog
+     * @param type  the type of the dialog (0: define, 1: already defined, 2: set angle)
+     * @param v     the vector of angles to be used in the dialog
+     */
     public SpecificAngleDialog(GExpert owner, int type, Vector v) {
         super(owner.getFrame(), true);
         gxInstance = owner;
@@ -48,7 +52,6 @@ public class SpecificAngleDialog extends JBaseDialog implements ActionListener, 
         cb4.addItemListener(this);
         cb5.addItemListener(this);
         cb6.addItemListener(this);
-
 
         JPanel panel2 = new JPanel();
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
@@ -86,7 +89,7 @@ public class SpecificAngleDialog extends JBaseDialog implements ActionListener, 
                     cb4.setEnabled(true);
                 else if (value == 120)
                     cb5.setEnabled(true);
-                else if(value == 0)
+                else if (value == 0)
                     cb6.setEnabled(true);
             }
             bok.setEnabled(false);
@@ -110,7 +113,7 @@ public class SpecificAngleDialog extends JBaseDialog implements ActionListener, 
                     cb4.setEnabled(true);
                 else if (value == 120)
                     cb5.setEnabled(true);
-                else if(value == 0)
+                else if (value == 0)
                     cb6.setEnabled(true);
             }
         }
@@ -118,6 +121,11 @@ public class SpecificAngleDialog extends JBaseDialog implements ActionListener, 
         owner.centerDialog(this);
     }
 
+    /**
+     * Handles the action events for the OK and Cancel buttons.
+     *
+     * @param e the ActionEvent triggered by clicking a button
+     */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         Object obj = e.getSource();
@@ -129,13 +137,22 @@ public class SpecificAngleDialog extends JBaseDialog implements ActionListener, 
             rtype = 0;
             this.setVisible(false);
         }
-
     }
 
+    /**
+     * Checks if the OK button was pressed.
+     *
+     * @return true if the OK button was pressed, false otherwise
+     */
     public boolean isOkPressed() {
         return rtype == 1;
     }
 
+    /**
+     * Handles the item state change events for the checkboxes.
+     *
+     * @param e the ItemEvent triggered by selecting or deselecting a checkbox
+     */
     public void itemStateChanged(ItemEvent e) {
         if (type == 0) return;
         if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -150,19 +167,16 @@ public class SpecificAngleDialog extends JBaseDialog implements ActionListener, 
                 cb3.setSelected(false);
                 cb4.setSelected(false);
                 cb5.setSelected(false);
-
             } else if (obj == cb3) {
                 cb1.setSelected(false);
                 cb2.setSelected(false);
                 cb4.setSelected(false);
                 cb5.setSelected(false);
-
             } else if (obj == cb4) {
                 cb1.setSelected(false);
                 cb2.setSelected(false);
                 cb3.setSelected(false);
                 cb5.setSelected(false);
-
             } else if (obj == cb5) {
                 cb2.setSelected(false);
                 cb3.setSelected(false);
@@ -172,7 +186,11 @@ public class SpecificAngleDialog extends JBaseDialog implements ActionListener, 
         }
     }
 
-
+    /**
+     * Returns the vector of selected specific angles.
+     *
+     * @return the vector of selected specific angles
+     */
     public Vector getSpecificAngle() {
         Vector v = new Vector();
         if (cb1.isSelected())

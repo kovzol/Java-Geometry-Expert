@@ -5,11 +5,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-5-10
- * Time: 16:51:26
- * To change this template use File | Settings | File Templates.
+ * GBevelUI.java
+ * This class extends BasicButtonUI to create a custom button UI with bevel borders.
+ * It changes the button's border based on its rollover and selected states.
  */
 public class GBevelUI extends BasicButtonUI {
 
@@ -20,6 +18,12 @@ public class GBevelUI extends BasicButtonUI {
         super();
     }
 
+    /**
+     * Installs the UI for a specified component.
+     * Sets the rollover enabled and applies an empty border.
+     *
+     * @param c the component where this UI will be installed
+     */
     public void installUI(JComponent c) {
         super.installUI(c);
         AbstractButton button = (AbstractButton) c;
@@ -27,6 +31,13 @@ public class GBevelUI extends BasicButtonUI {
         button.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     }
 
+    /**
+     * Paints the specified component.
+     * Changes the border based on the button's rollover and selected states.
+     *
+     * @param g the Graphics context in which to paint
+     * @param c the component being painted
+     */
     public void paint(Graphics g, JComponent c) {
         AbstractButton button = (AbstractButton) c;
         ButtonModel model = button.getModel();
@@ -35,11 +46,11 @@ public class GBevelUI extends BasicButtonUI {
         boolean b2 = model.isArmed();
         boolean b3 = model.isSelected();
 
-
         if (b3) {
             border2.paintBorder(button, g, 0, 0, button.getWidth(), button.getHeight());
-        } else if(b1)
+        } else if (b1) {
             border1.paintBorder(button, g, 0, 0, button.getWidth(), button.getHeight());
-        super.paint(g,button);
+        }
+        super.paint(g, button);
     }
 }
