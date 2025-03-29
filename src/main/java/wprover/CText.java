@@ -703,7 +703,7 @@ public class CText extends CClass {
      * Saves the text object as a PostScript file.
      *
      * @param fp the file output stream to write to
-     * @param stype the style type (0 for color, 1 for gray, 2 for black & white)
+     * @param stype the style type (0 for color, 1 for gray, 2 for black &amp; white)
      * @throws IOException if an I/O error occurs
      */
     public void SavePS(FileOutputStream fp, int stype) throws IOException {

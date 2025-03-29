@@ -19,7 +19,7 @@ package gprover;
 public class GDD extends GDDBase {
 
     /**
-     * Performs the fixed‐point computation for the geometric deduction system.
+     * Performs the fixed point computation for the geometric deduction system.
      * Processes all pending conditions, adjusts parameters, and collects results.
      */
     void fixpoint() {
@@ -760,7 +760,7 @@ public class GDD extends GDDBase {
     }
 
     /**
-     * Searches for additional circle‐line intersections within a PLine.
+     * Searches for additional circle line intersections within a PLine.
      *
      * @param cr1 the circle to search intersections with
      * @param p1  the first point index defining the line
@@ -832,7 +832,7 @@ public class GDD extends GDDBase {
     }
 
     /**
-     * Searches for circle‐circle intersections between the provided circle and all other circles.
+     * Searches for circle circle intersections between the provided circle and all other circles.
      *
      * @param cr1 the circle to search for intersections with other circles
      */
@@ -890,7 +890,7 @@ public class GDD extends GDDBase {
     }
 
     /**
-     * Searches and constructs midpoint‐related cyclic configurations for the given circle.
+     * Searches and constructs midpoint related cyclic configurations for the given circle.
      *
      * @param cr the circle to process
      * @param md the midpoint data structure containing endpoints and the midpoint
@@ -936,7 +936,7 @@ public class GDD extends GDDBase {
 
 
     /**
-     * Processes all midpoint‐related configurations including congruence, parallel, and cyclic conditions.
+     * Processes all midpoint related configurations including congruence, parallel, and cyclic conditions.
      *
      * @param md the midpoint to process
      */

@@ -199,11 +199,6 @@ public class CPoint extends CClass {
         g2.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
     }
 
-    /**
-     * Gets the default radius of the point.
-     *
-     * @return the default radius of the point
-     */
     public int POINT_RADIUS = CMisc.getPointRadius();
 
     /**

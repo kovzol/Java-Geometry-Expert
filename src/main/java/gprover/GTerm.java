@@ -8,18 +8,18 @@ import java.util.Vector;
  * JGEX supports loading and saving scripts in a simple textual format.
  * Among the examples, these files have no extension (see, e.g. 3_JAR/simson).
  * This class can load and save them.
- *  * Represents geometric constructions and their associated operations.
- *  *
- *  * <p>This class encapsulates the management of points, construction steps,
- *  * and constraints within a geometric theorem proving framework.
- *  * It provides methods for adding, retrieving, and processing geometric data,
- *  * including the generation of non-degenerate and prerequisite constraints.
- *  * Fundamental operations include loading, saving, and validating the structure
- *  * of geometric constructions.</p>
- *  *
- *  * <p>Utilize this class to perform geometric analyses and manipulations necessary
- *  * for automated theorem proving and geometric constraint solving within the
- *  * framework.</p>
+ * * Represents geometric constructions and their associated operations.
+ * *
+ * * <p>This class encapsulates the management of points, construction steps,
+ * * and constraints within a geometric theorem proving framework.
+ * * It provides methods for adding, retrieving, and processing geometric data,
+ * * including the generation of non-degenerate and prerequisite constraints.
+ * * Fundamental operations include loading, saving, and validating the structure
+ * * of geometric constructions.</p>
+ * *
+ * * <p>Utilize this class to perform geometric analyses and manipulations necessary
+ * * for automated theorem proving and geometric constraint solving within the
+ * * framework.</p>
  */
 public class GTerm {
 
@@ -61,9 +61,9 @@ public class GTerm {
     }
 
     /**
-     * Returns a vector containing non‐degenerate constraints.
+     * Returns a vector containing non degenerate constraints.
      *
-     * @return a vector of CNdg objects representing non‐degenerate constraints
+     * @return a vector of CNdg objects representing non degenerate constraints
      */
     public Vector getNcons() {
         Vector v = new Vector();
@@ -89,7 +89,7 @@ public class GTerm {
     /**
      * Generates a string description for the specified CNdg object based on the provided parameters.
      *
-     * @param dg the CNdg object to update with its description
+     * @param dg  the CNdg object to update with its description
      * @param pss the array of parameters used for generating the description
      */
     public void generateSd(CNdg dg, Object[] pss) {
@@ -434,8 +434,8 @@ public class GTerm {
      * Sets the location for the point matching the given name.
      *
      * @param sn the name of the point
-     * @param x the x-coordinate of the point
-     * @param y the y-coordinate of the point
+     * @param x  the x-coordinate of the point
+     * @param y  the y-coordinate of the point
      * @param x1 the first additional coordinate parameter
      * @param y1 the second additional coordinate parameter
      * @return true if the point location is successfully set; false otherwise
@@ -698,6 +698,7 @@ public class GTerm {
 
     /**
      * Add a conclusion to the construction.
+     *
      * @param ln A script command in the form "SHOW: COLLINEAR P Q R"
      * @return if the conclusion was added successfully
      */
@@ -904,7 +905,7 @@ public class GTerm {
      * Adds a constant to the construction.
      * Creates a new constant constraint using the provided identifier and function.
      *
-     * @param sf the identifier for the constant.
+     * @param sf   the identifier for the constant.
      * @param func the function defining the constant.
      */
     public void addConstant(String sf, String func) {
@@ -1334,7 +1335,7 @@ public class GTerm {
     /**
      * Checks if a valid conclusion exists in the construction.
      *
-     * @return true if the last condition type is within the valid range (>= 50 and < 100); false otherwise.
+     * @return true if the last condition type is within the valid range (&gt;= 50 and &lt; 100); false otherwise.
      */
     public boolean hasConclusion() {
         int n = gcons.size();
@@ -1476,8 +1477,7 @@ public class GTerm {
                             addccc(c2.ps[2], c2.ps[3], c1);
                             v.remove(j);
                             r = true;
-                        } else
-                        if (c1.ps[k * 2] == c2.ps[2] && c1.ps[k * 2 + 1] == c2.ps[3] || c1.ps[k * 2] == c2.ps[3] && c1.ps[k * 2 + 1] == c2.ps[2]) {
+                        } else if (c1.ps[k * 2] == c2.ps[2] && c1.ps[k * 2 + 1] == c2.ps[3] || c1.ps[k * 2] == c2.ps[3] && c1.ps[k * 2 + 1] == c2.ps[2]) {
                             addccc(c2.ps[0], c2.ps[1], c1);
                             v.remove(j);
                             r = true;
@@ -1527,8 +1527,8 @@ public class GTerm {
      * Adds a circle constraint between the two specified points to the provided constraint,
      * if the connection does not already exist.
      *
-     * @param a the first point index.
-     * @param b the second point index.
+     * @param a  the first point index.
+     * @param b  the second point index.
      * @param cs the constraint to which the circle condition is added.
      */
     public void addccc(int a, int b, Cons cs) {
@@ -1638,7 +1638,7 @@ public class GTerm {
      * Retrieves and removes the first constraint in the vector that contains the specified point.
      *
      * @param pt the point identifier to search for in the constraints.
-     * @param v the vector of constraints to search through.
+     * @param v  the vector of constraints to search through.
      * @return the constraint that contains the point, or null if no such constraint exists.
      */
     public Cons getcons(int pt, Vector v) {
@@ -1815,9 +1815,7 @@ public class GTerm {
             case Gib.C_TRAPEZOID:
             case Gib.C_R_TRAPEZOID:
             case Gib.C_LOZENGE:
-            case Gib.C_RECTANGLE:
-
-            {
+            case Gib.C_RECTANGLE: {
                 Cons c1 = this.getNDG_COLL(c.ps[0], c.ps[1], c.ps[2], c.pss[0], c.pss[1], c.pss[2]);
                 addNDG(c1, v);
                 break;
@@ -2093,7 +2091,7 @@ public class GTerm {
     /**
      * Checks if the first non-degenerate constraint is considered contained within the second.
      *
-     * @param c the constraint to check for containment.
+     * @param c  the constraint to check for containment.
      * @param c1 the constraint that may contain the first.
      * @return true if the first constraint is contained within the second, false otherwise.
      */

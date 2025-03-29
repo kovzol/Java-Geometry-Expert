@@ -918,7 +918,7 @@ public class CProveText {
      * Saves the proof text as a PostScript file.
      *
      * @param fp the file output stream to write to
-     * @param stype the style type (0 for color, 1 for gray, 2 for black & white)
+     * @param stype the style type (0 for color, 1 for gray, 2 for black &amp; white)
      * @param ntype the number type (0 for default, 1 for 20 added, 2 for 25 added)
      * @throws IOException if an I/O error occurs
      */
@@ -963,7 +963,7 @@ public class CProveText {
      *
      * @param c the color to set
      * @param fp the file output stream to write to
-     * @param stype the style type (0 for color, 1 for gray, 2 for black & white)
+     * @param stype the style type (0 for color, 1 for gray, 2 for black &amp; white)
      * @throws IOException if an I/O error occurs
      */
     public void SavePsColor(Color c, FileOutputStream fp, int stype) throws IOException {

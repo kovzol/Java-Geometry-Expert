@@ -25,6 +25,10 @@ package pdf;
 import java.awt.*;
 import java.util.*;
 
+/**
+ * This class represents a bounding box.
+ * It holds coordinate information and properties used for graphical operations.
+ */
 public class BoundingBox extends Rectangle
 {
   /** Percent f line height to space lines */
