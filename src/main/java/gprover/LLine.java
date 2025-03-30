@@ -1,8 +1,14 @@
+
+package gprover;
 /**
  * Represents a geometric line in the construction.
+ * <p>
+ * The class extends CClass and is used to model a line in a geometric context.
+ * It includes properties such as a lemma identifier, a condition object,
+ * an integer number to uniquely identify the line, an array of point indices,
+ * and a reference to another LLine (for linked constructs).
+ * </p>
  */
-package gprover;
-
 public class LLine extends CClass {
 
     int lemma;

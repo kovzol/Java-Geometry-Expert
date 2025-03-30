@@ -1,18 +1,17 @@
 package wprover;
 
-/**
- * ListTree.java
- * This class represents a tabbed pane containing two tabs: "Construct History" and "Objects".
- * It displays a list of undo structures and objects, allowing the user to select and view their properties.
- */
-
 import javax.swing.*;
 import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
-
+/**
+ * ListTree provides a tabbed interface with two panels:
+ * - "Construct History": displays a list of undo structures.
+ * - "Objects": shows geometric objects and their properties.
+ * This class enables users to select items for detailed inspection.
+ */
 public class ListTree extends JTabbedPane
         implements ActionListener, MouseListener, ListSelectionListener {
 
@@ -188,8 +187,7 @@ public class ListTree extends JTabbedPane
 
         Vector vx = dp.getAllSolidObj();
 
-        for (int i = 0; i < vx.size(); i++) {
-            Object o = vx.get(i);
+        for (Object o : vx) {
             if (o != null)
                 modelx.addElement(o);
         }

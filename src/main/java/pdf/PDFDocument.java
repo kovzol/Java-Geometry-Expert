@@ -26,6 +26,10 @@ import java.io.Serializable;
 import java.util.Vector;
 
 
+/**
+ * Represents a PDF document with functionalities to manage PDF objects,
+ * pages, fonts, images, and document metadata.
+ */
 public class PDFDocument implements Serializable
 {
 	

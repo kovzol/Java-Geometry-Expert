@@ -1,6 +1,5 @@
 package wprover;
 
-import gprover.CNdg;
 import gprover.Cons;
 import gprover.GTerm;
 import maths.PolyBasic;
@@ -18,6 +17,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * PanelGB is a graphical panel for performing Groebner basis computations.
+ * It extends the PanelAlgebraic class and implements MouseListener for handling mouse events.
+ * This class provides methods to compute Groebner bases, handle user interactions,
+ * and save results in Maple format.
+ */
 public class PanelGB extends PanelAlgebraic implements MouseListener {
 
     private Vector vndgs;

@@ -10,6 +10,10 @@ import java.io.DataInputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * RuleListDialog is a dialog that displays a list of rules and allows the user to interact with them.
+ * It extends JBaseDialog and provides functionality for loading and displaying rules.
+ */
 public class RuleListDialog extends JBaseDialog {
 
     private GExpert gxInstance;

@@ -1,5 +1,9 @@
 package gprover;
 
+/**
+ * The Var class represents a variable in a geometric context.
+ * It includes properties for the variable's name, points, and a string representation.
+ */
 public class Var {
     int nm;
     char[] p = new char[9];

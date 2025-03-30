@@ -1,9 +1,9 @@
+package gprover;
+
 /**
  * The CongSeg class represents a congruent segment in a geometric proof.
  * It includes properties for lemma, condition, points, types, and the next segment.
  */
-package gprover;
-
 public class CongSeg extends CClass {
 
     /** The lemma associated with the congruent segment. */

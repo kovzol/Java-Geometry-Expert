@@ -1,9 +1,9 @@
-/**
- * Represents an incenter in a geometric proof.
- * This class extends the CClass and includes properties for lemma, coordinates, and a reference to the next incenter.
- */
 package gprover;
 
+/**
+ * Represents an incenter(the center of the incircle) in a geometric proof.
+ * This class extends the CClass and includes properties for lemma, coordinates, and a reference to the next incenter.
+ */
 public class Incenter extends CClass {
     /** The lemma associated with the incenter. */
     int lemma;

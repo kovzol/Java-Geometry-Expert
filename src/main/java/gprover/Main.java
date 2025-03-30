@@ -3,6 +3,12 @@ package gprover;
 import java.io.*;
 import java.util.Vector;
 
+/**
+ * The main class for the GProver application.
+ * This class contains the main method and handles the reading of geometric terms,
+ * processing them, and outputting the results.
+ */
+@Deprecated
 public class Main {
 
     /**
@@ -81,9 +87,6 @@ public class Main {
                     DataOutputStream out = new DataOutputStream(fp);
                     gt.Save(out);
 
-                    //db.setPrintToString();
-                    //db.show_fproof();
-                    //out.writeBytes(db.getFileProve().append("\n********************************\n").toString());
                     out.close();
                 } else {
                     f++;
