@@ -25,6 +25,8 @@ buildscript {
 
 plugins {
     id 'application'
+    id 'java'
+    id 'org.docstr.gwt' version '2.1.7'
 }
 
 apply plugin: 'io.github.fvarrui.javapackager.plugin'
@@ -154,6 +156,13 @@ dependencies {
             'xml-apis:xml-apis:1.4.01',
             'xml-apis:xml-apis-ext:1.3.04',
             'commons-cli:commons-cli:1.4'
+    compileOnly group: 'org.gwtproject', name: 'gwt-dev', version: '2.12.2' // has vulnerabilities even in the latest version
+    compileOnly group: 'org.gwtproject', name: 'gwt-user', version: '2.12.2'
+}
+
+// relevant for later insert the main file for GWT here later
+gwt {
+    modules = ["webapp.JGEXWebApp"]
 }
 
 application {
@@ -232,4 +241,10 @@ task runGproverMain2(type: JavaExec) {
     File runningDir = new File('src/docs')
     workingDir = runningDir
     mainClass = 'gprover.Main2'
+}
+
+// this copies files from the webapp folder to the war folder to be usable by GWT
+tasks.register("prepareWebApp", Copy) {
+    from("src/main/webapp")
+    into("build/gwt/war")
 }
