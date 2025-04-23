@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact name="Java-Geometry-Expert.main:GWT">
+    <output-path>$PROJECT_DIR$/out/artifacts/Java_Geometry_Expert_main_GWT</output-path>
+    <root id="root">
+      <element id="gwt-compiler-output" facet="Java-Geometry-Expert.main/gwt/GWT" />
+    </root>
+  </artifact>
+</component>
