@@ -1,8 +1,20 @@
 <module rename-to="jgexwebapp">
+    <!-- Inherit the core Web Toolkit stuff -->
     <inherits name="com.google.gwt.user.User"/>
-    <entry-point class="webapp.JGEXWebApp"/>
-    <source path=""/>
-    <source path=""/>
+    <inherits name="com.google.gwt.user.theme.clean.Clean"/>
+
+    <!-- Inherit the core module -->
+    <inherits name="core.Core"/>
+
+    <!-- Specify the app entry point class -->
+    <entry-point class="webapp.client.JGEXWebApp"/>
+
+    <!-- Specify the paths for your GWT-compatible code -->
+    <source path="client"/>
+
+    <!-- Add other necessary packages as they become GWT-compatible -->
+
+    <!-- Configure GWT settings -->
     <add-linker name="xsiframe"/>
     <set-configuration-property name="devModeRedirectEnabled" value="true"/>
     <!-- enable source maps -->

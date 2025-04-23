@@ -3,6 +3,8 @@ package wprover;
 import UI.EntityButtonUI;
 import UI.GBevelBorder;
 import UI.GifEncoder;
+import core.GExpertCore;
+import core.ui.GExpertUI;
 import gprover.Gib;
 import gprover.GTerm;
 import org.xnap.commons.i18n.I18n;
@@ -41,6 +43,7 @@ import org.apache.commons.cli.*;
  * It initializes the application, sets up the GUI, and handles user interactions.
  * It also manages the language settings and file operations.
  */
+// Adaptation: preparing desktop-specific code for integration with future GWT features.
 public class GExpert extends JFrame implements ActionListener, KeyListener, DropTargetListener, WindowListener {    // APPLET ONLY.
 
     private JLabel label;
@@ -97,11 +100,20 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     public static gprover.Cons conclusion = null; // Temporary fix for storing conclusion with == in GGB import
 
+    // UI abstraction and core components
+    private GExpertUI ui;
+    private GExpertCore core;
+
     /**
      * Constructs a new GExpert instance and initializes the application if it is running as an application.
      */
     public GExpert() {
         super();  //GAPPLET.
+        // Create UI and core instances
+        ui = new SwingGExpertUI(this);
+        core = new GExpertCore();
+        core.setUI(ui);
+
         if (CMisc.isApplication())
             init();
     }
@@ -4041,4 +4053,3 @@ class TStateButton extends JToggleButton {
         super.setSelected(b);
     }
 }
-

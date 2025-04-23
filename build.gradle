@@ -35,6 +35,25 @@ apply plugin: 'io.github.fvarrui.javapackager.plugin'
 group = 'io.github.kovzol'
 ext.softwareVersion = '0.86'
 
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'src/main/gwt']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}
+
 // These are default settings based on Gradle's standard layout:
 ext.poDir = 'src/main/po'
 ext.classesDir = 'build/classes/java/main'
@@ -51,13 +70,22 @@ tasks.addRule("Pattern: msgFmt_<FILE>Po: Compile <FILE>.po into <FILE>.class.") 
             outputs.file output
             doLast {
                 def msgFmtCmd = "msgfmt --java2 -d ${classesDir} -r i18n.Messages -l ${language} ${input}"
-                exec {
-                    ignoreExitValue true
-                    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-                        commandLine 'cmd', '/c', msgFmtCmd
-                    } else {
-                        commandLine 'bash', '-c', msgFmtCmd
+                try {
+                    exec {
+                        ignoreExitValue true
+                        if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+                            commandLine 'cmd', '/c', msgFmtCmd
+                        } else {
+                            commandLine 'bash', '-c', msgFmtCmd
+                        }
                     }
+                } catch (Exception e) {
+                    // If msgfmt is not available, log a warning but don't fail the build
+                    logger.warn("Warning: msgfmt command not found. Internationalization will not be available.")
+                    logger.warn("Install gettext to enable internationalization support.")
+                    // Create an empty directory to satisfy the output requirement
+                    def outputDir = new File("${classesDir}/i18n")
+                    outputDir.mkdirs()
                 }
             }
         }
@@ -158,9 +186,13 @@ dependencies {
             'commons-cli:commons-cli:1.4'
     compileOnly group: 'org.gwtproject', name: 'gwt-dev', version: '2.12.2' // has vulnerabilities even in the latest version
     compileOnly group: 'org.gwtproject', name: 'gwt-user', version: '2.12.2'
+
+    // JUnit 5 dependencies
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 }
 
-// relevant for later insert the main file for GWT here later
+// GWT configuration
 gwt {
     modules = ["webapp.JGEXWebApp"]
 }
@@ -186,6 +218,17 @@ run {
 
 javadoc {
     mustRunAfter "msgFmtAll"
+}
+
+// Configure test task
+test {
+    useJUnitPlatform()  // Use JUnit 5 platform
+    mustRunAfter "msgFmtAll"
+}
+
+// Make compileTestJava depend on msgFmtAll
+tasks.named("compileTestJava") {
+    dependsOn "msgFmtAll"
 }
 
 javapackager {
@@ -243,8 +286,68 @@ task runGproverMain2(type: JavaExec) {
     mainClass = 'gprover.Main2'
 }
 
-// this copies files from the webapp folder to the war folder to be usable by GWT
+// GWT-related tasks
+
+// This copies files from the webapp folder to the war folder to be usable by GWT
 tasks.register("prepareWebApp", Copy) {
+    description "Copies web resources to the GWT war directory"
+    group "GWT"
     from("src/main/webapp")
     into("build/gwt/war")
+}
+
+// Make GWT tasks depend on prepareWebApp
+tasks.named("gwtDevMode") {
+    dependsOn prepareWebApp
+
+    // Configure Java compatibility for GWT development mode
+    doFirst {
+        // Ensure we're using a compatible Java version
+        println "Running GWT DevMode with Java version: ${System.getProperty('java.version')}"
+    }
+
+    // Set JVM args for Java 17 compatibility
+    jvmArgs = ["-Xmx1024M", "-Xms512M", "--add-opens=java.base/java.lang=ALL-UNNAMED", "--add-opens=java.base/java.util=ALL-UNNAMED", "--add-opens=java.base/java.nio=ALL-UNNAMED"]
+
+    // Set GWT compiler args
+    args = ["-style", "PRETTY", "-logLevel", "INFO"]
+}
+
+tasks.named("gwtCompile") {
+    dependsOn prepareWebApp
+}
+
+// Add a task to run the GWT application in development mode
+tasks.register("runGwtDev") {
+    description "Runs the GWT application in development mode"
+    group "GWT"
+    dependsOn gwtDevMode
+    doLast {
+        println "GWT development server started at http://127.0.0.1:8888/index.html"
+        println "Press Ctrl+C to stop the server"
+    }
+}
+
+// Add a task to build and run the GWT application in production mode
+tasks.register("buildGwt") {
+    description "Builds the GWT application for production"
+    group "GWT"
+    dependsOn gwtCompile
+    doLast {
+        println "GWT application built successfully in build/gwt/war"
+        println "You can deploy the contents of this directory to a web server"
+    }
+}
+
+// Add a task to serve the compiled GWT application
+tasks.register("serveGwt") {
+    description "Serves the compiled GWT application"
+    group "GWT"
+    dependsOn buildGwt
+    doLast {
+        println "To serve the GWT application, you can use a simple HTTP server:"
+        println "cd build/gwt/war"
+        println "python -m http.server 8000"
+        println "Then open http://localhost:8000 in your browser"
+    }
 }

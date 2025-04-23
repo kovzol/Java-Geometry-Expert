@@ -1,0 +1,11 @@
+<module>
+    <!-- Inherit the core Web Toolkit stuff -->
+    <inherits name="com.google.gwt.user.User"/>
+
+    <!-- Specify the paths for your GWT-compatible code -->
+    <source path=""/>
+    <source path="ui"/>
+
+    <!-- Use super-source to provide GWT-compatible versions of classes -->
+    <super-source path="supersrc"/>
+</module>
