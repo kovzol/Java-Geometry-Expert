@@ -4,10 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 
-import com.google.gwt.editor.client.Editor;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled("disabled because github can't execute this type of tests remotely")
 public class GExpertTest {
 
     private GExpert expert;
@@ -19,21 +20,20 @@ public class GExpertTest {
         expert.init();
     }
 
-    @Editor.Ignore
+
     @Test
     public void contentPanelShouldNotBeNull() {
         JComponent content = expert.getContent();
         assertNotNull(content, "Content panel should not be null");
     }
 
-    @Editor.Ignore
+
     @Test
     public void shouldReturnNonNullFileChooser() {
         JFileChooser chooser = expert.getFileChooser(false);
         assertNotNull(chooser, "File chooser should not be null");
     }
 
-    @Editor.Ignore
     @Test
     public void clearOperationShouldReturnZero() {
         // Clear returns 0 on success
