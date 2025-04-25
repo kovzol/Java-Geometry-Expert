@@ -1,15 +1,19 @@
 package webapp.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import core.ui.GExpertUI;
 import webapp.client.GExpertCore;
 import webapp.client.tools.ToolManager;
+import webapp.client.tools.Tool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +41,37 @@ public class JGEXWebApp implements EntryPoint {
             button.getElement().getStyle().setBackgroundColor("");
             button.getElement().getStyle().setFontWeight(Style.FontWeight.NORMAL);
         }
+    }
+
+    /**
+     * Creates a button with an icon for a tool.
+     * @param toolId The tool ID
+     * @param label The button label
+     * @return The created button
+     */
+    private Button createToolButton(String toolId, String label) {
+        Button button = new Button();
+        Tool tool = toolManager.getTool(toolId);
+
+        if (tool != null && tool.getIconPath() != null && !tool.getIconPath().isEmpty()) {
+            // Build an <img> + label safely:
+            String iconUrl = GWT.getModuleBaseURL() + tool.getIconPath();
+            String safeLabel = SafeHtmlUtils.htmlEscape(label);
+            String imgTag =
+                    "<img src=\"" + iconUrl + "\""
+                            + " width=\"16\" height=\"16\""
+                            + " style=\"vertical-align:middle; margin-right:4px;\"/>";
+            SafeHtml html = SafeHtmlUtils.fromTrustedString(imgTag + safeLabel);
+            button.setHTML(html);
+        } else {
+            button.setText(label);
+        }
+        // Tooltip (if available)
+        if (tool != null && tool.getDescription() != null) {
+            button.setTitle(tool.getDescription());
+        }
+
+        return button;
     }
 
     @Override
@@ -113,24 +148,24 @@ public class JGEXWebApp implements EntryPoint {
         toolbar.getElement().getStyle().setProperty("borderBottomColor", "#CCCCCC");
 
         // Add tool buttons
-        Button selectButton = new Button("Select");
-        Button pointButton = new Button("Point");
-        Button lineButton = new Button("Line");
-        Button parallelButton = new Button("Parallel");
-        Button perpButton = new Button("Perpendicular");
-        Button footButton = new Button("Foot");
-        Button circleButton = new Button("Circle");
-        Button circle3pButton = new Button("Circle 3P");
-        Button compassButton = new Button("Compass");
-        Button angleButton = new Button("Angle");
-        Button polygonButton = new Button("Polygon");
-        Button textButton = new Button("Text");
-        Button midpointButton = new Button("Midpoint");
-        Button intersectButton = new Button("Intersect");
-        Button mirrorButton = new Button("Mirror");
-        Button isoscelesButton = new Button("Isosceles");
-        Button squareButton = new Button("Square");
-        Button triangleButton = new Button("Triangle");
+        Button selectButton = createToolButton("select", "Select");
+        Button pointButton = createToolButton("point", "Point");
+        Button lineButton = createToolButton("line", "Line");
+        Button parallelButton = createToolButton("parallel", "Parallel");
+        Button perpButton = createToolButton("perp", "Perpendicular");
+        Button footButton = createToolButton("foot", "Foot");
+        Button circleButton = createToolButton("circle", "Circle");
+        Button circle3pButton = createToolButton("circle3p", "Circle 3P");
+        Button compassButton = createToolButton("circler", "Compass");
+        Button angleButton = createToolButton("angle", "Angle");
+        Button polygonButton = createToolButton("polygon", "Polygon");
+        Button textButton = createToolButton("text", "Text");
+        Button midpointButton = createToolButton("midpoint", "Midpoint");
+        Button intersectButton = createToolButton("intersect", "Intersect");
+        Button mirrorButton = createToolButton("mirror", "Mirror");
+        Button isoscelesButton = createToolButton("iso", "Isosceles");
+        Button squareButton = createToolButton("square", "Square");
+        Button triangleButton = createToolButton("triangle", "Triangle");
 
         // Set button styles
         Style selectStyle = selectButton.getElement().getStyle();

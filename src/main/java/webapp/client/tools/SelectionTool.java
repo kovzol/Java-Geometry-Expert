@@ -18,7 +18,7 @@ public class SelectionTool extends AbstractTool {
      * @param core The GExpertCore instance
      */
     public SelectionTool(GExpertCore core) {
-        super(core, "Select", "Select and manipulate objects");
+        super(core, "Select", "Select and manipulate objects", "images/select.gif");
         setCursorType(0); // Default cursor
     }
 

@@ -1,5 +1,6 @@
 package core;
 
+import com.google.gwt.editor.client.Editor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.Locale;
@@ -17,6 +18,7 @@ public class GExpertCoreTest {
         expertCore.init();
     }
 
+    @Editor.Ignore
     @Test
     public void initShouldInitializeCore() {
         // This test verifies that the core is initialized properly

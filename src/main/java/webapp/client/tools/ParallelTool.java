@@ -20,7 +20,7 @@ public class ParallelTool extends AbstractTool {
      * @param core The GExpertCore instance
      */
     public ParallelTool(GExpertCore core) {
-        super(core, "Parallel", "Create a line parallel to another line");
+        super(core, "Parallel", "Create a line parallel to another line", "images/parallel.gif");
         setCursorType(1); // Crosshair cursor
     }
 

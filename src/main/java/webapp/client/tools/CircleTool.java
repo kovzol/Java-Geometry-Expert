@@ -19,7 +19,7 @@ public class CircleTool extends AbstractTool {
      * @param core The GExpertCore instance
      */
     public CircleTool(GExpertCore core) {
-        super(core, "Circle", "Create a circle");
+        super(core, "Circle", "Create a circle", "images/circle.gif");
         setCursorType(1); // Crosshair cursor
     }
 

@@ -20,7 +20,7 @@ public class LineTool extends AbstractTool {
      * @param core The GExpertCore instance
      */
     public LineTool(GExpertCore core) {
-        super(core, "Line", "Create a line");
+        super(core, "Line", "Create a line", "images/line.gif");
         setCursorType(1); // Crosshair cursor
     }
 

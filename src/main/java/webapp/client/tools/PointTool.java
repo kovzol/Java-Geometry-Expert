@@ -13,7 +13,7 @@ public class PointTool extends AbstractTool {
      * @param core The GExpertCore instance
      */
     public PointTool(GExpertCore core) {
-        super(core, "Point", "Create a point");
+        super(core, "Point", "Create a point", "images/point.gif");
         setCursorType(1); // Crosshair cursor
     }
 
