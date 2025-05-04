@@ -10,18 +10,28 @@ package gprover;
 import wprover.GExpert;
 
 import java.util.Vector;
-                                
+
+/**
+ * GDDBc class handles the geometric proof process and predicate management.
+ */
 public class GDDBc extends GDDAux {
 
+    private static Rule test_r = new Rule(0);
 
     AuxPt axptc = null;
 
+    /**
+     * Constructs a new GDDBc instance initializing proof status, depth, and check value.
+     */
     public GDDBc() {
         P_STATUS = 0;
         depth = 0;
         ck_value = true;
     }
 
+    /**
+     * Executes the fixed-point proof process, handling auxiliary points and node list generation.
+     */
     void prove_fix() {
 
         axptc = null;
@@ -79,24 +89,32 @@ public class GDDBc extends GDDAux {
         }
     }
 
-
-    int PTY(Cond x) {
-        return x.u.get_type();
-    }
-
+    /**
+     * Retrieves the lemma value from the condition.
+     *
+     * @param x the condition from which to obtain the lemma
+     * @return the lemma value associated with the condition
+     */
     int PLM(Cond x) {
         return (x.u.get_lemma());
     }
 
+    /**
+     * Retrieves the condition predicate from the underlying data structure.
+     *
+     * @param x the condition used to extract the predicate
+     * @return the corresponding condition predicate
+     */
     Cond PCO(Cond x) {
         return (x.u.get_co());
     }
 
-    int PNO(Cond x) {
-        return (x.u.get_no());
-    }
-
-
+    /**
+     * Creates a copy of the given predicate condition and updates its identifier.
+     *
+     * @param co the original condition to copy
+     * @return a new condition copied from the provided one with updated identifiers
+     */
     Cond cp_pred(Cond co) {
         Cond c = new_pr(co.pred);
         co.no = c.no = ++gno;
@@ -108,6 +126,12 @@ public class GDDBc extends GDDAux {
         return (c);
     }
 
+    /**
+     * Searches for an existing predicate condition equivalent to the given condition.
+     *
+     * @param co the condition to search for
+     * @return the matching condition if found; otherwise, null
+     */
     Cond fd_pred(Cond co) {
         Cond pr = all_nd.nx;
         for (; pr != null; pr = pr.nx) {
@@ -116,6 +140,12 @@ public class GDDBc extends GDDAux {
         return (null);
     }
 
+    /**
+     * Searches for an equivalent predicate condition based on its comparison value.
+     *
+     * @param co the condition to search against
+     * @return the found condition if present; otherwise, null
+     */
     Cond fd_prep(Cond co) {
         Cond pr = all_nd.nx;
         for (; pr != null; pr = pr.nx) {
@@ -124,7 +154,21 @@ public class GDDBc extends GDDAux {
         return (null);
     }
 
-
+    /**
+     * Creates and returns a predicate condition using the provided type and point parameters.
+     *
+     * @param m the predicate type identifier
+     * @param n the predicate condition identifier
+     * @param p1 the first point parameter
+     * @param p2 the second point parameter
+     * @param p3 the third point parameter
+     * @param p4 the fourth point parameter
+     * @param p5 the fifth point parameter
+     * @param p6 the sixth point parameter
+     * @param p7 the seventh point parameter
+     * @param p8 the eighth point parameter
+     * @return the constructed predicate condition or null if invalid
+     */
     Cond add_pred(int m, int n, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
         tm_pr1.u.setnull();
         tm_pr1.pred = n;
@@ -176,6 +220,13 @@ public class GDDBc extends GDDAux {
 
     }
 
+    /**
+     * Determines the intersection point between two lines.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @return the intersection point if it exists; otherwise, 0
+     */
     int finter_ll(LLine l1, LLine l2) {
         char i, j;
 
@@ -187,6 +238,14 @@ public class GDDBc extends GDDAux {
         return (0);
     }
 
+    /**
+     * Determines the intersection point between two lines, excluding a specified point.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param p1 the point to exclude from consideration
+     * @return the intersection point if valid and not equal to p1; otherwise, 0
+     */
     int finter_ll1(LLine l1, LLine l2, int p1) {
         char i, j;
         if (l1 == l2) return (0);
@@ -197,6 +256,9 @@ public class GDDBc extends GDDAux {
         return (0);
     }
 
+    /**
+     * Processes and displays the forward proof for the current condition.
+     */
     void show_fproof() {
         if (conc_xtrue()) {
             last_nd = all_nd;
@@ -209,7 +271,13 @@ public class GDDBc extends GDDAux {
         }
     }
 
-
+    /**
+     * Processes forward predicates for the specified condition.
+     *
+     * Traverses the linked list of conditions and applies appropriate predicate rules.
+     *
+     * @param co the starting condition to process
+     */
     void forw_pred(Cond co) {
         Cond pr1, pr2, pr3;
         show_dtype = 0;
@@ -303,73 +371,16 @@ public class GDDBc extends GDDAux {
         }
     }
 
-    public boolean add_pr_coll(Cond pr, Cond pr1) {
-        if (pr.pred == CO_PERP && PLM(pr) == 11 && pr1.pred == CO_ACONG) {
-            int i1, i2, k1, k2;
-            if (xcoll4(pr.p[0], pr.p[1], pr1.p[4], pr1.p[5])) {
-                i1 = pr1.p[4];
-                i2 = pr1.p[5];
-                k1 = pr1.p[6];
-                k2 = pr1.p[7];
-            } else {
-                k1 = pr1.p[4];
-                k2 = pr1.p[5];
-                i1 = pr1.p[6];
-                i2 = pr1.p[7];
-            }
-            for_c4(pr.p[0], pr.p[1], i1, i2);
-            for_c4(pr.p[2], pr.p[3], k1, k2);
-        } else if (pr.pred == CO_ACONG && pr1.pred == CO_CYCLIC && PLM(pr) == 41) {
-            LLine l1 = fd_ln(pr.p[0], pr.p[1]);
-            LLine l2 = fd_ln(pr.p[2], pr.p[3]);
-            LLine l3 = fd_ln(pr.p[4], pr.p[5]);
-            LLine l4 = fd_ln(pr.p[6], pr.p[7]);
-            int i1 = finter_ll(l1, l2);
-            int i2 = finter_ll(l3, l4);
-            int k1 = finter_ll(l1, l3);
-            int k2 = finter_ll(l2, l4);
-            if (sdiff(i1, i2, k1, k2, pr.p)) {
-                for_c4(pr.p[0], pr.p[1], i1, k1);
-                for_c4(pr.p[2], pr.p[3], i1, k2);
-                for_c4(pr.p[4], pr.p[5], i2, k1);
-                for_c4(pr.p[6], pr.p[7], i2, k2);
-                Cond prc = add_pred(1, CO_ACONG, i1, k1, i1, k2, i2, k1, i2, k2);
-                pr.addcond(prc);
-                return false;
-            }
-        } else if (pr.pred == CO_ACONG && pr1.pred == CO_CYCLIC && PLM(pr) == 22) {
-            if (sdiff(pr1.p[0], pr1.p[1], pr1.p[2], 0, pr.p)) {
-                LLine l1 = fd_ln(pr.p[0], pr.p[1]);
-                LLine l2 = fd_ln(pr.p[2], pr.p[3]);
-                LLine l3 = fd_ln(pr.p[4], pr.p[5]);
-                LLine l4 = fd_ln(pr.p[6], pr.p[7]);
-                if (l1 == l4) {
-                    int k1 = finter_ll(l2, l3);
-                    int i1 = finter_ll(l1, l2);
-                    int i2 = finter_ll(l1, l3);
-                    for_c6(pr.p[0], pr.p[1], i1, i2, pr.p[6], pr.p[7]);
-                    for_c4(pr.p[2], pr.p[3], k1, i1);
-                    for_c4(pr.p[4], pr.p[5], k1, i2);
-                    Cond prc = add_pred(1, CO_ACONG, i1, i2, i1, k1, i2, k1, i2, i1);
-                    pr.addcond(prc);
-                } else {
-                    int k1 = finter_ll(l1, l4);
-                    int i1 = finter_ll(l2, l1);
-                    int i2 = finter_ll(l2, l4);
-                    for_c6(pr.p[2], pr.p[3], i1, i2, pr.p[4], pr.p[5]);
-                    for_c4(pr.p[0], pr.p[1], k1, i1);
-                    for_c4(pr.p[6], pr.p[7], k1, i2);
-                    Cond prc = add_pred(1, CO_ACONG, k1, i1, i1, i2, i1, i2, i2, k1);
-                    pr.addcond(prc);
-
-                }
-                return false;
-            }
-        }
-
-        return true;
-    }
-
+    /**
+     * Adds a predicate for a collision based on the given conditions.
+     *
+     * Determines the appropriate collision predicate by checking common line intersections
+     * and adds a corresponding parallel predicate condition.
+     *
+     * @param pr  the main condition to add to
+     * @param pr1 the first sub-condition containing line information
+     * @param pr2 the second sub-condition containing line information
+     */
     public void add_pred_coll(Cond pr, Cond pr1, Cond pr2) {
         int lemma = PLM(pr);
         switch (lemma) {
@@ -396,6 +407,16 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Adds a predicate for parallelism based on the provided sub-conditions.
+     *
+     * Chooses the appropriate rule based on a lemma value and constructs the relevant predicate
+     * conditions using line or angle data.
+     *
+     * @param pr  the main condition to add to
+     * @param pr1 the first sub-condition providing primary predicate data
+     * @param pr2 the second sub-condition providing supplementary predicate data
+     */
     public void add_pred_para(Cond pr, Cond pr1, Cond pr2) {
         LLine ln;
         PLine pn1;
@@ -522,6 +543,16 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Adds a predicate for perpendicularity based on the given conditions.
+     *
+     * Selects the appropriate perpendicularity rule using a lemma value and established geometric
+     * relationships, then adds the resulting predicate condition.
+     *
+     * @param pr  the main condition in which the predicate is to be added
+     * @param pr1 the first sub-condition providing geometric entity information
+     * @param pr2 the second sub-condition providing geometric entity information
+     */
     public void add_pred_perp(Cond pr, Cond pr1, Cond pr2) {
         int lm = PLM(pr);
 
@@ -605,6 +636,15 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Adds a predicate for cyclic configurations based on the given conditions.
+     *
+     * Extracts circle information from the sub-conditions and creates cyclic predicate conditions.
+     *
+     * @param pr  the main condition to add to
+     * @param pr1 the first sub-condition containing circle data
+     * @param pr2 the second sub-condition containing circle data
+     */
     public void add_pred_cr(Cond pr, Cond pr1, Cond pr2) {
         int lm = PLM(pr);
         switch (lm) {
@@ -620,6 +660,15 @@ public class GDDBc extends GDDAux {
 
     }
 
+    /**
+     * Constructs a cyclic predicate condition from the given circle.
+     *
+     * Calculates a set of points on the circle and creates a cyclic predicate condition.
+     *
+     * @param pr  the original condition used to reference predicate parameters
+     * @param c1  the circle from which cyclic properties are derived
+     * @return    a new predicate condition representing the cyclic property
+     */
     public Cond add_pred_cyclic1(Cond pr, ACir c1) {
         int[] p = new int[4];
         for (int i = 0; i < 4; i++)
@@ -647,6 +696,22 @@ public class GDDBc extends GDDAux {
         return add_pred(0, CO_CYCLIC, c1.o, p[0], p[1], p[2], p[3], 0, 0, 0);
     }
 
+    /**
+     * Adds a predicate based on points and two lines.
+     *
+     * Determines appropriate points on the provided lines and constructs a predicate condition with
+     * the supplied parameters.
+     *
+     * @param m  the mode or additional modifier for the predicate
+     * @param n  the predicate type identifier
+     * @param p1 the first point reference
+     * @param p2 the second point reference
+     * @param l1 the first line for the predicate
+     * @param p3 the third point reference
+     * @param p4 the fourth point reference
+     * @param l2 the second line for the predicate
+     * @return   a new predicate condition based on the given point and line data
+     */
     public Cond add_pred_pntn(int m, int n, int p1, int p2, LLine l1, int p3, int p4, LLine l2) {
         int m1, m2, m3, m4;
 
@@ -669,6 +734,22 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, m1, m2, m3, m4, 0, 0, 0, 0);
     }
 
+    /**
+     * Adds a predicate based on tangent line intersections.
+     *
+     * Determines intersection points or valid points from the two lines and constructs a tangent rule
+     * predicate with the specified parameters.
+     *
+     * @param m  the mode or modifier for the predicate
+     * @param n  the predicate type
+     * @param p1 the first point candidate for line l1
+     * @param p2 the second point candidate for line l1
+     * @param l1 the first line used to determine the tangent condition
+     * @param p3 the first point candidate for line l2
+     * @param p4 the second point candidate for line l2
+     * @param l2 the second line used to determine the tangent condition
+     * @return   a new predicate condition representing the tangent rule
+     */
     public Cond add_pred_tn13(int m, int n, int p1, int p2, LLine l1, int p3, int p4, LLine l2) {
         int m1, m2, m3, m4;
         int o = inter_lls(l1, l2);
@@ -694,6 +775,15 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, m1, m2, m3, m4, 0, 0, 0, 0);
     }
 
+    /**
+     * Adds a predicate for angle tangency based on the provided conditions.
+     *
+     * Uses geometric relationships from the sub-conditions to construct an angle tangency predicate.
+     *
+     * @param pr  the main condition to which the predicate will be added
+     * @param pr1 the first sub-condition containing angle information
+     * @param pr2 the second sub-condition that may provide additional angle data
+     */
     public void add_pred_atn(Cond pr, Cond pr1, Cond pr2) {
         int lm = PLM(pr);
 
@@ -729,6 +819,23 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Adds predicates for angle tangency transformations based on paired line configurations.
+     *
+     * Compares the relationships between two sets of lines and constructs paired predicates to
+     * represent angle tangent conditions.
+     *
+     * @param pr the main condition to add the predicates to
+     * @param l1 the first line of the first pair
+     * @param l2 the second line of the first pair
+     * @param l3 the first line of the second pair
+     * @param l4 the second line of the second pair
+     * @param s1 the first line of the complementary pair
+     * @param s2 the second line of the complementary pair
+     * @param s3 the third line used for additional tangent validation
+     * @param s4 the fourth line used for additional tangent validation
+     * @return   true if the appropriate tangent predicates were added; false otherwise
+     */
     public boolean add_pred_atn_atnas(Cond pr, LLine l1, LLine l2, LLine l3, LLine l4,
                                       LLine s1, LLine s2, LLine s3, LLine s4) {
         if (on_ln4(pr.p, l1, l2, s1, s2)) {
@@ -755,6 +862,16 @@ public class GDDBc extends GDDAux {
         return false;
     }
 
+    /**
+     * Adds an angle tangency predicate based on provided angle transformations.
+     *
+     * Analyzes the relationships between two angle-based conditions and constructs corresponding
+     * tangent predicates.
+     *
+     * @param pr  the main condition to modify
+     * @param pr1 the first sub-condition containing angle transformation data
+     * @param pr2 the second sub-condition containing angle transformation data
+     */
     public void add_pred_at(Cond pr, Cond pr1, Cond pr2) {
         int lm = PLM(pr);
 
@@ -863,6 +980,13 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Processes the provided conditions and angle structures to add angle predicates.
+     *
+     * @param pr the main condition to add predicates to
+     * @param pr1 the first condition containing angle information
+     * @param pr2 the second condition containing angle information
+     */
     public void add_pred_as(Cond pr, Cond pr1, Cond pr2) {
         Angles as1, as2;
         as1 = as2 = null;
@@ -990,6 +1114,13 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Creates angle predicates by comparing two angle structures and adds them to the condition.
+     *
+     * @param pr the target condition to add predicates to
+     * @param as1 the first angle structure
+     * @param as2 the second angle structure
+     */
     public void add_as82_t(Cond pr, Angles as1, Angles as2) {
         LLine l1, l2, l3, l4, l5, l6, l7, l8;
         l1 = as1.l1;
@@ -1027,6 +1158,20 @@ public class GDDBc extends GDDAux {
         return;
     }
 
+    /**
+     * Attempts to add angle congruence predicates using candidate lines from two angle structures.
+     *
+     * @param pr the condition containing predicate parameters
+     * @param l1 the first line from the first structure
+     * @param l2 the second line from the first structure
+     * @param l3 the first line from the second structure
+     * @param l4 the second line from the second structure
+     * @param l5 a candidate line from the first structure of the second angle structure
+     * @param l6 a candidate line from the first structure of the second angle structure
+     * @param l7 a candidate line from the second structure of the second angle structure
+     * @param l8 a candidate line from the second structure of the second angle structure
+     * @return true if predicates were successfully added; false otherwise
+     */
     public boolean add_as82t1(Cond pr, LLine l1, LLine l2, LLine l3, LLine l4,
                               LLine l5, LLine l6, LLine l7, LLine l8) {
 
@@ -1061,6 +1206,18 @@ public class GDDBc extends GDDAux {
         return true;
     }
 
+    /**
+     * Retrieves candidate line pairs for predicates based on provided parameters.
+     *
+     * @param p the integer array containing predicate parameters
+     * @param l1 the primary line candidate from the first structure
+     * @param s1 the secondary candidate line corresponding to l1
+     * @param l2 the primary line candidate from the second structure
+     * @param l3 the secondary line candidate from the third structure
+     * @param s2 the candidate line corresponding to l3
+     * @param l4 a fallback line candidate
+     * @return an array of two candidate lines if matching lines are found; null otherwise
+     */
     LLine[] get_cond_lns(int[] p, LLine l1, LLine s1, LLine l2, LLine l3, LLine s2, LLine l4) {
         LLine[] lns = get_cond_ln(p, l1, s1, l2, l3, s2, l4);
         if (lns != null) return lns;
@@ -1073,6 +1230,18 @@ public class GDDBc extends GDDAux {
         return null;
     }
 
+    /**
+     * Retrieves candidate lines if all predicate parameters lie on the specified lines.
+     *
+     * @param p the integer array of predicate parameters
+     * @param l1 the first line to check
+     * @param s1 the candidate line corresponding to l1
+     * @param l2 the second line to check
+     * @param l3 the third line to check
+     * @param s2 the candidate line corresponding to l3
+     * @param l4 the fourth line to check
+     * @return an array containing two candidate lines if conditions match; null otherwise
+     */
     public LLine[] get_cond_ln(int[] p, LLine l1, LLine s1, LLine l2, LLine l3, LLine s2, LLine l4) {
         if (!on_ln4(p, l1, l2, l3, l4)) return null;
         LLine[] ns = new LLine[2];
@@ -1081,10 +1250,27 @@ public class GDDBc extends GDDAux {
         return ns;
     }
 
+    /**
+     * Checks whether each pair of predicate parameters corresponds to a point on the given lines.
+     *
+     * @param p the integer array of predicate parameters
+     * @param l1 the first line for verification
+     * @param l2 the second line for verification
+     * @param l3 the third line for verification
+     * @param l4 the fourth line for verification
+     * @return true if each predicate parameter pair lies on the corresponding line; false otherwise
+     */
     public boolean on_ln4(int[] p, LLine l1, LLine l2, LLine l3, LLine l4) {
         return on_ln(p[0], p[1], l1) && on_ln(p[2], p[3], l2) && on_ln(p[4], p[5], l3) && on_ln(p[6], p[7], l4);
     }
 
+    /**
+     * Processes angle structures to determine appropriate lines and add angle congruence predicates.
+     *
+     * @param pr the condition object holding predicate parameters
+     * @param as1 the first angle structure
+     * @param as2 the second angle structure
+     */
     public void add_as82(Cond pr, Angles as1, Angles as2) {
         LLine l1, l2, l3, l4;
         l1 = l2 = l3 = l4 = null;
@@ -1117,6 +1303,18 @@ public class GDDBc extends GDDAux {
         pr.addcond(co1, co2);
     }
 
+    /**
+     * Creates a tangent predicate using four point parameters and an additional value.
+     *
+     * @param m a mode or flag for predicate creation
+     * @param n a predicate type identifier
+     * @param p1 the first point of the first pair
+     * @param p2 the second point of the first pair
+     * @param p3 the first point of the second pair
+     * @param p4 the second point of the second pair
+     * @param p5 an additional parameter influencing the tangent value
+     * @return a newly created condition representing a tangent predicate
+     */
     public Cond add_pred_4p_tang(int m, int n, int p1, int p2, int p3, int p4, int p5) {
         int t1, t2, t3;
         t1 = t2 = t3 = 0;
@@ -1140,6 +1338,17 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, t1, t2, t3, p5, 0, 0, 0, 0);
     }
 
+    /**
+     * Determines the angle transformation value based on the provided points and angle transformation objects.
+     *
+     * @param p1 the first point for comparison
+     * @param p2 the second point for comparison
+     * @param p3 the third point for comparison
+     * @param p4 the fourth point for comparison
+     * @param at1 the first angle transformation object
+     * @param at2 the second angle transformation object
+     * @return the computed angle value
+     */
     public int get_at2_v(int p1, int p2, int p3, int p4, AngleT at1, AngleT at2) {
         LLine l1 = at1.l1;
         LLine l2 = at1.l2;
@@ -1156,6 +1365,19 @@ public class GDDBc extends GDDAux {
         return 0;
     }
 
+    /**
+     * Determines a pair of lines based on predicate parameters and candidate line options.
+     *
+     * @param a the first integer parameter for the predicate
+     * @param b the second integer parameter for the predicate
+     * @param c the third integer parameter for the predicate
+     * @param d the fourth integer parameter for the predicate
+     * @param ln1 the first candidate line
+     * @param ln2 the second candidate line
+     * @param ln3 the third candidate line
+     * @param ln4 the fourth candidate line
+     * @return an array containing two lines if a valid pair is found; null otherwise
+     */
     LLine[] get4lntn(int a, int b, int c, int d, LLine ln1, LLine ln2, LLine ln3, LLine ln4) {
         LLine[] ls = new LLine[2];
         if (on_ln(a, b, ln1) && on_ln(c, d, ln2)) {
@@ -1175,6 +1397,11 @@ public class GDDBc extends GDDAux {
         return ls;
     }
 
+    /**
+     * Forwards equal angle predicate if the condition is of type CO_ACONG.
+     *
+     * @param pr the condition containing angle parameters
+     */
     void forw_eqangle(Cond pr) {
         if (pr.pred != Gib.CO_ACONG) return;
         LLine ln1 = fd_ln(pr.p[0], pr.p[1]);
@@ -1189,83 +1416,11 @@ public class GDDBc extends GDDAux {
         }
     }
 
-    void for_c4(int p1, int p2, int p3, int p4) {
-        int[] ps = new int[4];
-        int i, p = -1;
-
-        if (p1 != 0 && p1 != p2 && p1 != p3 && p1 != p4) {
-            p++;
-            ps[p] = p1;
-        }
-        if (p2 != 0 && p2 != p3 && p2 != p4) {
-            p++;
-            ps[p] = p2;
-        }
-        if (p3 != 0 && p3 != p4) {
-            p++;
-            ps[p] = p3;
-        }
-        if (p4 != 0) {
-            p++;
-            ps[p] = p4;
-        }
-        if (p > 1) {
-
-            gprint(Cm.s2707);
-            gprint("[");
-            for (i = 0; i <= p; i++) {
-                gprint(ANAME(ps[i]));
-            }
-            gprint(Cm.s2070);
-            gprint(", ");
-        }
-    }
-
-    void for_c6(int p1, int p2, int p3, int p4, int p5, int p6) {
-        int[] ps = new int[6];
-        int i, p = -1;
-        if (p1 != 0 && p1 != p2 && p1 != p3 && p1 != p4 && p1 != p5 && p1 != p6) {
-            p++;
-            ps[p] = p1;
-        }
-        if (p2 != 0 && p2 != p3 && p2 != p4 && p2 != p5 && p2 != p6) {
-            p++;
-            ps[p] = p2;
-        }
-        if (p3 != 0 && p3 != p4 && p3 != p5 && p3 != p6) {
-            p++;
-            ps[p] = p3;
-        }
-        if (p4 != 0 && p4 != p5 && p4 != p6) {
-            p++;
-            ps[p] = p4;
-        }
-        if (p5 != 0 && p5 != p6) {
-            p++;
-            ps[p] = p5;
-        }
-        if (p6 != 0) {
-            p++;
-            ps[p] = p6;
-        }
-        if (p > 1) {
-            gprint(Cm.s2707);
-            gprint("[");
-            for (i = 0; i <= p; i++) {
-                gprint(ANAME(ps[i]));
-            }
-            gprint("]");
-            gprint(Cm.s2070);
-            gprint(", ");
-        }
-    }
-
-    void show_nco(Cond co) {
-        gprint("(" + co.no + ")");
-        show_dtype = 0;
-        show_pred(co);
-    }
-
+    /**
+     * Iterates through all conditions and displays each predicate, including any sub-conditions.
+     *
+     * @return true after processing all predicates
+     */
     boolean show_allpred() {
         Cond co = all_nd.nx;
         Cond pr1;
@@ -1282,7 +1437,12 @@ public class GDDBc extends GDDAux {
         return true;
     }
 
-
+    /**
+     * Displays the human-readable form of a given predicate condition.
+     *
+     * @param co the condition to display
+     * @return true after the display has been generated
+     */
     boolean show_pred(Cond co) {
         switch (co.pred) {
             case 0:
@@ -1531,6 +1691,13 @@ public class GDDBc extends GDDAux {
         return true;
     }
 
+    /**
+     * Compares two predicate conditions to check for equivalence.
+     *
+     * @param co the first condition to compare
+     * @param pr the second condition to compare
+     * @return true if both conditions are considered equivalent, false otherwise
+     */
     boolean compare_pred(Cond co, Cond pr)   // do_pred(x,x,3)   ----------> check two predicate is the same.
     {
         if (co.pred != pr.pred) return (false);
@@ -1594,6 +1761,12 @@ public class GDDBc extends GDDAux {
         return ex;
     }
 
+    /**
+     * Checks whether a given predicate is obviously true based on its parameters.
+     *
+     * @param co the condition to check
+     * @return true if the condition meets an obvious criteria, false otherwise
+     */
     boolean check_pred(Cond co) // if it obviousely.
     {
         boolean va = false;
@@ -1633,6 +1806,11 @@ public class GDDBc extends GDDAux {
 
     }
 
+    /**
+     * Processes the predicate condition by executing the corresponding operation based on its type.
+     *
+     * @param co the condition to process
+     */
     final void do_pred(Cond co) {
 
         switch (co.pred) {
@@ -1699,7 +1877,13 @@ public class GDDBc extends GDDAux {
         }
     }
 
-
+    /**
+     * Generates a string representation of point names from a condition's parameters.
+     *
+     * @param co the condition containing the point parameters
+     * @param n the starting index of the points in the array
+     * @return the generated string of point names
+     */
     String show_pts(Cond co, int n) {
         int i, k;
         i = k = 0;
@@ -1715,29 +1899,15 @@ public class GDDBc extends GDDAux {
         return s;
     }
 
-    void show_copt(Cond co, int n) {
-        int i, k;
-        i = k = 0;
-        for (i = n; i <= 5; i++) if (co.p[i] != 0) k = i;
-
-        for (i = n; i <= k; i++) {
-            if (co.p[i] != 0) {
-                gprint(ANAME(co.p[i]));
-                if (i != k) gprint(",");
-            }
-        }
-    }
-
-
-    boolean sdiff(int a, int b, int c, int d, int ps[]) {
-        int i;
-        for (i = 0; i <= 7; i++) {
-            if (ps[i] == a || ps[i] == b || ps[i] == c || ps[i] == d) continue;
-            return (true);
-        }
-        return (false);
-    }
-
+    /**
+     * Compares two arrays of characteristic values to determine if they have the same elements.
+     *
+     * @param ch1 the first array of characteristics
+     * @param n1 the number of valid entries in the first array
+     * @param ch2 the second array of characteristics
+     * @param n2 the number of valid entries in the second array
+     * @return true if both arrays are equal (ignoring order), false otherwise
+     */
     boolean eq_chs(int[] ch1, int n1, int[] ch2, int n2)   // Check !!
     {
         int id1 = 1;
@@ -1764,6 +1934,16 @@ public class GDDBc extends GDDAux {
         return (true);
     }
 
+    /**
+     * Retrieves two lines based on the given endpoints from an Angles object's line set.
+     *
+     * @param a first point parameter associated with the first line
+     * @param b second point parameter associated with the first line
+     * @param c first point parameter associated with the second line
+     * @param d second point parameter associated with the second line
+     * @param as the Angles object containing four lines (l1, l2, l3, l4)
+     * @return an array of two LLine objects if a valid pair is found; otherwise, null
+     */
     LLine[] geti81(int a, int b, int c, int d, Angles as) {
         LLine l1, l2, l3, l4;
         l1 = as.l1;
@@ -1773,6 +1953,20 @@ public class GDDBc extends GDDAux {
         return get4ln(l1, l2, l3, l4, a, b, c, d);
     }
 
+    /**
+     * Determines and returns two complementary LLine objects from the provided four lines
+     * based on matching endpoint conditions.
+     *
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @param a first endpoint parameter for matching
+     * @param b second endpoint parameter for matching
+     * @param c third endpoint parameter for matching
+     * @param d fourth endpoint parameter for matching
+     * @return an array of two LLine objects satisfying the conditions; returns null if none found
+     */
     LLine[] get4ln(LLine l1, LLine l2, LLine l3, LLine l4, int a, int b, int c, int d) {
         LLine[] ln = new LLine[2];
 
@@ -1815,6 +2009,16 @@ public class GDDBc extends GDDAux {
 
     }
 
+    /**
+     * Retrieves a pair of LLine objects from an Angles object based on endpoint criteria.
+     *
+     * @param a first endpoint parameter
+     * @param b second endpoint parameter
+     * @param c third endpoint parameter
+     * @param d fourth endpoint parameter
+     * @param as the Angles object with four lines (l1, l2, l3, l4)
+     * @return an array of two LLine objects if matching conditions are met; otherwise, null
+     */
     LLine[] geti82(int a, int b, int c, int d, Angles as) {
         LLine l1, l2, l3, l4;
         l1 = as.l1;
@@ -1848,11 +2052,20 @@ public class GDDBc extends GDDAux {
         return ln;
     }
 
+    /**
+     * Determines whether the current conclusion is valid.
+     *
+     * @return true if the conclusion satisfies the required geometric conditions; false otherwise
+     */
     boolean conc_xtrue() {
         return (docc());
     }
 
-
+    /**
+     * Evaluates the current conclusion by testing various geometric predicates.
+     *
+     * @return true if the condition passes the geometric tests; false otherwise
+     */
     boolean docc() {
         boolean j = false;
         switch (conc.pred) {
@@ -1923,10 +2136,11 @@ public class GDDBc extends GDDAux {
         return (j);
     }
 
-    ///////////////////////////////////////////
-    // pred.
-
-
+    /**
+     * Displays the composite condition by printing concatenated condition information.
+     *
+     * @param co the condition object to be displayed
+     */
     void show_cos(Cond co) {
         if (co != null) {
             gprint(Cm.s2727);
@@ -1947,7 +2161,10 @@ public class GDDBc extends GDDAux {
         }
     }
 
-
+    /**
+     * Generates textual representations for all geometric entities in the database.
+     * This includes midpoints, lines, points, circles, angles, and other conditions.
+     */
     public void gen_dbase_text() {
         this.setPrintToString();
 
@@ -2045,13 +2262,21 @@ public class GDDBc extends GDDAux {
         }
     }
 
-
+    /**
+     * Displays the provided condition using the default display format.
+     *
+     * @param co the condition object to display
+     */
     void show_co(Cond co) {
         show_dtype = 0;
         show_pred(co);
     }
 
-
+    /**
+     * Displays an angle statement from an angle statement object.
+     *
+     * @param ast the angle statement object to be displayed
+     */
     public void show_ast(AngSt ast) {
         gprint(ast.no + ".");
         if (ast.no < 10) gprint("  ");
@@ -2063,6 +2288,11 @@ public class GDDBc extends GDDAux {
         ast.sd = this.getPrintedString();
     }
 
+    /**
+     * Displays the angle represented by an AngleT object, including its line representation and computed value.
+     *
+     * @param at the AngleT object containing angle information
+     */
     void show_at(AngleT at) {
         if (at == null) return;
         show_agll(at.l1, at.l2);
@@ -2076,7 +2306,12 @@ public class GDDBc extends GDDAux {
             gprint(" = " + ((float) v) / A_TIME);
     }
 
-    ////////////////////////////////////////////////////////////
+    /**
+     * Inserts a CClass object into a sorted Vector based on its identifier.
+     *
+     * @param obj the CClass object to be inserted
+     * @param v the Vector collection maintaining sorted CClass objects
+     */
     public void insertVector(CClass obj, Vector v) {
         if(obj == null)
             return;
@@ -2093,6 +2328,11 @@ public class GDDBc extends GDDAux {
         v.add(obj);
     }
 
+    /**
+     * Returns a Vector containing all MidPt objects with a non-zero type.
+     *
+     * @return a Vector of valid MidPt objects
+     */
     public Vector getAll_md() {
         Vector v = new Vector();
         MidPt md = all_md.nx;
@@ -2104,6 +2344,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Returns a Vector containing all LLine objects with a non-zero type and at least 2 points.
+     *
+     * @return a Vector of valid LLine objects
+     */
     public Vector getAll_ln() {
         Vector v = new Vector();
         LLine ln = all_ln.nx;
@@ -2115,6 +2360,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Returns a Vector containing all PLine objects with a non-zero type.
+     *
+     * @return a Vector of valid PLine objects
+     */
     public Vector getAll_pn() {
         Vector v = new Vector();
         PLine pn = all_pn.nx;
@@ -2126,6 +2376,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Returns a Vector containing all TLine objects with a non-zero type.
+     *
+     * @return a Vector of valid TLine objects
+     */
     public Vector getAll_tn() {
         Vector v = new Vector();
         TLine tn = all_tn.nx;
@@ -2137,6 +2392,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Returns a Vector containing all ACir objects with a non-zero type and at least 2 points.
+     *
+     * @return a Vector of valid ACir objects
+     */
     public Vector getAll_cir() {
         Vector v = new Vector();
         ACir cr = all_cir.nx;
@@ -2148,6 +2408,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Returns a Vector containing all AngSt objects with a non-zero type.
+     *
+     * @return a Vector of valid AngSt objects
+     */
     public Vector getAll_as() {
         Vector v = new Vector();
         AngSt ast = all_ast.nx;
@@ -2159,6 +2424,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Returns a Vector containing all AngleT objects with a non-zero type.
+     *
+     * @return a Vector of valid AngleT objects
+     */
     public Vector getAll_at() {
         Vector v = new Vector();
         AngleT at = all_at.nx;
@@ -2170,6 +2440,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Returns a Vector containing all AngTn objects with a non-zero type.
+     *
+     * @return a Vector of valid AngTn objects
+     */
     public Vector getAll_atn() {
         Vector v = new Vector();
         AngTn at = all_atn.nx;
@@ -2181,7 +2456,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
-
+    /**
+     * Returns a Vector containing all CSegs objects with a non-zero type.
+     *
+     * @return a Vector of valid CSegs objects
+     */
     public Vector getAll_cg() {
         Vector v = new Vector();
         CSegs cg = all_cgs.nx;
@@ -2193,6 +2472,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Returns a Vector containing all CongSeg objects with a non-zero type.
+     *
+     * @return a Vector of valid CongSeg objects
+     */
     public Vector getAll_rg() {
         Vector v = new Vector();
         CongSeg cg = all_rg.nx;
@@ -2204,28 +2488,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
-    public Vector getAll_st() {
-        Vector v = new Vector();
-        SimTri st = all_st.nx;
-        while (st != null) {
-            if (st.type != 0 && !xcoll(st.p1[0], st.p1[1], st.p1[2]))
-                insertVector(st, v);
-            st = st.nx;
-        }
-        return v;
-    }
-
-    public Vector getAll_ct() {
-        Vector v = new Vector();
-        SimTri ct = all_ct.nx;
-        while (ct != null) {
-            if (ct.type != 0 && !xcoll(ct.p1[0], ct.p1[1], ct.p1[2]))
-                insertVector(ct, v);
-            ct = ct.nx;
-        }
-        return v;
-    }
-
+    /**
+     * Returns a Vector containing all RatioSeg objects with a non-zero type.
+     *
+     * @return a Vector of valid RatioSeg objects
+     */
     public Vector getAll_ra() {
         Vector v = new Vector();
         RatioSeg ra = all_ra.nx;
@@ -2237,6 +2504,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Returns a Vector containing all STris objects with a non-zero type.
+     *
+     * @return a Vector of valid STris objects
+     */
     public Vector getAll_sts() {
         Vector v = new Vector();
         STris sts = all_sts.nx;
@@ -2248,6 +2520,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Returns a Vector containing all STris objects (alternate set) with a non-zero type.
+     *
+     * @return a Vector of valid alternate STris objects
+     */
     public Vector getAll_cts() {
         Vector v = new Vector();
         STris sts = all_cts.nx;
@@ -2259,6 +2536,15 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Searches for a fact based on the specified type and string parameters.
+     *
+     * @param t the fact type selector
+     * @param s1 the first string parameter
+     * @param s2 the second string parameter
+     * @param s3 the third string parameter
+     * @return a Vector containing the matching fact objects
+     */
     public Vector search_a_fact(int t, String s1, String s2, String s3) {
         int t1 = this.fd_pt(s1);
         int t2 = this.fd_pt(s2);
@@ -2302,6 +2588,13 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Retrieves a line if it has at least two points.
+     *
+     * @param a the first point parameter
+     * @param b the second point parameter
+     * @return the matching line if it exists and meets the criteria; otherwise, null
+     */
     private LLine fd_lnno3(int a, int b) {
         LLine ln = fd_ln(a, b);
         if (ln != null && ln.no >= 2)
@@ -2309,6 +2602,14 @@ public class GDDBc extends GDDAux {
         return null;
     }
 
+    /**
+     * Searches for angle transformation nodes and adds them to the provided vector.
+     *
+     * @param a the first point parameter
+     * @param b the second point parameter
+     * @param c the third point parameter
+     * @param v the vector to collect matching angle transformation nodes
+     */
     private void fo_atn2(int a, int b, int c, Vector v) {
         AngTn atn = all_atn.nx;
 
@@ -2323,6 +2624,15 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Searches for a triangle matching the given parameters and adds it to the vector.
+     *
+     * @param a the first point parameter
+     * @param b the second point parameter
+     * @param c the third point parameter
+     * @param v the vector to collect the matching triangle nodes
+     * @return always returns null
+     */
     STris fo_tri2(int a, int b, int c, Vector v) {
         STris st = all_sts.nx;
         while (st != null) {
@@ -2343,6 +2653,14 @@ public class GDDBc extends GDDAux {
         return null;
     }
 
+    /**
+     * Searches for and adds congruence or circular segments matching the given points.
+     *
+     * @param a the first point parameter
+     * @param b the second point parameter
+     * @param v the vector to collect matching segment objects
+     * @return always returns null
+     */
     CClass fo_cg2(int a, int b, Vector v) {
         CSegs cgs = all_cgs.nx;
 
@@ -2363,7 +2681,17 @@ public class GDDBc extends GDDAux {
         return null;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Creates a predicate for angle similarity based on four provided lines.
+     *
+     * @param m the predicate type
+     * @param n the predicate identifier
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the constructed predicate object
+     */
     Cond add_as_pred(int m, int n, LLine l1, LLine l2, LLine l3, LLine l4) {
         int p1, p2, p3, p4, p5, p6, p7, p8;
         int a = inter_ll(l1, l2);
@@ -2395,6 +2723,19 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, p1, p2, p3, p4, p5, p6, p7, p8);
     }
 
+    /**
+     * Creates a predicate from point parameters and two lines.
+     *
+     * @param m the predicate type
+     * @param n the predicate identifier
+     * @param p1 the first point parameter
+     * @param p2 the second point parameter
+     * @param p3 the third point parameter
+     * @param p4 the fourth point parameter
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the constructed predicate object
+     */
     Cond add_as_pred1(int m, int n, int p1, int p2, int p3, int p4, LLine l3, LLine l4) {
         int p5, p6, p7, p8;
         int b = inter_ll(l3, l4);
@@ -2425,6 +2766,19 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, p1, p2, p3, p4, p5, p6, p7, p8);
     }
 
+    /**
+     * Creates a predicate using a line to derive additional point parameters.
+     *
+     * @param m the predicate type
+     * @param n the predicate identifier
+     * @param p1 the first point parameter
+     * @param p2 the second point parameter
+     * @param l1 the line used to obtain additional point information
+     * @param p5 the fifth point parameter
+     * @param p6 the sixth point parameter
+     * @param l2 the second line used to obtain additional point information
+     * @return the constructed predicate object
+     */
     Cond add_as_pred1(int m, int n, int p1, int p2, LLine l1, int p5, int p6, LLine l2) {
         int p3, p4, p7, p8;
         if (on_ln(p1, l1)) {
@@ -2462,6 +2816,21 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, p1, p2, p3, p4, p5, p6, p7, p8);
     }
 
+    /**
+     * Creates a predicate from two pairs of points on two lines by selecting the most likely configuration.
+     *
+     * @param m the predicate type
+     * @param n the predicate identifier
+     * @param m1 the first candidate point on the first line
+     * @param m2 the second candidate point on the first line
+     * @param m3 the first candidate point on the second line
+     * @param m4 the second candidate point on the second line
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the constructed predicate object
+     */
     Cond add_as_pred_12(int m, int n, int m1, int m2, int m3, int m4, LLine l1, LLine l2, LLine l3, LLine l4) {
 // m1,m2 on l1,  m3,m4 on l2;  find the most likely predicate
         int p1, p2, p3, p4, p5, p6, p7, p8;
@@ -2503,6 +2872,21 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, l1.pt[0], l1.pt[1], l2.pt[0], l2.pt[1], l3.pt[0], l3.pt[1], l4.pt[0], l4.pt[1]);
     }
 
+    /**
+     * Creates a predicate from two pairs of points on two lines with a different configuration.
+     *
+     * @param m the predicate type
+     * @param n the predicate identifier
+     * @param m1 the first candidate point on the first line
+     * @param m2 the second candidate point on the first line
+     * @param m3 the first candidate point on the third line
+     * @param m4 the second candidate point on the third line
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the constructed predicate object
+     */
     Cond add_as_pred_13(int m, int n, int m1, int m2, int m3, int m4, LLine l1, LLine l2, LLine l3, LLine l4) {
 // m1,m2 on l1,  m3,m4 on l3;  find the most likely predicate
         int p1, p2, p3, p4, p5, p6, p7, p8;
@@ -2548,6 +2932,19 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, l1.pt[0], l1.pt[1], l2.pt[0], l2.pt[1], l3.pt[0], l3.pt[1], l4.pt[0], l4.pt[1]);
     }
 
+    /**
+     * Creates a predicate from a line and additional point parameters.
+     *
+     * @param m the predicate type
+     * @param n the predicate identifier
+     * @param l1 the line providing initial point information
+     * @param p1 the first point parameter on the line
+     * @param p2 the second point parameter on the line
+     * @param p5 the fifth point parameter
+     * @param p6 the sixth point parameter
+     * @param l2 the second line used for deriving further point information
+     * @return the constructed predicate object
+     */
     Cond add_as_pred1(int m, int n, LLine l1, int p1, int p2, int p5, int p6, LLine l2) {
         int p3, p4, p7, p8;
         if (on_ln(p1, l1)) {
@@ -2585,6 +2982,19 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, p3, p4, p1, p2, p5, p6, p7, p8);
     }
 
+    /**
+     * Creates a predicate from two lines and additional point parameters.
+     *
+     * @param m the predicate type
+     * @param n the predicate identifier
+     * @param p1 the first point parameter
+     * @param p2 the second point parameter
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param p5 the fifth point parameter
+     * @param p6 the sixth point parameter
+     * @return the constructed predicate object
+     */
     Cond add_as_pred1(int m, int n, int p1, int p2, LLine l1, LLine l2, int p5, int p6) {
         int p3, p4, p7, p8;
         if (on_ln(p1, l1)) {
@@ -2621,6 +3031,19 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, p1, p2, p3, p4, p7, p8, p5, p6);
     }
 
+    /**
+     * Creates an angle transformation predicate based on given point parameters and two lines.
+     *
+     * @param m the predicate type
+     * @param n the predicate identifier
+     * @param p1 the first point parameter
+     * @param p2 the second point parameter
+     * @param p3 the third point parameter
+     * @param p4 the fourth point parameter
+     * @param l3 the third line
+     * @param l4 the fourth line
+     * @return the constructed predicate object
+     */
     Cond add_as_atn(int m, int n, int p1, int p2, int p3, int p4, LLine l3, LLine l4) {
         int p5, p6, p7, p8;
         int b = inter_ll(l3, l4);
@@ -2650,6 +3073,19 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, p1, p2, p3, p4, p5, p6, p7, p8);
     }
 
+    /**
+     * Creates a predicate using point parameters and two lines for congruence segments.
+     *
+     * @param m the predicate type
+     * @param n the predicate identifier
+     * @param p1 the first point parameter
+     * @param p2 the second point parameter
+     * @param l2 the first line
+     * @param l3 the second line
+     * @param p7 the seventh point parameter
+     * @param p8 the eighth point parameter
+     * @return the constructed predicate object
+     */
     Cond add_as_pred2(int m, int n, int p1, int p2, LLine l2, LLine l3, int p7, int p8) {
         int p3, p4, p5, p6;
         if (on_ln(p1, l2)) {
@@ -2688,12 +3124,13 @@ public class GDDBc extends GDDAux {
         return add_pred(m, n, p1, p2, p3, p4, p5, p6, p7, p8);
     }
 
-/////////////////////////////////////////////////////////////////////////////
-//*****************************************************************************
-// adding auxiliary points
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * Checks if the given condition is valid. Validity depends on whether the predicate is CO_ACONG
+     * and specific point values satisfy the anti-angle criteria.
+     *
+     * @param c the condition to be validated
+     * @return true if the condition is valid; false otherwise
+     */
     public boolean check_tValid(Cond c) {
         if (isPFull()) return true;
         if (c.pred != CO_ACONG) return true;
@@ -2704,10 +3141,9 @@ public class GDDBc extends GDDAux {
         return true;
     }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///// for backward chaining.
-
-
+    /**
+     * Parses the global node list, processes sublists, and displays the list content using backup and preview mechanisms.
+     */
     public void parse_llist() {
         LList ns = all_ns.nx;
         if (ns == null) return;
@@ -2751,7 +3187,12 @@ public class GDDBc extends GDDAux {
         }
     }
 
-
+    /**
+     * Retrieves the next proof head node list from the global node list.
+     *
+     * @param ls the current node list
+     * @return the next node list for proof head, or null if no further node is available
+     */
     LList get_next_ls_prove_head(LList ls) {
         LList ns = all_ns.nx;
         if (ns == null) return null;
@@ -2771,6 +3212,11 @@ public class GDDBc extends GDDAux {
         return rs;
     }
 
+    /**
+     * Displays the list preview by printing the node list and all its associated rules.
+     *
+     * @param ls the node list to preview
+     */
     void show_lprv(LList ls) {
 
         setPrintToString();
@@ -2787,6 +3233,11 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Searches for angle splitting opportunities within the given node list and adds corresponding split rules.
+     *
+     * @param ls the node list to search for angle splits
+     */
     public void search_ag_split(LList ls) {
         if (ls.nd == 1) return;
 
@@ -2820,6 +3271,11 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Searches the TLine list for applicable transformations and adds corresponding rules to the given node list.
+     *
+     * @param ls the node list to process for transformation rules
+     */
     public void search_t_list(LList ls) {
 
         TLine tn = all_tn.nx;
@@ -2835,6 +3291,11 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Searches the node list for predicate rules based on angle properties and anti-point values, adding matching rules.
+     *
+     * @param ls the node list to search for predicate rules
+     */
     public void search_p_list(LList ls) {
         for (int i = 0; i < ls.nd; i++) {
             Mnde m = ls.md[i];
@@ -2848,6 +3309,15 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Searches the node list for transformation matches based on the given lines and intersection value,
+     * and adds corresponding tag rules.
+     *
+     * @param ls the node list to search
+     * @param l1 the first line for the search criteria
+     * @param l2 the second line for the search criteria
+     * @param v the intersection value used for matching
+     */
     public void search_list_tn(LList ls, LLine l1, LLine l2, int v) {
         if (v != 0) {
             for (int i = 0; i < ls.nd; i++) {
@@ -2870,24 +3340,13 @@ public class GDDBc extends GDDAux {
         }
     }
 
-    public void search_p_list(Vector v) {
-
-        for (int i = 0; i < v.size(); i++) {
-            LList ls = (LList) v.get(i);
-
-        }
-    }
-
-    public void search_list_ln(LList ls) {
-        for (int i = 0; i < ls.nd; i++) {
-            AngTr t = ls.md[i].tr;
-            if (t.v == ls.pt) {
-
-            }
-
-        }
-    }
-
+    /**
+     * Creates and returns a tag rule for an angle based on the intersection of two lines.
+     *
+     * @param l1 the first line for the rule
+     * @param l2 the second line for the rule
+     * @return a tag rule with angle relations configured
+     */
     public Rule add_rule_tag(LLine l1, LLine l2) {
         Rule r = new Rule(Rule.T_ANGLE);
         Mnde m = new Mnde();
@@ -2902,6 +3361,15 @@ public class GDDBc extends GDDAux {
         return r;
     }
 
+    /**
+     * Creates and returns a split-angle rule that partitions an angle into sub-angles using the given lines.
+     *
+     * @param v the angle value used for splitting
+     * @param l1 the first line for the transformation
+     * @param l2 the second line forming the angle vertex
+     * @param l3 the third line completing the new angle configuration
+     * @return a split-angle rule containing the constructed transformations
+     */
     public Rule add_rule_spag(int v, LLine l1, LLine l2, LLine l3) {
         Rule r = new Rule(Rule.SPLIT_ANGLE);
         Mnde m = new Mnde();
@@ -2920,6 +3388,12 @@ public class GDDBc extends GDDAux {
         return r;
     }
 
+    /**
+     * Creates a P_ANGLE rule using the provided angle transformation.
+     *
+     * @param t the angle transformation containing the angle value and associated lines
+     * @return a new Rule object of type P_ANGLE
+     */
     public Rule add_rule_p_ag(AngTr t) {
 
         int v = t.v;
@@ -2948,8 +3422,15 @@ public class GDDBc extends GDDAux {
         return r;
 
     }
-
-
+    /**
+     * Creates an EX_ANGLE rule based on three lines forming an angle.
+     *
+     * @param v the angle value
+     * @param l1 the first line
+     * @param l2 the second line
+     * @param l3 the third line
+     * @return a new Rule object of type EX_ANGLE, or null if a valid intersection is not found
+     */
     public Rule add_rule_exag(int v, LLine l1, LLine l2, LLine l3) {
         Rule r = new Rule(Rule.EX_ANGLE);
         Mnde m = new Mnde();
@@ -2973,8 +3454,12 @@ public class GDDBc extends GDDAux {
         return r;
     }
 
-    private static Rule test_r = new Rule(0);
-
+    /**
+     * Subtracts matching nodes from the provided node list using the specified rule.
+     *
+     * @param ls the original node list
+     * @param r the rule to apply for subtracting matching nodes
+     */
     public void list_sub(LList ls, Rule r) {
         if (r == null) return;
 
@@ -3023,14 +3508,11 @@ public class GDDBc extends GDDAux {
 
     }
 
-    public boolean equal_md(Mnde m1, Mnde m2) {
-        if (m1.tr == null && m2.tr == null) {
-            if (m1.t == m2.t) return true;
-            return false;
-        }
-        return false;
-    }
-
+    /**
+     * Retrieves a vector of node lists sorted by their point counts.
+     *
+     * @return a Vector containing sorted node lists
+     */
     public Vector getPVector() {
         Vector v = new Vector();
         LList ns = all_ns.nx;
@@ -3048,6 +3530,11 @@ public class GDDBc extends GDDAux {
         return v;
     }
 
+    /**
+     * Displays a single node list in a formatted manner.
+     *
+     * @param ls the node list to be displayed
+     */
     public void show_llist(LList ls) {
         for (int i = 0; i < ls.nd; i++) {
             Mnde m = ls.md[i];
@@ -3075,10 +3562,11 @@ public class GDDBc extends GDDAux {
 
     }
 
-//    public void show_rule(rule r) {
-//        if (r.type == rule.)
-//    }
-
+    /**
+     * Displays all node lists contained in the provided vector.
+     *
+     * @param v a vector containing node lists to be displayed
+     */
     public void show_llists(Vector v) {
 
         for (int i = 0; i < v.size(); i++) {
@@ -3087,6 +3575,11 @@ public class GDDBc extends GDDAux {
         }
     }
 
+    /**
+     * Displays the Mnde object either by showing its transformation or its angle value.
+     *
+     * @param m the Mnde object to be displayed
+     */
     public void show_mnde(Mnde m) {
 
         if (m.tr == null)
@@ -3095,28 +3588,11 @@ public class GDDBc extends GDDAux {
             show_tr(m.tr);
     }
 
-
-    void show_bk_list(LList ls) {
-
-        setPrintToString();
-        if (ls == null) return;
-        while (ls != null) {
-            show_llist(ls);
-            ls.text = this.getPrintedString();
-            show_rule(ls.rl[0]);
-
-            ls = ls.fr;
-        }
-    }
-
-    LList fd_nx_list(LList ls) {
-        if (ls == null) return all_ns.nx;
-        LList ls1 = all_ns.nx;
-        while (ls1 != ls)
-            ls1 = ls1.nx;
-        return ls1.nx;
-    }
-
+    /**
+     * Parses a backup list of node lists, updating rules and transformations as needed.
+     *
+     * @param ls the starting node list for the backup parsing process
+     */
     void parse_bk_list(LList ls) {
         Vector v = new Vector();
         while (ls != null) {
@@ -3183,7 +3659,13 @@ public class GDDBc extends GDDAux {
         }
     }
 
-
+    /**
+     * Searches the node list for an angle transformation matching the specified transformation.
+     *
+     * @param t the target angle transformation to find
+     * @param ls the node list to search for a matching transformation
+     * @return the matching AngTr object if found; otherwise, null
+     */
     public AngTr find_tr_in_ls(AngTr t, LList ls) {
         for (int i = 0; i < ls.nd; i++) {
             AngTr t1 = ls.md[i].tr;
@@ -3192,6 +3674,11 @@ public class GDDBc extends GDDAux {
         return null;
     }
 
+    /**
+     * Displays the provided rule in a formatted manner.
+     *
+     * @param r the rule to be displayed
+     */
     void show_rule(Rule r) {
         if (r == null) return;
 

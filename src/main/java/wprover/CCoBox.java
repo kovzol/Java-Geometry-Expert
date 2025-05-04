@@ -5,12 +5,8 @@ import java.util.Vector;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-3-4
- * Time: 14:25:06
- * To change this template use File | Settings | File Templates.
- * This class represents a custom JComboBox for color selection.
+ * CCoBox is a custom JComboBox that displays color options.
+ * It allows for the creation of multiple instances and provides methods to manage them.
  */
 public class CCoBox extends JComboBox {
     private static Vector instanceList = new Vector();
@@ -54,15 +50,6 @@ public class CCoBox extends JComboBox {
     public void setSelectedIndex(int index) {
         ((ColorComboRender) super.getRenderer()).index = index;
         super.setSelectedIndex(index);
-    }
-
-    /**
-     * Sets the default selected index of the combo box.
-     *
-     * @param index the default index
-     */
-    public void setDefaultIndex(int index) {
-        defaultindex = index;
     }
 
     /**

@@ -1,11 +1,7 @@
 package gprover;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: Nov 6, 2006
- * Time: 10:22:42 PM
- * To change this template use File | Settings | File Templates.
+ * Represents a polygon in a geometric construction.
  */
 public class Polygon extends CClass {
     int lemma;
@@ -16,10 +12,19 @@ public class Polygon extends CClass {
 
     Polygon nx;
 
+    /**
+     * Constructs a Polygon object with default values.
+     */
     public Polygon() {
         lemma = o = 0;
         co = null;
     }
+
+    /**
+     * Constructs a Polygon object with a specified type.
+     *
+     * @param t the type of the polygon
+     */
     public Polygon(int t) {
         qtype = t;
         lemma = o = 0;

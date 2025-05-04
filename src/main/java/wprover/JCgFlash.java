@@ -7,11 +7,8 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-5-3
- * Time: 15:05:13
- * To change this template use File | Settings | File Templates.
+ * JCgFlash is a class that extends JFlash and implements ActionListener.
+ * It is used to create a flashing effect on a JPanel with specified points.
  */
 public class JCgFlash extends JFlash implements ActionListener {
     Vector vlist = new Vector();
@@ -19,47 +16,71 @@ public class JCgFlash extends JFlash implements ActionListener {
     int dnum = 2;
     private boolean dTT = true;
 
+    /**
+     * Constructs a new JCgFlash with the specified JPanel.
+     *
+     * @param p the JPanel to associate with this JCgFlash
+     */
     public JCgFlash(JPanel p) {
         super(p);
         timer = new Timer(TIME_INTERVAL, this);
     }
 
+    /**
+     * Sets whether the drawTT flag is enabled.
+     *
+     * @param t true to enable drawTT, false to disable
+     */
     public void setDrawdTT(boolean t) {
         dTT = t;
     }
 
+    /**
+     * Sets the number of divisions.
+     *
+     * @param n the number of divisions
+     */
     public void setDNum(int n) {
         dnum = n;
     }
 
+    /**
+     * Gets the number of divisions.
+     *
+     * @return the number of divisions
+     */
     public int getDNum() {
         return dnum;
     }
 
+    /**
+     * Adds a pair of CPoints to the vector list.
+     *
+     * @param a the first CPoint
+     * @param b the second CPoint
+     */
     public void addACg(CPoint a, CPoint b) {
         vlist.add(a);
         vlist.add(b);
     }
 
-    public CPoint getCGPoint1() {
-        if (vlist.size() == 0)
-            return null;
-
-        return (CPoint) vlist.get(0);
-    }
-
-    public CPoint getCGPoint2() {
-        if (vlist.size() <= 1)
-            return null;
-        return (CPoint) vlist.get(1);
-    }
-
+    /**
+     * Handles action events for the timer.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         n--;
         if (n <= 0) super.stop();
         panel.repaint();
     }
 
+    /**
+     * Draws the flashing effect on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     * @return true if the drawing was successful, false otherwise
+     */
     public boolean draw(Graphics2D g2) {
         int num = vlist.size() / 2;
         for (int i = 0; i < num; i++) {
@@ -99,7 +120,6 @@ public class JCgFlash extends JFlash implements ActionListener {
             }
         }
 
-
         for (int i = 0; i < num; i++) {
             CPoint p1 = (CPoint) vlist.get(i * 2);
             CPoint p2 = (CPoint) vlist.get(i * 2 + 1);
@@ -121,6 +141,14 @@ public class JCgFlash extends JFlash implements ActionListener {
         return true;
     }
 
+    /**
+     * Draws a line between two CPoints with a flashing effect.
+     *
+     * @param g2 the Graphics2D context to draw on
+     * @param p1 the starting CPoint
+     * @param p2 the ending CPoint
+     * @return true if the drawing was successful, false otherwise
+     */
     public boolean draw(Graphics2D g2, CPoint p1, CPoint p2) {
         if (!dTT) return false;
 
@@ -173,6 +201,15 @@ public class JCgFlash extends JFlash implements ActionListener {
         return true;
     }
 
+    /**
+     * Draws a line segment with a specified direction and length.
+     *
+     * @param x  the x-coordinate of the center point
+     * @param y  the y-coordinate of the center point
+     * @param dx the x-direction unit vector
+     * @param dy the y-direction unit vector
+     * @param g2 the Graphics2D context to draw on
+     */
     public void drawALine(double x, double y, double dx, double dy, Graphics2D g2) {
         double xx1 = x - dy * length;
         double yy1 = y + dx * length;
@@ -180,6 +217,5 @@ public class JCgFlash extends JFlash implements ActionListener {
         double xx2 = x + dy * length;
         double yy2 = y - dx * length;
         g2.drawLine((int) xx1, (int) yy1, (int) xx2, (int) yy2);
-
     }
 }

@@ -8,13 +8,7 @@ import java.io.FileOutputStream;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ${Yezheng}
- * Date: 2004-12-9
- * Time: 12:29:48
- * To change this template use File | Settings | File Templates.
- *
- * This class represents a circle in geometric constructions.
+ * Represents a geometric circle with various properties and methods.
  */
 public class Circle extends CClass {
     public static int PCircle = 0;
@@ -315,6 +309,13 @@ public class Circle extends CClass {
         points.add(C);
     }
 
+/**
+     * Constructs a Circle object with the specified center and two points on the circle.
+     *
+     * @param O the center of the circle
+     * @param A the first point on the circle
+     * @param B the second point on the circle
+     */
     public Circle(CPoint O, CPoint A, CPoint B) {
         super(CClass.CIRCLE);
         this.o = O;
@@ -322,34 +323,54 @@ public class Circle extends CClass {
         points.add(B);
     }
 
+    /**
+     * Constructs a Circle object with the specified center and one point on the circle.
+     *
+     * @param O the center of the circle
+     * @param A the point on the circle
+     */
     public Circle(CPoint O, CPoint A) {
         super(CClass.CIRCLE);
         this.o = O;
         points.add(A);
     }
 
+    /**
+     * Constructs a Circle object with the specified type and center.
+     *
+     * @param type the type of the circle
+     * @param O the center of the circle
+     */
     public Circle(int type, CPoint O) {
         super(CClass.CIRCLE);
         this.o = O;
         this.type = type;
     }
 
+    /**
+     * Adds a constraint to the circle.
+     *
+     * @param cs the constraint to add
+     */
     public void addConstraint(Constraint cs) {
         cons.add(cs);
     }
 
-    public boolean hasPoint(CPoint p) {
-        for (int i = 0; i < points.size(); i++) {
-            if (p.isEqual((CPoint) points.get(i))) return true;
-        }
-        return false;
-    }
-
+    /**
+     * Adds a point to the circle.
+     *
+     * @param p the point to add
+     */
     public void addPoint(CPoint p) {
         if (!points.contains(p))
             points.add(p);
     }
 
+    /**
+     * Adjusts the coordinates of the given point to lie on the circle.
+     *
+     * @param p the point to adjust
+     */
     public void pointStickToCircle(CPoint p) {
         double x = p.getx();
         double y = p.gety();
@@ -362,13 +383,27 @@ public class Circle extends CClass {
         double y1 = yo + (y - yo) * R / R1;
         double x1 = xo + (x - xo) * R / R1;
         p.setXY(x1, y1);
-
     }
 
+    /**
+     * Checks if the given coordinates are on the circle.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if the coordinates are on the circle, false otherwise
+     */
     public boolean on_circle(double x, double y) {
         return this.select(x, y);
     }
 
+    /**
+     * Checks if the given coordinates are near the circle within a specified tolerance.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param eps the tolerance
+     * @return true if the coordinates are near the circle, false otherwise
+     */
     public boolean nearcircle(double x, double y, double eps) {
         double ox, oy;
         ox = o.getx();
@@ -381,17 +416,20 @@ public class Circle extends CClass {
         return false;
     }
 
+    /**
+     * Adjusts the coordinates of the given point to lie on the circle using a smart algorithm.
+     *
+     * @param p the point to adjust
+     */
     public void SmartPonc(CPoint p) {
-        //    CPoint pt = (CPoint) points.get(0);
         double ox, oy, x, y;
         ox = o.getx();
         oy = o.gety();
         x = p.getx();
         y = p.gety();
 
-        double r = this.getRadius();//Math.sqrt(Math.pow(pt.getx() - ox, 2) + Math.pow(pt.gety() - oy, 2));
+        double r = this.getRadius();
         double len = Math.sqrt(Math.pow(p.getx() - ox, 2) + Math.pow(p.gety() - oy, 2));
-
 
         if (Math.abs(x - o.getx()) < 0.001) {
             if (y > oy)
@@ -404,6 +442,13 @@ public class Circle extends CClass {
         }
     }
 
+    /**
+     * Finds the common points between two circles.
+     *
+     * @param c1 the first circle
+     * @param c2 the second circle
+     * @return a vector of common points
+     */
     public static Vector CommonPoints(Circle c1, Circle c2) {
         Vector vlist = new Vector();
         for (int i = 0; i < c1.points.size(); i++) {
@@ -416,6 +461,12 @@ public class Circle extends CClass {
         return vlist;
     }
 
+    /**
+     * Checks if the given object is tangent to the circle.
+     *
+     * @param obj the object to check
+     * @return true if the object is tangent to the circle, false otherwise
+     */
     public boolean Tangent(Object obj) {
         if (obj instanceof CLine) {
             return true;
@@ -434,6 +485,13 @@ public class Circle extends CClass {
             return false;
     }
 
+    /**
+     * Saves the circle to a PostScript file.
+     *
+     * @param fp the file output stream
+     * @param stype the style type
+     * @throws IOException if an I/O error occurs
+     */
     public void SavePS(FileOutputStream fp, int stype) throws IOException {
         if (!visible) return;
 
@@ -444,6 +502,12 @@ public class Circle extends CClass {
         this.saveSuper(fp);
     }
 
+    /**
+     * Saves the circle to a data output stream.
+     *
+     * @param out the data output stream
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
         super.Save(out);
 
@@ -459,10 +523,15 @@ public class Circle extends CClass {
             Constraint cs = (Constraint) cons.get(i);
             out.writeInt(cs.id);
         }
-
-
     }
 
+    /**
+     * Loads the circle from a data input stream.
+     *
+     * @param in the data input stream
+     * @param dp the draw process
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         if (CMisc.version_load_now < 0.010) {
             m_id = in.readInt();
@@ -482,7 +551,6 @@ public class Circle extends CClass {
             }
             m_dash = drawt.dash;
             m_width = drawt.width;
-
 
             type = in.readInt();
             int size = in.readInt();
@@ -520,10 +588,7 @@ public class Circle extends CClass {
                 int dx = in.readInt();
                 cons.add(dp.getConstraintByid(dx));
             }
-
         }
-
-
     }
 
 

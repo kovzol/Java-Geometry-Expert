@@ -10,13 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
-
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-6-26
- * Time: 16:18:09
- * To change this template use File | Settings | File Templates.
+ * A dialog for saving a proof as a GIF file in GeoGebra.
  */
 public class ImageTimer extends JBaseDialog implements ActionListener, ChangeListener {
     private GExpert gxInstance;
@@ -39,10 +34,20 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
     int n1 = 0;
     int n2 = 0;
 
+    /**
+     * Returns the result of the image timer process.
+     *
+     * @return true if the process was successful, false otherwise
+     */
     public boolean getResult() {
         return result;
     }
 
+    /**
+     * Handles state changes for the sliders and updates the delay values.
+     *
+     * @param e the change event
+     */
     public void stateChanged(ChangeEvent e) {
         int n = slider.getValue();
         delay = n;
@@ -51,7 +56,11 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
         updateValue();
     }
 
-
+    /**
+     * Constructs a new ImageTimer dialog with the specified GExpert instance.
+     *
+     * @param f the GExpert instance
+     */
     public ImageTimer(GExpert f) {
         super(f.getFrame(), GExpert.getLanguage("Saving Proof as GIF File"), true);
         gxInstance = f;
@@ -132,7 +141,11 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
 
     }
 
-
+    /**
+     * Sets the delay values for the sliders.
+     *
+     * @param n the delay value
+     */
     public void setDelay(int n) {
         delay = n;
         slider.setValue(n);
@@ -140,7 +153,9 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
         slider2.setValue(n * 3);
     }
 
-
+    /**
+     * Updates the text fields with the current slider values.
+     */
     public void updateValue() {
         int n = slider.getValue() / 100;
         int n1 = slider1.getValue() / 100;
@@ -150,18 +165,36 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
         field2.setText(Double.toString(n2 / 10.00));
     }
 
+    /**
+     * Sets the GifEncoder instance for the image timer.
+     *
+     * @param e the GifEncoder instance
+     */
     public void setEncorder(GifEncoder e) {
         this.encorder = e;
     }
 
+    /**
+     * Sets the CProveBarPanel instance for the image timer.
+     *
+     * @param bar the CProveBarPanel instance
+     */
     public void setProveBar(CProveBarPanel bar) {
         this.bar = bar;
     }
 
+    /**
+     * Sets the rectangle area for capturing images.
+     *
+     * @param rc the rectangle area
+     */
     public void setRectangle(Rectangle rc) {
         this.rc = rc;
     }
 
+    /**
+     * Starts the image timer and the save process.
+     */
     public void start() {
         if (timer == null)
             timer = new Timer(delay, this);
@@ -170,6 +203,9 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
         startSave();
     }
 
+    /**
+     * Starts the save process in a new thread.
+     */
     public void startSave() {
         if (sprocess == null) {
             sprocess = new Thread(new SaveProcess());
@@ -182,6 +218,9 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
         }
     }
 
+    /**
+     * Adds a new image to the buffer.
+     */
     public void imageAdded() {
         BufferedImage i = gxInstance.getBufferedImage2(rc);
         if (i != null) {
@@ -192,6 +231,11 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
         }
     }
 
+    /**
+     * Handles action events for the timer and buttons.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
 
@@ -204,7 +248,6 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
                 if (bar.isStepAtEnd()) {
                     timer.stop();
                     finished = true;
-//                    this.setVisible(false);
                     result = true;
                 } else
                     bar.AStep();
@@ -223,7 +266,6 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
                     timer.stop();
                     bar.stop();
                     interrupted = true;
-
                 } else {
                     interrupted = true;
                     this.setVisible(false);
@@ -232,9 +274,11 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
         }
     }
 
-
     boolean running = false;
 
+    /**
+     * A runnable class for saving the images in a separate thread.
+     */
     class SaveProcess implements Runnable {
 
         public SaveProcess() {
@@ -268,7 +312,5 @@ public class ImageTimer extends JBaseDialog implements ActionListener, ChangeLis
             }
             running = false;
         }
-
-
     }
 }

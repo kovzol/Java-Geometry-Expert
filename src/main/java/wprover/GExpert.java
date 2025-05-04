@@ -36,6 +36,11 @@ import java.util.*;
 
 import org.apache.commons.cli.*;
 
+/**
+ * GExpert is the main class for the GEXPERT application.
+ * It initializes the application, sets up the GUI, and handles user interactions.
+ * It also manages the language settings and file operations.
+ */
 public class GExpert extends JFrame implements ActionListener, KeyListener, DropTargetListener, WindowListener {    // APPLET ONLY.
 
     private JLabel label;
@@ -92,23 +97,28 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     public static gprover.Cons conclusion = null; // Temporary fix for storing conclusion with == in GGB import
 
+    /**
+     * Constructs a new GExpert instance and initializes the application if it is running as an application.
+     */
     public GExpert() {
         super();  //GAPPLET.
         if (CMisc.isApplication())
             init();
     }
 
+    /**
+     * Initializes the GExpert application, setting up the GUI components, loading preferences, language settings, and rules.
+     * It also initializes various attributes and sets up the main content pane.
+     */
     public void init() {
-
         this.setIconImage(GExpert.createImageIcon("images/gexicon.gif").getImage());    //GAPPLET
-//        setLocal();
-//        showWelcome();
+        // setLocal();
+        // showWelcome();
         CMisc.initFont();
 
         loadPreference(); //swapped loadPreference() and loadRules() because loadPreference needs to happen first.
         loadLanguage(); // this was after loadrules and loadpreference. real order: loadRules, LoadPreference, loadLanguage
         loadRules();
-
 
         initAttribute();
         setLookAndFeel();
@@ -146,19 +156,28 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         addWindowListener(this);
 
         this.getContentPane().add(contentPane, BorderLayout.CENTER);
-
     }
 
-
+    /**
+     * Loads the rules for the GExpert application.
+     */
     public void loadRules() {
         RuleList.loadRules();
         Gib.initRules();
     }
 
+    /**
+     * Returns the main content pane of the application.
+     *
+     * @return the main content pane
+     */
     public JComponent getContent() {
         return contentPane;
     }
 
+    /**
+     * Adds a component listener to the drawing panel to handle resizing and visibility changes.
+     */
     public void addSplitListener() {
         d.addComponentListener(new ComponentListener() {
             public void componentResized(ComponentEvent e) {
@@ -177,25 +196,28 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         });
     }
 
+    /**
+     * Loads the user preferences from the configuration file.
+     */
     public void loadPreference() {
-
         String u = getUserHome();
         try {
-            InputStreamReader read = new InputStreamReader(new FileInputStream(u + "/jgex.cfg"), "UTF-8");//
+            InputStreamReader read = new InputStreamReader(new FileInputStream(u + "/jgex.cfg"), "UTF-8");
             BufferedReader reader = new BufferedReader(read);
             CMisc.LoadProperty(reader);
         } catch (IOException ee) {
-//            CMisc.print(ee.getMessage());
+            // CMisc.print(ee.getMessage());
         }
-
     }
 
+    /**
+     * Loads the language settings for the application and sets up internationalization.
+     */
     public void loadLanguage() {
-
         language = new Language();
         String user_directory = getUserDir();
         Language.setLanguage(language);
-        System.out.println("Language loaded: "+CMisc.lan);
+        System.out.println("Language loaded: " + CMisc.lan);
         lan = CMisc.lan; //setting lan to current language so RuleList can read it.
 
         // Set gettext based internationalization:
@@ -253,10 +275,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         UIManager.put("FileChooser.fileSizeHeaderText", getLanguage("Size"));
         UIManager.put("FileChooser.fileDateHeaderText", getLanguage("Date Modified"));
 
-        /* There are still some keys that require translation. TODO.
-         * This piece of code may help finding the missing keys.
-         */
-
+        // There are still some keys that require translation. TODO.
+        // This piece of code may help finding the missing keys.
         /*
         UIDefaults defaults = UIManager.getDefaults();
         java.util.Enumeration<Object> keysEnumeration = defaults.keys();
@@ -269,27 +289,35 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     }
 
 
+    /**
+     * Initializes the attributes of the application, setting the font if the language is not English.
+     */
     public void initAttribute() {
-
         if (language != null && !language.isEnglish()) {
             Font f = language.getFont();
-
             if (f != null) {
-                {
-                    setUIFont(new FontUIResource(f));
-                    CMisc.setFont(f.getName());
-                }
+                setUIFont(new FontUIResource(f));
+                CMisc.setFont(f.getName());
             }
         }
     }
 
+    /**
+     * Returns the default font of the application.
+     *
+     * @return the default Font object, or null if the language is not set
+     */
     public Font getDefaultFont() {
         if (language == null)
             return null;
         return language.getFont();
     }
 
-
+    /**
+     * Returns the Frame object of the application.
+     *
+     * @return the Frame object, or null if no Frame is found
+     */
     public Frame getFrame() {
         Container c = this;
         while (c != null) {
@@ -300,35 +328,39 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return (Frame) null;
     }
 
+    /**
+     * Loads the cursor for the application.
+     */
     public void loadCursor() {
     }
 
-    public void createCursor(Toolkit kit, String file, String name) {
-    }
-
-    public Cursor getDefinedCursor(String name) {
-        return null;
-    }
-
-
+    /**
+     * Checks if the panel is visible.
+     *
+     * @return true if the panel is visible, false otherwise
+     */
     public boolean isPPanelVisible() {
         return ppanel.isVisible();
     }
 
+    /**
+     * Shows or hides the panel.
+     *
+     * @param t if true, hides the panel; if false, shows the panel
+     */
     public void showppanel(boolean t) {
         show_button.setSelected(t);
         ppanel.setVisible(!t);
         contentPane.resetToPreferredSizes();
-//        if (t == false) {
-//            Dimension dm = contentPane.getMinimumSize();
-//            contentPane.setSize(dm);
-//        }
     }
 
-    public JSplitPane getSplitContentPane() {
-        return contentPane;
-    }
-
+    /**
+     * Shows the rule panel at the specified location.
+     *
+     * @param s the rule to be shown
+     * @param x the x-coordinate of the location
+     * @param y the y-coordinate of the location
+     */
     public void showRulePanel(String s, int x, int y) {
         if (rview == null) {
             rview = new JPopExView(this);
@@ -340,14 +372,29 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
+    /**
+     * Returns the PanelProve object.
+     *
+     * @return the PanelProve object
+     */
     public PanelProve getpprove() {
         return pprove;
     }
 
+    /**
+     * Checks if the animate frame is present.
+     *
+     * @return true if the animate frame is present, false otherwise
+     */
     public boolean hasAFrame() {
         return aframe != null;
     }
 
+    /**
+     * Returns the AnimatePanel object, initializing it if necessary.
+     *
+     * @return the AnimatePanel object
+     */
     public AnimatePanel getAnimateDialog() {
         if (aframe == null) {
             aframe = new AnimatePanel(this, d, dp);
@@ -355,15 +402,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return aframe;
     }
 
-    public boolean isAframeShown() {
-        return afpane.isVisible() && aframe != null && aframe.isVisible();
-    }
-
+    /**
+     * Shows the animate pane.
+     */
     public void showAnimatePane() {
-
         if (aframe == null)
             this.getAnimateDialog();
-
 
         Rectangle rc = scroll.getVisibleRect();
         if (afpane == null)
@@ -379,6 +423,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         aframe.repaint();
     }
 
+    /**
+     * Returns the RuleDialog object for the specified rule, initializing it if necessary.
+     *
+     * @param n the rule number
+     * @return the RuleDialog object
+     */
     public RuleDialog getRuleDialog(int n) {
         if (rdialog == null) {
             rdialog = new RuleDialog(this);
@@ -393,6 +443,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     }
 
 
+    /**
+     * Automatically sets the panel type for the given class.
+     *
+     * @param c the class for which the panel type is to be set
+     */
     public void viewElementsAuto(CClass c) {
         if (c == null)
             return;
@@ -401,6 +456,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         cp.SetPanelType(c);
     }
 
+    /**
+     * Returns the dialog property, initializing it if necessary.
+     *
+     * @return the dialog property
+     */
     public DialogProperty getDialogProperty() {
         if (propt == null) {
             cp = new CProperty(d, language);
@@ -413,12 +473,22 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return propt;
     }
 
+    /**
+     * Centers the given dialog relative to the main frame.
+     *
+     * @param dlg the dialog to be centered
+     */
     public void centerDialog(JDialog dlg) {
         dlg.setLocation(this.getX() + this.getWidth() / 2 - dlg.getWidth() / 2,
                 this.getY() + this.getHeight() / 2 -
                         dlg.getHeight() / 2);
     }
 
+    /**
+     * Returns the select dialog, initializing it if necessary.
+     *
+     * @return the select dialog
+     */
     public SelectDialog getSelectDialog() {
         if (sdialog == null) {
             sdialog = new SelectDialog(this, new Vector());
@@ -426,6 +496,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return sdialog;
     }
 
+    /**
+     * Checks if the conclusion dialog is visible.
+     *
+     * @return true if the conclusion dialog is visible, false otherwise
+     */
     public boolean isconcVisible() {
         if (cdialog != null && cdialog.isVisible()) {
             return true;
@@ -433,6 +508,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return false;
     }
 
+    /**
+     * Returns the conclusion dialog, initializing it if necessary.
+     *
+     * @return the conclusion dialog
+     */
     public ConcDialog getConcDialog() {
         if (cdialog == null) {
             cdialog = new ConcDialog(this, "");
@@ -441,6 +521,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return cdialog;
     }
 
+    /**
+     * Shows the number check dialog if there are points to check.
+     */
     public void showNumDialog() {
         if (ndialog != null && ndialog.isVisible())
             return;
@@ -451,11 +534,21 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         ndialog.setVisible(true);
     }
 
+    /**
+     * Selects a point in the number check dialog if it is visible.
+     *
+     * @param p the point to be selected
+     */
     public void selectAPoint(CPoint p) {
         if (ndialog != null && ndialog.isVisible())
             ndialog.addSelectPoint(p);
     }
 
+    /**
+     * Returns the undo edit dialog, initializing it if necessary.
+     *
+     * @return the undo edit dialog
+     */
     public UndoEditDialog getUndoEditDialog() {
         if (udialog == null) {
             udialog = new UndoEditDialog(this);
@@ -464,10 +557,20 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return udialog;
     }
 
+    /**
+     * Checks if the prove dialog is visible.
+     *
+     * @return true if the prove dialog is visible, false otherwise
+     */
     public boolean isDialogProveVisible() {
         return pdialog != null && pdialog.isVisible();
     }
 
+    /**
+     * Returns the prove dialog, initializing it if necessary.
+     *
+     * @return the prove dialog
+     */
     public CDialogProve getDialogProve() {
         if (pdialog == null) {
             pdialog = new CDialogProve(this);
@@ -475,6 +578,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return pdialog;
     }
 
+    /**
+     * Returns a file chooser, initializing it if necessary.
+     *
+     * @param importGgb if true, sets the file filter to GeoGebra files; otherwise, sets it to GEX files
+     * @return the file chooser
+     */
     public JFileChooser getFileChooser(boolean importGgb) {
         if (filechooser == null) {
             filechooser = new JFileChooser();
@@ -491,42 +600,83 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return filechooser;
     }
 
+    /**
+     * Returns the user directory.
+     *
+     * @return the user directory
+     */
     public static String getUserDir() {
         return System.getProperty("user.dir");
     }
 
+    /**
+     * Returns the user home directory.
+     *
+     * @return the user home directory
+     */
     public static String getUserHome() {
         return System.getProperty("user.home");
     }
 
+    /**
+     * Returns the file separator.
+     *
+     * @return the file separator
+     */
     public static String getFileSeparator() {
         return File.separator;
     }
 
+    /**
+     * Checks if the manual input bar is present.
+     *
+     * @return true if the manual input bar is present, false otherwise
+     */
     public boolean hasMannualInputBar() {
         return inputm != null;
     }
 
+    /**
+     * Returns the prove status.
+     *
+     * @return the prove status
+     */
     public int getProveStatus() {
         return pprove.getSelectedIndex();
     }
 
+    /**
+     * Returns the style dialog.
+     *
+     * @return the style dialog
+     */
     public CStyleDialog getStyleDialog() {
         return styleDialog;
     }
 
+    /**
+     * Returns the manual input toolbar.
+     *
+     * @return the manual input toolbar
+     */
     public MProveInputPanel getMannalInputToolBar() {
         return inputm;
     }
 
+    /**
+     * Adds a button to the draw group.
+     *
+     * @param b the button to be added
+     */
     public void addButtonToDrawGroup(JToggleButton b) {
         group.add(b);
     }
 
-    public CProveBarPanel getPProveBar() {
-        return provePanelbar;
-    }
-
+    /**
+     * Switches the visibility of the prove bar.
+     *
+     * @param r if false, hides the prove bar; if true, shows the prove bar
+     */
     public void switchProveBarVisibility(boolean r) {
         if (r == false) {
             if (provePanelbar == null)
@@ -536,6 +686,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             showProveBar(true);
     }
 
+    /**
+     * Shows or hides the prove bar.
+     *
+     * @param show if true, shows the prove bar; if false, hides the prove bar
+     */
     public void showProveBar(boolean show) {
         if (provePanelbar == null) {
             provePanelbar = new CProveBarPanel(this);
@@ -554,6 +709,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
+    /**
+     * Shows the style dialog.
+     */
     public void showStyleDialog() {
         if (styleDialog == null) {
             styleDialog = new CStyleDialog(this, d);
@@ -570,6 +728,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
+    /**
+     * Creates and initializes the tip label.
+     */
     public void createTipLabel() {
 
         label = new JLabel() {
@@ -596,15 +757,14 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
         GBevelBorder border = new GBevelBorder(GBevelBorder.RAISED, 1);
 
-        label.setBorder(border); //BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        label2.setBorder(border); //BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        label.setBorder(border);
+        label2.setBorder(border);
 
         JPanel panel = new JPanel();
         panel.setBorder(null);
         panel.setBackground(CMisc.frameColor);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         tipanel = panel;
-
 
         show_button = new TStateButton(GExpert.createImageIcon("images/ticon/show.gif"),
                 GExpert.createImageIcon("images/ticon/hide.gif"));
@@ -627,31 +787,21 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
+    /**
+     * Sets the location of the frame.
+     *
+     * @param x the x-coordinate of the frame
+     * @param y the y-coordinate of the frame
+     */
     public void setLocation(int x, int y) {
         super.setLocation(x, y);
     }
 
-    void addDirectoryIcons(File f) {
-        if (f.isDirectory()) {
-            File contents[] = f.listFiles();
-            for (int i = 0; i < contents.length; i++) {
-                if (contents[i].isDirectory()) {
-                    continue;
-                }
-                iconPool.add(GExpert.createImageIcon(contents[i].getPath()));
-            }
-
-            for (int i = 0; i < contents.length; i++) {
-                String s = contents[i].getName();
-                String t = s;
-                if (contents[i].isDirectory()) {
-                    this.addDirectoryIcons(contents[i]);
-                }
-            }
-
-        }
-    }
-
+    /**
+     * Adds all example files from the examples directory to the specified menu.
+     *
+     * @param menu the menu to which the example files will be added
+     */
     void addAllExamples(JMenu menu) {
         String user_directory = getUserDir();
         String sp = GExpert.getFileSeparator();
@@ -660,6 +810,13 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         this.addDirectory(dir, menu, dr);
     }
 
+    /**
+     * Adds the contents of the specified directory to the specified menu.
+     *
+     * @param f the directory whose contents will be added
+     * @param menu the menu to which the contents will be added
+     * @param path the path of the directory
+     */
     void addDirectory(File f, JMenu menu, String path) {
 
         String sp = GExpert.getFileSeparator();
@@ -701,44 +858,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
-    void addDirectory(BufferedReader bf, JMenu menu, String path) throws IOException {
-
-        String s1 = bf.readLine();
-        s1.trim();
-
-        while (s1.length() != 0) {
-            if (s1.length() == 1 && s1.charAt(0) == '(') {
-                s1 = bf.readLine();
-                s1.trim();
-                JMenu m = new JMenu(s1);
-                addMenu(menu, m);
-                if (path.length() == 0)
-                    addDirectory(bf, m, s1);
-                else
-                    addDirectory(bf, m, path + "/" + s1);
-            } else if (s1.length() == 1 && s1.charAt(0) == ')') {
-                return;
-            } else {
-                if (s1.endsWith(".gex")) {
-                    s1 = s1.substring(0, s1.length() - 4);
-                    JMenuItem mt = new JMenuItem(s1);
-                    mt.setName(path);
-                    mt.setToolTipText(s1);
-                    mt.setActionCommand("example");
-                    mt.addActionListener(this);
-                    addMenu(menu, mt);
-                }
-
-            }
-            s1 = bf.readLine();
-
-            if (s1 != null)
-                s1.trim();
-            else
-                return;
-        }
-    }
-
+    /**
+     * Adds a menu item to the specified menu in alphabetical order.
+     *
+     * @param menu the menu to which the item will be added
+     * @param item the menu item to be added
+     */
     void addMenu(JMenu menu, JMenuItem item) {
         String name = item.getText();
         for (int i = 0; i < menu.getItemCount(); i++) {
@@ -754,7 +879,15 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         menu.add(item);
     }
 
-
+    /**
+     * Initializes and adds the menu and tool bar(s) to the application frame.
+     * <p>
+     * This method creates and configures the top toolbar, the right-side toolbar,
+     * and the menu bar with all necessary menus and menu items for file operations,
+     * examples, construction, constraints, actions, and help.
+     * Toolbar buttons and menu items are set up with icons and action listeners.
+     * </p>
+     */
     public void addMenueToolBar() {
         JToolBar toolBar = new JToolBar("Toolbar");
         toolBar.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -930,9 +1063,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         JMenu sub2 = new JMenu(getLanguage(getLanguage("Ratio Distance")));
 
         // addRadioButtonMenuItem(sub2, "1 : 1", "Set two segments to have ratio: 1 : 1", this, "ra_side");
-        addRadioButtonMenuItem(sub2, "1 : 1", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}",  "1 : 1"), this, "ra_side");
-        addRadioButtonMenuItem(sub2, "1 : 2", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}",  "1 : 2"), this, "ra_side");
-        addRadioButtonMenuItem(sub2, "1 : 3", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}",  "1 : 3"), this, "ra_side");
+        addRadioButtonMenuItem(sub2, "1 : 1", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}", "1 : 1"), this, "ra_side");
+        addRadioButtonMenuItem(sub2, "1 : 2", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}", "1 : 2"), this, "ra_side");
+        addRadioButtonMenuItem(sub2, "1 : 3", GExpert.getTranslationViaGettext("Set two segments to have ratio: {0}", "1 : 3"), this, "ra_side");
         addRadioButtonMenuItem(sub2, "Other...", "Set two segments to have specified ratio", this, "ra_side");
         menu.add(sub2);
         addRadioButtonMenuItem(menu, "CCtangent", "Set two circles to be tangent", this);
@@ -1018,6 +1151,16 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         getContentPane().add(toolBarRight, BorderLayout.EAST);
     }
 
+    /**
+     * Creates a JRadioButtonMenuItem with the specified name, tooltip, action listener, and command.
+     *
+     * @param bar the menu to add the item to
+     * @param name the display name and action command of the menu item
+     * @param tooltip the tooltip text to display
+     * @param listener the action listener to register on the menu item
+     * @param command the specific action command to set
+     * @return the created JRadioButtonMenuItem
+     */
     public JRadioButtonMenuItem addRadioButtonMenuItem(JMenu bar, String name,
                                                        String tooltip, ActionListener listener, String command) {
         JRadioButtonMenuItem item = addRadioButtonMenuItem(bar, name, tooltip, listener);
@@ -1025,6 +1168,17 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return item;
     }
 
+    /**
+     * Creates a JRadioButtonMenuItem with the specified name, custom text, tooltip, and action listener.
+     * The menu item's text is set to its localized value.
+     *
+     * @param bar the menu to add the item to
+     * @param name the internal name of the menu item used as its action command
+     * @param text the text to display on the menu item (to be localized)
+     * @param tooltip the tooltip text to display
+     * @param listener the action listener to register on the menu item
+     * @return the created JRadioButtonMenuItem with localized text
+     */
     public JRadioButtonMenuItem addRadioButtonMenuItem(JMenu bar, String name, String text,
                                                        String tooltip, ActionListener listener) {
         JRadioButtonMenuItem item = addRadioButtonMenuItem(bar, name, tooltip, listener);
@@ -1032,6 +1186,17 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return item;
     }
 
+    /**
+     * Creates a JRadioButtonMenuItem with the specified name, tooltip, and action listener.
+     * The menu item's text and action command are set based on the provided name.
+     * If the tooltip is null, a localized language tip may be used instead.
+     *
+     * @param bar the menu to add the item to
+     * @param name the name used as the action command and display text of the menu item
+     * @param tooltip the tooltip text to display (or a localized tip if null)
+     * @param listener the action listener to register on the menu item
+     * @return the created JRadioButtonMenuItem
+     */
     public JRadioButtonMenuItem addRadioButtonMenuItem(JMenu bar, String name,
                                                        String tooltip, ActionListener listener) {
         JRadioButtonMenuItem miten;
@@ -1053,21 +1218,16 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return miten;
     }
 
-    /*
-    public JMenuItem addAMenu(JMenu bar, String name, String tooltip,
-                              ActionListener listener, String command) {
-        JMenuItem item = addAMenu(bar, name, tooltip, listener);
-        item.setActionCommand(command);
-        return item;
-    }
-
-    public JMenuItem addAMenu(JMenu bar, String command, String text, String tip, ActionListener listener) {
-        JMenuItem item = addAMenu(bar, text, tip, listener);
-        item.setActionCommand(command);
-        return item;
-    }
+    /**
+     * Adds a menu item to the specified menu bar with the given name, tooltip, mnemonic, and action listener.
+     *
+     * @param bar the menu bar to which the menu item will be added
+     * @param name the name of the menu item
+     * @param tooltip the tooltip text for the menu item
+     * @param ne the mnemonic for the menu item
+     * @param listener the action listener for the menu item
+     * @return the created JMenuItem
      */
-
     public JMenuItem addAMenu(JMenu bar, String name, String tooltip, int ne, ActionListener listener) {
         JMenuItem item = addAMenu(bar, name, tooltip, listener);
         item.setMnemonic(ne);
@@ -1076,16 +1236,32 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return item;
     }
 
+    /**
+     * Adds a blank image icon to the specified menu item.
+     *
+     * @param item the menu item to which the image icon will be added
+     */
     public void addImageToItem(JMenuItem item) {
         ImageIcon m = GExpert.createImageIcon("images/small/" + "blank.gif");
         item.setIcon(m);
     }
 
+    /**
+     * Adds a blank image icon to the specified menu.
+     *
+     * @param item the menu to which the image icon will be added
+     */
     public void addImageToItem(JMenu item) {
         ImageIcon m = GExpert.createImageIcon("images/small/" + "blank.gif");
         item.setIcon(m);
     }
 
+    /**
+     * Adds an image icon to the specified menu item with the given name.
+     *
+     * @param item the menu item to which the image icon will be added
+     * @param name the name of the image icon
+     */
     public void addImageToItem(JMenuItem item, String name) {
         ImageIcon m = GExpert.createImageIcon("images/small/" + name + ".gif");
         if (m == null)
@@ -1093,24 +1269,20 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         item.setIcon(m);
     }
 
-    /*
-    public JMenuItem addAMenu(JMenu bar, String name, String tooltip, int ne, ActionListener listener, String image) {
-        JMenuItem item = addAMenu(bar, name, tooltip, listener);
-        item.setMnemonic(ne);
-        KeyStroke ctrlP = KeyStroke.getKeyStroke(ne, InputEvent.CTRL_MASK);
-        item.setAccelerator(ctrlP);
-        ImageIcon m = GExpert.createImageIcon("images/small/" + image + ".gif");
-        item.setIcon(m);
-        return item;
-    }
-    */
-
+    /**
+     * Adds a menu item to the specified menu bar with the given name, tooltip, and action listener.
+     *
+     * @param bar the menu bar to which the menu item will be added
+     * @param name the name of the menu item
+     * @param tooltip the tooltip text for the menu item
+     * @param listener the action listener for the menu item
+     * @return the created JMenuItem
+     */
     public JMenuItem addAMenu(JMenu bar, String name, String tooltip, ActionListener listener) {
         JMenuItem miten;
         miten = new JMenuItem(name);
         if (tooltip != null) {
             miten.setToolTipText(this.getLanguage(tooltip));
-            // System.out.println("Tooltip set for " + tooltip);
         }
         miten.setActionCommand(name);
         miten.setText(this.getLanguage(name));
@@ -1119,10 +1291,21 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return miten;
     }
 
+    /**
+     * Returns the current language settings.
+     *
+     * @return the current Language object
+     */
     public Language getLan() {
         return language;
     }
 
+    /**
+     * Returns the translated string for the given key.
+     *
+     * @param s1 the key to be translated
+     * @return the translated string
+     */
     public static String getLanguage(String s1) {
         s1 = getTranslationViaGettext(s1);
         if (s1 != null) {
@@ -1135,6 +1318,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return s2;
     }
 
+    /**
+     * Returns the tooltip text for the given key.
+     *
+     * @param s1 the key to be translated
+     * @return the translated tooltip text
+     */
     public static String getLanguageTip(String s1) {
         s1 = getTranslationViaGettext(s1);
         if (s1 != null) {
@@ -1150,10 +1339,23 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return s2;
     }
 
+    /**
+     * Returns the translated string for the given key using gettext.
+     *
+     * @param s the key to be translated
+     * @return the translated string
+     */
     public static String getTranslationViaGettext(String s) {
         return getTranslationViaGettext(s, (String) null);
     }
 
+    /**
+     * Returns the translated string for the given key using gettext with parameters.
+     *
+     * @param s the key to be translated
+     * @param p the parameters for the translation
+     * @return the translated string
+     */
     public static String getTranslationViaGettext(String s, String... p) {
         String gettextTranslation = null;
         try {
@@ -1173,29 +1375,50 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             }
             if (gettextTranslation != null && !gettextTranslation.equals(""))
                 return gettextTranslation;
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.err.println("Caught exception " + ex);
         }
         System.err.println("Missing translation: " + s + ", " + p);
         return "";
     }
 
+    /**
+     * Sets the action to "Move" and selects the move button.
+     */
     public void setActionMove() {
         sendAction("Move", buttonMove);
         buttonMove.setSelected(true);
     }
 
+    /**
+     * Sets the action to "Select" and selects the select button.
+     */
     public void setActionSelect() {
         sendAction("Select", buttonSelect);
         buttonSelect.setSelected(true);
     }
 
+    /**
+     * Handles action events by sending the action command and source to the sendAction method.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         Object src = e.getSource();
         sendAction(command, src);
     }
 
+    /**
+     * Processes an action command based on the provided command string and source.
+     *
+     * <p>This method interprets the action command triggered by the user and executes
+     * the corresponding operation such as saving files, opening dialogs, performing undo/redo actions,
+     * updating the UI state, and other application-specific functions.
+     *
+     * @param command the action command to be processed
+     * @param src the source object that triggered the command (e.g., JMenuItem, JToggleButton, or File)
+     */
     synchronized public void sendAction(String command, Object src) {
 
 
@@ -1302,14 +1525,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     dp.setFile((File) src);
                 }
                 this.saveAFile(false);
-            }
-            else this.saveAFile(true);
+            } else this.saveAFile(true);
 
         } else if (command.equalsIgnoreCase("Save GDD Proof as GraphViz File")) {
             this.saveGDDProofAsGraphViz(src);
-        }
-
-        else if (command.equals("Save as Text")) {
+        } else if (command.equals("Save as Text")) {
             if (!need_save())
                 return;
 
@@ -1350,7 +1570,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
             if (src instanceof File) {
                 openAFile((File) src);
-                } else {
+            } else {
 
                 JFileChooser chooser = getFileChooser(false);
                 int result = chooser.showOpenDialog(this);
@@ -1741,12 +1961,16 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
+    /**
+     * Saves the GDD proof as a GraphViz file.
+     *
+     * @param src the source object, which can be a File or another object
+     */
     private void saveGDDProofAsGraphViz(Object src) {
         File ff;
         if (src instanceof File) {
             ff = (File) src;
         } else {
-
             JFileChooser chooser = new JFileChooser();
             chooser.setFileFilter(new JFileFilter("gv"));
 
@@ -1777,7 +2001,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
-
+    /**
+     * Opens a GeoGebra file (.ggb) and loads its content.
+     *
+     * @param file the GeoGebra file to be opened
+     * @return true if the file was opened successfully, false otherwise
+     */
     private boolean openGGBFile(File file) {
         String path = file.getPath();
         File f = new File(path);
@@ -1794,7 +2023,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     dp.setFile(f);
                     DataInputStream in = dp.openInputFile(f.getPath());
                     //r = dp.LoadGGB(in,f.getPath());
-                    r = dp.LoadGGB2(in,f.getPath());
+                    r = dp.LoadGGB2(in, f.getPath());
                     // pprove.LoadProve(in); // TODO:
                     in.close();
                     // dp.stopUndoFlash(); // TODO:
@@ -1822,6 +2051,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return false;
     }
 
+    /**
+     * Parses a string in the format "x:y" into an array of two integers.
+     *
+     * @param s the string to be parsed
+     * @return an array of two integers parsed from the string
+     */
     int[] parse2Int(String s) {
         String[] sl = s.split(":");
         int[] t = new int[2];
@@ -1835,6 +2070,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return t;
     }
 
+    /**
+     * Sets the enabled state of the undo and redo buttons based on the sizes of the undo and redo lists.
+     */
     public void setBKState() {
         int n1 = dp.getUndolistSize();
         int n2 = dp.getRedolistSize();
@@ -1851,6 +2089,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
+    /**
+     * Prompts the user to save any unsaved changes before exiting the application.
+     *
+     * @return true if the user chose to save or discard changes, false if the user canceled the operation
+     */
     public boolean saveBeforeExit() {
         if (dp.need_save() && CMisc.needSave()) {
             int n = JOptionPane.showConfirmDialog(this, getLanguage("The diagram has been changed, do you want to save it?"),
@@ -1866,6 +2109,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return true;
     }
 
+    /**
+     * Checks if there are any unsaved changes.
+     *
+     * @return true if there are unsaved changes, false otherwise
+     */
     public boolean need_save() {
         if (!dp.need_save()) {
             this.setTipText(getLanguage("Nothing to be saved."));
@@ -1874,12 +2122,19 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return true;
     }
 
+    /**
+     * Saves the current file. If the file does not exist or the user chooses "Save as...",
+     * prompts the user to select a file location.
+     *
+     * @param n if true, prompts the user to select a file location
+     * @return true if the file was saved successfully, false otherwise
+     */
     public boolean saveAFile(boolean n) {
         File file = dp.getFile();
         int result = 0;
 
         if (need_save()) {
-            if (file == null || n) { //command.equals("Save as...")
+            if (file == null || n) { // command.equals("Save as...")
                 JFileChooser chooser = this.getFileChooser(false);
 
                 try {
@@ -1920,6 +2175,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return false;
     }
 
+    /**
+     * Clears the current diagram and resets the application state.
+     * Prompts the user to save any unsaved changes before clearing.
+     *
+     * @return 0 if the diagram was cleared successfully, 2 if the user canceled the operation
+     */
     public int Clear() {
         int n = 0;
         if (CMisc.isApplication() && !dp.isitSaved()) {
@@ -1929,8 +2190,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                 if (!saveAFile(false))
                     return 2;
             } else if (n == JOptionPane.NO_OPTION) {
-//                if (!saveAFile(true))
-//                    return 2;
+                // if (!saveAFile(true))
+                // return 2;
             } else {
                 return 2;
             }
@@ -1952,6 +2213,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return 0;
     }
 
+    /**
+     * Closes all open dialogs in the application.
+     */
     public void closeAllDialogs() {
         if (propt != null)
             propt.setVisible(false);
@@ -1969,22 +2233,32 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             ndialog.setVisible(false);
         if (adialog != null)
             adialog.setVisible(false);
-//        removeAllDependentDialogs();
+        // removeAllDependentDialogs();
     }
 
+    /**
+     * Sets the cursor to the specified predefined cursor type.
+     *
+     * @param t the predefined cursor type
+     */
     public void setDrawCursor(int t) {
         d.setCursor(Cursor.getPredefinedCursor(t));
     }
 
-    public void setDrawCursor(String s) {
-        d.setCursor(this.getDefinedCursor(s));
-    }
-
+    /**
+     * Reloads the list of points if the list panel and undo dialog are visible.
+     */
     public void reloadLP() {
         if (lp != null && udialog != null && udialog.isVisible())
             lp.reload();
     }
 
+    /**
+     * Prompts the user to confirm overwriting an existing file.
+     *
+     * @param name the name of the file to be overwritten
+     * @return true if the user chose to overwrite the file, false otherwise
+     */
     public boolean get_User_Overwrite_Option(String name) {
         if (JOptionPane.OK_OPTION != JOptionPane.showConfirmDialog(this,
                 getTranslationViaGettext("{0} already exists, do you want to overwrite it?", name),
@@ -1994,6 +2268,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return false;
     }
 
+    /**
+     * Saves the project to a file at the specified path.
+     *
+     * @param path the file path to save the project
+     * @throws IOException if an I/O error occurs during saving
+     */
     public void saveAFile(String path) throws IOException {
         DataOutputStream out = dp.openOutputFile(path);
         dp.Save(out);
@@ -2001,13 +2281,17 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         out.close();
     }
 
+    /**
+     * Saves the proof as a GIF image.
+     * Opens dialogs to select the region and file destination, then encodes the proof into a GIF.
+     */
     public void saveProofAsGIF() {
         if (provePanelbar == null)
             return;
         if (!need_save())
             return;
 
-        RectChooser1 r1 = new RectChooser1(this);
+        RectangleSelectionDialog r1 = new RectangleSelectionDialog(this);
         this.centerDialog(r1);
         r1.setVisible(true);
         if (!r1.getResult())
@@ -2059,6 +2343,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
+    /**
+     * Saves the current animation as a GIF.
+     * Displays GIF options, captures the animation frames, and writes them to the selected file.
+     */
     public void saveAsGIF() {
 
         if (!need_save())
@@ -2152,7 +2440,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
-
+    /**
+     * Saves the current view as an image file.
+     * Opens a file chooser to select the output format and destination, then writes the captured image.
+     */
     public void saveAsImage() {
 
         if (!need_save())
@@ -2248,7 +2539,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
-
+    /**
+     * Returns a buffered image of the drawing area bounded by the specified rectangle.
+     *
+     * @param rc the rectangle defining the area to capture
+     * @return the buffered image of the drawing area
+     */
     public BufferedImage getBufferedImage(Rectangle rc) {
         BufferedImage image = new BufferedImage((int) rc.getWidth(), (int) rc.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
@@ -2258,6 +2554,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return image;
     }
 
+    /**
+     * Returns a buffered image of the content pane bounded by the specified rectangle.
+     *
+     * @param rc the rectangle defining the area to capture
+     * @return the buffered image of the content pane
+     */
     public BufferedImage getBufferedImage2(Rectangle rc) {
         BufferedImage image = new BufferedImage((int) rc.getWidth(), (int) rc.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
@@ -2267,6 +2569,13 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return image;
     }
 
+    /**
+     * Opens and loads a project file.
+     * Adjusts the file extension if necessary, then loads the project data accordingly.
+     *
+     * @param file the file to open
+     * @return true if the file was successfully loaded, false otherwise
+     */
     public boolean openAFile(File file) {
         String path = file.getPath();
         File f = new File(path);
@@ -2330,6 +2639,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return false;
     }
 
+    /**
+     * Adds right-side buttons to the provided tool bar.
+     *
+     * @param toolBar the tool bar to which the right-side buttons are added
+     */
     protected void addRightButtons(JToolBar toolBar) {
         JToggleButton button = null;
 
@@ -2378,6 +2692,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         button.setEnabled(false);
     }
 
+    /**
+     * Adds primary action buttons to the provided tool bar.
+     *
+     * @param toolBar the tool bar to which the primary action buttons are added
+     */
     protected void addButtons(JToolBar toolBar) {
         JToggleButton button = null;
         //ButtonGroup group = new ButtonGroup();
@@ -2560,6 +2879,16 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     };
 
+    /**
+     * Creates a toggle button with the specified image, action command, tooltip text, alternate text, and an optional action listener.
+     *
+     * @param imageName the name of the image file (without extension) to be used as the button icon
+     * @param actionCommand the action command to be set for the button
+     * @param toolTipText the tooltip text to be displayed when the mouse hovers over the button
+     * @param altText the alternate text to be used if the image cannot be found
+     * @param t a boolean indicating whether to add an action listener to the button
+     * @return the created JToggleButton
+     */
     protected JToggleButton makeAButton(String imageName,
                                         String actionCommand,
                                         String toolTipText,
@@ -2572,6 +2901,15 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return button;
     }
 
+    /**
+     * Creates a toggle button with the specified image, action command, tooltip text, and alternate text.
+     *
+     * @param imageName the name of the image file (without extension) to be used as the button icon
+     * @param actionCommand the action command to be set for the button
+     * @param toolTipText the tooltip text to be displayed when the mouse hovers over the button
+     * @param altText the alternate text to be used if the image cannot be found
+     * @return the created JToggleButton
+     */
     protected JToggleButton makeAButton(String imageName,
                                         String actionCommand,
                                         String toolTipText,
@@ -2613,6 +2951,16 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     }
 
 
+    /**
+     * Creates a toggle button with two icons, one for the default state and one for the selected state.
+     *
+     * @param imageName the name of the image file (without extension) to be used as the button icon in the default state
+     * @param imageNameSelected the name of the image file (without extension) to be used as the button icon in the selected state
+     * @param actionCommand the action command to be set for the button
+     * @param toolTipText the tooltip text to be displayed when the mouse hovers over the button
+     * @param altText the alternate text to be used if the image cannot be found
+     * @return the created DActionButton with two status icons
+     */
     protected JToggleButton makeAButtonWith2ICon(String imageName,
                                                  String imageNameSelected,
                                                  String actionCommand,
@@ -2645,6 +2993,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     }
 
 
+    /**
+     * This method is used to reset all button status.
+     * It is used to reset all button status when the user drags a file on the window.
+     */
     public void resetAllButtonStatus() {
 
         if (lp != null) {
@@ -2669,6 +3021,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         BK4.setEnabled(true);
     }
 
+    /**
+     * This method is used to update the title of the window.
+     * It is used to update the title of the window when the user drags a file on the window.
+     */
     public void updateTitle() { // APPLET ONLY.
         if (!CMisc.isApplication())
             return;
@@ -2688,6 +3044,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
+    /**
+     * This method is used to restore the scroll.
+     * It is used to restore the scroll when the user drags a file on the window.
+     */
     public void restorScroll() {
         Rectangle rc = new Rectangle(0, 0, 0, 0);
         scroll.scrollRectToVisible(rc);
@@ -2695,6 +3055,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         d.revalidate();
     }
 
+    /**
+     * This method is used to set the text of the label.
+     * It is used to set the text of the label when the user drags a file on the window.
+     */
     public void setActionTip(String name, String tip) {
         if (pprove.isProverRunning())
             return;
@@ -2710,15 +3074,27 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     private int n = 4;
     private static Color fcolor = new Color(128, 0, 0);
 
+    /**
+     * This method is used to set the text of the label2.
+     * It is used to set the text of the label2 when the user drags a file on the window.
+     */
     public void setTextLabel2(String s, int n) {
         setTextLabel2(s);
         this.n = n;
     }
 
+    /**
+     * This method is used to set the text of the label2.
+     * It is used to set the text of the label2 when the user drags a file on the window.
+     */
     public void setLabelText2(String s) {
         label2.setText(" " + s);
     }
 
+    /**
+     * This method is used to stop the timer.
+     * It is used to stop the timer when the user drags a file on the window.
+     */
     public void stopTimer() {
         if (timer != null)
             timer.stop();
@@ -2726,6 +3102,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         label2.setForeground(fcolor);
     }
 
+    /**
+     * This method is used to set the text of the label2.
+     * It is used to set the text of the label2 when the user drags a file on the window.
+     */
     public void setTextLabel2(String s) {
         label2.setText(" " + s);
         if (timer == null && s != null && s.length() != 0) {
@@ -2751,31 +3131,31 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
+    /**
+     * This method is used to set the text of the tip.
+     * It is used to set the text of the tip when the user drags a file on the window.
+     */
     public void setTipText(String text) {
         this.setTextLabel2(text);
     }
 
-    public void Animate(int type) {
-        d.onAnimate(type);
-    }
-
 
     public void dragEnter(DropTargetDragEvent dtde) {
-        // System.out.println("Drag Enter");
     }
 
     public void dragExit(DropTargetEvent dte) {
-        //System.out.println("Drag Exit");
     }
 
     public void dragOver(DropTargetDragEvent dtde) {
-        // System.out.println("Drag Over");
     }
 
     public void dropActionChanged(DropTargetDragEvent dtde) {
-        // System.out.println("Drop Action Changed");
     }
 
+    /**
+     * This method is called when the user drops a file on the window.
+     * It accepts the drop and adds the file to the text area.
+     */
     public void drop(DropTargetDropEvent dtde) {
         try {
             // Ok, get the dropped object and try to figure out what it is
@@ -2830,6 +3210,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     public void windowOpened(WindowEvent e) {
     }
 
+    /**
+     * This method is called when the user closes the window.
+     * It asks the user if he wants to save the file before quitting.
+     */
     public void windowClosing(WindowEvent e) {
         if (saveBeforeExit())
             System.exit(0);
@@ -2852,10 +3236,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     }
 
 
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////
-
-
+    /**
+     * This class is used to create a popup menu with buttons.
+     * It is used to create the popup menu for the buttons in the toolbar.
+     */
     class JPopButtonsPanel extends JPopupMenu implements ActionListener, MouseListener, ItemListener, PopupMenuListener {
         JToggleButton button, b2, bselect;
         Vector vlist = new Vector();
@@ -2966,7 +3350,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
-
+    /**
+     * Create an ImageIcon from the path.
+     * @param path the path to the image
+     * @return the ImageIcon
+     */
     protected static ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = GExpert.class.getResource(path);
         if (imgURL == null) {
@@ -2975,6 +3363,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         return new ImageIcon(imgURL);
     }
 
+    /**
+     * Get the resource URL from the path.
+     * @param path the path to the resource
+     * @return the URL of the resource
+     */
     public static URL getResourceURL(String path) {
         return GExpert.class.getResource(path);
     }
@@ -3013,7 +3406,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
      * so we cannot wait for their finish her and cannot continue with the remaining requests. Instead,
      * we will continue performing the requests later, when the asynchronous command finishes.
      *
-     * @param exp a GExpert instance
+     * @param exp          a GExpert instance
      * @param breakOnProve if the "Prove" command should be assumed as an asynchronous call
      */
     public static void performCommandLineRequests(GExpert exp, boolean breakOnProve) {
@@ -3049,6 +3442,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     public static ArrayList<String> commandlineCommand = new ArrayList<>();
     public static ArrayList<Object> commandlineSrc = new ArrayList<>();
     public static int commandLineRequestsPerformed = 0;
+
     private static void processCommandLineOptions(String[] args) {
         Options options = new Options();
 
@@ -3100,10 +3494,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             // Process first argument as a file:
             String filename = cmd.getArgList().get(0);
             if (filename.endsWith(".gex")) {
-                commandlineCommand.add("Open");}
-            else {
+                commandlineCommand.add("Open");
+            } else {
                 commandlineCommand.add("Import");
-                }
+            }
             commandlineSrc.add(new File(filename));
 
             if (cmd.hasOption("p")) {
@@ -3134,8 +3528,15 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
+    // TODO START CONVERTING HERE, this is the main method
+    /**
+     * Main entry point of the application.
+     * Processes command line options and initializes the GUI.
+     *
+     * @param args command line arguments.
+     */
     public static void main(String[] args) {
-        System.out.println("Java " +  Version.getNameAndVersion());
+        System.out.println("Java " + Version.getNameAndVersion());
         processCommandLineOptions(args);
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -3145,7 +3546,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         });
     }
 
-
+    /**
+     * Opens the specified URL in the system's default web browser.
+     *
+     * @param url the URL to open.
+     */
     public static void openURL(String url) {
         String osName = System.getProperty("os.name");
         try {
@@ -3179,6 +3584,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
+    /**
+     * Saves the current view as a PDF file.
+     * Prompts the user to choose a file and generates the PDF output.
+     */
     public void saveAsPDF() {
         if (!need_save())
             return;
@@ -3214,7 +3623,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             }
             if (file.exists()) {
                 int n2 = JOptionPane.showConfirmDialog(this,
-                                getTranslationViaGettext("{0} already exists, do you want to overwrite it?", file.getName()),
+                        getTranslationViaGettext("{0} already exists, do you want to overwrite it?", file.getName()),
                         "File Exists", JOptionPane.YES_NO_CANCEL_OPTION);
                 if (n2 != JOptionPane.YES_OPTION) {
                     return;
@@ -3237,17 +3646,35 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
+    /**
+     * Handles key typed events.
+     *
+     * @param e the key event.
+     */
     public void keyTyped(KeyEvent e) {
     }
 
+    /**
+     * Handles key pressed events.
+     *
+     * @param e the key event.
+     */
     public void keyPressed(KeyEvent e) {
         int k = 0;
     }
 
+    /**
+     * Handles key released events.
+     *
+     * @param e the key event.
+     */
     public void keyReleased(KeyEvent e) {
     }
 
-
+    /**
+     * This class is used to group buttons in a button group.
+     * It allows for easy retrieval of buttons by their action command.
+     */
     class Group extends ButtonGroup {
         public Group() {
             super();
@@ -3268,19 +3695,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
-//    public void addDependentDialog(JDialog dlg) {
-//        if (dlg != null && !depdlglist.contains(dlg))
-//            depdlglist.add(dlg);
-//    }
-
-//    private void removeAllDependentDialogs() {
-//        for (int i = 0; i < depdlglist.size(); i++) {
-//            JDialog dlg = (JDialog) depdlglist.get(i);
-//            dlg.setVisible(false);
-//        }
-//        depdlglist.clear();
-//    }
-
+    /**
+     * Sets the default UI font for all components.
+     *
+     * @param f the FontUIResource to be used.
+     */
     public static void setUIFont(javax.swing.plaf.FontUIResource f) {
 
         java.util.Enumeration keys = UIManager.getDefaults().keys();
@@ -3292,16 +3711,23 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
+    /**
+     * Starts or initializes the component.
+     */
     public void start() {
     }
 
+    /**
+     * Stops or cleans up the component.
+     */
     public void stop() {
     }
 
-    public void destroy() {
-    }
-
-
+    /**
+     * Updates the action pool using the currently selected list of objects.
+     *
+     * @param n the pool identifier to update.
+     */
     public void updateActionPool(int n) {
         Vector v = dp.getSelectList();
         int nx = vpoolist.size();
@@ -3315,6 +3741,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
+    /**
+     * Configures the action pool based on the specified pool type.
+     *
+     * @param a the pool type identifier.
+     */
     public void setActionPool(int a) {
         int n = dp.getPooln(a);
         int sz = vpoolist.size();
@@ -3346,6 +3777,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         }
     }
 
+    /**
+     * This class represents a label in the action pool.
+     * It displays the type of object and allows for mouse interaction.
+     */
     class OPoolabel extends JLabel implements MouseListener {
         private int otype = -1;
         private Object obj;
@@ -3424,12 +3859,18 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     }
 
+    /**
+     * Cancels the current action triggered by key events.
+     */
     public void onKeyCancel() {
         dp.cancelCurrentAction();
         //this.setActionMove();
 //        closeAllDialogs();
     }
 
+    /**
+     * Initializes the key mapping by registering a KeyEventPostProcessor.
+     */
     public void initKeyMap() {
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventPostProcessor(new KeyProcessor());
@@ -3437,6 +3878,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
     public static long HotKeyTimer = 0;
 
+    /**
+     * This class processes key events and performs actions based on the key pressed.
+     */
     class KeyProcessor implements KeyEventPostProcessor {
         public boolean postProcessKeyEvent(KeyEvent event) {
             int key = event.getKeyCode();
@@ -3495,11 +3939,14 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
 }
 
-////////////////////////////////////////////////
-////// End of GExpert.java.
-///////////////////////////////////////////////
+/// /////////////////////////////////////////////
+/// /// End of GExpert.java.
+/// ////////////////////////////////////////////
 
-
+/**
+ * This class is used to create a button with two icons, one for the selected state and one for the unselected state.
+ * It is used in the GExpert application to create buttons with different icons depending on their state.
+ */
 class DActionButton extends ActionButton {
     private Icon ico1, ico2;
 
@@ -3507,11 +3954,22 @@ class DActionButton extends ActionButton {
         super(co);
     }
 
+    /**
+     * Sets the icons for the two status states of the button.
+     *
+     * @param ico1 the icon for the unselected state
+     * @param ico2 the icon for the selected state
+     */
     public void set2StatusIcons(Icon ico1, Icon ico2) {
         this.ico1 = ico1;
         this.ico2 = ico2;
     }
 
+    /**
+     * Sets the selected state of the button and updates the icon accordingly.
+     *
+     * @param b true if the button is selected, false otherwise
+     */
     public void setSelected(boolean b) {
         super.setSelected(b);
         if (b) {
@@ -3519,9 +3977,13 @@ class DActionButton extends ActionButton {
         } else {
             this.setIcon(ico1);
         }
-
     }
 
+    /**
+     * Enables or disables the button and sets the icon to the unselected state.
+     *
+     * @param b true to enable the button, false to disable it
+     */
     public void setEnabled(boolean b) {
         super.setEnabled(b);
         this.setIcon(ico1);
@@ -3529,7 +3991,10 @@ class DActionButton extends ActionButton {
     }
 }
 
-
+/**
+ * This class is used to create a button with a custom UI. It is used in the GExpert application to create buttons
+ * with a specific look and feel.
+ */
 class ActionButton extends JToggleButton {
 
     private static EntityButtonUI ui = new EntityButtonUI();
@@ -3543,10 +4008,6 @@ class ActionButton extends JToggleButton {
         dm = new Dimension(32, 28);
     }
 
-    public void setButtonSize(int x, int y) {
-        dm.setSize(x, y);
-    }
-
     public Dimension getPreferredSize() {
         return dm;
     }
@@ -3554,12 +4015,12 @@ class ActionButton extends JToggleButton {
     public Dimension getMaximumSize() {
         return dm;
     }
-
-    //////////////////////////////////////////////////////////////////////
-
-
 }
 
+/**
+ * This class is used to create a button with two states (selected and unselected) and two icons. It is used in the
+ * GExpert application to create buttons with different icons depending on their state.
+ */
 class TStateButton extends JToggleButton {
     ImageIcon icon1, icon2;
 

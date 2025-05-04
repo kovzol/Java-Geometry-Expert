@@ -8,20 +8,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-4-10
- * Time: 22:42:17
- * To change this template use File | Settings | File Templates.
- */                       
+ * A dialog for setting GIF options in GeoGebra.
+ */
 public class GIFOptionDialog extends JBaseDialog implements ActionListener, ChangeListener {
 
-    JSlider slider;
-    JTextField field1, field2;
-    JButton bok, bcancel;
-    boolean result = false;
+    private JSlider slider;
+    private JTextField field1, field2;
+    private JButton bok, bcancel;
+    private boolean result = false;
     private GExpert gxInstance;
 
+    /**
+     * Constructs a new GIFOptionDialog with the specified GExpert instance and title.
+     *
+     * @param fr    the GExpert instance
+     * @param title the title of the dialog
+     */
     public GIFOptionDialog(GExpert fr, String title) {
         super(fr.getFrame(), title, true);
         gxInstance = fr;
@@ -40,7 +42,6 @@ public class GIFOptionDialog extends JBaseDialog implements ActionListener, Chan
         panel.add(panel1);
         panel.add(Box.createVerticalStrut(5));
         slider = new JSlider(1, 20, 1);
-//        slider = new JSlider(0, 20);
         slider.setValue(2);
         slider.setPaintTicks(true);
         slider.setMinorTickSpacing(1);
@@ -63,20 +64,39 @@ public class GIFOptionDialog extends JBaseDialog implements ActionListener, Chan
         this.setSize(300, 150);
     }
 
+    /**
+     * Sets the default value of the slider.
+     *
+     * @param n the default value
+     */
     public void setDefaultValue(int n) {
         slider.setValue(n);
         this.updateValue();
     }
 
+    /**
+     * Returns the result of the dialog.
+     *
+     * @return true if OK was pressed, false otherwise
+     */
     public boolean getReturnResult() {
         return result;
     }
 
+    /**
+     * Returns the quality value based on the slider position.
+     *
+     * @return the quality value
+     */
     public int getQuality() {
         return 21 - slider.getValue();
     }
 
-
+    /**
+     * Handles action events for the OK and Cancel buttons.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == bok)
             result = true;
@@ -84,20 +104,30 @@ public class GIFOptionDialog extends JBaseDialog implements ActionListener, Chan
         this.setVisible(false);
     }
 
+    /**
+     * Handles state change events for the slider.
+     *
+     * @param e the change event
+     */
     public void stateChanged(ChangeEvent e) {
         updateValue();
     }
 
+    /**
+     * Updates the text fields based on the slider value.
+     */
     private void updateValue() {
         int v = slider.getValue();
         field1.setText(Integer.toString(v));
         field2.setText(getRate(v));
     }
 
-    private int getValue() {
-        return 21 - slider.getValue();
-    }
-
+    /**
+     * Returns the quality rate as a string based on the slider value.
+     *
+     * @param n the slider value
+     * @return the quality rate
+     */
     private String getRate(int n) {
         if (n > 18)
             return gxInstance.getLanguage("Best");
@@ -109,6 +139,4 @@ public class GIFOptionDialog extends JBaseDialog implements ActionListener, Chan
             return gxInstance.getLanguage("Low");
         else return gxInstance.getLanguage("Very Low");
     }
-
-
 }

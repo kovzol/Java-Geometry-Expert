@@ -293,14 +293,6 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
     }
 
     /**
-     * Handles window opened events (empty implementation).
-     *
-     * @param e the window event
-     */
-    public void windowOpened(WindowEvent e) {
-    }
-
-    /**
      * Sets the visibility of this panel.
      *
      * @param aFlag true to make the component visible; false to

@@ -12,11 +12,9 @@ import java.awt.event.KeyListener;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-5-31
- * Time: 21:47:16
- * To change this template use File | Settings | File Templates.
+ * TextValueEditor is a dialog for editing mathematical expressions.
+ * It allows users to input and evaluate expressions using buttons and a text pane.
+ * The dialog also provides options to insert data points and functions into the expression.
  */
 public class TextValueEditor extends JBaseDialog implements ActionListener, KeyListener {
 
@@ -28,6 +26,12 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
     GExpert gxInstance;
     CText text = null;
 
+    /**
+     * Sets the text in the editor based on the provided CText object.
+     * Inserts the string from the CText into the styled document and updates the editor value.
+     *
+     * @param t the CText object containing the text to be set
+     */
     public void setText(CText t) {
         text = t;
         //pane.setText(t.getString());
@@ -41,10 +45,15 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
         onValueUpdated();
     }
 
+    /**
+     * Constructs a new TextValueEditor dialog with a specified GExpert context.
+     * Initializes the user interface components for editing mathematical expressions.
+     *
+     * @param gx the GExpert instance providing context for the dialog
+     */
     public TextValueEditor(GExpert gx) {
         super(gx.getFrame(), GExpert.getLanguage("Calculation"));
         gxInstance = gx;
-
 
 
         JPanel panel = new JPanel();
@@ -186,13 +195,21 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
 
     }
 
+    /**
+     * Sets the text in the text pane and updates the value.
+     *
+     * @param s the text to set in the text pane
+     */
     public void setText(String s) {
         pane.setText(s);
         this.onValueUpdated();
     }
 
+    /**
+     * Updates the value displayed in the pane1 based on the text in the pane.
+     * Parses the text, calculates the value, and updates the pane1 with the result.
+     */
     public void onValueUpdated() {
-
         String s = pane.getText();
         if (s == null || s.length() == 0) {
             pane1.setText("");
@@ -206,11 +223,16 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
                 doc.remove(0, doc.getLength());
                 doc.insertString(0, Double.toString(r), doc.getStyle("large"));
             } catch (Exception ee) {
+                // Handle exception
             }
-
         }
     }
 
+    /**
+     * Handles action events for the buttons in the dialog.
+     *
+     * @param e the ActionEvent triggered by clicking a button
+     */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equalsIgnoreCase("OK")) {
@@ -248,7 +270,6 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
                 }
             } catch (Exception ee) {
                 ee.printStackTrace();
-
             }
         } else {
             if (command.equals("+") || command.equals("-") || command.equals("*") || command.equals("/"))
@@ -259,20 +280,34 @@ public class TextValueEditor extends JBaseDialog implements ActionListener, KeyL
                 doc.insertString(doc.getLength(), command, doc.getStyle("large1"));
                 onValueUpdated();
             } catch (Exception ee) {
-
+                // Handle exception
             }
-
         }
     }
 
+    /**
+     * Handles the key typed event.
+     *
+     * @param e the KeyEvent triggered by typing a key
+     */
     public void keyTyped(KeyEvent e) {
-
+        // No implementation needed
     }
 
+    /**
+     * Handles the key pressed event.
+     *
+     * @param e the KeyEvent triggered by pressing a key
+     */
     public void keyPressed(KeyEvent e) {
         super.keyPressed(e);
     }
 
+    /**
+     * Handles the key released event and updates the value.
+     *
+     * @param e the KeyEvent triggered by releasing a key
+     */
     public void keyReleased(KeyEvent e) {
         onValueUpdated();
     }

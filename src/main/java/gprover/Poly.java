@@ -1,6 +1,12 @@
 package gprover;
 
 
+/**
+ * The Poly class extends MathBase and provides implementations
+ * for various polynomial operations such as addition, subtraction,
+ * multiplication, division, and remainder computation.
+ * It also supports simplification and printing functionalities for polynomials.
+ */
 public class Poly extends MathBase {
     /* initials */
     public static int PRO_VEC = 330;
@@ -16,24 +22,46 @@ public class Poly extends MathBase {
     int pro_type = 0;
     Var all_var, last_var;
 
+/**
+     * Initializes the polynomial by setting up the initial variable.
+     */
     void init_poly() {
         all_var = new Var();
         last_var = all_var;
         all_var.nx = null;
     }
 
+    /**
+     * Constructs a Poly object and initializes it.
+     */
     public Poly() {
         init_poly();
     }
 
+    /**
+     * Creates a new XTerm object.
+     *
+     * @return a new XTerm object
+     */
     XTerm get_x() {
         return (new XTerm());
     }
 
+    /**
+     * Creates a new DTerm object.
+     *
+     * @return a new DTerm object
+     */
     DTerm get_d() {
         return (new DTerm());
     }
 
+    /**
+     * Creates a new XTerm object representing a number.
+     *
+     * @param n the number to represent
+     * @return a new XTerm object representing the number
+     */
     XTerm get_n(long n) {
         XTerm p1;
         p1 = get_x();
@@ -42,6 +70,12 @@ public class Poly extends MathBase {
         return (p1);
     }
 
+    /**
+     * Creates a new XTerm object representing a number.
+     *
+     * @param n the number to represent
+     * @return a new XTerm object representing the number
+     */
     XTerm get_num(long n) {
         XTerm p1;
         p1 = get_x();
@@ -50,6 +84,13 @@ public class Poly extends MathBase {
         return (p1);
     }
 
+    /**
+     * Creates a new XTerm object with a variable and a DTerm.
+     *
+     * @param v the variable
+     * @param dp1 the DTerm
+     * @return a new XTerm object
+     */
     XTerm get_xt(Var v, DTerm dp1) {
         XTerm xp1;
         xp1 = get_x();
@@ -58,10 +99,12 @@ public class Poly extends MathBase {
         return (xp1);
     }
 
-    XTerm get_s(char[] ch) {
-        return (get_m(mk_svar(ch)));
-    }
-
+    /**
+     * Creates a new XTerm object representing a monomial.
+     *
+     * @param vn the variable
+     * @return a new XTerm object representing the monomial
+     */
     XTerm get_m(Var vn) {
         DTerm dp1;
         XTerm xp1;
@@ -74,6 +117,14 @@ public class Poly extends MathBase {
         }
     }
 
+    /**
+     * Creates a new XTerm object representing a variable raised to a power.
+     *
+     * @param v the variable
+     * @param d the degree
+     * @param p the polynomial term
+     * @return a new XTerm object
+     */
     XTerm get_v(Var v, int d, XTerm p) {
         DTerm dp1;
         XTerm xp1;
@@ -88,7 +139,14 @@ public class Poly extends MathBase {
         }
     }
 
-
+    /**
+     * Creates a new DTerm object.
+     *
+     * @param d the degree
+     * @param xp1 the XTerm
+     * @param dp1 the next DTerm
+     * @return a new DTerm object
+     */
     DTerm get_dt(int d, XTerm xp1, DTerm dp1) {
         DTerm d1;
         d1 = get_d();
@@ -98,12 +156,27 @@ public class Poly extends MathBase {
         return (d1);
     }
 
+    /**
+     * Placeholder method for handling DTerm objects.
+     *
+     * @param dpt the DTerm object
+     */
     void put_d(DTerm dpt) {
     }
 
+    /**
+     * Placeholder method for handling XTerm objects.
+     *
+     * @param xpt the XTerm object
+     */
     void put_x(XTerm xpt) {
     }
 
+    /**
+     * Handles the given XTerm object and its associated DTerm objects.
+     *
+     * @param p1 the XTerm object
+     */
     void put_p(XTerm p1) {
         DTerm dp1, dp2;
         if (p1 != null) {
@@ -122,6 +195,11 @@ public class Poly extends MathBase {
         }
     }
 
+    /**
+     * Handles the given DTerm objects.
+     *
+     * @param dp0 the head of the DTerm list
+     */
     void put_ps(DTerm dp0) {
         DTerm dp1;
         while (dp0 != null) {
@@ -132,12 +210,24 @@ public class Poly extends MathBase {
         }
     }
 
-/* xtermnomials */
-
+    /**
+     * Checks if two numbers are equal.
+     *
+     * @param c1 the first number
+     * @param c2 the second number
+     * @return true if the numbers are equal, false otherwise
+     */
     boolean num_eq(long c1, long c2) {
         return c1 == c2;
     }
 
+    /**
+     * Checks if two polynomial terms are equal.
+     *
+     * @param p1 the first polynomial term
+     * @param p2 the second polynomial term
+     * @return true if the polynomial terms are equal, false otherwise
+     */
     boolean eq_poly(XTerm p1, XTerm p2) {
         if ((p1.var == null) && (p2.var == null))
             return (num_eq(p1.c, p2.c));
@@ -147,6 +237,13 @@ public class Poly extends MathBase {
             return (eq_pols(p1.ps, p2.ps));
     }
 
+    /**
+     * Checks if two lists of polynomial terms are equal.
+     *
+     * @param dp1 the first list of polynomial terms
+     * @param dp2 the second list of polynomial terms
+     * @return true if the lists of polynomial terms are equal, false otherwise
+     */
     boolean eq_pols(DTerm dp1, DTerm dp2) {
         while ((dp1 != null) && (dp2 != null)) {
             if ((dp1.deg != dp2.deg) ||
@@ -159,6 +256,12 @@ public class Poly extends MathBase {
         return (dp1 == dp2);
     }
 
+    /**
+     * Creates a copy of the given polynomial term.
+     *
+     * @param p1 the polynomial term to copy
+     * @return a copy of the polynomial term
+     */
     XTerm cp_poly(XTerm p1) {
         if (p1.var == null)
             return (get_num(p1.c));
@@ -166,6 +269,12 @@ public class Poly extends MathBase {
             return (get_xt(p1.var, cp_pols(p1.ps)));
     }
 
+    /**
+     * Creates a copy of the given list of polynomial terms.
+     *
+     * @param dp1 the list of polynomial terms to copy
+     * @return a copy of the list of polynomial terms
+     */
     DTerm cp_pols(DTerm dp1) {
         DTerm dt2, dp2;
         dt2 = new DTerm();
@@ -179,26 +288,35 @@ public class Poly extends MathBase {
         return (dt2.nx);
     }
 
+    /**
+     * Creates a new XTerm object representing zero.
+     *
+     * @return a new XTerm object representing zero
+     */
     XTerm pzero() {
         return (get_n(0L));
     }
 
-/*
-int pclass(p)
-xterm *p;
-{ if (numberp(p)) return(0);
- else		  return(p.var);
-} */
-
-    int ldeg(XTerm p)
-//xterm p;
-    {
+    /**
+     * Gets the leading degree of the polynomial term.
+     *
+     * @param p the polynomial term
+     * @return the leading degree of the polynomial term
+     */
+    int ldeg(XTerm p) {
         DTerm dp1;
         if (p.var == null) return (0);
         dp1 = p.ps;
         return (dp1.deg);
     }
 
+    /**
+     * Gets the degree of the polynomial term with respect to a variable.
+     *
+     * @param p the polynomial term
+     * @param v the variable
+     * @return the degree of the polynomial term with respect to the variable
+     */
     int pdeg(XTerm p, Var v) {
         int tem, md;
         DTerm dp1;
@@ -215,6 +333,13 @@ xterm *p;
         return (md);
     }
 
+    /**
+     * Gets the minimum degree of the polynomial term with respect to a variable.
+     *
+     * @param p the polynomial term
+     * @param v the variable
+     * @return the minimum degree of the polynomial term with respect to the variable
+     */
     int mdeg(XTerm p, Var v) {
         int tem, md;
         DTerm ps1;
@@ -235,7 +360,12 @@ xterm *p;
         return (md);
     }
 
-
+    /**
+     * Gets the leading coefficient of the polynomial term.
+     *
+     * @param p the polynomial term
+     * @return the leading coefficient of the polynomial term
+     */
     long lcc(XTerm p) {
         DTerm dp1;
         while (p.var != null) {
@@ -245,13 +375,24 @@ xterm *p;
         return (p.c);
     }
 
-
+    /**
+     * Gets the first coefficient of the polynomial term.
+     *
+     * @param p the polynomial term
+     * @return the first coefficient of the polynomial term
+     */
     long fcc(XTerm p) {
         return (lcc(p));
     }
 
     static long lcc_p;
 
+    /**
+     * Computes the content (greatest common divisor) of the polynomial coefficients.
+     *
+     * @param p the polynomial term
+     * @return the content of the polynomial as an integer
+     */
     int lcontent(XTerm p) {
         lcc_p = mk_num(0L);
         lcont1(p);
@@ -259,6 +400,11 @@ xterm *p;
         return (int) (lcc_p);
     }
 
+    /**
+     * Recursively computes and updates the content based on the polynomial's coefficients.
+     *
+     * @param p the polynomial term
+     */
     void lcont1(XTerm p) {
         DTerm ps1;
         if (p.var == null) {
@@ -272,6 +418,12 @@ xterm *p;
         }
     }
 
+    /**
+     * Retrieves the initial term of the polynomial.
+     *
+     * @param p the polynomial term
+     * @return the initial term of the polynomial or null if not applicable
+     */
     XTerm init(XTerm p) {
         DTerm dp1;
         if (p.var == null) return (null);
@@ -279,6 +431,12 @@ xterm *p;
         return (dp1.p);
     }
 
+    /**
+     * Retrieves a copy of the initial term of the polynomial.
+     *
+     * @param p the polynomial term
+     * @return a copy of the first term of the polynomial or null if not applicable
+     */
     XTerm cp_init(XTerm p) {
         DTerm dp1;
         if (p.var == null) return (null);
@@ -286,11 +444,25 @@ xterm *p;
         return (cp_poly(dp1.p));
     }
 
-
+    /**
+     * Initializes the polynomial with respect to the specified variable.
+     *
+     * @param p the polynomial term
+     * @param v the variable used for initialization
+     * @return the initialized polynomial term for the given variable
+     */
     XTerm init_v(XTerm p, Var v) {
         return (pinit(p, v, pdeg(p, v)));
     }
 
+    /**
+     * Adjusts the polynomial by removing lower degree parts relative to the specified variable.
+     *
+     * @param p the polynomial term
+     * @param v the variable for initialization
+     * @param d the degree threshold
+     * @return the modified polynomial after initialization
+     */
     XTerm pinit(XTerm p, Var v, int d) {
         DTerm dt, dp0, dp1, dp2;
         if (p.var == null) {
@@ -337,12 +509,12 @@ xterm *p;
         return (psimp(p, dt.nx));
     }
 
-    XTerm cp_rem(XTerm p)
-//xterm p;
-    {
-        return (rem(cp_poly(p)));
-    }
-
+    /**
+     * Computes the remainder of the polynomial by removing its first term.
+     *
+     * @param p the polynomial term
+     * @return the polynomial remainder as an XTerm
+     */
     XTerm rem(XTerm p)
 //xterm p;
     {
@@ -358,16 +530,12 @@ xterm *p;
         return (psimp(p, dp2));
     }
 
-    int mono_pol(XTerm p) {
-        DTerm ps;
-        while (p.var != null) {
-            ps = p.ps;
-            if (ps.nx != null) return (0);
-            p = ps.p;
-        }
-        return (1);
-    }
-
+    /**
+     * Calculates the number of immediate terms in the polynomial.
+     *
+     * @param p the polynomial term
+     * @return the count of terms linked directly to the polynomial
+     */
     int tlength(XTerm p) {
         DTerm dp1;
         int count = 0;
@@ -383,17 +551,12 @@ xterm *p;
         return (count);
     }
 
-    int mlength(XTerm p) {
-        DTerm dp1;
-        int count = 0;
-        if (p.var != null) {
-            count++;
-            dp1 = p.ps;
-            p = dp1.p;
-        }
-        return (count);
-    }
-
+    /**
+     * Computes the total number of subterms within the polynomial.
+     *
+     * @param p the polynomial term
+     * @return the total length of the polynomial, including nested subterms
+     */
     int plength(XTerm p) {
         DTerm dp1;
         int count = 0;
@@ -412,6 +575,12 @@ xterm *p;
         return (count);
     }
 
+    /**
+     * Computes the length of the DTerm linked list representing differential terms.
+     *
+     * @param dp1 the head of the DTerm list
+     * @return the total number of DTerm nodes
+     */
     int dlength(DTerm dp1) {
         int count = 0;
         while (dp1 != null) {
@@ -421,26 +590,13 @@ xterm *p;
         return (count);
     }
 
-    boolean pless(XTerm p1, XTerm p2) {
-        if ((p1.var == null) && (p2.var == null))
-            return (false);
-        else if (p1.var == null)
-            return (true);
-        else if (p2.var == null)
-            return (false);
-        else if (p1.var == p2.var) {
-            if (ldeg(p1) < ldeg(p2))
-                return (true);
-            else if (ldeg(p1) > ldeg(p2))
-                return (false);
-            else
-                return (plength(p1) < plength(p2));
-        } else if (vless(p1.var, p2.var))
-            return (true);
-        else
-            return (false);
-    }
-
+    /**
+     * Compares two polynomial terms for ordering.
+     *
+     * @param p1 the first polynomial term
+     * @param p2 the second polynomial term
+     * @return true if the first polynomial is considered less than the second; false otherwise
+     */
     boolean pls(XTerm p1, XTerm p2) {
         int k1, k2;
         if ((p1.var == null) && (p2.var == null))
@@ -466,6 +622,13 @@ xterm *p;
             return (false);
     }
 
+    /**
+     * Simplifies the polynomial by updating its terms with the provided DTerm list.
+     *
+     * @param p1 the polynomial term to simplify
+     * @param dp0 the DTerm list used for simplification
+     * @return the simplified polynomial term
+     */
     XTerm psimp(XTerm p1, DTerm dp0) {
         XTerm p;
         if (dp0 == null) {
@@ -483,22 +646,15 @@ xterm *p;
         return (p1);
     }
 
-
-    int bad_poly(XTerm p) {
-        DTerm ps;
-        if (p.var == null) return (bad_num(p.c));
-        for (ps = p.ps; ps != null; ps = ps.nx) {
-            if (bad_poly(ps.p) != 0) return (1);
-        }
-        return (0);
-    }
-
-    int bad_num(long n) {
-        return 0;
-    }
-
 /* Polynomial Plus: destructive */
 
+    /**
+     * Adds two polynomial terms.
+     *
+     * @param p1 the first polynomial term
+     * @param p2 the second polynomial term
+     * @return the sum of p1 and p2 as a new polynomial term
+     */
     XTerm pplus(XTerm p1, XTerm p2) {
         DTerm dp1;
         XTerm xp1;
@@ -533,6 +689,13 @@ xterm *p;
         return (pcplus(p2, p1));
     }
 
+    /**
+     * Merges two lists of polynomial terms represented as DTerm linked lists.
+     *
+     * @param dp1 the first DTerm list
+     * @param dp2 the second DTerm list
+     * @return the merged DTerm list representing the summed polynomial parts
+     */
     DTerm pplus1(DTerm dp1, DTerm dp2) {
         DTerm firstd, dp0, dp3;
 
@@ -572,7 +735,13 @@ xterm *p;
         return (firstd.nx);
     }
 
-    // c < p2
+    /**
+     * Adds a constant polynomial term to a polynomial represented by a DTerm chain.
+     *
+     * @param c the constant polynomial term to add
+     * @param p2 the polynomial term (as an XTerm) to which to add the constant
+     * @return the resulting polynomial term after addition
+     */
     XTerm pcplus(XTerm c, XTerm p2) {
         DTerm dp1, dp2;
         dp2 = new DTerm();
@@ -596,12 +765,25 @@ xterm *p;
 
 /* Polynomial difference: destructive */
 
+    /**
+     * Subtracts the second polynomial term from the first polynomial term destructively.
+     *
+     * @param p1 the polynomial term from which to subtract
+     * @param p2 the polynomial term to subtract
+     * @return the resulting polynomial term after subtraction
+     */
     XTerm pminus(XTerm p1, XTerm p2) {
         XTerm q1;
         q1 = neg_poly(p2);
         return (pplus(p1, q1));
     }
 
+    /**
+     * Negates a polynomial term destructively.
+     *
+     * @param p the polynomial term to negate
+     * @return the negated polynomial term
+     */
     XTerm neg_poly(XTerm p) {
         DTerm dp1;
         if (p.var == null) {
@@ -618,6 +800,13 @@ xterm *p;
 
 /* polynomial times: destructive */
 
+    /**
+     * Multiplies two polynomial terms destructively.
+     *
+     * @param p1 the first polynomial term
+     * @param p2 the second polynomial term
+     * @return the product polynomial term
+     */
     XTerm ptimes(XTerm p1, XTerm p2) {
         DTerm dp1;
         if (p1.var == null) {
@@ -648,6 +837,13 @@ xterm *p;
         return (pctimes(p2, p1));
     }
 
+    /**
+     * Multiplies two DTerm polynomial parts and accumulates the result.
+     *
+     * @param dp1 the first DTerm list
+     * @param dp2 the second DTerm list
+     * @return the resulting DTerm list from the multiplication
+     */
     DTerm ptimes1(DTerm dp1, DTerm dp2)
 //dterm dp1,dp2;
     {
@@ -680,6 +876,13 @@ xterm *p;
         return (dp0);
     }
 
+    /**
+     * Multiplies a constant polynomial term with a polynomial represented as an XTerm.
+     *
+     * @param c the constant polynomial term
+     * @param p the polynomial term to multiply
+     * @return the resulting polynomial term after multiplication
+     */
     XTerm pctimes(XTerm c, XTerm p)
 //xterm c,p;
     {
@@ -693,6 +896,13 @@ xterm *p;
         return (p);
     }
 
+    /**
+     * Raises a polynomial term to the specified integer power.
+     *
+     * @param p the polynomial term
+     * @param n the exponent
+     * @return the polynomial term raised to the power n
+     */
     XTerm ppower(XTerm p, int n) {
         XTerm pp1 = get_n(1L);
         if (n <= 0) {
@@ -711,6 +921,13 @@ xterm *p;
         return (ptimes(pp1, p));
     }
 
+    /**
+     * Performs polynomial division when the divisor is a unit.
+     *
+     * @param p1 the dividend polynomial term
+     * @param p2 the divisor polynomial term
+     * @return the resulting polynomial term representing the remainder after division
+     */
     XTerm ppdiv(XTerm p1, XTerm p2) {
         XTerm p3;
         if (unitp(p2)) return (p1);
@@ -725,8 +942,14 @@ xterm *p;
 
 /* polynomial division: destructive for p1 */
 
+    /**
+     * Divides the first polynomial term by the second polynomial term destructively.
+     *
+     * @param p1 the dividend polynomial term
+     * @param p2 the divisor polynomial term
+     * @return the resulting polynomial term after division, or null if division is not possible
+     */
     XTerm pdiv(XTerm p1, XTerm p2)
-//xterm p1, p2;
     {
         DTerm dp1;
 
@@ -768,9 +991,14 @@ xterm *p;
         return (null);
     }
 
-
+    /**
+     * Divides a polynomial term by a constant polynomial term.
+     *
+     * @param p the polynomial term to be divided
+     * @param c the constant polynomial term divisor
+     * @return the resulting polynomial term after division, or null if division is not possible
+     */
     XTerm pcdiv(XTerm p, XTerm c)
-//xterm p,c;
     {
         DTerm dp1;
         for (dp1 = p.ps; dp1 != null; dp1 = dp1.nx) {
@@ -783,6 +1011,14 @@ xterm *p;
         return (p);
     }
 
+    /**
+     * Divides the polynomial represented by dp1 by dp2.
+     * Returns the quotient as a new DTerm or null if the division fails.
+     *
+     * @param dp1 the dividend polynomial as a DTerm structure
+     * @param dp2 the divisor polynomial as a DTerm structure
+     * @return the quotient polynomial as a DTerm, or null if division is not exact
+     */
     DTerm pdiv1(DTerm dp1, DTerm dp2) {
         DTerm fird, qterm, dp0, dp3, dp4;
         XTerm lcf, qp;
@@ -840,6 +1076,13 @@ xterm *p;
 
     char init_deg;
 
+    /**
+     * Computes the polynomial remainder (prem) of p1 with respect to p2.
+     *
+     * @param p1 the dividend polynomial as an XTerm structure
+     * @param p2 the divisor polynomial as an XTerm structure
+     * @return the remainder polynomial as an XTerm, or a zero polynomial if p2 is null
+     */
     XTerm prem(XTerm p1, XTerm p2) {
         init_deg = 0;
         if (p2.var == null) {
@@ -852,6 +1095,14 @@ xterm *p;
         return (prem_var(p1, p2, p2.var));
     }
 
+    /**
+     * Computes the polynomial remainder when both p1 and p2 share the same variable.
+     * Uses an evaluation-based approach.
+     *
+     * @param p1 the dividend polynomial as an XTerm structure
+     * @param p2 the divisor polynomial as an XTerm structure with the same variable as p1
+     * @return the remainder polynomial as an XTerm, or null if the division is not exact
+     */
     XTerm prem_ev(XTerm p1, XTerm p2) {
         DTerm dt1, dp1, dp2, dp3, dp4;
         XTerm ip1, ip2, pp1, pp2;
@@ -926,6 +1177,14 @@ xterm *p;
         return (null);
     }
 
+    /**
+     * Computes the polynomial remainder for p1 with respect to p2 when they have different variable orderings.
+     *
+     * @param p1 the dividend polynomial as an XTerm structure
+     * @param p2 the divisor polynomial as an XTerm structure
+     * @param v the variable used for division operations
+     * @return the remainder polynomial as an XTerm, or a zero polynomial if division is complete
+     */
     XTerm prem_var(XTerm p1, XTerm p2, Var v) {
         XTerm ip0, ip1, ip2, u1, u2, v2;
         int deg1, deg2;
@@ -970,57 +1229,45 @@ xterm *p;
         return (p1);
     }
 
-    void xerror(char ch)
-//char *ch;
-    {
-        Cm.print("\n\n Syntax error:\n\n");
-        //      Cm.print(ch);
-        Cm.print("\n\n Please check your input.\n");
-    }
-
-/* print polynomials  */
-
-//      public void gprint(String s)
-//      {
-//            System.out.print(s);
-//      }
-
-    void dprint(DTerm dp1) {
-        if (dp1 == null)
-            gprint("null\r\n");
-        else {
-            while (dp1 != null) {
-                gprint("\r\n");
-                print_ind(dp1.p);
-                gprint("\r\n");
-                if (plength(dp1.p) < 20) pprint(dp1.p);
-                dp1 = dp1.nx;
-            }
-        }
-    }
-
+    /**
+     * Prints the polynomial in a compact form.
+     *
+     * @param p1 the polynomial to be printed as an XTerm structure
+     */
     final void xprint(XTerm p1) {
         print_p(p1, (char) 0);
     }
 
+    /**
+     * Prints the polynomial followed by a newline.
+     *
+     * @param p1 the polynomial to be printed as an XTerm structure
+     */
     void pprint(XTerm p1) {
         print_p(p1, (char) 0);
         gprint("\r\n");
     }
 
-    void eprint(XTerm p1) {
-        print_p(p1, (char) 0);
-        gprint("=0\r\n");
-    }
-
     static int char_no;
 
-    void print_p(XTerm p1, char mk)            // print_pp1
+    /**
+     * Prints the polynomial with a specified marker for formatting.
+     *
+     * @param p1 the polynomial to be printed as an XTerm structure
+     * @param mk the marker character to use during printing
+     */
+    void print_p(XTerm p1, char mk)
     {
         char_no = 0;
         print_p1(p1, mk);
     }
 
+    /**
+     * Helper method that prints the polynomial in detailed format.
+     *
+     * @param p1 the polynomial to be printed as an XTerm structure
+     * @param mk the marker character used for formatting
+     */
     void print_p1(XTerm p1, char mk) {
         DTerm dp1;
         XTerm xp1, xp2;
@@ -1137,6 +1384,11 @@ xterm *p;
     }
 
 
+    /**
+     * Prints the index information of the given polynomial.
+     *
+     * @param p the polynomial as an XTerm structure whose index is to be printed
+     */
     void print_ind(XTerm p) {
         Var v;
         if (p == null)
@@ -1161,44 +1413,40 @@ xterm *p;
     }
 
 
-    XTerm c_pplus(XTerm x, XTerm y) {
-        return pplus(cp_poly(x), cp_poly(y));
-    }
-
-    XTerm c_pminus(XTerm x, XTerm y) {
-        return pminus(cp_poly(x), cp_poly(y));
-    }
-
-    XTerm c_ptimes(XTerm x, XTerm y) {
-        return ptimes(cp_poly(x), cp_poly(y));
-    }
-
-    XTerm c_pdiv(XTerm x, XTerm y) {
-        return pdiv(cp_poly(x), y);
-    }
-
+    /**
+     * Adds three polynomial terms.
+     *
+     * @param x the first polynomial term
+     * @param y the second polynomial term
+     * @param z the third polynomial term
+     * @return the sum of the three polynomial terms
+     */
     XTerm pplus3(XTerm x, XTerm y, XTerm z) {
         return pplus(x, pplus(y, z));
     }
 
-    XTerm ptimes3(XTerm x, XTerm y, XTerm z) {
-        return ptimes(x, ptimes(y, z));
-    }
-
+    /**
+     * Adds four polynomial terms.
+     *
+     * @param x the first polynomial term
+     * @param y the second polynomial term
+     * @param z the third polynomial term
+     * @param w the fourth polynomial term
+     * @return the sum of the four polynomial terms
+     */
     XTerm pplus4(XTerm x, XTerm y, XTerm z, XTerm w) {
         return pplus(pplus(x, y), pplus(z, w));
     }
 
-    XTerm ptimes4(XTerm x, XTerm y, XTerm z, XTerm w) {
-        return ptimes(ptimes(x, y), ptimes(z, w));
-    }
-
-//-----------------------------------------
-//-----------------------------------------var.cpp
-
-
     static Var svar = new Var();
 
+    /**
+     * Compares two Var objects for equality based on their type and contents.
+     *
+     * @param v1 the first Var object
+     * @param v2 the second Var object
+     * @return true if the two variables are considered equal, false otherwise
+     */
     boolean eq_var(Var v1, Var v2) {
         int i;
         if (v1.nm == 0 || v1.nm == 99) {
@@ -1212,6 +1460,12 @@ xterm *p;
             return (false);
     }
 
+    /**
+     * Creates a copy of the given Var object.
+     *
+     * @param v the Var object to copy
+     * @return a new Var object that is a copy of v
+     */
     Var cp_var(Var v) {
         Var v1;
         int i;
@@ -1225,6 +1479,12 @@ xterm *p;
         return (v1);
     }
 
+    /**
+     * Retrieves an existing Var object equal to the given one or adds a new one.
+     *
+     * @param v the Var object to add or look up
+     * @return an existing Var equal to v or a new copy if not found
+     */
     Var ad_var(Var v) {
         Var v1;
         char i;
@@ -1242,6 +1502,16 @@ xterm *p;
         return (v1);
     }
 
+    /**
+     * Constructs and adds a new Var object using the given parameters.
+     *
+     * @param nm the variable identifier
+     * @param p1 the first parameter
+     * @param p2 the second parameter
+     * @param p3 the third parameter
+     * @param p4 the fourth parameter
+     * @return the resulting Var object
+     */
     Var mk_var(int nm, int p1, int p2, int p3, int p4) {
         svar.nm = nm;
         svar.pt[0] = p1;
@@ -1251,22 +1521,13 @@ xterm *p;
         return (ad_var(svar));
     }
 
-    Var mk_svar(char[] nm) {
-        char i;
-        for (i = 0; i < 9; i++) svar.p[i] = 0;
-        svar.nm = 0;
-        strcpy(svar.p, nm);
-        return (ad_var(svar));
-    }
-
-    Var mk_cvar(char[] nm) {
-        char i;
-        for (i = 0; i < 9; i++) svar.p[i] = 0;
-        strcpy(svar.p, nm);
-        svar.nm = 99;
-        return (ad_var(svar));
-    }
-
+    /**
+     * Creates a new "w" Var object by initializing its parameters to zero
+     * and setting its identifier based on the provided number.
+     *
+     * @param nm the input number determining the variable type
+     * @return the newly created Var object
+     */
     Var mk_wvar(int nm) {
         for (int i = 0; i < 4; i++) svar.pt[i] = 0;
         if (nm > 0)
@@ -1279,7 +1540,14 @@ xterm *p;
         return (ad_var(svar));
     }
 
-
+    /**
+     * Compares two integer arrays element-wise from index 0 to n.
+     *
+     * @param a1 the first integer array
+     * @param a2 the second integer array
+     * @param n the last index (inclusive) to compare
+     * @return 1 if the first differing element in a1 is less than in a2, otherwise 0
+     */
     int ials(int a1[], int a2[], int n) {
         char i;
         for (i = 0; i <= n; ++i) {
@@ -1290,6 +1558,13 @@ xterm *p;
         return (0);
     }
 
+    /**
+     * Determines the maximum point value from a Var object's point array
+     * based on the variable type.
+     *
+     * @param v the Var object to evaluate
+     * @return the maximum value among the relevant point entries
+     */
     int lpt(Var v) {
         int k = v.pt[0];
         if (v.nm == 1) {
@@ -1300,6 +1575,13 @@ xterm *p;
         return (k);
     }
 
+    /**
+     * Compares two Var objects for ordering based on type and point values.
+     *
+     * @param v1 the first Var object
+     * @param v2 the second Var object
+     * @return true if v1 is considered less than v2, false otherwise
+     */
     boolean vless(Var v1, Var v2) {
         int m, l1, l2;
 
@@ -1388,6 +1670,12 @@ xterm *p;
         return (m != 0);
     }
 
+    /**
+     * Extracts a linked list of unique variables present in the given polynomial term.
+     *
+     * @param p the polynomial term represented as an XTerm
+     * @return the head of a linked list of distinct Var objects from p
+     */
     XTerm vars_in_p(XTerm p) {
         DTerm ps1;
         XTerm p0, p1, p2;
@@ -1432,14 +1720,12 @@ xterm *p;
         return (p0);
     }
 
-
-    void print_vars(Var v, char mk) {
-        while (v != null) {
-            print_var(v, mk);
-            v = v.nx;
-        }
-    }
-
+    /**
+     * Prints the variable using a specific format determined by its type and mode.
+     *
+     * @param v the Var object to print
+     * @param mk the mode flag determining the format
+     */
     void print_var(Var v, int mk) {
         switch (v.nm) {
             case 0:
@@ -1596,263 +1882,13 @@ xterm *p;
         }
     }
 
-//      void print_fang(int p1, int p2, int p3, int p4)
-//      {
-//            int p0;
-//            if (p1 == p4)
-//            {
-//                  p0 = p4;
-//                  p4 = p3;
-//                  p3 = p0;
-//            } else if (p2 == p3)
-//            {
-//                  p0 = p1;
-//                  p1 = p2;
-//                  p2 = p0;
-//            } else if (p2 == p4)
-//            {
-//                  p0 = p1;
-//                  p1 = p2;
-//                  p2 = p0;
-//                  p0 = p4;
-//                  p4 = p3;
-//                  p3 = p0;
-//            }
-////        sprintf(txt, "%s[%s%s,%s%s]", Cm.s2078),
-////                pt_name(p1), pt_name(p2), pt_name(p3), pt_name(p4));
-//            gprint(Cm.s2078 + "[");
-//      }
-
+    /**
+     * Prints a point identifier using the established naming conventions.
+     *
+     * @param p the point identifier
+     */
     void print_pt(int p) {
         //sprintf(txt,"%s",pt_name(p));
         gprint(pt_name(p));
-    }
-
-/////--------------------------------------------------getp.cpp
-
-    static DTerm p_stk = new DTerm();
-    public static int gno;
-
-    public XTerm rd_pol(String sterm[]) {
-
-        gno = 0;
-        int nterm = sterm.length;
-        DTerm ps1;
-
-        p_stk.nx = null;
-        if (strcmp(sterm[gno], "-") == 0 || strcmp(sterm[gno], "+") == 0) {
-            p_stk.nx = get_dt(1, get_n(0L), p_stk.nx);
-        }
-
-
-        ps1 = p_stk.nx;
-        while (gno < nterm && strcmp(sterm[gno], ";") != 0 &&
-                strcmp(sterm[gno], "=") != 0 && strcmp(sterm[gno], ".") != 0)// && (in_hyp == 0 || (ps1 != null && !(ps1.nx == null && ps1.deg == 1))))
-        {
-
-            if (strcmp(sterm[gno], "(") == 0) {
-                if (ps1 != null && ps1.deg == 1) {
-                    do_it(6);
-                    gno--;
-                }
-                p_stk.nx = get_dt(2, null, p_stk.nx);
-                gno++;
-                if (strcmp(sterm[gno], "-") == 0 || strcmp(sterm[gno], "+") == 0) {
-                    p_stk.nx = get_dt(1, get_n(0L), p_stk.nx);
-                }
-            } else if (strcmp(sterm[gno], ")") == 0) {
-                do_it(3);
-            } else if (strcmp(sterm[gno], "+") == 0) {
-                do_it(4);
-            } else if (strcmp(sterm[gno], "-") == 0) {
-                do_it(5);
-            } else if (strcmp(sterm[gno], "*") == 0) {
-                do_it(6);
-            } else if (strcmp(sterm[gno], "/") == 0) {
-                do_it(7);
-            } else if (strcmp(sterm[gno], "^") == 0) {
-                do_it(8);
-            } else if (num_ch(sterm[gno])) {
-                if (ps1 != null && ps1.deg == 1) {
-                    do_it(6);
-                }
-                p_stk.nx = get_dt(1, get_n(ch2num(sterm[gno])), p_stk.nx);
-                gno++;
-            } else {
-                if (ps1 != null && ps1.deg == 1)
-                    do_it(6);
-                else
-                    gno++;
-                p_stk.nx = get_dt(1, get_m(mk_svar(sterm[gno - 1].toCharArray())), p_stk.nx);
-            }
-            ps1 = p_stk.nx;
-        }
-
-        if (gno > nterm) {
-            gerror(" expression error\n");
-            return (null);
-        }
-        do_it(0);
-        return (ps1.p);
-    }
-
-
-    public void doother(String[] sterm) {
-        //       if (strcmp(sterm[gno], Cm.s3000) == 0) {
-        //cannot dela with (RATIO B F F C)<-
-//                p_stk.nx = get_dt(1, trim_r(fptno(gno + 1), fptno(gno + 2), fptno(gno + 3), fptno(gno + 4)), p_stk.nx);
-//                gno += 5;
-//            } else if (strcmp(sterm[gno], Cm.s3001) == 0) {
-//                //gao need
-//                p_stk.nx = get_dt(1, trim_f(fptno(gno + 1), fptno(gno + 2), fptno(gno + 3), fptno(gno + 4)), p_stk.nx);
-//                gno += 5;
-//            } else if (strcmp(sterm[gno], Cm.s3002) == 0) {
-//                if (strcmp(sterm[gno + 4], ")") == 0) {
-//                    p_stk.nx = get_dt(1, trim_a(fptno(gno + 1), fptno(gno + 2), fptno(gno + 3), fptno(gno + 3)), p_stk.nx);
-//                    gno += 4;
-//                } else if (strcmp(sterm[gno + 5], ")") == 0) {
-//                    p_stk.nx = get_dt(1, trim_a(fptno(gno + 1), fptno(gno + 2), fptno(gno + 3), fptno(gno + 4)), p_stk.nx);
-//                    gno += 5;
-//                } else
-//                    gerror("area is not proper");
-//            } else if (strcmp(sterm[gno], Cm.s3008) == 0) {
-//                if (strcmp(sterm[gno + 4], ")") == 0) {
-//                    p_stk.nx = get_dt(1, trim_g(fptno(gno + 1), fptno(gno + 2), fptno(gno + 2), fptno(gno + 3)), p_stk.nx);
-//                    gno += 4;
-//                } else if (strcmp(sterm[gno + 5], ")") == 0) {
-//                    p_stk.nx = get_dt(1, trim_g(fptno(gno + 1), fptno(gno + 2), fptno(gno + 3), fptno(gno + 4)), p_stk.nx);
-//                    gno += 5;
-//                } else
-//                    gerror("py is not proper");
-//            } else if (strcmp(sterm[gno], Cm.s3003) == 0) {
-//                p_stk.nx = get_dt(1, trim_g(fptno(gno + 1), fptno(gno + 2), fptno(gno + 2), fptno(gno + 1)), p_stk.nx);
-//                gno += 3;
-//            } else if (strcmp(sterm[gno], Cm.s3004) == 0) {
-//                if (strcmp(sterm[gno + 2], ")") == 0) {
-//                    p_stk.nx = get_dt(1, trim_vec(fptno(gno + 1), 0), p_stk.nx);
-//                    gno += 2;
-//                } else if (strcmp(sterm[gno + 3], ")") == 0) {
-//                    p_stk.nx = get_dt(1, trim_vec(fptno(gno + 1), fptno(gno + 2)), p_stk.nx);
-//                    gno += 3;
-//                } else
-//                    gerror("vector is not proper");
-//            } else if (strcmp(sterm[gno], Cm.s3009) == 0) {
-//                p_stk.nx = get_dt(1, trim_l(fptno(gno + 1), fptno(gno + 2)), p_stk.nx);
-//                gno += 3;
-//            } else if (strcmp(sterm[gno], Cm.s3005) == 0) {
-//                p_stk.nx = get_dt(1,
-//                        ptimes(trim_r(fptno(gno + 3), fptno(gno + 1), fptno(gno + 3), fptno(gno + 2)),
-//                                trim_r(fptno(gno + 4), fptno(gno + 2), fptno(gno + 4), fptno(gno + 1))),
-//                        p_stk.nx);
-//                gno += 5;
-//            } else if (num_ch(sterm[gno])) {
-//                if (ps1 != null && ps1.deg == 1) {
-//                    do_it(6);
-//                }
-//                p_stk.nx = get_dt(1, get_n(ch2num(sterm[gno])), p_stk.nx);
-//                gno++;
-//            } else {
-//                if (ps1 != null && ps1.deg == 1)
-//                    do_it(6);
-//                else
-//                    gno++;
-//                p_stk.nx = get_dt(1, get_m(mk_svar(sterm[gno - 1])), p_stk.nx);
-//            }
-    }
-
-    void do_it(int op) {
-        DTerm ps1, ps2, ps3;
-        XTerm p1;
-        int deg;
-
-
-        ps1 = p_stk.nx;
-        if (ps1 == null) {
-            p_stk.nx = get_dt(op, null, p_stk.nx);
-            return;
-        }
-
-        if (ps1.deg == 2) {
-            if (op == 3) {
-                p_stk.nx = ps1.nx;
-                put_d(ps1);
-            } else
-                p_stk.nx = get_dt(op, null, p_stk.nx);
-            gno++;
-            return;
-        }
-
-        if (ps1.deg != 1) gerror("expresion error 13");
-        ps2 = ps1.nx;
-        while (ps2 != null && ps2.deg >= op) {
-            ps3 = ps2.nx;
-            if (ps3 == null) {
-                if (ps2.deg != 2) gerror("expression error 14");
-                ps1.nx = ps2.nx;
-                put_d(ps2);
-            } else if (ps3.deg == 2) {
-                if (ps2.deg == 4)
-                    ps1.p = neg_poly(ps1.p);
-                else if (ps2.deg != 3) gerror("expression error15");
-                ps1.nx = ps3.nx;
-                put_d(ps3);
-                put_d(ps2);
-            } else if (ps2.deg == 4) {
-                ps1.p = pplus(ps1.p, ps3.p);
-                ps1.nx = ps3.nx;
-                put_d(ps2);
-                put_d(ps3);
-            } else if (ps2.deg == 5) {
-                ps1.p = pminus(ps3.p, ps1.p);
-                ps1.nx = ps3.nx;
-                put_d(ps2);
-                put_d(ps3);
-            } else if (ps2.deg == 6) {
-                ps1.p = ptimes(ps1.p, ps3.p);
-                ps1.nx = ps3.nx;
-                put_d(ps2);
-                put_d(ps3);
-            } else if (ps2.deg == 8) {
-                p1 = ps1.p;
-                if (p1.var != null) gerror("expression error");
-                deg = num_int(p1.c);
-                ps1.p = ppower(ps3.p, deg);
-                ps1.nx = ps3.nx;
-                put_d(ps2);
-                put_d(ps3);
-            } else {
-                gerror("expression error 99");
-                return;
-            }
-            ps2 = ps1.nx;
-        }
-        if (op == 3) {
-            if (ps2 == null || ps2.deg != 2) gerror("expression error 17");
-            ps1.nx = ps2.nx;
-            put_d(ps2);
-            gno++;
-        } else if (op > 3) {
-            p_stk.nx = get_dt(op, null, p_stk.nx);
-            gno++;
-        }
-
-    }
-
-
-    boolean num_ch(String sn) {
-        byte[] ch = sn.getBytes();
-        int i = 0;
-        if (ch[i] == '-')
-            i++;
-        else if (ch[i] == '+') i++;
-        while (i < ch.length && ch[i] != '\0') {
-            if (ch[i] < '0' || ch[i] > '9') return (false);
-            i++;
-        }
-        return (true);
-    }
-
-    long ch2num(String sn) {
-        return Integer.parseInt(sn);
     }
 }

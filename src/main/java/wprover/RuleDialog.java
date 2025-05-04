@@ -12,19 +12,26 @@ import java.awt.event.*;
 import java.util.EventObject;
 import java.util.Vector;
 
-
+/**
+ * RuleDialog is a class that extends JBaseDialog and implements ChangeListener,
+ * ActionListener, and MouseListener interfaces. It provides a dialog for displaying
+ * and managing rules related to the GDD method and the Full Angle method.
+ */
 public class RuleDialog extends JBaseDialog implements ChangeListener, ActionListener, MouseListener {
 
     private GExpert gxInstance;
     private JTree tree, treef;
     private JTabbedPane pane;
 
+    /**
+     * Constructs a new RuleDialog with the specified GExpert instance.
+     *
+     * @param owner the GExpert instance to associate with this dialog
+     */
     public RuleDialog(GExpert owner) {
         super(owner.getFrame());
 
         gxInstance = owner;
-//        if (gxInstance != null)
-//            gxInstance.addDependentDialog(this);
 
         this.setTitle(GExpert.getLanguage("Rules for the GDD Method"));
 
@@ -45,7 +52,7 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer();
         tree.setCellRenderer(renderer);
 
-//        tree.setCellEditor(new CheckBoxNodeEditor(tree));
+        // tree.setCellEditor(new CheckBoxNodeEditor(tree));
         tree.setEditable(false);
         tree.addMouseListener(this);
 
@@ -64,23 +71,40 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         JScrollPane scrollPane1 = new JScrollPane(treef);
         pane.addTab(GExpert.getLanguage("Rules for the Full Angle Method"), scrollPane1);
 
-
         this.getContentPane().add(pane, BorderLayout.CENTER);
         expandAll();
         this.setSize(600, owner.getHeight());
     }
 
+    /**
+     * Sets the selected tab in the JTabbedPane.
+     *
+     * @param n the index of the tab to select
+     */
     public void setSelected(int n) {
         pane.setSelectedIndex(n);
     }
 
+    /**
+     * Called when the state of the JTabbedPane changes.
+     *
+     * @param e the ChangeEvent that triggered this method
+     */
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == pane) {
             this.setTitle(pane.getTitleAt(pane.getSelectedIndex()));
         }
     }
 
-
+    /**
+     * Creates a NamedVector with the specified name and a subset of the given vector.
+     *
+     * @param n     the name of the NamedVector
+     * @param vlist the vector to create the subset from
+     * @param t1    the starting index of the subset
+     * @param t2    the ending index of the subset
+     * @return the created NamedVector
+     */
     private Vector createNameVector(String n, Vector vlist, int t1, int t2) {
         CheckBoxNode[] list1 = new CheckBoxNode[t2 - t1 + 1];
         createCheckBox(list1, vlist, t1, t2);
@@ -88,6 +112,14 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         return v1;
     }
 
+    /**
+     * Creates an array of CheckBoxNode objects from a subset of the given vector.
+     *
+     * @param list  the array to store the CheckBoxNode objects
+     * @param vlist the vector to create the subset from
+     * @param t1    the starting index of the subset
+     * @param t2    the ending index of the subset
+     */
     private void createCheckBox(CheckBoxNode[] list, Vector vlist, int t1, int t2) {
         int index = 0;
         for (int i = t1; i < vlist.size() && i <= t2; i++) {
@@ -98,6 +130,9 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         }
     }
 
+    /**
+     * Expands all rows in the JTree components.
+     */
     private void expandAll() {
         int n = tree.getRowCount();
         for (int i = n - 1; i >= 0; i--)
@@ -107,6 +142,11 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
             treef.expandRow(i);
     }
 
+    /**
+     * Returns the selected GRule from the currently selected tab.
+     *
+     * @return the selected GRule, or null if no rule is selected
+     */
     public GRule getSelectedRule() {
         DefaultMutableTreeNode nd = null;
         JTree tt = null;
@@ -130,6 +170,11 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         return null;
     }
 
+    /**
+     * Handles mouse click events on the JTree components.
+     *
+     * @param e the MouseEvent that triggered this method
+     */
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3) {
             DefaultMutableTreeNode nd = null;
@@ -152,7 +197,6 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
                 this.showRuleDialog(r);
             }
         }
-
     }
 
     public void mousePressed(MouseEvent e) {
@@ -167,6 +211,10 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
     public void mouseExited(MouseEvent e) {
     }
 
+    /**
+     * CheckBoxNodeRenderer is a class that implements TreeCellRenderer to render
+     * checkboxes in a JTree.
+     */
     class CheckBoxNodeRenderer implements TreeCellRenderer {
         private JCheckBox leafRenderer = new JCheckBox();
         private DefaultTreeCellRenderer nonLeafRenderer = new DefaultTreeCellRenderer();
@@ -240,75 +288,9 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         }
     }
 
-    class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
-
-        CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer();
-
-        ChangeEvent changeEvent = null;
-
-        JTree tree;
-
-        public CheckBoxNodeEditor(JTree tree) {
-            this.tree = tree;
-//            renderer.leafRenderer.addChangeListener();
-            renderer.leafRenderer.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                    int n = 0;
-                    if (renderer.leafNode != null)
-                        renderer.leafNode.updateValue(renderer.leafRenderer.isSelected());
-                }
-
-            });
-        }
-
-        public Object getCellEditorValue() {
-            JCheckBox checkbox = renderer.getLeafRenderer();
-            CheckBoxNode nd = renderer.getLeafNode();
-            if (nd != null && checkbox != null)
-                nd.setSelected(checkbox.isSelected());
-            return nd;
-        }
-
-        public boolean isCellEditable(EventObject event) {
-            boolean returnValue = false;
-            if (event instanceof MouseEvent) {
-                MouseEvent mouseEvent = (MouseEvent) event;
-                TreePath path = tree.getPathForLocation(mouseEvent.getX(),
-                        mouseEvent.getY());
-                if (path != null) {
-                    Object node = path.getLastPathComponent();
-                    if ((node != null) && (node instanceof DefaultMutableTreeNode)) {
-                        DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
-                        Object userObject = treeNode.getUserObject();
-                        returnValue = ((treeNode.isLeaf()) && (userObject instanceof CheckBoxNode));
-                    }
-                }
-            }
-            return returnValue;
-        }
-
-        public Component getTreeCellEditorComponent(JTree tree, Object value,
-                                                    boolean selected, boolean expanded, boolean leaf, int row) {
-
-            Component editor = renderer.getTreeCellRendererComponent(tree, value,
-                    true, expanded, leaf, row, true);
-
-            // editor always selected / focused
-            ItemListener itemListener = new ItemListener() {
-                public void itemStateChanged(ItemEvent itemEvent) {
-                    if (stopCellEditing()) {
-                        fireEditingStopped();
-                    }
-                }
-            };
-            if (editor instanceof JCheckBox) {
-                ((JCheckBox) editor).addItemListener(itemListener);
-            }
-
-            return editor;
-        }
-    }
-
+    /**
+     * CheckBoxNode is a class that represents a node in the JTree with a checkbox.
+     */
     class CheckBoxNode {
 
         private String text;
@@ -354,6 +336,9 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         }
     }
 
+    /**
+     * NamedVector is a class that extends Vector and adds a name attribute.
+     */
     class NamedVector extends Vector {
         String name;
 
@@ -400,6 +385,9 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
 
     }
 
+    /**
+     * Popup menu for displaying rule options.
+     */
     class ppMenu extends JPopupMenu {
 
         private GRule rule;

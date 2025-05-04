@@ -2,13 +2,11 @@ package maths;
 
 
 import java.util.Vector;
-//import java.util.regex.Pattern;
-//import java.math.BigDecimal;
-//import java.math.MathContext;
 import java.math.BigInteger;
-//import java.math.RoundingMode;
 
-
+/**
+ * This class provides basic polynomial operations.
+ */
 public class PolyBasic {
     private static int MAXSTR = 100;
     final private static double ZERO = 10E-6;
@@ -16,19 +14,41 @@ public class PolyBasic {
     private static boolean BB_STOP = false;
     private static boolean RM_SCOEF = true;
 
+    /**
+     * Returns the singleton instance of the PolyBasic class.
+     *
+     * @return the singleton instance of PolyBasic
+     */
 
     public static PolyBasic getInstance() {
         return basic;
     }
 
+    /**
+     * Sets the BB\_STOP flag.
+     *
+     * @param t the new value for the BB\_STOP flag
+     */
     public static void setbbStop(boolean t) {
         BB_STOP = t;
     }
 
+    /**
+     * Sets the RM\_SCOEF flag.
+     *
+     * @param s the new value for the RM\_SCOEF flag
+     */
     public static void setRMCOEF(boolean s) {
         RM_SCOEF = s;
     }
-
+/**
+     * Adds two polynomials.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @param es a flag indicating whether to perform exact simplification
+     * @return the resulting polynomial after addition
+     */
     private TMono pp_plus(TMono p1, TMono p2, boolean es) {
 
         if (p1 == null) return p2;
@@ -100,16 +120,36 @@ public class PolyBasic {
         return (poly);
 
     }
-
+    /**
+     * Subtracts one polynomial from another.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return the resulting polynomial after subtraction
+     */
     private TMono pp_minus(TMono p1, TMono p2) {
         TMono m = pp_plus(p1, cp_times(-1, p2), true);
         return m;
     }
 
+    /**
+         * Multiplies a polynomial by a constant.
+         *
+         * @param c the constant to multiply by
+         * @param p1 the polynomial to be multiplied
+         * @return the resulting polynomial after multiplication
+         */
     public TMono cp_times(long c, TMono p1) {
         return cp_times(BigInteger.valueOf(c), p1);
     }
 
+    /**
+     * Multiplies a polynomial by a constant.
+     *
+     * @param c the constant to multiply by
+     * @param p1 the polynomial to be multiplied
+     * @return the resulting polynomial after multiplication
+     */
     private TMono cp_times(BigInteger c, TMono p1) {
         if (p1 == null || c.compareTo(BigInteger.ZERO) == 0) return null;
         if (c.compareTo(BigInteger.ONE) == 0) return p1;
@@ -126,6 +166,13 @@ public class PolyBasic {
         return p1;
     }
 
+    /**
+     * Multiplies two polynomials.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return the resulting polynomial after multiplication
+     */
     private TMono pp_times(TMono p1, TMono p2) //(m X n)
     {
         if (p1 == null || p2 == null) return null;
@@ -168,6 +215,13 @@ public class PolyBasic {
         return (poly);
     }
 
+    /**
+     * Multiplies two monomials.
+     *
+     * @param p1 the first monomial
+     * @param p2 the second monomial
+     * @return the resulting monomial after multiplication
+     */
     private TMono mp_times(TMono p1, TMono p2) // p1.x <= p2.x
     {
         TMono poly = p2;
@@ -199,6 +253,12 @@ public class PolyBasic {
         return (poly);
     }
 
+    /**
+     * Checks if the given polynomial is zero.
+     *
+     * @param m the polynomial to check
+     * @return true if the polynomial is zero, false otherwise
+     */
     public boolean check_zero(TMono m) {
         if (m == null) return false;
         if (m.x == 0 && m.value() == 0) return true;
@@ -211,16 +271,30 @@ public class PolyBasic {
         return false;
     }
 
+    /**
+     * Returns the degree of the given polynomial `p` with respect to the variable `x`.
+     *
+     * @param p the polynomial to check
+     * @param x the variable to check the degree against
+     * @return the degree of the polynomial with respect to `x`
+     */
     public int deg(TMono p, int x) {
         if (p.x == x) return p.deg;
         if (p.x > x) {
             int d1 = deg(p.coef, x);
             int d2 = deg(p.next, x);
-            return d1 > d2 ? d1 : d2;
+            return Math.max(d1, d2);
         }
         return 0;
     }
 
+    /**
+     * Reduces the given polynomial `m` using the provided parameters `p`.
+     *
+     * @param m the polynomial to be reduced
+     * @param p the array of parameters used for reduction
+     * @return the reduced polynomial
+     */
     public TMono reduce(TMono m, Param[] p) {
         if (m == null)
             return null;
@@ -249,7 +323,13 @@ public class PolyBasic {
         return m;
     }
 
-    // simplify  an tmono to low degree. Note here we don't remove coef.
+    /**
+     * Simplifies a polynomial to a lower degree without removing coefficients.
+     *
+     * @param m the polynomial to simplify
+     * @param p the array of parameters used for simplification
+     * @return the simplified polynomial
+     */
     public TMono simplify(TMono m, Param[] p) {
         if (m == null)
             return null;
@@ -277,6 +357,13 @@ public class PolyBasic {
         return m;
     }
 
+    /**
+     * Computes the pseudo-remainder of two polynomials.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return the pseudo-remainder of the two polynomials
+     */
     public TMono prem(TMono p1, TMono p2) {
         if (p1 == null)
             return p1;
@@ -301,6 +388,13 @@ public class PolyBasic {
         return result;
     }
 
+    /**
+     * Returns the degree of the polynomial `m` with respect to the variable `x`.
+     *
+     * @param m the polynomial
+     * @param x the variable
+     * @return the degree of the polynomial with respect to `x`
+     */
     private int degree(TMono m, int x) {
         if (m == null || m.x < x)
             return 0;
@@ -311,59 +405,61 @@ public class PolyBasic {
         return 0;
     }
 
+    /**
+     * Checks if the pseudo-remainder of two polynomials can be computed.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return true if the pseudo-remainder can be computed, false otherwise
+     */
     private boolean can_prem3(TMono p1, TMono p2) {
         if (p1 == null || p2 == null)
             return false;
         return prem3(p1, p2, false) == null;
     }
 
+    /**
+     * Computes the pseudo-remainder of two polynomials.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return the pseudo-remainder of the two polynomials
+     */
     private TMono prem3(TMono p1, TMono p2) {
         return prem3(p1, p2, true);
     }
 
-    private TMono prem3(TMono p1, TMono p2, boolean r /*do all*/) {   // p1.x > p2.x.
+    /**
+     * Computes the pseudo-remainder of two polynomials.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @param r  a flag indicating whether to perform all steps
+     * @return the pseudo-remainder of the two polynomials
+     */
+    private TMono prem3(TMono p1, TMono p2, boolean r) {
         if (p2 == null)
             return p1;
         int x = p2.x;
         if (x == 0)
             return p1;
         TMono[] mm = new TMono[2];
-        getm2(p1, p2, mm);//, x, p2.deg, mm);
+        getm2(p1, p2, mm);
         boolean rx = false;
 
         while (mm[0] != null && mm[1] != null) {
-//            int d1 = degree(mm[0], x);
-//            int d2 = degree(p2, x);
             if (p1 != null) {
-//                if (d1 >= d2) {
-//                    int dd = d1 - d2;
                 {
-//                    TMono l1 = ptimes(p_copy(mm[0].coef), mm[1]);
-//                    if (rx) {
-//                        print(p1);
-//                        print(p2);
-//                        print(mm[0]);
-//                        print(mm[1]);
-//                    }
                     TMono t1 = pp_times(p1, mm[0]);
                     TMono t2 = pp_times(p_copy(p2), mm[1]);
-//                    if(rx)
-//                    {
-//                        print(t1);
-//                        print(t2);
-//                    }
                     p1 = pp_minus(t1, t2);
                     coefgcd(p1);
-//                    if (rx) {
-//                        print(p1);
-//                        System.out.println("\n");
-//                    }
                     if (p1 == null) break;
                 }
             }
             if (p1 == null) break;
             mm[0] = mm[1] = null;
-            getm2(p1, p2, mm);// x, p2.deg, mm); // mm[0]: coef ,  mm[1]. p.x
+            getm2(p1, p2, mm);
             if (!r && mm[1] != null && mm[1].x < p1.x)
                 return p1;
 
@@ -371,7 +467,15 @@ public class PolyBasic {
         return p1;
     }
 
-    private void getm2(TMono p1, TMono p2, TMono[] mm) {// int x, int deg, TMono[] mm) {
+
+    /**
+     * Computes the monomials `mm` required for the pseudo-remainder calculation.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @param mm an array to store the resulting monomials
+     */
+    private void getm2(TMono p1, TMono p2, TMono[] mm) {
         if (p1 == null || p2 == null || p1.x < p2.x || p1.x == p2.x && p1.deg < p2.deg)
             return;
 
@@ -400,24 +504,16 @@ public class PolyBasic {
             if (p1 != null && p1.deg == 0)
                 p1 = p1.coef;
         }
-
-//        if (p.x > x) {
-//            while (p != null) {
-//                getm2(p.coef, x, deg, mm);
-//                if (mm[0] != null) {
-//                    TMono m = pth(p.x, 1, p.deg);
-//                    mm[1] = ptimes(mm[1], m);
-//                    return;
-//                }
-//                p = p.next;
-//            }
-//        } else if (p.deg >= deg) {
-//            mm[0] = p;
-//            mm[1] = pth(0, 1, 0);
-//            return;
-//        }
     }
 
+
+    /**
+     * Computes the pseudo-remainder of two polynomials.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return the pseudo-remainder of the two polynomials
+     */
     private TMono prem1(TMono p1, TMono p2) {
 
         if (p1 == null)
@@ -448,12 +544,6 @@ public class PolyBasic {
                     int d1 = deg(p1);
                     int d2 = deg(p2);
                     if (d1 < d2) {
-                        /*TMono m = p1;                   //comment by ye. 5.31.
-                        p1 = p2;
-                        p2 = m;
-                        int t = d1;
-                        d1 = d2;
-                        d2 = t;*/
                         break;
                     }
                     if (d1 >= d2) {
@@ -477,12 +567,17 @@ public class PolyBasic {
 
         while (result != null && result.deg == 0 && result.x != 0)
             result = result.coef;
-
-//        print(result);
         return result;
     }
 
 
+    /**
+     * Divides the degree of the polynomial `m` by `n` for the variable `x`.
+     *
+     * @param m the polynomial to be modified
+     * @param x the variable whose degree is to be divided
+     * @param n the divisor for the degree
+     */
     public void div_factor1(TMono m, int x, int n) {
         if (x > m.x) return;
 
@@ -510,39 +605,11 @@ public class PolyBasic {
 
     }
 
-    public void factor2(TMono m1) {
-        TMono m = this.get_factor2(m1);
-        if (m == null)
-            return;
-        while (m != null) {
-            if (m.x != 0) {
-                this.div_factor1(m1, m.x, m.deg);
-            }
-            m = m.coef;
-        }
-    }
-
-    public TMono get_factor2(TMono m) {
-        if (m == null)
-            return null;
-
-        TMono mx = null;
-        TMono m1 = m;
-        long n = 0;
-        while (m != null) {
-            if (m.x != 0)
-                n = factor_contain(m.x, m.deg, m1);
-            if (n != 0) {
-                if (mx == null)
-                    mx = new TMono(m.x, 1, (int) n);
-                else
-                    mx = this.pp_times(mx, new TMono(m.x, 1, (int) n));
-            }
-            m = m.coef;
-        }
-        return mx;
-    }
-
+    /**
+     * Factors the polynomial `m1` by dividing it by its common factors.
+     *
+     * @param m1 the polynomial to be factored
+     */
     public void factor1(TMono m1) {
         if (!RM_SCOEF)
             return;
@@ -558,6 +625,12 @@ public class PolyBasic {
         }
     }
 
+    /**
+     * Gets the common factors of the polynomial `m`.
+     *
+     * @param m the polynomial to get factors from
+     * @return the common factors of the polynomial
+     */
     public TMono get_factor1(TMono m) {
         if (m == null)
             return null;
@@ -580,6 +653,14 @@ public class PolyBasic {
         return mx;
     }
 
+    /**
+     * Checks if the polynomial `m` contains the factor `(x, d)`.
+     *
+     * @param x the variable of the factor
+     * @param d the degree of the factor
+     * @param m the polynomial to check
+     * @return true if the polynomial contains the factor, false otherwise
+     */
     private boolean m_contain(long x, long d, TMono m) {
         if (m == null || x > m.x || x == m.x && d > m.deg)
             return false;
@@ -594,6 +675,14 @@ public class PolyBasic {
         return false;
     }
 
+    /**
+     * Determines the minimum degree of the factor `(x, n)` contained in the polynomial `m`.
+     *
+     * @param x the variable of the factor
+     * @param n the degree of the factor
+     * @param m the polynomial to check
+     * @return the minimum degree of the factor contained in the polynomial
+     */
     private long factor_contain(long x, long n, TMono m) {
         if (m == null)
             return n;
@@ -622,6 +711,13 @@ public class PolyBasic {
         return n;
     }
 
+    /**
+     * Removes the common factors of the polynomial `p1` using the polynomial `p2`.
+     *
+     * @param p1 the polynomial to be factored
+     * @param p2 the polynomial used for factoring
+     * @return the factored polynomial
+     */
     public TMono factor_remove(TMono p1, TMono p2) {  // p1 ,p2 be destryoed.
         if (p1 == null || p2 == null || plength(p1) > 1000)
             return p1;
@@ -671,7 +767,13 @@ public class PolyBasic {
         return p1;
     }
 
-
+    /**
+     * Divides the polynomial `m` by the polynomial `d`.
+     *
+     * @param m the dividend polynomial
+     * @param d the divisor polynomial
+     * @return the quotient polynomial
+     */
     TMono div(TMono m, TMono d) {
         if (m == null || d == null)
             return m;
@@ -726,6 +828,12 @@ public class PolyBasic {
         return result;
     }
 
+    /**
+     * Creates a copy of the polynomial `p`.
+     *
+     * @param p the polynomial to copy
+     * @return the copied polynomial
+     */
     public TMono p_copy(TMono p) {
         if (p == null) return null;
 
@@ -739,7 +847,13 @@ public class PolyBasic {
 
     }
 
-
+    /**
+     * Compares two polynomials.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return -1 if p1 is less than p2, 1 if p1 is greater than p2, 0 if they are equal
+     */
     private int pp_compare(TMono p1, TMono p2) {
         if (p1 == null && p2 == null)
             return 0;
@@ -758,6 +872,12 @@ public class PolyBasic {
         return pp_compare(p1.next, p2.next);
     }
 
+    /**
+     * Pushes a polynomial into a sorted vector.
+     *
+     * @param m the polynomial to push
+     * @param v the vector to push into
+     */
     public void ppush(TMono m, Vector v) {
         if (m == null) return;
 
@@ -772,6 +892,13 @@ public class PolyBasic {
         v.add(m);
     }
 
+    /**
+     * Compares two polynomials for sorting.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return -1 if p1 is less than p2, 1 if p1 is greater than p2, 0 if they are equal
+     */
     private int pp_compare2(TMono p1, TMono p2) {
         if (p1 == null && p2 == null)
             return 0;
@@ -801,84 +928,12 @@ public class PolyBasic {
         return n;
     }
 
-    private int pp_compare1(TMono p1, TMono p2) {
-        if (p1 == null && p2 == null)
-            return 0;
-        if (p1 == null && p2 != null)
-            return -1;
-        if (p1 != null && p2 == null)
-            return 1;
-        int x = Math.max(p1.x, p2.x) + 1;
-        while (x != 0) {
-            int x1 = getNextX(x, -1, p1);
-            int x2 = getNextX(x, -1, p2);
-            if (x1 > x2)
-                return 1;
-            else if (x1 < x2)
-                return -1;
-            else {
-                int d1 = this.getMaxDeg(x1, 1000, -1, p1);
-                int d2 = this.getMaxDeg(x2, 1000, -1, p2);
-                if (d1 > d2)
-                    return 1;
-                else if (d1 < d2)
-                    return -1;
-                else {
-                    int d = d1;
-                    while (d != 0) {
-                        d1 = this.getMaxDeg(x1, d, -1, p1);
-                        d2 = this.getMaxDeg(x2, d, -1, p2);
-                        if (d1 > d2)
-                            return 1;
-                        else if (d1 < d2)
-                            return -1;
-                        d--;
-                    }
-                }
-                x = x1;
-            }
-        }
-        return 1;
-    }
-
-    private int getNextX(int x, int x1, TMono m) { //  x1 < x .
-        if (m == null) return x1;
-        if (m.x <= x1) return x1;
-        while (m != null) {
-            if (m.x <= x1) return x1;
-
-            if (m.x < x && m.x > x1)
-                x1 = m.x;
-            x1 = getNextX(x, x1, m.coef);
-            m = m.next;
-            if (m == null)
-                break;
-            if (m.deg == 0)
-                m = m.coef;
-        }
-        return x1;
-    }
-
-    private int getMaxDeg(int x, int dmax, int d, TMono m) {  // dd < d , dd > d1; return dd;
-        if (m == null) return d;
-        if (m.x < x) return d;
-
-        while (m != null) {
-            if (m.x < x) return d;
-
-            if (m.x == x && m.deg > d && m.deg < dmax)
-                d = m.deg;
-            d = getMaxDeg(x, dmax, d, m.coef);
-            m = m.next;
-            if (m == null)
-                break;
-
-            if (m.deg == 0)
-                m = m.coef;
-        }
-        return d;
-    }
-
+    /**
+     * Checks if the given polynomial is an integer.
+     *
+     * @param p the polynomial to check
+     * @return true if the polynomial is an integer, false otherwise
+     */
     private boolean Int(TMono p) {
         if (p == null)
             return false;
@@ -890,14 +945,11 @@ public class PolyBasic {
         return false;
     }
 
-    public void dprint(TMono p, int dx) {
-        upValueTM(p, -dx);
-        String s = getExpandedPrint(p);
-        System.out.println(s);
-//        print(p);
-        upValueTM(p, dx);
-    }
-
+    /**
+     * Prints the given polynomial.
+     *
+     * @param p the polynomial to print
+     */
     public void print(TMono p) {
         if (p == null)
             return;
@@ -907,15 +959,27 @@ public class PolyBasic {
 
         System.out.print(String_p_print(p, false, true, true));
 
-//        p_print(p, false, true);
         System.out.print("\n");
     }
 
+    /**
+     * Prints the polynomial in a simplified format.
+     *
+     * @param p the polynomial to print
+     */
     public void sprint(TMono p) {
         p_print(p, false, true);
     }
 
-    private void p_print(TMono p, boolean ce, boolean first) { // coefficent ?      print "+" of first ?
+
+    /**
+     * Prints the polynomial in a specified format.
+     *
+     * @param p the polynomial to print
+     * @param ce a flag indicating whether to enclose the polynomial in parentheses
+     * @param first a flag indicating whether this is the first polynomial in a sequence
+     */
+    private void p_print(TMono p, boolean ce, boolean first) {
         if (p == null) return;
         if (p.next == null) ce = false;
 
@@ -946,6 +1010,12 @@ public class PolyBasic {
         }
     }
 
+    /**
+     * Prints a monomial in a polynomial.
+     *
+     * @param p the monomial to print
+     * @param first a flag indicating whether this is the first monomial in the polynomial
+     */
     private void m_print(TMono p, boolean first) {
         if (p.x == 0) {
             if (first != true) {
@@ -981,14 +1051,37 @@ public class PolyBasic {
         }
     }
 
+
+    /**
+     * Creates a new monomial with the specified variable, coefficient, and degree.
+     *
+     * @param x the variable of the monomial
+     * @param c the coefficient of the monomial
+     * @param d the degree of the monomial
+     * @return the created monomial
+     */
     public TMono pth(int x, int c, int d) {
         return new TMono(x, c, d);
     }
 
+    /**
+     * Creates a new monomial with the specified variable, BigInteger coefficient, and degree.
+     *
+     * @param x the variable of the monomial
+     * @param c the BigInteger coefficient of the monomial
+     * @param d the degree of the monomial
+     * @return the created monomial
+     */
     public TMono pth(int x, BigInteger c, int d) {
         return new TMono(x, c, d);
     }
 
+    /**
+     * Returns the degree of the given polynomial.
+     *
+     * @param p the polynomial
+     * @return the degree of the polynomial
+     */
     public int deg(TMono p) {
         if (p == null) {
             int k = 0;
@@ -996,15 +1089,32 @@ public class PolyBasic {
         return p.deg;
     }
 
+    /**
+     * Returns the leading variable of the given polynomial.
+     *
+     * @param p the polynomial
+     * @return the leading variable of the polynomial
+     */
     public int lv(TMono p) {
         if (p == null) return 0;
         return p.x;
     }
 
+    /**
+     * Returns a zero polynomial.
+     *
+     * @return a zero polynomial
+     */
     public TMono pzero() {
         return null;
     }
 
+    /**
+     * Returns the length of the given polynomial.
+     *
+     * @param m the polynomial
+     * @return the length of the polynomial
+     */
     public int plength(TMono m) {
         if (m == null) return 0;
 
@@ -1015,12 +1125,12 @@ public class PolyBasic {
         }
     }
 
-    boolean pzerom(TMono m) {
-        if (m == null)
-            return true;
-        return (!pzerop(m.coef) && m.next == null);
-    }
-
+    /**
+     * Checks if the given polynomial is zero.
+     *
+     * @param m the polynomial to check
+     * @return true if the polynomial is zero, false otherwise
+     */
     public boolean pzerop(TMono m) {
         if (m == null) return true;
 
@@ -1029,7 +1139,13 @@ public class PolyBasic {
         return pzerop(m.coef) && pzerop(m.next);
     }
 
-
+    /**
+     * Adds a monomial to a polynomial.
+     *
+     * @param t the monomial to add
+     * @param p the polynomial to add to
+     * @return the resulting polynomial after addition
+     */
     TPoly addpoly(TMono t, TPoly p) {
         TPoly poly = new TPoly();
         poly.setNext(p);
@@ -1038,17 +1154,14 @@ public class PolyBasic {
         return poly;
     }
 
-    TPoly addPolytoList(TPoly pl, TPoly pp) {
-        if (pl == null) return pp;
-
-        while (pl != null) {
-            pp = ppush(pl.getPoly(), pp);
-            pl = pl.getNext();
-        }
-        return pp;
-    }
-
-    public TPoly ppush(TMono t, TPoly pp) {  //  n, n-1,,,,,,1.
+    /**
+     * Pushes a polynomial into a sorted linked list.
+     *
+     * @param t the polynomial to push
+     * @param pp the linked list to push into
+     * @return the updated linked list with the polynomial added
+     */
+    public TPoly ppush(TMono t, TPoly pp) {
         if (t == null)
             return pp;
 
@@ -1104,6 +1217,13 @@ public class PolyBasic {
         return pp;
     }
 
+    /**
+     * Calculates the value of a polynomial given the polynomial and parameters.
+     *
+     * @param m the polynomial to calculate
+     * @param p the array of parameters used in the calculation
+     * @return the calculated value of the polynomial
+     */
     double calpoly(TMono m, Param[] p) {
         if (m == null || p == null)
             return 0.0;
@@ -1123,6 +1243,13 @@ public class PolyBasic {
     }
 
 
+    /**
+     * Calculates the values of the polynomial `mm` given the parameters `p`.
+     *
+     * @param mm the polynomial to calculate
+     * @param p the array of parameters used in the calculation
+     * @return an array of calculated values of the polynomial
+     */
     public double[] calculv(TMono mm, Param[] p) {
         int x, d;
         double[] result = null;
@@ -1210,6 +1337,13 @@ public class PolyBasic {
         return null;
     }
 
+    /**
+     * Calculates the values of the polynomial `mm` given the parameters `p` for two variables.
+     *
+     * @param mm the polynomial to calculate
+     * @param p the array of parameters used in the calculation
+     * @return an array of calculated values of the polynomial
+     */
     public double[] calculv_2v(TMono mm, Param[] p) {
         if (mm.next != null)
             return this.calculv(mm.next.coef, p);
@@ -1217,11 +1351,16 @@ public class PolyBasic {
             return null;
 
     }
-//    public double[] calculate_onlinex(TMono mm, param[] p, int dx, int dy) {
-//        CLine ln = this.
 
-//    }
-
+    /**
+     * Calculates the values of the polynomial `mm` given the parameters `p` for two variables.
+     *
+     * @param mm the polynomial to calculate
+     * @param p the array of parameters used in the calculation
+     * @param dx the first variable index
+     * @param dy the second variable index
+     * @return an array of calculated values of the polynomial
+     */
     public double[] calculate_online(TMono mm, Param[] p, int dx, int dy) {
         if (mm.deg != 1 && mm.x != dy) return null;
 
@@ -1258,6 +1397,15 @@ public class PolyBasic {
         return result;
     }
 
+    /**
+     * Calculates the values of the polynomial `mm` given the parameters `p` for two variables.
+     *
+     * @param mm the polynomial to calculate
+     * @param p the array of parameters used in the calculation
+     * @param dx the first variable index
+     * @param dy the second variable index
+     * @return an array of calculated values of the polynomial
+     */
     public double[] calculate_oncr(TMono mm, Param[] p, int dx, int dy) {
 
         if (mm.deg != 2 && mm.x != dy) return null;
@@ -1304,7 +1452,15 @@ public class PolyBasic {
         return result;
     }
 
-    public double[] calculv2poly(TMono mm1, TMono mm2, Param[] p)     //from two poly
+    /**
+     * Calculates the values of two polynomials `mm1` and `mm2` given the parameters `p`.
+     *
+     * @param mm1 the first polynomial to calculate
+     * @param mm2 the second polynomial to calculate
+     * @param p the array of parameters used in the calculation
+     * @return an array of calculated values of the polynomials
+     */
+    public double[] calculv2poly(TMono mm1, TMono mm2, Param[] p)
     {
         int x, d;
         double[] result;
@@ -1362,7 +1518,6 @@ public class PolyBasic {
         if (result == null || result.length == 0)
             result = calculv(mm2, p);
         if (result == null || result.length == 0) {
-//            System.out.println("parell two line");
             return null;
         }
         return result;
@@ -1370,62 +1525,91 @@ public class PolyBasic {
 
     }
 
+    /**
+     * Multiplies two polynomials.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return the product of the two polynomials
+     */
     public TMono pRtimes(TMono p1, TMono p2) {
         return pp_times(p1, p2);
     }
 
-    public TMono pQtimer(TMono t1, TMono t2, TMono t3, TMono t4) {
-        return this.pp_times(p_copy(t1), pp_times(p_copy(t2), pp_times(p_copy(t3), p_copy(t4))));
-    }
-
+    /**
+     * Adds two polynomials.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return the sum of the two polynomials
+     */
     public TMono padd(TMono p1, TMono p2) { //add
         TMono m = (pp_plus(p1, p2, true));
         return m;
     }
 
+    /**
+     * Subtracts the second polynomial from the first polynomial.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return the difference of the two polynomials
+     */
     public TMono pdif(TMono p1, TMono p2) {//minus
         TMono m = (pp_minus(p1, p2));
         return m;
 
     }
 
-    TMono redundancy(TMono m) {
-        return m;
-    }
-
-    boolean isZero(TMono m) {
-        if (m == null) return true;
-        if (Int(m)) {
-            if (m.value() == 0)
-                return true;
-            else
-                return false;
-        }
-
-        if (m.x != 0 && m.coef == null) return isZero(m.next);
-        return false;
-    }
-
+    /**
+     * Creates a copy of the given polynomial.
+     *
+     * @param p the polynomial to copy
+     * @return the copied polynomial
+     */
     public TMono pcopy(TMono p) {
         return p_copy(p);
     }
 
+    /**
+     * Multiplies two polynomials.
+     *
+     * @param p1 the first polynomial
+     * @param p2 the second polynomial
+     * @return the product of the two polynomials
+     */
     public TMono ptimes(TMono p1, TMono p2) {
         return pp_times(p1, p2);
     }
 
+    /**
+     * Multiplies a polynomial by a constant.
+     *
+     * @param p the polynomial
+     * @param c the constant
+     * @return the product of the polynomial and the constant
+     */
     public TMono pctimes(TMono p, long c) {
         return cp_times(BigInteger.valueOf(c), p);
     }
 
-    void pr(TMono m) {
-        print(m);
-    }
-
+    /**
+     * Prints the given polynomial.
+     *
+     * @param m the polynomial to print
+     */
     public void printpoly(TMono m) {
         print(m);
     }
 
+
+    /**
+     * Gets the monomial with the minimum degree for the given variable in the polynomial.
+     *
+     * @param x the variable
+     * @param p the polynomial
+     * @return the monomial with the minimum degree for the given variable
+     */
     TMono getMinV(int x, TPoly p) {
         TMono poly = null;
         int exp = 0;
@@ -1447,36 +1631,12 @@ public class PolyBasic {
 
     }
 
-
-    public TPoly OptimizePoly(TPoly poly) {
-        TPoly t = poly;
-        while (poly != null) {
-            TMono m = poly.getPoly();
-            m = opt(m);
-            poly.setPoly(m);
-            poly = poly.getNext();
-        }
-        return t;
-    }
-
-    TMono opt(TMono m) {
-        if (m == null) return null;
-
-        if (Int(m)) return m;
-
-        if (m.x <= 3 && m.x > 0)
-            return null;
-
-        m.coef = opt(m.coef);
-        m.next = opt(m.next);
-
-        if (m.coef == null && m.deg != 0) m = m.next;
-        if (isZero(m)) return null;
-
-        return m;
-    }
-
-
+    /**
+     * Returns the head of the polynomial as a string.
+     *
+     * @param m the polynomial
+     * @return the head of the polynomial as a string
+     */
     public String printHead(TMono m) {
         if (m == null)
             return "0";
@@ -1488,11 +1648,22 @@ public class PolyBasic {
             return "x" + v;
     }
 
+    /**
+     * Returns a simplified string representation of the polynomial.
+     *
+     * @param m the polynomial
+     * @return the simplified string representation of the polynomial
+     */
     public String printSPoly(TMono m) {
         return printSPoly(m, MAXSTR);
     }
 
-
+    /**
+     * Returns a string representation of the polynomial with a maximum length.
+     *
+     * @param m the polynomial
+     * @return the string representation of the polynomial with a maximum length
+     */
     public String printNPoly(TMono m) {
         if (m == null)
             return "";
@@ -1504,6 +1675,13 @@ public class PolyBasic {
         return s;
     }
 
+    /**
+     * Returns a string representation of two polynomials with a maximum length.
+     *
+     * @param m1 the first polynomial
+     * @param m2 the second polynomial
+     * @return the string representation of the two polynomials with a maximum length
+     */
     public String printNPoly(TMono m1, TMono m2) {
         int n1 = plength(m1);
         int n2 = plength(m2);
@@ -1516,6 +1694,13 @@ public class PolyBasic {
         return s1 + s2 + " != 0";
     }
 
+    /**
+     * Returns a simplified string representation of the polynomial with a specified maximum length.
+     *
+     * @param m the polynomial
+     * @param n the maximum length of the string representation
+     * @return the simplified string representation of the polynomial with a specified maximum length
+     */
     public String printSPoly(TMono m, int n) {
         if (m == null)
             return "0";
@@ -1527,6 +1712,12 @@ public class PolyBasic {
         return s;
     }
 
+    /**
+     * Returns a string representation of the polynomial with a maximum length.
+     *
+     * @param m the polynomial
+     * @return the string representation of the polynomial with a maximum length
+     */
     public String printMaxstrPoly(TMono m) {
         int n = MAXSTR;
         if (m == null)
@@ -1538,35 +1729,15 @@ public class PolyBasic {
         return s;
     }
 
-    public String printSPoly1(TMono m, int n) {
-        if (m == null)
-            return "";
-
-        String s = StringPrint(m);
-        if (s.length() > n)
-            return s.substring(0, n) + "....";
-
-        return s;
-    }
-
-    public String StringPrint(TMono p) {
-        StringBuffer buffer = new StringBuffer();
-        String_p_print(p, true, buffer);
-        return buffer.toString();
-    }
-
-    public void String_p_print(TMono p, boolean nn, StringBuffer buffer) {
-        if (p == null) return;
-        while (p != null) {
-            if (String_mprint(p.coef, buffer))
-                buffer.insert(0, '+');
-            buffer.append("x" + p.x + "" + p.deg);
-            if (p.deg == 0)
-                p = p.coef;
-            else p = p.next;
-        }
-    }
-
+    /**
+     * Returns a string representation of the polynomial.
+     *
+     * @param p the polynomial
+     * @param ce a flag indicating whether to enclose the polynomial in parentheses
+     * @param first a flag indicating whether this is the first polynomial in a sequence
+     * @param nn a flag indicating whether to include the leading coefficient
+     * @return the string representation of the polynomial
+     */
     public String String_p_print(TMono p, boolean ce, boolean first, boolean nn) {
         if (p == null) return "";
         if (p.next == null) ce = false;
@@ -1606,29 +1777,12 @@ public class PolyBasic {
         return s;
     }
 
-
-    public boolean String_mprint(TMono m, StringBuffer buffer) {
-        boolean br = false;
-        if (m == null) return br;
-
-        if (m.next != null)
-            br = true;
-        if (br)
-            buffer.append("(");
-        while (m != null) {
-            String_mprint(m.coef, buffer);
-            if (String_mprint(m.coef, buffer))
-                buffer.insert(0, '+');
-            buffer.append(m.x + "" + m.deg);
-            if (m.deg == 0)
-                m = m.coef;
-            else m = m.next;
-        }
-        if (br)
-            buffer.append(")");
-        return br;
-    }
-
+    /**
+     * Returns a string representation of the polynomial with expanded format.
+     *
+     * @param p the polynomial
+     * @return the string representation of the polynomial with expanded format
+     */
     public String getExpandedPrint(TMono p) {
         String r = ep_print(p, "", true);
         if (r != null && (r.endsWith("-") || r.endsWith("+")))
@@ -1636,6 +1790,14 @@ public class PolyBasic {
         return r;
     }
 
+    /**
+     * Returns a string representation of the polynomial with expanded format.
+     *
+     * @param p the polynomial
+     * @param s the string to append to
+     * @param f a flag indicating whether this is the first polynomial in a sequence
+     * @return the string representation of the polynomial with expanded format
+     */
     private String ep_print(TMono p, String s, boolean f) {
         String st = "";
         while (p != null) {
@@ -1654,6 +1816,14 @@ public class PolyBasic {
         return st;
     }
 
+    /**
+     * Returns a string representation of the polynomial with expanded format.
+     *
+     * @param p the polynomial
+     * @param s the string to append to
+     * @param f a flag indicating whether this is the first polynomial in a sequence
+     * @return the string representation of the polynomial with expanded format
+     */
     private String eprint(TMono p, String s, boolean f) {
         if (p == null)
             return "";
@@ -1694,6 +1864,13 @@ public class PolyBasic {
         }
     }
 
+    /**
+     * Returns a string representation of all printed monomials in the polynomial.
+     *
+     * @param p the polynomial
+     * @param b a flag indicating whether to include the leading coefficient
+     * @return the string representation of all printed monomials in the polynomial
+     */
     public String getAllPrinted(TMono p, boolean b) {
         int n = MAXSTR;
         MAXSTR = 1000000;
@@ -1724,11 +1901,25 @@ public class PolyBasic {
         else return s;
     }
 
+    /**
+     * Returns a string representation of all printed monomials in the polynomial.
+     *
+     * @param p the polynomial
+     * @return the string representation of all printed monomials in the polynomial
+     */
     public String getAllPrinted(TMono p) {
         return getAllPrinted(p, true);
     }
 
 
+    /**
+     * Returns a string representation of the monomial.
+     *
+     * @param p the monomial
+     * @param first a flag indicating whether this is the first monomial in the polynomial
+     * @param nn a flag indicating whether to include the leading coefficient
+     * @return the string representation of the monomial
+     */
     private String String_m_print(TMono p, boolean first, boolean nn) {
 
 
@@ -1774,6 +1965,12 @@ public class PolyBasic {
         return s;
     }
 
+    /**
+     * Returns the greatest common divisor of the coefficients of the polynomial.
+     *
+     * @param p the polynomial
+     * @return the greatest common divisor of the coefficients of the polynomial
+     */
     public BigInteger coefgcd(TMono p) {
         if (p == null) return BigInteger.ONE;
 
@@ -1793,6 +1990,13 @@ public class PolyBasic {
         return c;
     }
 
+    /**
+     * Divides the coefficients of the polynomial by the given constant.
+     *
+     * @param m the polynomial
+     * @param c the constant to divide by
+     * @return true if successful, false otherwise
+     */
     private boolean coef_div(TMono m, BigInteger c) {
         if (m == null) return true;
         if (m.x == 0) {
@@ -1806,23 +2010,24 @@ public class PolyBasic {
 
     }
 
+    /**
+     * Returns the greatest common divisor of two BigInteger values.
+     *
+     * @param a the first BigInteger
+     * @param b the second BigInteger
+     * @return the greatest common divisor of the two BigInteger values
+     */
     BigInteger gcd(BigInteger a, BigInteger b) {
         return a.gcd(b);
     }
 
-    private long gcd(long a, long b) {
-        long t;
-
-        a = Math.abs(a);
-        b = Math.abs(b);
-        while (b != 0) {
-            t = b;
-            b = a % b;
-            a = t;
-        }
-        return a;
-    }
-
+    /**
+     * Returns the greatest common divisor of the coefficients of the polynomial.
+     *
+     * @param p the polynomial
+     * @param c the constant to divide by
+     * @return the greatest common divisor of the coefficients of the polynomial
+     */
     private BigInteger coefgcd(TMono p, BigInteger c) {
 
         if (p == null) return c;
@@ -1847,10 +2052,24 @@ public class PolyBasic {
         return c;
     }
 
+    /**
+     * Checks if the given value is close to zero.
+     *
+     * @param r the value to check
+     * @return true if the value is close to zero, false otherwise
+     */
     private boolean ZERO(double r) {
         return Math.abs(r) < ZERO;
     }
 
+    /**
+     * Solves a quadratic polynomial equation.
+     *
+     * @param aa the coefficient of x^2
+     * @param bb1 the coefficient of x
+     * @param bb2 the constant term
+     * @return an array of solutions to the equation
+     */
     private double[] poly_solve_quadratic(double aa, double bb1, double bb2) {
 
         double[] result;
@@ -1884,6 +2103,15 @@ public class PolyBasic {
         return result;
     }
 
+    /**
+     * Solves a cubic polynomial equation.
+     *
+     * @param a the coefficient of x^3
+     * @param b the coefficient of x^2
+     * @param c the coefficient of x
+     * @param d the constant term
+     * @return an array of solutions to the equation
+     */
     double[] poly_solve_cubic(double a, double b, double c, double d) {
         double p = (3 * c / a - (b * b / (a * a))) / 3;
         double q = (2 * Math.pow(b / a, 3) - 9 * b * c / a / a + 27 * d / a) / 27;
@@ -1918,6 +2146,12 @@ public class PolyBasic {
         return null;
     }
 
+    /**
+     * Calculates the cubic root of a given value.
+     *
+     * @param r the value to calculate the cubic root of
+     * @return the cubic root of the value
+     */
     private double cubic_root(double r) {
         double r1 = Math.pow(Math.abs(r), 1.0 / 3.0);
         if (r < 0)
@@ -1925,50 +2159,15 @@ public class PolyBasic {
         return r1;
     }
 
-//    double[] cal_e4(double A, double B, double C, double D, double E, double rt) {
-//        double a = -3 * B * B / (8 * A * A) + C / A;
-//        double b = B * B * B / (8 * A * A * A) - B * C / (2 * A * A) + D / A;
-//        double c = -3 * B * B * B * B / (256 * A * A * A * A) + C * B * B / (16 * A * A * A) - B * D / (4 * A * A) + E / A;
-//        double p = -a * a / 12 - c;
-//        double q = -a * a * a / 108 + a * c / 3 - b * b / 8;
-//        double r = q / 2 + Math.sqrt(q * q / 4 + p * p * p / 27);
-//        double u = Math.pow(r, 1 / 3.0);
-//        double y = -5 / 6 * a - u;
-//        if (Math.abs(u) >  ZERO)
-//            y += p / (3 * u);
-//
-//        double w = Math.sqrt(a + 2 * y);
-//        double t1 = -(3 * a + 2 * y + 2 * b / w);
-//        double t2 = -(3 * a + 2 * y - 2 * b / w);
-//        int n = 0;
-//        double v1, v2, v3, v4;
-//        if (t1 < 0 && t2 < 0)
-//            return null;
-//        else if (t1 > 0 && t2 > 0)
-//            n = 4;
-//        else
-//            n = 2;
-//
-//        int i = 0;
-//        double d[] = new double[n];
-//
-//        if (t1 > 0) {
-//            v1 = -b / (4 * a) + (w + Math.sqrt(t1)) / 2;
-//            v2 = -b / (4 * a) + (w - Math.sqrt(t1)) / 2;
-//            d[i++] = v1 / rt;
-//            d[i++] = v2 / rt;
-//
-//        }
-//
-//        if (t2 > 0) {
-//            v3 = -b / (4 * a) + (-w + Math.sqrt(t2)) / 2;
-//            v4 = -b / (4 * a) + (-w - Math.sqrt(t2)) / 2;
-//            d[i++] = v3 / rt;
-//            d[i++] = v4 / rt;
-//        }
-//        return d;
-//    }
-
+    /**
+     * Solves a quartic polynomial equation.
+     *
+     * @param a the coefficient of x^4
+     * @param b the coefficient of x^3
+     * @param c the coefficient of x^2
+     * @param d the coefficient of x
+     * @return an array of solutions to the equation
+     */
     double[] poly_solve_quartic(double a, double b, double c, double d) {
         /*
          * This code is based on a simplification of
@@ -2061,16 +2260,6 @@ public class PolyBasic {
                 u[0] = A + B - rc / 3;
                 u[1] = -0.5 * (A + B) - rc / 3;
                 u[2] = -(Math.sqrt(3.0) / 2.0) * mod_diffAB;
-//                double sgnR = (R >= 0 ? 1 : -1);
-//                double modR = Math.abs(R);
-//                double sqrt_disc = Math.sqrt(R2 - Q3);
-//                double A = -sgnR * Math.pow(modR + sqrt_disc, 1.0 / 3.0);
-//                double B = Q / A;
-//                double mod_diffAB = Math.abs(A - B);
-//
-//                u[0] = A + B - rc / 3;
-//                u[1] = -0.5 * (A + B) - rc / 3;
-//                u[2] = -(Math.sqrt(3.0) / 2.0) * mod_diffAB;
             }
         }
 
@@ -2193,6 +2382,13 @@ public class PolyBasic {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+    /**
+     * Calculates the polynomial value for the given monomial and coefficients.
+     *
+     * @param m the monomial
+     * @param p the coefficients
+     * @return the polynomial value
+     */
     BigFraction calpoly(TMono m, BigFraction[] p) {
         if (m == null || p == null)
             return BigFraction.ZERO;
@@ -2216,192 +2412,26 @@ public class PolyBasic {
         return r;
     }
 
-    public int check_ndg(TMono m, Param[] pm) // 0. TRUE 1. FALSE 2.CAN NOT Verify, should be checked by floating point calculation.
-    {
-        if (m == null)
-            return 1;
-
-        int x = m.x;
-        int n = 0;
-        for (n = 0; n < pm.length; n++) {
-            Param p = pm[n];
-            if (p == null || p.xindex >= x)
-                break;
-        }
-        BigFraction[] bp = new BigFraction[n + 1];
-
-        int r = ndg_valid(m, pm, bp, 0);
-        if (r == -1) {
-            long k = 1;
-            for (int i = 0; i <= n; i++) {
-                if (pm[i].m == null) {
-                    bp[i] = bp[i].add(BigInteger.valueOf(2 * k + 1));
-                    r = ndg_valid(m, pm, bp, 0);
-                    if (r != -1)
-                        return r;
-                    k++;
-                }
-            }
-        }
-
-        for (int i = 0; i < bp.length; i++)
-            if (bp[i] != null)
-                System.out.println(bp[i]);
-        return -1;
-    }
-
-    public int ndg_valid(TMono m, Param[] pm, BigFraction[] bp, int n) {
-        for (int i = n; i < bp.length && pm[i] != null; i++) {
-            Param p = pm[i];
-            if (p.m == null) {
-                if (bp[i] == null)
-                    bp[i] = new BigFraction((long) p.value);
-            } else {
-                BigFraction[] bb = calcu_pm(p.m, bp, p);
-                if (bb == null) // no solution.
-                    return -1;
-                else if (bb.length == 0)
-                    return 1; // not equal..
-                else if (bb.length == 1)
-                    bp[i] = bb[0];
-                else {
-                    for (int j = 0; j < bb.length; j++) {
-                        bp[i] = bb[j];
-                        int b1 = ndg_valid(m, pm, bp, i + 1);
-                        if (b1 != 1)
-                            return b1;
-                    }
-                }
-            }
-        }
-        boolean r = calpoly(m, bp).compareTo(BigInteger.ZERO) == 0;
-        if (r)
-            return 0;
-        else return 1;
-    }
-
-    public BigFraction[] calcu_pm(TMono m, BigFraction[] bp, Param pm) {    //    return null if m.coef == 0
-        if (m.deg == 1) {
-            BigFraction a = calpoly(m.coef, bp);
-            if (a.isZero()) return null;
-
-            BigFraction b = calpoly(m.next, bp);
-            BigFraction[] bb = new BigFraction[1];
-            bb[0] = b.divide(a).negate();
-            return bb;
-        } else if (m.deg == 2) {
-            BigFraction a, b, c;
-            a = calpoly(m.coef, bp);
-            if (a.isZero()) return null;
-            m = m.next;
-            if (m.deg == 1) {
-                b = calpoly(m.coef, bp);
-                m = m.next;
-            } else b = BigFraction.ZERO;
-            c = calpoly(m.coef, bp);
-            BigFraction dl = b.multiply(b).subtract(a.multiply(4).multiply(c));
-            dl = dl.sqrt();
-            if (dl != null) {
-                BigFraction[] bb = new BigFraction[2];
-                bb[0] = (b.negate().add(dl).divide(a.multiply(2)));
-                bb[1] = (b.negate().subtract(dl).divide(a.multiply(2)));
-                return bb;
-            } else return null;
-        } else if (m.deg == 3) {
-            BigFraction a, b, c, d;
-            a = b = c = d = BigFraction.ZERO;
-            while (m != null) {
-                BigFraction f = calpoly(m.coef, bp);
-                switch (m.x) {
-                    case 3:
-                        a = f;
-                        break;
-                    case 2:
-                        b = f;
-                        break;
-                    case 1:
-                        c = f;
-                        break;
-                    case 0:
-                        d = f;
-                        break;
-                }
-                m = m.next;
-            }
-            if (a.isZero()) return null;
-        }
-        return new BigFraction[0];
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private boolean n2dv(TMono m) {
-        if (plength(m) != 2) return false;
-        m = m.next;
-        if (m == null) return false;
-        return Int(m.coef);
-    }
-
-    public TPoly gb_reduce(TPoly poly) {
-//        return bb_reduce(poly);
-        return null;
-    }
-
-    public void nn_reduce(TPoly poly) {
-        while (poly != null) {
-            TMono m = poly.poly;
-            if (n2dv(m)) {
-                while (m != null && m.x != 0) {
-                    nn_div1(m.x, poly.next);
-                    m = m.coef;
-                }
-            }
-            poly = poly.next;
-        }
-    }
-
-    public void nn_div1(int x, TPoly poly) {
-
-        while (poly != null) {
-            TMono m = poly.poly;
-            while (true) {
-                long n = factor_contain(x, 1, m);
-                if (n > 0)
-                    div_factor1(m, x, (int) n);
-                else break;
-            }
-            poly = poly.next;
-        }
-    }
-
-    public TMono g_prem(TMono p1, TMono p2) {
-//        if (p1 == null)
-//            return p1;
-//        if (p2 == null)
-//            return p1;
-//        if (p1.x < p2.x)
-//            return p1;
-//
-//        TMono result = null;
-//        if (p1.x == p2.x)
-//            result = prem1(p1, p2);
-//        else
-//            result = prem3(p1, p2);
-//
-//        coefgcd(result);
-//
-//        return result;
-        return null;
-    }
-
-
+    /**
+     * Reduces the polynomial by dividing it by the leading term of another polynomial.
+     *
+     * @param vlist the list of polynomials to reduce
+     * @param t the time limit for reduction
+     * @return the reduced polynomial
+     */
     public Vector bb_reduce(Vector vlist, long t) {
         bb_reduce(vlist, t, false);
-//        bb_reduce(vlist, t, false);
-//        bb_reduce(vlist, t, true);
-
         return vlist;
     }
 
+    /**
+     * Reduces the polynomial by dividing it by the leading term of another polynomial.
+     *
+     * @param vlist the list of polynomials to reduce
+     * @param t the time limit for reduction
+     * @param s a flag indicating whether to use a special reduction method
+     * @return the reduced polynomial
+     */
     public Vector bb_reduce(Vector vlist, long t, boolean s) {
 
 
@@ -2439,7 +2469,6 @@ public class PolyBasic {
                         ppush(m2, vlist);
                     }
                     size = vlist.size();
-                    //  i = size -2;
                 }
             }
             if (r) break;
@@ -2447,68 +2476,13 @@ public class PolyBasic {
         return vlist;
     }
 
-
-    public void divm(TMono m1, TMono m) {
-        if (m1 == null || m == null || m1.x <= m.x) return;
-
-        while (m != null && m.x != 0) {
-            while (true) {
-                long n = factor_contain(m.x, 1, m1);
-                if (n > 0)
-                    div_factor1(m1, m.x, (int) n);
-                else break;
-            }
-            m = m.coef;
-        }
-    }
-
-    public int get_n_paraent(TMono m) {
-        if (m == null)
-            return 0;
-        int n = 0;
-        while (m != null)
-            m = m.coef;
-        return n;
-    }
-
-    public TMono sp_reduce(TMono m1, TMono m2) { //m1.x == m2.x
-
-
-        while (true) {
-
-            if (m1 == null) return m1;
-            if (m2 == null) return m1;
-            if (m1.x != m2.x)
-                break;
-            if (m2.coef == null || m2.coef.coef != null)
-                break;
-            if (m2.deg != 1)
-                break;
-
-            //           basic.print(m1);
-
-            BigInteger b1 = getLN(m1);
-            BigInteger b2 = getLN(m2);
-
-            int n = m1.deg;
-
-            BigInteger bc1 = BigInteger.ONE;
-            BigInteger coefm2 = m2.coef.val;
-            TMono e = p_copy(m2.next.coef);
-            e = this.pctimes(e, -1);
-
-            TMono cpm2 = pth(0, 1, 1);
-            for (int i = 0; i < n; i++) {
-                bc1 = bc1.multiply(coefm2);
-                cpm2 = ptimes(cpm2, p_copy(e));
-            }
-            m1 = padd(ptimes(m1.coef, cpm2), this.pctimes(m1.next, bc1.intValue()));
-//            basic.print(m1);
-        }
-        coefgcd(m1);
-        return m1;
-    }
-
+    /**
+     * Reduces the polynomial by dividing it by the leading term of another polynomial.
+     *
+     * @param m1 the first polynomial
+     * @param vlist the list of polynomials to reduce
+     * @return the reduced polynomial
+     */
     public TMono b_reduce(TMono m1, Vector vlist) {
         if (m1 == null) return null;
 
@@ -2541,103 +2515,13 @@ public class PolyBasic {
         return m1;
     }
 
-    private void ppmove(TPoly pp) {
-        if (pp == null) return;
-        TMono m = pp.poly;
-        TPoly tp = pp.next;
-        while (tp != null) {
-            TMono mx = tp.poly;
-            if (pp_compare(m, mx) < 0) {
-                tp.poly = m;
-                pp.poly = mx;
-                pp = tp;
-            } else break;
-
-            tp = pp.next;
-        }
-    }
-
-    private TPoly shink_poly(TPoly poly) {
-        if (poly == null) return null;
-        TPoly tp = poly;
-        while (tp.next != null) {
-            if (tp.next.poly == null)
-                tp.next = tp.next.next;
-            else
-                tp = tp.next;
-        }
-        if (poly.poly != null)
-            return poly;
-        return poly.next;
-    }
-
-
-    private int compare(TMono m1, TMono m2) {
-        if (m1 == null && m2 == null) return 0;
-        if (m1 == null && m2 != null) return -1;
-        if (m1 != null && m2 == null) return 1;
-
-        if (m1.x == 0 && m2.x == 0) return 0;
-        if (m1.x == 0 && m2.x != 0) return -1;
-        if (m1.x != 0 && m2.x == 0) return 1;
-
-        if (m1.x > m2.x || m1.x == m2.x && m1.deg > m2.deg)
-            return 1;
-        if (m1.x == m2.x && m1.deg == m2.deg)
-            return 0;
-
-        return -1;
-    }
-
-    private TMono m_head(TMono m) {
-        if (m == null)
-            return null;
-        while (!Int(m))
-            m = m.coef;
-        return pth(0, m.val, 0);
-    }
-
-//    private TMono bb_divnh(TMono m1, TMono m2) {
-//        if (m1 == null || m2 == null) return null;
-//        int n = compare(m1, m2);
-//
-//        if (n < 0) return null;
-//
-//        if (Int(m1) && Int(m2))
-//            return new TMono(0, m1.val, 0);
-//
-//        if (n == 0) {
-//            TMono mx = bb_divn(m1.coef, m2.coef);
-//            if (mx == null)
-//                mx = this.m_head(m1);
-//            return mx;
-//        }
-//
-//        if (n > 0) {
-//            if (m1.x == m2.x) {
-//                TMono mx = bb_divn(m1.coef, m2.coef);
-//                if (mx == null)
-//                    mx = this.m_head(m1);
-//                int dd = m1.deg - m2.deg;
-//                if (dd > 0)
-//                    mx = pp_times(pth(m1.x, 1, dd), mx);
-//
-//                return mx;
-//            } else {
-//                TMono mx = bb_divn(m1.coef, m2);
-//                if (mx != null) {
-//                    int dd = m1.deg;
-//                    if (dd > 0)
-//                        mx = pp_times(pth(m1.x, 1, dd), mx);
-//                }
-//                return mx;
-//
-//            }
-//
-//        }
-//        return null;
-//    }
-
+    /**
+     * Divides the leading term of one polynomial by the leading term of another polynomial.
+     *
+     * @param m1 the first polynomial
+     * @param m2 the second polynomial
+     * @return the result of the division
+     */
     private TMono bb_divnh(TMono m1, TMono m2) {
         if (m1 == null || m2 == null) return null;
 
@@ -2667,6 +2551,13 @@ public class PolyBasic {
         return pp_times(pth(m1.x, 1, m1.deg), mx);
     }
 
+    /**
+     * Divides the leading term of one polynomial by the leading term of another polynomial.
+     *
+     * @param m1 the first polynomial
+     * @param m2 the second polynomial
+     * @return the result of the division
+     */
     private TMono bb_divn(TMono m1, TMono m2) {  //  get a term of m1 which diviid leading variable of m2.
         if (m1 == null || m2 == null) return null;
 
@@ -2715,12 +2606,24 @@ public class PolyBasic {
         return null;
     }
 
+
+    /**
+     * Prints the given vector of polynomials.
+     *
+     * @param v the vector of polynomials to print
+     */
     public void printVpoly(Vector v) {
         for (int i = 0; i < v.size(); i++)
             this.print((TMono) v.get(i));
         System.out.println("\n");
     }
 
+    /**
+     * Computes the Groebner basis for the given vector of polynomials.
+     *
+     * @param v the vector of polynomials
+     * @return the Groebner basis as a vector of polynomials
+     */
     public Vector g_basis(Vector v) {
         while (true) {
             bb_reduce(v, System.currentTimeMillis());
@@ -2741,6 +2644,12 @@ public class PolyBasic {
         return v;
     }
 
+    /**
+     * Computes the S-polynomials for the given vector of polynomials.
+     *
+     * @param vlist the vector of polynomials
+     * @return the S-polynomials as a vector of polynomials
+     */
     public Vector s_polys(Vector vlist) {
 
         Vector v = new Vector();
@@ -2761,27 +2670,24 @@ public class PolyBasic {
         return v;
     }
 
-    private TMono s_poly(TMono m1, TMono m2) {
-        if (m1.x == m2.x && m1.deg >= m2.deg) {
-
-        } else if (m_contain(m2.x, m2.deg, m1.coef)) {
-
-        } else return null;
-
-        TMono result;
-        m1 = p_copy(m1);
-        m2 = p_copy(m2);
-        if (m1.x == m2.x) {
-            result = prem1(m1, m2);
-        } else
-            result = prem3(m1, m2);
-        return result;
-    }
-
+    /**
+     * Computes the S-polynomial for two given polynomials.
+     *
+     * @param m1 the first polynomial
+     * @param m2 the second polynomial
+     * @return the S-polynomial of the two polynomials
+     */
     private TMono s_poly1(TMono m1, TMono m2) {
         return prem4(m1, m2);
     }
 
+    /**
+     * Computes the S-polynomial for two given polynomials.
+     *
+     * @param m1 the first polynomial
+     * @param m2 the second polynomial
+     * @return the S-polynomial of the two polynomials
+     */
     private TMono prem4(TMono m1, TMono m2) {
         if (m1 == null || m2 == null) return null;
         if (m1.x < m2.x) return m1;
@@ -2804,6 +2710,13 @@ public class PolyBasic {
         return null;
     }
 
+    /**
+     * Computes the greatest common divisor of two polynomials.
+     *
+     * @param m1 the first polynomial
+     * @param m2 the second polynomial
+     * @return the greatest common divisor of the two polynomials
+     */
     private TMono gcd_h(TMono m1, TMono m2) {           // gcd of m1, m2.   (HEAD);
         if (m1 == null || m2 == null) return null;
         TMono mx = null;
@@ -2832,6 +2745,13 @@ public class PolyBasic {
         return mx;
     }
 
+    /**
+     * Divides the leading term of one polynomial by the leading term of another polynomial.
+     *
+     * @param m1 the first polynomial
+     * @param m the second polynomial
+     * @return the result of the division
+     */
     private TMono div_gcd(TMono m1, TMono m) {
         TMono mx = pth(0, 1, 0);
 
@@ -2854,36 +2774,14 @@ public class PolyBasic {
         return mx;
     }
 
-    private TMono[] mgcd(TMono m1, TMono m2) {
-        if (m1 == null || m2 == null) return null;
-        TMono[] mm = new TMono[2];
-        bb_div2n(m1, m2, mm);
-        return mm;
-    }
 
-    private void bb_div2n(TMono m1, TMono m2, TMono[] mm) {
-        if (m1 == null || m2 == null) return;
-
-        while (m1 != null) {
-            if (m1.x > m2.x) {
-                bb_div2n(m1.coef, m2, mm);
-                if (mm[0] != null) {
-                    mm[1] = ptimes(pth(m1.x, 1, m1.deg), mm[1]);
-                    return;
-                }
-            } else if (m1.x == m2.x && m1.deg >= m2.deg) {
-                mm[0] = pth(0, 1, 0);
-                mm[1] = pth(0, 1, 0);
-                get_mm(m1, m2, mm);
-                return;
-            } else break;
-
-            m1 = m1.next;
-            if (m1 != null && m1.deg == 0)
-                m1 = m1.coef;
-        }
-    }
-
+    /**
+     * Computes the greatest common divisor of two polynomials and stores the result in the provided array.
+     *
+     * @param m1 the first polynomial
+     * @param m2 the second polynomial
+     * @param mm the array to store the result
+     */
     private void get_mm(TMono m1, TMono m2, TMono[] mm) {
         if (m1 == null || m2 == null) return;
 
@@ -2912,6 +2810,12 @@ public class PolyBasic {
         get_mm(m1, m2, mm);
     }
 
+    /**
+     * Gets the leading coefficient of a polynomial.
+     *
+     * @param m the polynomial
+     * @return the leading coefficient
+     */
     private BigInteger getLN(TMono m) {
         if (m == null) return null;
         while (!Int(m))
@@ -2919,70 +2823,14 @@ public class PolyBasic {
         return m.val;
     }
 
-//    public void n_reduce(Vector v1, Vector nlist) {
-//        for (int i = 0; i < v1.size(); i++) {
-//            TMono m1 = (TMono) v1.get(i);
-//            boolean r = false;
-//            while (true) {
-//                boolean b = true;
-//                for (int j = 0; j < nlist.size(); j++) {
-//                    TMono m2 = (TMono) nlist.get(j);
-//                    TMono mm = gcd_h(m1, m2);
-//                    if (mm != null && mm.x != 0) {
-//                        TMono t1 = div_gcd(m1, mm);
-//                        TMono t2 = div_gcd(m2, mm);
-//                        print(m1);
-//                        print(m2);
-//                        m1 = pdif(ptimes(t2, p_copy(m1)), ptimes(t1, p_copy(m2)));
-//
-//                        if (CharSet.debug()) {
-//                            print(m1);
-//                            System.out.println("\n");
-//                        }
-//
-//                        r = true;
-//                        b = false;
-//                    }
-//                }
-//                if (b) break;
-//            }
-//            if (r) {
-//                v1.remove(i);
-//                if (m1 == null)
-//                    i--;
-//                else
-//                    v1.add(i, m1);
-//            }
-//        }
-//    }
-
-
-    public TMono ll_gbasis(TMono m1, TMono md, int x, int para) {
-        if (m1 == null)
-            return null;
-
-        if (m1.deg == 1) {
-            TMono m11 = getxm1(x, 1, m1);    // u1
-            TMono m12 = getxm1(x - 1, 1, m1);   // u2
-            TMono c11 = pp_times(pth(para, 1, 1), p_copy(m11)); // zu1,
-            TMono c12 = pp_times(pth(para, 1, 1), p_copy(m12)); // zu2.
-
-            TMono c2 = pth(x, 1, 1); // x1
-            TMono t11 = ptimes(c11, p_copy(m1)); // zu1*x1
-            TMono t12 = ptimes(c12, p_copy(m12)); // zu2^2
-
-            TMono t2 = pp_times(c2, p_copy(md)); // x1*md.
-
-            t2 = pdif(t2, t11);
-            t2 = pp_times(p_copy(m11), t2);
-            TMono t13 = pp_times(p_copy(m12), pp_times(pth(para, 1, 1), p_copy(m12)));
-
-
-            return pdif(t2, pp_times(t13, p_copy(m1)));
-        }
-        return null;
-    }
-
+    /**
+     * Computes the delta of two polynomials.
+     *
+     * @param x the variable
+     * @param m1 the first polynomial
+     * @param m2 the second polynomial
+     * @return the delta of the two polynomials
+     */
     public TMono ll_delta(int x, TMono m1, TMono m2) {
         if (m1 == null) return null;
         if (m1.deg == 1) {
@@ -3021,23 +2869,14 @@ public class PolyBasic {
         return null;
     }
 
-    public TMono getxm1(int x, TMono m) {
-        if (m == null)
-            return null;
-
-        if (m.x == x)
-            return m.coef;
-
-        while (m.next != null)
-            m = m.next;
-        if (m.deg != 0)
-            return null;
-        m = m.coef;
-        if (m.deg == 1 && m.x == x)
-            return m.coef;
-        return null;
-    }
-
+    /**
+     * Gets the leading coefficient of a polynomial.
+     *
+     * @param x the variable
+     * @param d the degree
+     * @param m the polynomial
+     * @return the leading coefficient
+     */
     public TMono getxm1(int x, int d, TMono m) {
         if (m == null)
             return null;
@@ -3058,6 +2897,12 @@ public class PolyBasic {
         return null;
     }
 
+    /**
+     * Updates the value of a polynomial by adding a given value to its coefficients.
+     *
+     * @param v the polynomial
+     * @param dx the value to add
+     */
     public void upValueTM(Vector v, int dx) {
         if (dx == 0)
             return;
@@ -3067,6 +2912,12 @@ public class PolyBasic {
         }
     }
 
+    /**
+     * Updates the value of a polynomial by adding a given value to its coefficients.
+     *
+     * @param v the polynomial
+     * @param dx the value to add
+     */
     public void upValueDM(Vector v, int dx) {
         for (int i = 0; i < v.size(); i++) {
             TDono d = (TDono) v.get(i);
@@ -3076,6 +2927,12 @@ public class PolyBasic {
         }
     }
 
+    /**
+     * Gets the maximum value of x in a vector of polynomials.
+     *
+     * @param v the vector of polynomials
+     * @return the maximum value of x
+     */
     public int getMaxX(Vector v) {
         int x = 0;
 
@@ -3087,6 +2944,12 @@ public class PolyBasic {
         return x;
     }
 
+    /**
+     * Updates the value of a polynomial by adding a given value to its coefficients.
+     *
+     * @param m the polynomial
+     * @param dx the value to add
+     */
     public void upValueTM(TMono m, int dx) {
         if (dx == 0)
             return;
@@ -3107,8 +2970,13 @@ public class PolyBasic {
             m = m.next;
         }
     }
-
-
+    
+    /**
+     * Checks if the polynomial is finished.
+     *
+     * @param v the vector of polynomials
+     * @return true if the polynomial is finished, false otherwise
+     */
     public boolean gb_finished(Vector v) {
         for (int i = 0; i < v.size(); i++) {
             TMono m = (TMono) v.get(i);
@@ -3118,6 +2986,11 @@ public class PolyBasic {
         return false;
     }
 
+    /**
+     * Reduces the polynomial by removing terms with degree 0.
+     *
+     * @param v the vector of polynomials
+     */
     public void ndg_reduce(Vector v) {
         for (int i = 0; i < v.size(); i++) {
             TMono m = (TMono) v.get(i);
@@ -3128,7 +3001,13 @@ public class PolyBasic {
         }
     }
 
-
+    /**
+     * Gets the conditions for the given vector of polynomials.
+     *
+     * @param v the vector of polynomials
+     * @param dx the value to add
+     * @return the conditions as a vector of polynomials
+     */
     public Vector getcnds(Vector v, int dx) {
         Vector v1 = new Vector();
         for (int i = 0; i < v.size(); i++) {
@@ -3142,93 +3021,14 @@ public class PolyBasic {
         return v1;
     }
 
-    public Vector specialTreatment(TMono m1, TMono m2, int dd) {
-        Vector v = new Vector();
-        if (m1 == null) return v;
-        int x = m1.x;
 
-        if (m1.deg == 1) {
-            TMono m11 = getxm1(x, 1, m1);
-            TMono m12 = getxm1(x - 1, 1, m1);
-            if (m2 == null) {
-                return v;
-            }
-            TMono m21 = getxm1(x, 1, m2);
-            TMono m22 = getxm1(x - 1, 1, m2);
-
-
-            TMono dmm = pdif(ptimes(p_copy(m1), p_copy(m21)), ptimes(p_copy(m11), p_copy(m2)));
-            dmm = ptimes(pth(dd, 1, 1), dmm);
-
-            TMono dmm1 = pdif(ptimes(p_copy(m1), p_copy(m22)), ptimes(p_copy(m12), p_copy(m2)));
-            dmm1 = ptimes(pth(dd, 1, 1), dmm1);
-            v.add(dmm);
-            v.add(dmm1);
-        }
-        return v;
-    }
-
-    public Vector updateTMM(Vector v, int s, int e, int dx, boolean up) {
-        Vector v3 = new Vector();
-
-        for (int i = 0; i < v.size(); i++) {
-            TMono m = (TMono) v.get(i);
-            TMono m2 = updateTMM(m, s, e, dx, up);
-            ppush(m2, v3);
-        }
-        return v3;
-    }
-
-    private TMono updateTMM(TMono m, int s, int e, int dx, boolean up) {
-
-        TMono mx = null;
-
-        if (up) {
-            while (m != null) {
-                if (m.x < s && m.x != 0) {
-                    TMono m1 = updateTMM(m.coef, s, e, dx, up);
-                    m1 = ptimes(m1, pth(dx + m.x, 1, m.deg));
-                    mx = padd(mx, m1);
-                } else {
-                    if (m.x == 0) {
-                        TMono m1 = pth(0, m.val, m.deg);
-                        mx = padd(mx, m1);
-                    } else {
-                        TMono m1 = updateTMM(m.coef, s, e, dx, up);
-                        if (m.deg != 0)
-                            m1 = ptimes(m1, pth(m.x, 1, m.deg));
-                        mx = padd(mx, m1);
-                    }
-
-                }
-                m = m.next;
-            }
-        } else {
-            while (m != null) {
-                if (m.x > e) {
-                    TMono m1 = updateTMM(m.coef, s, e, dx, up);
-                    m1 = ptimes(m1, pth(m.x - dx, 1, m.deg));
-                    mx = padd(mx, m1);
-                } else {
-                    if (m.x == 0) {
-                        TMono m1 = pth(0, m.val, m.deg);
-                        mx = padd(mx, m1);
-                    } else {
-                        TMono m1 = updateTMM(m.coef, s, e, dx, up);
-                        if (m.deg != 0)
-                            m1 = ptimes(m1, pth(m.x, 1, m.deg));
-                        mx = padd(mx, m1);
-                    }
-                }
-                m = m.next;
-            }
-        }
-        return mx;
-    }
-
-    //////////////////////////////////////////////////////////////////
-    //TDono;
-
+    /**
+     * Parses common Dono objects from the given vector of polynomials.
+     *
+     * @param v the vector of polynomials
+     * @param dx the value to add
+     * @return a vector of parsed Dono objects
+     */
     public Vector parseCommonDono(Vector v, int dx) {
         Vector v1 = new Vector();
         for (int i = 0; i < v.size(); i++) {
@@ -3251,6 +3051,11 @@ public class PolyBasic {
         return v1;
     }
 
+    /**
+     * Erases common Dono objects from the given vector of polynomials.
+     *
+     * @param v the vector of polynomials
+     */
     public void eraseCommonDono(Vector v) {
         for (int i = 0; i < v.size(); i++) {
             TDono d = (TDono) v.get(i);
@@ -3266,6 +3071,13 @@ public class PolyBasic {
         }
     }
 
+    /**
+     * Checks if two monomials are equal.
+     *
+     * @param m1 the first monomial
+     * @param m2 the second monomial
+     * @return true if the monomials are equal, false otherwise
+     */
     public boolean ck_eq(TMono m1, TMono m2) {
         while (m1 != null && m2 != null) {
             if (m1.x != m2.x || m1.deg != m2.deg)
@@ -3276,62 +3088,18 @@ public class PolyBasic {
             m2 = m2.next;
         }
 
-        return m1 == m2; // null
+        return m1 == m2;
     }
 
-    public Vector parseDono(Vector v, int dx) {
-        Vector v1 = new Vector();
-        Vector v2 = new Vector();
-
-        int ldx = 0;
-        for (int i = 0; i < v.size(); i++) {
-            TDono d = (TDono) v.get(i);
-            TMono m = d.p2;
-
-            ldx = getLdx(m, dx);
-            if (ldx == 0) {
-                v1.add(d);
-            } else
-                v2.add(d);
-        }
-
-        if (v2.size() == 0) return v1;
-
-        boolean r = true;
-
-        while (true) {
-            r = true;
-
-            for (int i = 0; i < v2.size(); i++) {
-                TDono d = (TDono) v2.get(i);
-                reduceDono(d, v1, dx);
-                if (getLdx(d.p2, dx) == 0) {
-                    v1.add(d);
-                    v2.remove(d);
-                    i--;
-                    r = false;
-                }
-            }
-            if (r) break;
-        }
-
-        return v1;
-    }
-
-    private int getLdx(TMono m, int dx) {
-        while (m != null) {
-
-            if (m.x > 0 && m.x < dx)
-                return m.x;
-
-            int n = getLdx(m.coef, dx);
-            if (n > 0)
-                return n;
-            m = m.next;
-        }
-        return 0;
-    }
-
+    /**
+     * Checks if the polynomial is less than a given value.
+     *
+     * This method only traverses the `coef` chain of the polynomial.
+     *
+     * @param m the polynomial
+     * @param dx the value to compare with
+     * @return true if the polynomial is less than the given value, false otherwise
+     */
     public boolean ctLessdx1(TMono m, int dx) {
         while (m != null) {
             if (m.x > 0 && m.deg > 0 && m.x < dx)
@@ -3341,6 +3109,16 @@ public class PolyBasic {
         return false;
     }
 
+
+    /**
+     * Checks if the polynomial is less than a given value.
+     *
+     * This method traverses both the `coef` and `next` chains of the polynomial and uses recursion.
+     *
+     * @param m the polynomial
+     * @param dx the value to compare with
+     * @return true if the polynomial is less than the given value, false otherwise
+     */
     public boolean ctLessdx(TMono m, int dx) {
         int r = 0;
 
@@ -3357,21 +3135,13 @@ public class PolyBasic {
         return false;
     }
 
-
-    private boolean ctLdx(TMono m, int i) {
-        while (m != null) {
-
-            if (m.x > 0 && m.x == i)
-                return true;
-
-            boolean n = ctLdx(m.coef, i);
-            if (n)
-                return n;
-            m = m.next;
-        }
-        return false;
-    }
-
+    /**
+     * Gets the minimum leading degree of a polynomial.
+     *
+     * @param m the polynomial
+     * @param dx the value to compare with
+     * @return the minimum leading degree, or -1 if not found
+     */
     private int MinLdx(TMono m, int dx) {
         int r = MinLdx(m);
         if (r >= dx)
@@ -3379,6 +3149,12 @@ public class PolyBasic {
         return r;
     }
 
+    /**
+     * Gets the minimum leading degree of a polynomial.
+     *
+     * @param m the polynomial
+     * @return the minimum leading degree
+     */
     private int MinLdx(TMono m) {
         int r = Integer.MAX_VALUE;
 
@@ -3396,26 +3172,14 @@ public class PolyBasic {
 
     }
 
-    private int MaxLdx(TMono m, int dx) {
-        int r = 0;
 
-        while (m != null) {
-            if (m.x == 0)
-                return -1;
-            if (m.x < dx) {
-                if (r < m.x)
-                    r = m.x;
-            }
-
-            int k = MaxLdx(m.coef, dx);
-            if (k > 0 && r < k)
-                r = k;
-            m = m.next;
-        }
-        return r;
-    }
-
-
+    /**
+     * Gets the maximum leading degree of a polynomial.
+     *
+     * @param m the polynomial
+     * @param i the value to compare with
+     * @return the maximum leading degree
+     */
     private int ctMLdx(TMono m, int i) {  // MAX
         int r = 0;
 
@@ -3439,6 +3203,14 @@ public class PolyBasic {
     }
 
 
+    /**
+     * Reduces the polynomial by dividing it by the leading term of another polynomial.
+     *
+     * @param mm the polynomial to reduce
+     * @param v the vector of polynomials
+     * @param dx the value to add
+     * @return the reduced polynomial
+     */
     public TMono reduceMDono(TMono mm, Vector v, int dx) {
         TMono m = mm;
 
@@ -3461,8 +3233,6 @@ public class PolyBasic {
                 for (int k = 0; k < rd; k++) {
                     m = pp_times(m, p_copy(d1.p2));
                 }
-//                dprint(m, 9);
-//                dprint(m2, 9);
 
                 TMono dp = basic.p_copy(d1.p1);
                 div_factor1(dp, max, 1);
@@ -3485,41 +3255,19 @@ public class PolyBasic {
                     if (BB_STOP)
                         return null;
                 }
-//                this.print(m);
                 coefgcd(m);
             }
         }
         return m;
     }
 
-    public void reduceDono(TDono d, Vector v, int dx) {
-        for (int i = 1; i < dx; i++) {
-            if (!ctLdx(d.p2, i))
-                continue;
-
-            int n = i;
-
-            TDono d1 = getDo(v, n);
-            if (d1 != null) {
-                TMono m = d.p2;
-                TMono m2 = this.padd(pp_times(p_copy(d1.p1), p_copy(d1.p2)), p_copy(d1.c));
-                TMono mx = bb_divn(m, m2);
-                if (mx == null) {
-                    m = pp_times(m, p_copy(d1.p2));
-                    mx = bb_divn(m, m2);
-                }
-
-
-                while (mx != null && mx.x != 0) {
-                    BigInteger b2 = getLN(m2);
-                    m = pdif(cp_times(b2, m), pp_times(mx, p_copy(m2)));
-                    mx = bb_divn(m, m2);
-                }
-                d.p2 = m;
-            }
-        }
-    }
-
+    /**
+     * Gets the Dono object from the given vector of polynomials.
+     *
+     * @param v the vector of polynomials
+     * @param n the value to compare with
+     * @return the Dono object, or null if not found
+     */
     public TDono getDo(Vector v, int n) {
         TDono xd = null;
         int nn = -1;
@@ -3544,87 +3292,13 @@ public class PolyBasic {
         return xd;
     }
 
-
-    public void d_reduce(TDono d1, Vector vlist) {
-        if (d1 == null) return;
-
-        TMono m1 = d1.p2;
-        BigInteger bb = BigInteger.ONE;
-
-
-        while (true) {
-            boolean r = true;
-            for (int i = 0; i < vlist.size(); i++) {
-                TMono m2 = (TMono) vlist.get(i);
-                TMono m = bb_divnh(m1, m2);
-                while (m != null) {
-                    BigInteger b2 = getLN(m2);
-                    bb.multiply(b2);
-                    m1 = pdif(cp_times(b2, m1), pp_times(m, p_copy(m2)));
-                    if (m1 == null) break;
-                    r = false;
-                    m = bb_divn(m1, m2);
-                }
-            }
-            if (r) break;
-        }
-//        d1.p1 = cp_times(bb, d1.p1);
-        d1.c = cp_times(bb, d1.c);
-        d1.p2 = m1;
-    }
-
-
-    public void splitDonos(Vector vnn, Vector vnds, int dx) {
-        Vector vtemp = new Vector();
-
-        while (true) {
-            while (vnds.size() != 0) {
-                TMono tx = getMaxDMono(vnds, dx);
-//                this.dprint(tx, 9);
-
-                int max = MaxLdx(tx, dx);
-                int min = MinLdx(tx, dx);
-                vnds.remove(tx);
-
-
-                if (max != min) {
-                    tx = reduceMDono(tx, vnn, dx);
-                    max = MaxLdx(tx, dx);
-                }
-
-                if (max == min) {
-                    TDono d = splitDono(tx, dx);
-                    if (d != null)
-                        vnn.add(d);
-                } else {
-                    vtemp.add(tx);
-                }
-            }
-            if (vtemp.size() == 0)
-                break;
-            else {
-                vnds.addAll(vtemp);
-                vtemp.clear();
-            }
-        }
-
-    }
-
-    public TMono getMaxDMono(Vector vnds, int dx) {
-        int k = 0;
-        TMono tx = null;
-
-        for (int i = 0; i < vnds.size(); i++) {
-            TMono m = (TMono) vnds.get(i);
-            int x = this.MaxLdx(m, dx);
-            if (x > k) {
-                k = x;
-                tx = m;
-            }
-        }
-        return tx;
-    }
-
+    /**
+     * Splits the given monomial into a Dono object.
+     *
+     * @param m the monomial
+     * @param dx the value to add
+     * @return the Dono object
+     */
     public TDono splitDono(TMono m, int dx) {
         TMono m1 = m;
         TMono c = null;
@@ -3643,8 +3317,6 @@ public class PolyBasic {
 
         TMono mx = this.pp_minus(p_copy(m), p_copy(c));
 
-        int minX = this.MinLdx(mx, dx);
-
         TMono mo = pth(0, 1, 0);
         TMono mf = get_factor1(mx);
         while (mf != null && mf.x != 0) {
@@ -3662,33 +3334,5 @@ public class PolyBasic {
 
         return new TDono(mo, mx, c);
     }
-
-    public void reduceMdo(Vector vrs, int dx) {
-        for (int i = 0; i < vrs.size(); i++) {
-            TMono m = (TMono) vrs.get(i);
-            int max = this.MaxLdx(m, dx);
-            int min = this.MinLdx(m, dx);
-            if (max == min)
-                continue;
-
-
-        }
-
-    }
-
-
-    public TMono getMono(TDono d) {
-        TMono m = padd(pp_times(p_copy(d.p1), p_copy(d.p2)), p_copy(d.c));
-        coefgcd(m);
-        if (m == null)
-            return m;
-
-        if (this.getLN(m).intValue() < 0) {
-            m = cp_times(-1, m);
-            return m;
-        }
-        return m;
-    }
-
 }
 

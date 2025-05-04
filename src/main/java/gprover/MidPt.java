@@ -1,21 +1,28 @@
+package gprover;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2006-2-14
- * Time: 21:31:33
- * To change this template use File | Settings | File Templates.
+ * Represents a midpoint in a geometric construction.
+ * This class extends CClass and includes properties for lemma, conditions, and coordinates.
  */
-package gprover;
-public class MidPt extends CClass
-{
-//    int type;
+public class MidPt extends CClass {
+    // int type; // Commented out type field
+
+    /** The lemma associated with the midpoint. */
     int lemma;
+
+    /** The condition associated with the midpoint. */
     Cond co;
+
+    /** The coordinates of the midpoint. */
     public int m, a, b;
+
+    /** Reference to the next MidPt object. */
     MidPt nx;
-    public MidPt()
-    {
+
+    /**
+     * Constructs a MidPt object with default values.
+     */
+    public MidPt() {
         type = lemma = m = a = b = 0;
         co = null;
         nx = null;

@@ -1,5 +1,11 @@
 package gprover;
 
+/**
+ * Rules class holds the translated geometric rules and full angle definitions.
+ * The arrays defined in this class provide language-specific translations for
+ * geometric construction rules and full angle definitions. These translations are
+ * integrated with a gettext-based internationalization system.
+ */
 public class Rules {
 
     // All of these translations are now in the keys.pot and *.po files in the gettext system.

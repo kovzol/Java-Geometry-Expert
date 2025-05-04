@@ -28,6 +28,12 @@ import org.w3c.dom.svg.SVGDocument;
 import static org.graphper.api.Html.table;
 import static org.graphper.api.Html.td;
 
+/**
+ * PanelProve is a class that represents a tabbed pane for displaying various
+ * proof-related panels in a graphical user interface (GUI). It includes panels
+ * for construction, GDD (General Deduction), area method, manual proof editor,
+ * and database.
+ */
 public class PanelProve extends JTabbedPane implements ChangeListener {
 //    private Font font_thm = new Font("Dialog", Font.BOLD, 12);
 

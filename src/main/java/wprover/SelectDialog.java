@@ -8,11 +8,9 @@ import java.awt.event.*;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2005-7-19
- * Time: 11:42:51
- * To change this template use File | Settings | File Templates.
+ * SelectDialog is a class that extends JBaseDialog and implements ActionListener,
+ * ListSelectionListener, MouseListener, MouseMotionListener, and KeyListener interfaces.
+ * It provides a dialog for selecting items from a list.
  */
 public class SelectDialog extends JBaseDialog implements
         ActionListener, ListSelectionListener, MouseListener, MouseMotionListener, KeyListener {
@@ -31,6 +29,12 @@ public class SelectDialog extends JBaseDialog implements
 
     private static Font listFont = new Font("Arial", Font.PLAIN, 12);
 
+    /**
+     * Constructs a new SelectDialog with the specified GExpert instance and list of items.
+     *
+     * @param owner the GExpert instance to associate with this dialog
+     * @param vlist the list of items to display in the dialog
+     */
     public SelectDialog(GExpert owner, Vector vlist) {
         super(owner.getFrame(), "Select");
         gxInstance = owner;
@@ -45,8 +49,8 @@ public class SelectDialog extends JBaseDialog implements
         list.addMouseMotionListener(this);
         JScrollPane listScrollPane = new JScrollPane(list);
         list.setFont(listFont);
-//        list.addKeyListener(this);
-//        this.addKeyListener(this);
+        //        list.addKeyListener(this);
+        //        this.addKeyListener(this);
 
         cancle_button = new JButton(str);
         cancle_button.addActionListener(this);
@@ -61,10 +65,20 @@ public class SelectDialog extends JBaseDialog implements
         addItem(vlist);
     }
 
+    /**
+     * Handles the mouse dragged event.
+     *
+     * @param e the MouseEvent triggered by dragging the mouse
+     */
     public void mouseDragged(MouseEvent e) {
 
     }
 
+    /**
+     * Handles the mouse moved event.
+     *
+     * @param e the MouseEvent triggered by moving the mouse
+     */
     public void mouseMoved(MouseEvent e) {
         Rectangle rc = list.getCellBounds(0, 0);
         if (rc == null)
@@ -81,6 +95,11 @@ public class SelectDialog extends JBaseDialog implements
         list.setSelectedIndex(n);
     }
 
+    /**
+     * Adds items to the list model and selected list.
+     *
+     * @param v the vector of items to add
+     */
     public void addItem(Vector v) {
         listModel.clear();
         selectedlist.clear();
@@ -92,6 +111,11 @@ public class SelectDialog extends JBaseDialog implements
         }
     }
 
+    /**
+     * Handles the list selection event.
+     *
+     * @param e the ListSelectionEvent triggered by selecting an item in the list
+     */
     public void valueChanged(ListSelectionEvent e) {
         int n = list.getSelectedIndex();
         int len = selectedlist.size();
@@ -99,6 +123,11 @@ public class SelectDialog extends JBaseDialog implements
             gxInstance.dp.setObjectListForFlash((CClass) selectedlist.get(n));
     }
 
+    /**
+     * Handles the action event for the cancel button.
+     *
+     * @param e the ActionEvent triggered by clicking the cancel button
+     */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == cancle_button) {
             selectedlist.clear();
@@ -107,23 +136,43 @@ public class SelectDialog extends JBaseDialog implements
         }
     }
 
+    /**
+     * Returns the selected item.
+     *
+     * @return the selected item
+     */
     public Object getSelected() {
         return selected;
     }
 
+    /**
+     * Handles the mouse clicked event.
+     *
+     * @param e the MouseEvent triggered by clicking the mouse
+     */
     public void mouseClicked(MouseEvent e) {
 
     }
 
+    /**
+     * Displays the dialog at the specified location.
+     *
+     * @param x the x-coordinate of the location
+     * @param y the y-coordinate of the location
+     */
     public void popSelect(int x, int y) {
         oldx = x;
         oldy = y;
         this.setLocation(oldx, oldy);
         this.setFocusable(true);
         this.setVisible(true);
-
     }
 
+    /**
+     * Handles the mouse pressed event.
+     *
+     * @param e the MouseEvent triggered by pressing the mouse
+     */
     public void mousePressed(MouseEvent e) {
         int index = list.getSelectedIndex();
         if (index < 0 || index >= selectedlist.size())
@@ -132,22 +181,46 @@ public class SelectDialog extends JBaseDialog implements
         this.setVisible(false);
     }
 
+    /**
+     * Handles the mouse released event.
+     *
+     * @param e the MouseEvent triggered by releasing the mouse
+     */
     public void mouseReleased(MouseEvent e) {
-
 
     }
 
+    /**
+     * Handles the mouse entered event.
+     *
+     * @param e the MouseEvent triggered by entering the mouse
+     */
     public void mouseEntered(MouseEvent e) {
     }
 
+    /**
+     * Handles the mouse exited event.
+     *
+     * @param e the MouseEvent triggered by exiting the mouse
+     */
     public void mouseExited(MouseEvent e) {
     }
 
+    /**
+     * Handles the key typed event.
+     *
+     * @param e the KeyEvent triggered by typing a key
+     */
     public void keyTyped(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
             this.setVisible(false);
     }
 
+    /**
+     * Handles the key pressed event.
+     *
+     * @param e the KeyEvent triggered by pressing a key
+     */
     public void keyPressed(KeyEvent e) {
         super.keyPressed(e);
     }

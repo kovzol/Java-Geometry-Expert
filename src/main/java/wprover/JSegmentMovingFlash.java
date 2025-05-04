@@ -6,11 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: Mar 23, 2007
- * Time: 11:41:54 PM
- * To change this template use File | Settings | File Templates.
+ * JSegmentMovingFlash is a class that extends JFlash and implements ActionListener.
+ * It is used to create a moving flash effect on a segment defined by four points.
  */
 public class JSegmentMovingFlash extends JFlash implements ActionListener {
 
@@ -21,6 +18,17 @@ public class JSegmentMovingFlash extends JFlash implements ActionListener {
     private double xc, yc, dxc, dyc;
 
 
+    /**
+     * Constructs a new JSegmentMovingFlash with the specified parameters.
+     *
+     * @param p  the JPanel to associate with this JSegmentMovingFlash
+     * @param p1 the first CPoint of the segment
+     * @param p2 the second CPoint of the segment
+     * @param p3 the third CPoint of the segment
+     * @param p4 the fourth CPoint of the segment
+     * @param c1 the first color index for the flashing effect
+     * @param c2 the second color index for the flashing effect
+     */
     public JSegmentMovingFlash(JPanel p, CPoint p1, CPoint p2, CPoint p3, CPoint p4, int c1, int c2) {
         super(p);
 
@@ -35,9 +43,11 @@ public class JSegmentMovingFlash extends JFlash implements ActionListener {
         nstep = -3;
         timer = new Timer(TIME_INTERVAL, this);
         super.vType = true;
-
     }
 
+    /**
+     * Initializes the parameters for the moving flash effect.
+     */
     private void init() {
         double r = CMisc.getMoveStep();
         double x1 = (p1.getx() + p2.getx()) / 2;
@@ -97,6 +107,12 @@ public class JSegmentMovingFlash extends JFlash implements ActionListener {
         da = r2 / n;
     }
 
+    /**
+     * Draws the moving flash effect on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     * @return true if the drawing was successful, false otherwise
+     */
     public boolean draw(Graphics2D g2) {
         double r = (double) (n - nd) / n;
         Color c = getRatioColor(c1, c2, r);
@@ -104,7 +120,6 @@ public class JSegmentMovingFlash extends JFlash implements ActionListener {
         g2.setColor(c);
 
         if (nd >= 0 && nd != n) {
-
             double dxt = (dxc) * nd / n;
             double dyt = (dyc) * nd / n;
             double tx1 = p1.getx() - xc;
@@ -121,7 +136,6 @@ public class JSegmentMovingFlash extends JFlash implements ActionListener {
             double x2 = tx2 * cos - ty2 * sin + xc + dxt;
             double y2 = tx2 * sin + ty2 * cos + yc + dyt;
             g2.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-
         } else if (nd < 0) {
             g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) p2.getx(), (int) p2.gety());
         } else if (nd == n && nstep <= 0) {
@@ -130,6 +144,11 @@ public class JSegmentMovingFlash extends JFlash implements ActionListener {
         return true;
     }
 
+    /**
+     * Handles the action event for the timer, updating the animation state and repainting the panel.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         nd++;
         if (nd >= n) {

@@ -7,16 +7,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-6-25
- * Time: 21:12:36
- * To change this template use File | Settings | File Templates.
+ * TransformConfirmDialog.java
+ * This class represents a confirmation dialog for transformations in the GExpert application.
+ * It extends JBaseDialog and implements ActionListener to handle button actions.
  */
 public class TransformConfirmDialog extends JBaseDialog implements ActionListener {
 
     int result = -1;
 
+    /**
+     * Constructs a new TransformConfirmDialog with the specified frame and messages.
+     *
+     * @param f  the parent frame for the dialog
+     * @param s1 the first message to display in the dialog
+     * @param s2 the second message to display in the dialog
+     */
     public TransformConfirmDialog(Frame f, String s1, String s2) {
         super(f, "Confirm", true);
 
@@ -70,6 +75,11 @@ public class TransformConfirmDialog extends JBaseDialog implements ActionListene
         pack();
     }
 
+    /**
+     * Handles action events for the buttons in the dialog.
+     *
+     * @param e the ActionEvent triggered by clicking a button
+     */
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
         if (s.equalsIgnoreCase("Yes"))
@@ -79,16 +89,23 @@ public class TransformConfirmDialog extends JBaseDialog implements ActionListene
         else
             result = 2;
         this.setVisible(false);
-
-//        super.keyPressed();
     }
 
+    /**
+     * Returns the result of the dialog.
+     *
+     * @return the result of the dialog (0 for Yes, 1 for No, 2 for Cancel)
+     */
     public int getResult() {
         return result;
     }
 
+    /**
+     * Handles key pressed events for the dialog.
+     *
+     * @param e the KeyEvent triggered by pressing a key
+     */
     public void keyPressed(KeyEvent e) {
-
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_Y) {
             result = 0;
@@ -102,6 +119,4 @@ public class TransformConfirmDialog extends JBaseDialog implements ActionListene
         }
         super.keyPressed(e);
     }
-
-
 }

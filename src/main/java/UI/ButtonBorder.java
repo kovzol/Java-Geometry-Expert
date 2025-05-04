@@ -31,6 +31,17 @@ import javax.swing.border.AbstractBorder;
 public class ButtonBorder extends AbstractBorder
 {
 
+/**
+       * Paints the border of the specified component.
+       * Determines the state of the button (pressed, rollover, enabled) and calls the appropriate paint method.
+       *
+       * @param c the component for which this border is being painted
+       * @param g the Graphics context in which to paint
+       * @param x the x position of the painted border
+       * @param y the y position of the painted border
+       * @param width the width of the painted border
+       * @param height the height of the painted border
+       */
       public void paintBorder(Component c, Graphics g, int x, int y, int width,
                               int height)
       {
@@ -66,34 +77,86 @@ public class ButtonBorder extends AbstractBorder
             }
       }
 
+      /**
+       * Paints the border for a normal (default) button state.
+       *
+       * @param b the button being painted
+       * @param g the Graphics context in which to paint
+       * @param x the x position of the painted border
+       * @param y the y position of the painted border
+       * @param width the width of the painted border
+       * @param height the height of the painted border
+       */
       protected void paintNormal(AbstractButton b, Graphics g, int x, int y,
                                  int width, int height)
       {
       }
 
+      /**
+       * Paints the border for a disabled button state.
+       *
+       * @param b the button being painted
+       * @param g the Graphics context in which to paint
+       * @param x the x position of the painted border
+       * @param y the y position of the painted border
+       * @param width the width of the painted border
+       * @param height the height of the painted border
+       */
       protected void paintDisabled(AbstractButton b, Graphics g, int x, int y,
                                    int width, int height)
       {
       }
 
+      /**
+       * Paints the border for a rollover button state.
+       *
+       * @param b the button being painted
+       * @param g the Graphics context in which to paint
+       * @param x the x position of the painted border
+       * @param y the y position of the painted border
+       * @param width the width of the painted border
+       * @param height the height of the painted border
+       */
       protected void paintRollover(AbstractButton b, Graphics g, int x, int y,
                                    int width, int height)
       {
       }
 
+      /**
+       * Paints the border for a pressed button state.
+       *
+       * @param b the button being painted
+       * @param g the Graphics context in which to paint
+       * @param x the x position of the painted border
+       * @param y the y position of the painted border
+       * @param width the width of the painted border
+       * @param height the height of the painted border
+       */
       protected void paintPressed(AbstractButton b, Graphics g, int x, int y,
                                   int width, int height)
       {
       }
 
+      /**
+       * Returns the insets of the border.
+       *
+       * @param c the component for which this border insets value applies
+       * @return the insets of the border
+       */
       public Insets getBorderInsets(Component c)
       {
             return getBorderInsets(c, new Insets(0, 0, 0, 0));
       }
 
+      /**
+       * Reinitializes the insets parameter with this border's current insets.
+       *
+       * @param c the component for which this border insets value applies
+       * @param insets the object to be reinitialized
+       * @return the insets of the border
+       */
       public Insets getBorderInsets(Component c, Insets insets)
       {
             return insets;
       }
-
 }

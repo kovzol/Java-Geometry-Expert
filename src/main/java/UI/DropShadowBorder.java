@@ -1,13 +1,5 @@
 package UI;
 
-/**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-4-2
- * Time: 18:20:45
- * To change this template use File | Settings | File Templates.
- */
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -54,18 +46,38 @@ public class DropShadowBorder implements Border {
     private boolean showBottomShadow;
     private boolean showRightShadow;
 
+    /**
+     * Constructs a DropShadowBorder with default settings.
+     * Uses the default color from the UIManager, a line width of 1, and a shadow size of 5.
+     */
     public DropShadowBorder() {
         this(UIManager.getColor("Control"), 1, 5);
     }
 
+    /**
+     * Constructs a DropShadowBorder with specified line color, line width, and shadow size.
+     *
+     * @param lineColor  the color of the border line
+     * @param lineWidth  the width of the border line
+     * @param shadowSize the size of the shadow
+     */
     public DropShadowBorder(Color lineColor, int lineWidth, int shadowSize) {
         this(lineColor, lineWidth, shadowSize, .5f, 12, false, false, true, true);
     }
 
-    public DropShadowBorder(Color lineColor, int lineWidth, boolean showLeftShadow) {
-        this(lineColor, lineWidth, 5, .5f, 12, false, showLeftShadow, true, true);
-    }
-
+    /**
+     * Constructs a DropShadowBorder with full customization options.
+     *
+     * @param lineColor        the color of the border line
+     * @param lineWidth        the width of the border line
+     * @param shadowSize       the size of the shadow
+     * @param shadowOpacity    the opacity of the shadow
+     * @param cornerSize       the size of the corners
+     * @param showTopShadow    whether to show the top shadow
+     * @param showLeftShadow   whether to show the left shadow
+     * @param showBottomShadow whether to show the bottom shadow
+     * @param showRightShadow  whether to show the right shadow
+     */
     public DropShadowBorder(Color lineColor, int lineWidth, int shadowSize,
                             float shadowOpacity, int cornerSize, boolean showTopShadow,
                             boolean showLeftShadow, boolean showBottomShadow, boolean showRightShadow) {
@@ -80,6 +92,17 @@ public class DropShadowBorder implements Border {
         this.showRightShadow = showRightShadow;
     }
 
+    /**
+     * Paints the border for the specified component.
+     * Draws the shadow and border lines based on the component's dimensions and shadow settings.
+     *
+     * @param c        the component for which this border is being painted
+     * @param graphics the Graphics context in which to paint
+     * @param x        the x position of the painted border
+     * @param y        the y position of the painted border
+     * @param width    the width of the painted border
+     * @param height   the height of the painted border
+     */
     public void paintBorder(Component c, Graphics graphics, int x, int y, int width, int height) {
         /*
          * 1) Get images for this border
@@ -87,7 +110,7 @@ public class DropShadowBorder implements Border {
          */
         Map<Position, BufferedImage> images = getImages(null);
 
-        //compute the edges of the component -- not including the border
+        // Compute the edges of the component -- not including the border
         Insets borderInsets = getBorderInsets(c);
         int leftEdge = x + borderInsets.left - lineWidth;
         int rightEdge = x + width - borderInsets.right;
@@ -96,12 +119,12 @@ public class DropShadowBorder implements Border {
         Graphics2D g2 = (Graphics2D) graphics;
         g2.setColor(lineColor);
 
-        //The location and size of the shadows depends on which shadows are being
-        //drawn. For instance, if the left & bottom shadows are being drawn, then
-        //the left shadow extends all the way down to the corner, a corner is drawn,
-        //and then the bottom shadow begins at the corner. If, however, only the
-        //bottom shadow is drawn, then the bottom-left corner is drawn to the
-        //right of the corner, and the bottom shadow is somewhat shorter than before.
+        // The location and size of the shadows depends on which shadows are being drawn.
+        // For instance, if the left & bottom shadows are being drawn, then the left shadow
+        // extends all the way down to the corner, a corner is drawn, and then the bottom
+        // shadow begins at the corner. If, however, only the bottom shadow is drawn, then
+        // the bottom-left corner is drawn to the right of the corner, and the bottom shadow
+        // is somewhat shorter than before.
 
         Point topLeftShadowPoint = null;
         if (showLeftShadow || showTopShadow) {
@@ -185,15 +208,22 @@ public class DropShadowBorder implements Border {
         }
     }
 
+    /**
+     * Retrieves the images for the drop shadow border.
+     * If the images for the current shadow size are not cached, they are created and cached.
+     *
+     * @param g2 the Graphics2D context (can be null)
+     * @return a map of positions to buffered images for the drop shadow
+     */
     private Map<Position, BufferedImage> getImages(Graphics2D g2) {
-        //first, check to see if an image for this size has already been rendered
-        //if so, use the cache. Else, draw and save
+        // First, check to see if an image for this size has already been rendered
+        // If so, use the cache. Else, draw and save
         Map<Position, BufferedImage> images = CACHE.get(shadowSize);
         if (images == null) {
             images = new HashMap<Position, BufferedImage>();
 
             /*
-             * Do draw a drop shadow, I have to:
+             * To draw a drop shadow, the following steps are performed:
              *  1) Create a rounded rectangle
              *  2) Create a BufferedImage to draw the rounded rect in
              *  3) Translate the graphics for the image, so that the rectangle
@@ -203,7 +233,7 @@ public class DropShadowBorder implements Border {
              *  4) Draw the rounded rect as black, with an opacity of 50%
              *  5) Create the BLUR_KERNEL
              *  6) Blur the image
-             *  7) copy off the corners, sides, etc into images to be used for
+             *  7) Copy off the corners, sides, etc into images to be used for
              *     drawing the Border
              */
             int rectWidth = cornerSize + 1;
@@ -274,6 +304,13 @@ public class DropShadowBorder implements Border {
         return images;
     }
 
+    /**
+     * Returns the insets of the border.
+     * The insets are determined based on the visibility of the shadows and the line width.
+     *
+     * @param c the component for which this border insets value applies
+     * @return the insets of the border
+     */
     public Insets getBorderInsets(Component c) {
         int top = showTopShadow ? lineWidth + shadowSize : lineWidth;
         int left = showLeftShadow ? lineWidth + shadowSize : lineWidth;
@@ -282,43 +319,12 @@ public class DropShadowBorder implements Border {
         return new Insets(top, left, bottom, right);
     }
 
+    /**
+     * Indicates whether the border is opaque.
+     *
+     * @return true if the border is opaque, false otherwise
+     */
     public boolean isBorderOpaque() {
         return true;
-    }
-
-    public boolean isShowTopShadow() {
-        return showTopShadow;
-    }
-
-    public boolean isShowLeftShadow() {
-        return showLeftShadow;
-    }
-
-    public boolean isShowRightShadow() {
-        return showRightShadow;
-    }
-
-    public boolean isShowBottomShadow() {
-        return showBottomShadow;
-    }
-
-    public int getLineWidth() {
-        return lineWidth;
-    }
-
-    public Color getLineColor() {
-        return lineColor;
-    }
-
-    public int getShadowSize() {
-        return shadowSize;
-    }
-
-    public float getShadowOpacity() {
-        return shadowOpacity;
-    }
-
-    public int getCornerSize() {
-        return cornerSize;
     }
 }

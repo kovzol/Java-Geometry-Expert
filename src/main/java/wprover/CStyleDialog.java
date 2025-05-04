@@ -8,6 +8,10 @@ import java.awt.event.MouseEvent;
 import java.awt.*;
 import java.util.Vector;
 
+/**
+ * CStyleDialog is a class that creates a dialog for selecting drawing styles, including color,
+ * line width, and line type. It is used in the GExpert application.
+ */
 public class CStyleDialog extends FloatableToolBar {
     public static int CELLWIDTH = 60;
     int action = -1;
@@ -34,6 +38,13 @@ public class CStyleDialog extends FloatableToolBar {
     JPanel pagColor = null;
     JPanel topAgPanel = null;
 
+    /**
+     * Constructor for the CStyleDialog class.
+     * Initializes the dialog with the given GExpert and DPanel instances.
+     *
+     * @param gx the GExpert instance
+     * @param d the DPanel instance
+     */
     public CStyleDialog(GExpert gx, DPanel d) {
         this.gxInstance = gx;
         this.d = d;
@@ -47,6 +58,9 @@ public class CStyleDialog extends FloatableToolBar {
         this.add(pcs);
     }
 
+    /**
+     * Resets the drawing style panels to the current drawing data indices.
+     */
     public void reset() {
         rColor.index = DrawData.cindex;
         rStyle.index = DrawData.dindex;
@@ -55,10 +69,19 @@ public class CStyleDialog extends FloatableToolBar {
             pgColor.index = DrawData.polygoncolor;
     }
 
-    public void setAction(int actionType) ////-1. ByPass Action;     0. defalut;
-    //  1. Draw Action + point; 2: draw action line + circle
-    // 3: fill action 4: angle 5: move/select/intersect   
-    {
+    /**
+     * Sets the action type for the dialog and updates the layout accordingly.
+     *
+     * @param actionType the action type to set
+     *                  -1: ByPass Action
+     *                   0: Default
+     *                   1: Draw Action + point
+     *                   2: Draw Action line + circle
+     *                   3: Fill Action
+     *                   4: Angle
+     *                   5: Move/Select/Intersect
+     */
+    public void setAction(int actionType) {
         reset();
         if (actionType == action)
             return;
@@ -101,24 +124,31 @@ public class CStyleDialog extends FloatableToolBar {
             case 4:
                 this.removeAll();
                 this.add(mpanel);
-                
+
                 this.add(pColor);
                 this.add(pStyle);
                 this.add(pWidth);
                 break;
             default:
                 break;
-
         }
         this.pack();
     }
 
+    /**
+     * Returns the preferred size of the dialog.
+     *
+     * @return the preferred size of the dialog
+     */
     public Dimension getPreferredSize() {
         Dimension dm = super.getPreferredSize();
         return dm;
     }
 
-
+    /**
+     * This class is used to create a panel for selecting color, line width, and line type.
+     * It extends the JPanel class and implements ActionListener to handle action events.
+     */
     class Panel_CS extends JPanel implements ActionListener {
 
         DPanel d;
@@ -178,7 +208,10 @@ public class CStyleDialog extends FloatableToolBar {
         }
     }
 
-
+    /**
+     * This class is used to handle the rendering of the color, line width, and line type
+     * selection. It extends the JPanel class and implements MouseListener to handle mouse events.
+     */
     class DrawStylePanel extends JPanel implements MouseListener {
         JLabel label;
         PopComboRender selector;
@@ -287,7 +320,10 @@ public class CStyleDialog extends FloatableToolBar {
         }
     }
 
-
+    /**
+     * This class is used to handle the rendering of the color, line width, and line type
+     * selection. It extends the JPanel class and implements MouseListener to handle mouse events.
+     */
     class PopComboRender extends JPanel implements MouseListener {
         Vector vlist = new Vector();
 
@@ -355,6 +391,11 @@ public class CStyleDialog extends FloatableToolBar {
         }
     }
 
+    /**
+     * This class is used to handle the rendering of the color, line width, and line type
+     * selection. It extends the ColorComboRender class and implements MouseListener to handle
+     * mouse events.
+     */
     class PopComboRenderCell extends ColorComboRender implements MouseListener {
         public PopComboRenderCell(int type, int w, int h) {
             super(type, w, h);
@@ -388,9 +429,11 @@ public class CStyleDialog extends FloatableToolBar {
         }
     }
 
-    ////////////
-    ///////////////////////////////////////////////////////////////
-
+    /**
+     * This class is used to handle the rendering of the color, line width, and line type
+     * selection. It extends the PopComboRender class and overrides the mousePressed method to
+     * set the selected index for the corresponding style.
+     */
     class GeneralPopComboRender extends PopComboRender {
         public GeneralPopComboRender(int type) {
             super(type);
@@ -418,6 +461,11 @@ public class CStyleDialog extends FloatableToolBar {
         }
     }
 
+    /**
+     * This class is used to handle the rendering of the polygon fill color selection.
+     * It extends the PopComboRender class and overrides the mousePressed method to
+     * set the polygon color when a color is selected.
+     */
     class PolygonFillPopComboRender extends PopComboRender {
         public PolygonFillPopComboRender(int type) {
             super(type);
@@ -434,41 +482,4 @@ public class CStyleDialog extends FloatableToolBar {
                 pgColor.index = idx;
         }
     }
-
-    class AngleFillPopComboRender extends PopComboRender {
-        public AngleFillPopComboRender(int type) {
-            super(type);
-        }
-
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
-            PopComboRenderCell c = (PopComboRenderCell) e.getSource();
-            int t = c.type;
-            int idx = c.index;
-            DrawData.polygoncolor = idx;
-            if (pgColor != null)
-                pgColor.index = idx;
-        }
-    }
-
-    class AnglePropertyPanel extends JPanel implements ActionListener {
-        JComboBox boxType;
-
-        public AnglePropertyPanel() {
-            this.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-            Vector v = new Vector();
-            v.add("Without Arrow");
-            v.add("With Arrow");
-            v.add("Multiple Arc");
-            v.add("Fill");
-            boxType = new JComboBox(v);
-            this.add(boxType);
-            boxType.addActionListener(AnglePropertyPanel.this);
-        }
-
-        public void actionPerformed(ActionEvent e) {
-        }
-    }
-
 }

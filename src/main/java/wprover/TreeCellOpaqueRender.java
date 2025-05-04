@@ -12,13 +12,11 @@ import java.awt.event.MouseEvent;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-6-8
- * Time: 13:30:48
- * To change this template use File | Settings | File Templates.
+ * TreeCellOpaqueRender.java
+ * This class is a custom tree cell renderer and editor for a JTree component.
+ * It provides a way to display and edit tree nodes with custom rendering and editing capabilities.
+ * The class implements TreeCellRenderer and TreeCellEditor interfaces.
  */
-
 public class TreeCellOpaqueRender extends JPanel implements TreeCellRenderer, MouseListener {
     static Icon Icon_etri = GExpert.createImageIcon("images/dtree/etri.gif");
     static Icon Icon_squa = GExpert.createImageIcon("images/dtree/squa.gif");
@@ -409,6 +407,12 @@ public class TreeCellOpaqueRender extends JPanel implements TreeCellRenderer, Mo
     }
 }
 
+/**
+ * TreeCellOPaqueEditor.java
+ * This class is a custom tree cell editor for a JTree component.
+ * It provides a way to edit tree nodes with custom rendering and editing capabilities.
+ * The class implements TreeCellEditor interface.
+ */
 class TreeCellOPaqueEditor extends AbstractCellEditor implements TreeCellEditor {
     TreeCellOpaqueRender render;
 
@@ -467,30 +471,12 @@ class TreeCellOPaqueEditor extends AbstractCellEditor implements TreeCellEditor 
 
 }
 
-//class TreeCellOpaquePanel extends JPanel {
-//    JLabel label1, label2, label3;
-//
-//    public TreeCellOpaquePanel() {
-//        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-//        label1 = new JLabel();
-//        label2 = new JLabel();
-//        label3 = new JLabel();
-//        this.add(label1);
-//        this.add(label2);
-//        this.add(label3);
-//    }
-//
-//    public void setUserObject(Object obj) {
-//        massertion ass = (massertion) obj;
-//        ass.checkValid();
-//    }
-//
-//}
-
+/**
+ * TreeCellAssertPanel.java
+ * This class is a custom panel for displaying assertions in a tree cell.
+ * It extends JPanel and implements MouseListener for handling mouse events.
+ */
 class TreeCellAssertPanel extends JPanel implements MouseListener {
-//    private Color backgroundColor = (UIManager.getColor("Tree.selectionBackground"));
-//
-//    private Color backgroundNoSelectionColor = UIManager.getColor("Tree.textBackground");
 
     private static Color bcolor = new Color(204, 255, 204);
     private Vector vlist = new Vector();
@@ -721,8 +707,12 @@ class TreeCellAssertPanel extends JPanel implements MouseListener {
 
 }
 
+/**
+ * TreeCellOpaqueLabel.java
+ * This class is a custom label for displaying tree cell values.
+ * It extends JLabel and implements MouseListener for handling mouse events.
+ */
 class TreeCellOpaqueLabel extends JLabel implements MouseListener {
-//    static Font font = (new Font("Dialog", Font.BOLD, 14));
     protected boolean selected;
     protected boolean mousein;
     private Object userObject;
@@ -795,31 +785,6 @@ class TreeCellOpaqueLabel extends JLabel implements MouseListener {
         return userObject;
     }
 
-    private void setLeafIcon(Icon newIcon) {
-        leafIcon = newIcon;
-        this.setIcon(leafIcon);
-    }
-
-    private Icon getLeafIcon() {
-        return leafIcon;
-    }
-
-    private void setTextSelectionColor(Color newColor) {
-        textSelectionColor = newColor;
-    }
-
-    private Color getTextSelectionColor() {
-        return textSelectionColor;
-    }
-
-    private void setTextNonSelectionColor(Color newColor) {
-        textNonSelectionColor = newColor;
-    }
-
-    private Color getTextNonSelectionColor() {
-        return textNonSelectionColor;
-    }
-
     private void setBackgroundSelectionColor(Color newColor) {
         backgroundSelectionColor = newColor;
     }
@@ -828,20 +793,8 @@ class TreeCellOpaqueLabel extends JLabel implements MouseListener {
         return backgroundSelectionColor;
     }
 
-    private void setBackgroundNonSelectionColor(Color newColor) {
-        backgroundNonSelectionColor = newColor;
-    }
-
-    private Color getBackgroundNonSelectionColor() {
-        return backgroundNonSelectionColor;
-    }
-
     private void setBorderSelectionColor(Color newColor) {
         borderSelectionColor = newColor;
-    }
-
-    private Color getBorderSelectionColor() {
-        return borderSelectionColor;
     }
 
     public void setFont(Font font) {
@@ -911,14 +864,6 @@ class TreeCellOpaqueLabel extends JLabel implements MouseListener {
             }
         }
         super.paint(g);
-    }
-
-    private int getLabelStart() {
-        Icon currentI = getIcon();
-        if (currentI != null && getText() != null) {
-            return currentI.getIconWidth() + Math.max(0, getIconTextGap() - 1);
-        }
-        return 0;
     }
 
     public void mouseClicked(MouseEvent e) {

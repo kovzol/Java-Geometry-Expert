@@ -22,6 +22,11 @@
 
 package UI;
 
+/**
+ * NeuQuant is a class that implements the NeuQuant algorithm for color quantization.
+ * It is used to reduce the number of colors in an image while preserving its visual quality.
+ * The algorithm is based on a neural network approach and is designed to be efficient and fast.
+ */
 public class NeuQuant {
 
 	protected static final int netsize = 256; /* number of colours used */

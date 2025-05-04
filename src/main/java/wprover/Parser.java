@@ -3,11 +3,8 @@ package wprover;
 import maths.TMono;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-8-30
- * Time: 10:10:17
- * To change this template use File | Settings | File Templates.
+ * Parser is a class that parses a mathematical expression represented as a string
+ * and converts it into a TMono object.
  */
 public class Parser {
     private static GeoPoly poly = GeoPoly.getPoly();
@@ -18,6 +15,13 @@ public class Parser {
     int id;
     int param;
 
+    /**
+     * Constructs a new Parser with the specified name, function, and parameter.
+     *
+     * @param n the name of the parser
+     * @param f the function to parse
+     * @param x the parameter for the parser
+     */
     public Parser(String n, String f, int x) {
         m1 = null;
         sname = n;
@@ -26,6 +30,11 @@ public class Parser {
         param = x;
     }
 
+    /**
+     * Parses the function string and converts it into a TMono object.
+     *
+     * @return the TMono object representing the parsed function
+     */
     public TMono parse() {
         byte[] bf = sfunc.getBytes();
         byte[] nm = sname.getBytes();
@@ -34,14 +43,33 @@ public class Parser {
         return m1;
     }
 
+    /**
+     * Checks if the given byte represents a numeric character.
+     *
+     * @param b the byte to check
+     * @return true if the byte is a numeric character, false otherwise
+     */
     public boolean isNum(byte b) {
         return b >= '0' && b <= '9';
     }
 
+    /**
+     * Checks if the given byte represents an alphabetic character.
+     *
+     * @param b the byte to check
+     * @return true if the byte is an alphabetic character, false otherwise
+     */
     public boolean isAlpha(byte b) {
-        return b >= 'a' && b <= 'z' || b >= 'A' && b <= 'z';
+        return b >= 'a' && b <= 'z' || b >= 'A' && b <= 'Z';
     }
 
+    /**
+     * Parses a term from the function string and updates the TMono object.
+     *
+     * @param first indicates if this is the first term being parsed
+     * @param bf    the byte array representing the function string
+     * @param nm    the byte array representing the name string
+     */
     public void parseterm(boolean first, byte[] bf, byte[] nm) {
         while (true) {
             if (id >= bf.length)
@@ -70,6 +98,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Skips blank spaces in the function string.
+     *
+     * @param bf the byte array representing the function string
+     * @param nm the byte array representing the name string
+     */
     public void parseBlank(byte[] bf, byte[] nm) {
         while (bf[id] == 32) {
             if (id >= bf.length)
@@ -78,6 +112,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a term from the function string and returns it as a TMono object.
+     *
+     * @param bf the byte array representing the function string
+     * @param nm the byte array representing the name string
+     * @return the TMono object representing the parsed term
+     */
     public TMono getAterm(byte[] bf, byte[] nm) {
         parseBlank(bf, nm);
 
@@ -112,5 +153,4 @@ public class Parser {
         else return
                 poly.pth(0, value, 0);
     }
-
 }

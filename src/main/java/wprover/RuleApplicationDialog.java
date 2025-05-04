@@ -17,6 +17,11 @@ import UI.EntityButtonUI;
 
 import static wprover.GExpert.getLanguage;
 
+/**
+ * RuleApplicationDialog is a dialog that displays the application of rules in
+ * the GExpert system. It allows users to visualize and interact with rules and
+ * their conditions.
+ */
 public class RuleApplicationDialog extends JBaseDialog implements ComponentListener, ActionListener, WindowListener {
 
     private GExpert gxInstance;
@@ -37,6 +42,13 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
     private JDialog ruleDialog;
 
 
+    /**
+     * Constructs a new RuleApplicationDialog with the specified GExpert, DPanel, and DrawTextProcess instances.
+     *
+     * @param gx the GExpert instance to associate with this dialog
+     * @param d  the DPanel instance to associate with this dialog
+     * @param dp the DrawTextProcess instance to associate with this dialog
+     */
     public RuleApplicationDialog(GExpert gx, DPanel d, DrawTextProcess dp) {
         super(gx.getFrame());
         this.dpane = d;
@@ -47,6 +59,12 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         init();
     }
 
+    /**
+     * Constructs a new RuleApplicationDialog with the specified DPanel and DrawTextProcess instances.
+     *
+     * @param d  the DPanel instance to associate with this dialog
+     * @param dp the DrawTextProcess instance to associate with this dialog
+     */
     public RuleApplicationDialog(DPanel d, DrawTextProcess dp) {
         this.dpane = d;
         this.dpp = dp;
@@ -54,14 +72,12 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         init();
     }
 
-
+    /**
+     * Initializes the RuleApplicationDialog by setting up the panels, listeners, and window properties.
+     */
     public void init() {
-//        if (gxInstance != null)
-//            gxInstance.addDependentDialog(this);
-
         rpanel = new rulePanel(gxInstance);
         panel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-
 
         JPanel panel1 = new JPanel() {
             public Dimension getMaximumSize() {
@@ -78,7 +94,6 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         panel1.add(rvpanel = new ruleViewPanel());
         panel1.add(Box.createVerticalStrut(4));
         panel1.add(rapanel);
-
 
         spanel = new JScrollPane(rpanel) {
             public Dimension getPreferredSize() {
@@ -102,9 +117,11 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         } else {
             this.setSize(500, 500);
         }
-
     }
 
+    /**
+     * Generates a MouseListener for handling mouse events on the dialog components.
+     */
     public void generateListener() {
         lselected = null;
 
@@ -145,8 +162,12 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         };
     }
 
+    /**
+     * Starts flashing the specified object in the rule panel.
+     *
+     * @param o the object to flash
+     */
     public void startFlashObject(Object o) {
-
         Object f = hash.get(o.toString());
         if (f instanceof JFlash) {
             JFlash f1 = (JFlash) f;
@@ -155,6 +176,11 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         rpanel.repaint();
     }
 
+    /**
+     * Handles action events for the Align Center button.
+     *
+     * @param e the ActionEvent triggered by the button
+     */
     public void actionPerformed(ActionEvent e) {
         if (buttona == e.getSource()) {
             rpanel.centerAllObject();
@@ -164,6 +190,13 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
     }
 
+    /**
+     * Creates a JToggleButton with the specified icon and tooltip.
+     *
+     * @param name the name of the icon file
+     * @param tip  the tooltip text
+     * @return the created JToggleButton
+     */
     private JToggleButton createRPaneButton(String name, String tip) {
         JToggleButton b = new JToggleButton(GExpert.createImageIcon("images/rpane/" + name));
         b.setToolTipText(tip);
@@ -174,6 +207,11 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         return b;
     }
 
+    /**
+     * Loads the specified ElTerm rule into the dialog.
+     *
+     * @param el the ElTerm rule to load
+     */
     public void LoadRule(ElTerm el) {
         this.setTitle(GExpert.getTranslationViaGettext("RULE {0}", el.etype + ""));
         hash.clear();
@@ -184,6 +222,11 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         rpanel.scrollToCenter();
     }
 
+    /**
+     * Loads the specified Cond rule into the dialog.
+     *
+     * @param c the Cond rule to load
+     */
     public void LoadRule(Cond c) {
         this.setTitle(GExpert.getTranslationViaGettext("RULE {0}", c.getRule() + ""));
         hash.clear();
@@ -193,9 +236,13 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         rpanel.scrollToCenter();
     }
 
+    /**
+     * Handles component resized events to reset the panel sizes.
+     *
+     * @param e the ComponentEvent triggered by resizing the component
+     */
     public void componentResized(ComponentEvent e) {
         panel.resetToPreferredSizes();
-
     }
 
     public void componentMoved(ComponentEvent e) {
@@ -207,6 +254,11 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
     public void componentHidden(ComponentEvent e) {
     }
 
+    /**
+     * ruleViewPanel is a custom JPanel that displays the rule view in the
+     * RuleApplicationDialog. It allows users to visualize and interact with
+     * rules and their conditions.
+     */
     class ruleViewPanel extends JToolBar {
         private Vector vlist = new Vector();
 
@@ -264,6 +316,11 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
     }
 
+    /**
+     * ruleAppPanel is a custom JPanel that displays the rule application view
+     * in the RuleApplicationDialog. It allows users to visualize and interact
+     * with rules and their conditions.
+     */
     class ruleAppPanel extends JToolBar {
         private Vector vlist = new Vector();
 
@@ -334,31 +391,17 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
     }
 
-    class JruleTreePanel extends JPanel {
-        private JEditorPane pane;
-
-        public JruleTreePanel() {
-            pane = new JEditorPane();
-            this.add(pane);
-        }
-
-        public void loadRule(ElTerm el) {
-            URL url = GExpert.getResourceURL("rule/rule" + el.getEType() + ".html");
-            try {
-                pane.setPage(url);
-            } catch (IOException ee) {
-            }
-
-        }
-
-    }
-
     public void windowOpened(WindowEvent e) {
     }
 
     public void windowClosing(WindowEvent e) {
     }
 
+    /**
+     * Invoked when a window has been closed. If the rule dialog is open, it hides the rule dialog.
+     *
+     * @param e the WindowEvent that indicates the window has been closed
+     */
     public void windowClosed(WindowEvent e) {
         if (ruleDialog != null)
             ruleDialog.setVisible(false);
@@ -376,7 +419,11 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
     public void windowDeactivated(WindowEvent e) {
     }
 
-
+    /**
+     * rulePanel is a custom JPanel that displays geometric objects and allows
+     * interaction with them. It handles mouse events, scaling, and drawing of
+     * objects.
+     */
     class rulePanel extends JPanel implements MouseListener, MouseMotionListener, ComponentListener {
 
         int xx, yy;
@@ -920,6 +967,10 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         }
     }
 
+    /**
+     * RuleLabel is a custom JLabel that represents a rule in the GExpert system.
+     * It allows users to click on the label to view more information about the rule.
+     */
     class RuleLabel extends JLabel implements MouseListener {
         private int RULE;
         private int type;

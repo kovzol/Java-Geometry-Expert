@@ -12,11 +12,8 @@ import java.net.URL;
 import java.util.EventObject;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-2-10
- * Time: 19:38:34
- * To change this template use File | Settings | File Templates.
+ * CProperty is a JPanel that displays property panels for different geometric objects.
+ * It allows users to modify properties such as color, line type, and line width.
  */
 public class CProperty extends JPanel implements ActionListener {
 
@@ -36,6 +33,13 @@ public class CProperty extends JPanel implements ActionListener {
     private Panel_arrow parrow;
 
 
+    /**
+     * Constructor for the CProperty class.
+     * Initializes the property panels and sets up the layout.
+     *
+     * @param dd the DPanel instance
+     * @param lan the Language instance
+     */
     public CProperty(DPanel dd, Language lan) {
         d = dd;
         this.lan = lan;
@@ -58,12 +62,24 @@ public class CProperty extends JPanel implements ActionListener {
         this.add(label);
     }
 
+    /**
+     * Retrieves the language string for the given key.
+     *
+     * @param s the key for the language string
+     * @return the language string
+     * @deprecated Use {@link GExpert#getLanguage(String)} instead.
+     */
     @Deprecated
     public String getLanguage(String s) {
         return GExpert.getLanguage(s);
     }
 
-
+    /**
+     * Sets the panel type based on the given CClass object.
+     * Updates the layout and adds the appropriate property panel.
+     *
+     * @param obj the CClass object
+     */
     public void SetPanelType(CClass obj) {
         if (obj == null)
             return;
@@ -161,24 +177,30 @@ public class CProperty extends JPanel implements ActionListener {
         this.revalidate();
     }
 
+    /**
+     * Handles action events.
+     *
+     * @param e the ActionEvent
+     */
     public void actionPerformed(ActionEvent e) {
 
     }
 
-    public void setPropertyChanged() {
-
-    }
-
+    /**
+     * Creates a JButton with an icon from the specified image name.
+     *
+     * @param imageName the name of the image file
+     * @return the created JButton
+     */
     public static JButton CreateIconButton(String imageName) {
         String imgLocation = "images/" + imageName;
         URL imageURL = GExpert.class.getResource(imgLocation);
 
         JButton button = new JButton();
 
-
-        if (imageURL != null) {                      //image found
+        if (imageURL != null) {                      // image found
             button.setIcon(new ImageIcon(imageURL));
-        } else {                                     //no image found
+        } else {                                     // no image found
             button.setText(imageName);
         }
         button.setMaximumSize(new Dimension(20, 18));
@@ -187,6 +209,13 @@ public class CProperty extends JPanel implements ActionListener {
         return button;
     }
 
+    /**
+     * Creates a JTable with the specified objects.
+     *
+     * @param obj1 the first object
+     * @param obj2 the second object
+     * @return the created JTable
+     */
     public static JTable createTable(Object obj1, Object obj2) {
         Object data[][] = {{obj1, obj2}};
         String[] sname = {"", ""};
@@ -205,6 +234,9 @@ public class CProperty extends JPanel implements ActionListener {
     }
 
 
+    /**
+     * Panel for the color, line type and line width properties.
+     */
     class Panel_CS extends JPanel implements ActionListener {
 
         DPanel d;
@@ -352,6 +384,9 @@ public class CProperty extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Panel for the polygon properties.
+     */
     class Panel_Line extends JPanel implements TableModelListener, ActionListener, ChangeListener {
         DPanel d;
         CLine line;
@@ -473,6 +508,9 @@ public class CProperty extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * Panel for the circle properties.
+     */
     class Panel_Circle extends JPanel implements TableModelListener {
         DPanel d;
 
@@ -529,6 +567,9 @@ public class CProperty extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * Panel for the point properties.
+     */
     class Panel_Point extends JPanel implements TableModelListener {
         DPanel d;
 
@@ -608,6 +649,9 @@ public class CProperty extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Panel for the angle properties.
+     */
     class Panel_Angle extends JPanel implements ActionListener, TableModelListener {
         DPanel d;
         JComboBox bcolor;
@@ -759,6 +803,9 @@ public class CProperty extends JPanel implements ActionListener {
     }
 
 
+    /**
+     * Base class for all property panels.
+     */
     class Panel_Base extends JPanel {
         protected DPanel d;
         protected TitledBorder border;
@@ -776,6 +823,9 @@ public class CProperty extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Panel for the text properties.
+     */
     class Panel_text extends Panel_Base implements TableModelListener {
         CText tx;
         JTable table, table1, table2;
@@ -886,6 +936,9 @@ public class CProperty extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * Panel for the trace properties.
+     */
     class Panel_trace extends Panel_Base implements TableModelListener {
         CTrace ts;
         JTable table, table1;
@@ -942,6 +995,9 @@ public class CProperty extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Panel for the equation mark properties.
+     */
     class Panel_eqmark extends Panel_Base implements TableModelListener {
         Cedmark mk;
         JTable table;
@@ -982,6 +1038,9 @@ public class CProperty extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Panel for the polygon properties.
+     */
     class Panel_Polygon extends JPanel implements TableModelListener {
 
         DPanel d;
@@ -1076,6 +1135,9 @@ public class CProperty extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * Panel for the arrow properties.
+     */
     class Panel_arrow extends Panel_Base implements TableModelListener {
         CArrow arrow;
         JTable table;
@@ -1116,48 +1178,9 @@ public class CProperty extends JPanel implements ActionListener {
         }
     }
 
-
-    class DefaultTableModel extends AbstractTableModel {
-        private Object[][] data;
-
-        public DefaultTableModel(Object[][] o) {
-            data = o;
-        }
-
-        public int getColumnCount() {
-            return 2;
-        }
-
-        public int getRowCount() {
-            return data.length;
-        }
-
-        public String getColumnName(int col) {
-            return "";
-        }
-
-        public Object getValueAt(int row, int col) {
-            return data[row][col];
-        }
-
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
-
-        public boolean isCellEditable(int row, int col) {
-            if (col < 1) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-
-        public void setValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
-        }
-    }
-
+    /**
+     * Table model for the property table.
+     */
     class propertyTableModel extends AbstractTableModel {
         private String[] names = {"", ""};
         private Object[][] data = null;
@@ -1205,6 +1228,9 @@ public class CProperty extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * Table model for the point properties.
+     */
     class PointTableModel extends AbstractTableModel {
         private String[] names = {"", ""};
         private Object[][] data = {
@@ -1249,6 +1275,9 @@ public class CProperty extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Table model for the line properties.
+     */
     class LineTableModel extends AbstractTableModel {
         private String[] names = {"", ""};
         private Object[][] data = {
@@ -1294,7 +1323,9 @@ public class CProperty extends JPanel implements ActionListener {
         }
     }
 
-
+    /**
+     * Table model for the circle properties.
+     */
     class CircleTableModel extends AbstractTableModel {
         private String[] names = {"", ""};
         private Object[][] data = {
@@ -1340,6 +1371,9 @@ public class CProperty extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Table model for the polygon properties.
+     */
     class PolygonTableModel extends AbstractTableModel {
         private String[] names = {"", ""};
         private Object[][] data = {
@@ -1381,73 +1415,14 @@ public class CProperty extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Rounds a double to two decimal places.
+     *
+     * @param r the double to round
+     * @return the rounded double
+     */
     private double round(double r) {
         int t = (int) (100 * r);
         return t / 100.0;
-    }
-
-    class CPropertyTableCellRender implements TableCellRenderer {
-        TableCellRenderer deditor;
-
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus,
-                                                       int row, int column) {
-            return deditor.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        }
-
-    }
-
-    class CPropertyTableCellEditor implements TableCellEditor {
-        DefaultCellEditor editor;
-        DefaultCellEditor booleanEditor;
-        DefaultCellEditor selected;
-
-        public CPropertyTableCellEditor() {
-            selected = editor = new DefaultCellEditor(new JTextField());
-            booleanEditor = new DefaultCellEditor(new JCheckBox());
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                                                     boolean isSelected,
-                                                     int row, int column) {
-            if (value instanceof Boolean) {
-                selected = booleanEditor;
-                return booleanEditor.getTableCellEditorComponent(table, value, isSelected, row, column);
-            }
-            selected = editor;
-            return editor.getTableCellEditorComponent(table, value, isSelected, row, column);
-        }
-
-        public void setEditorAt(int row, TableCellEditor editor) {
-
-        }
-
-        public Object getCellEditorValue() {
-            return selected.getCellEditorValue();
-        }
-
-        public boolean stopCellEditing() {
-            return selected.stopCellEditing();
-        }
-
-        public void cancelCellEditing() {
-            selected.cancelCellEditing();
-        }
-
-        public boolean isCellEditable(EventObject anEvent) {
-            return selected.isCellEditable(anEvent);
-        }
-
-        public void addCellEditorListener(CellEditorListener l) {
-            selected.addCellEditorListener(l);
-        }
-
-        public void removeCellEditorListener(CellEditorListener l) {
-            selected.removeCellEditorListener(l);
-        }
-
-        public boolean shouldSelectCell(EventObject anEvent) {
-            return selected.shouldSelectCell(anEvent);
-        }
     }
 }

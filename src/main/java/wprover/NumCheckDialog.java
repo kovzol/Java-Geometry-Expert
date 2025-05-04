@@ -7,6 +7,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
+/**
+ * NumCheckDialog is a dialog for performing numerical checks on geometric points.
+ * It allows the user to select points and check various geometric properties.
+ */
 public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemListener, WindowListener {
 
     private JComboBox bx;
@@ -24,6 +28,11 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
     public static String[] ST = {"Collinear", "Parallel", "Perpendicular", "Cyclic", "Equal Distance", "Equal Angle"};
     public static int[] SN = {3, 4, 4, 4, 4, 6};
 
+    /**
+     * Constructs a new NumCheckDialog with the specified GExpert instance.
+     *
+     * @param gx the GExpert instance to associate with this NumCheckDialog
+     */
     public NumCheckDialog(GExpert gx) {
         super(gx.getFrame());
         gxInstance = gx;
@@ -33,9 +42,7 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         icon1 = GExpert.createImageIcon("images/ptree/hook.gif");
         icon2 = GExpert.createImageIcon("images/ptree/cross.gif");
 
-
         JPanel top = new JPanel();
-
         top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -105,7 +112,9 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         gxInstance.dp.addDiagramUpdaterListener(this);
     }
 
-
+    /**
+     * Updates the diagram and the labels in the dialog.
+     */
     public void UpdateDiagram() {
         for (int i = 0; i < labels.length; i++) {
             labels[i].setText(getStringFromPoint((CPoint) bxs[i].getSelectedItem()));
@@ -117,6 +126,11 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
     }
 
+    /**
+     * Adds the selected point to the first available JComboBox.
+     *
+     * @param p the point to add
+     */
     public void addSelectPoint(CPoint p) {
         for (int i = 0; i < bxs.length; i++) {
             if (bxs[i].getSelectedIndex() < 0) {
@@ -124,9 +138,13 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
                 return;
             }
         }
-
     }
 
+    /**
+     * Handles item state change events.
+     *
+     * @param e the item event
+     */
     public void itemStateChanged(ItemEvent e) {
         Object o = e.getSource();
         if (o == bx) {
@@ -142,6 +160,11 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
             UpdateDiagram();
     }
 
+    /**
+     * Sets the visibility status of the JComboBoxes and labels based on the selected index.
+     *
+     * @param n the selected index
+     */
     public void setVisibleStatus(int n) {
         int num = 0;
         if (n == -1)
@@ -158,8 +181,11 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
     }
 
+    /**
+     * Unselects all points in the JComboBoxes.
+     */
     public void unSelectAllPoints() {
-         Vector v = gxInstance.dp.getPointList();
+        Vector v = gxInstance.dp.getPointList();
         for (int i = 0; i < bxs.length; i++) {
         }
 
@@ -168,10 +194,21 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
     }
 
+    /**
+     * Retrieves the selected point from the specified JComboBox.
+     *
+     * @param n the index of the JComboBox
+     * @return the selected point
+     */
     public CPoint getPt(int n) {
         return (CPoint) bxs[n].getSelectedItem();
     }
 
+    /**
+     * Checks if all visible JComboBoxes have selected points.
+     *
+     * @return true if all visible JComboBoxes have selected points, false otherwise
+     */
     public boolean check_filled() {
         for (int i = 0; i < bxs.length; i++) {
             if ((bxs[i].isVisible() && bxs[i].getSelectedIndex() == -1)) return false;
@@ -179,6 +216,12 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         return true;
     }
 
+    /**
+     * Retrieves the string representation of the specified point.
+     *
+     * @param p the point
+     * @return the string representation of the point
+     */
     public String getStringFromPoint(CPoint p) {
         if (p == null) return "      ";
 
@@ -195,6 +238,12 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
     public void windowClosing(WindowEvent e) {
     }
 
+    /**
+     * This method is called when the window is closed.
+     * It removes the current instance from the diagram updater listeners.
+     *
+     * @param e the window event
+     */
     public void windowClosed(WindowEvent e) {
         gxInstance.dp.RemoveDiagramUpdaterListener(this);
     }
@@ -212,8 +261,10 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
     public void windowDeactivated(WindowEvent e) {
     }
 
-
-    /////////////////////////////////////////////////////////////////////
+    /**
+     * This method is called when the diagram is updated.
+     * It updates the diagram and the labels in the dialog.
+     */
     class Panel_Button extends JPanel {
 
         public Panel_Button() {
@@ -221,6 +272,10 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
     }
 
+    /**
+     * Abstract class representing a basic panel for numerical checks.
+     * It contains methods to set values, reset the panel, and update the diagram.
+     */
     abstract class Panel_Basic extends JPanel {
         JLabel lex, ltex;
         String pstring;
@@ -275,6 +330,10 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
     }
 
+    /**
+     * Panel_Coll is a subclass of Panel_Basic that checks for collinearity of three points.
+     * It overrides the Cal_Value and getLex methods to provide specific functionality.
+     */
     class Panel_Coll extends Panel_Basic {
 
         public Panel_Coll() {
@@ -294,6 +353,10 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
 
     }
 
+    /**
+     * Panel_Para is a subclass of Panel_Basic that checks for parallelism of two lines.
+     * It overrides the Cal_Value and getLex methods to provide specific functionality.
+     */
     class Panel_Para extends Panel_Basic {
         public Panel_Para() {
             super(ST[1]);
@@ -311,6 +374,10 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
     }
 
+    /**
+     * Panel_Perp is a subclass of Panel_Basic that checks for perpendicularity of two lines.
+     * It overrides the Cal_Value and getLex methods to provide specific functionality.
+     */
     class Panel_Perp extends Panel_Basic {
         public Panel_Perp() {
             super(ST[2]);
@@ -328,6 +395,10 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
     }
 
+    /**
+     * Panel_Cyclic is a subclass of Panel_Basic that checks for cyclicity of four points.
+     * It overrides the Cal_Value and getLex methods to provide specific functionality.
+     */
     class Panel_Cyclic extends Panel_Basic {
         public Panel_Cyclic() {
             super(gxInstance.getLanguage(ST[3]));
@@ -345,6 +416,10 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
     }
 
+    /**
+     * Panel_EQDis is a subclass of Panel_Basic that checks for equal distances between two pairs of points.
+     * It overrides the Cal_Value and getLex methods to provide specific functionality.
+     */
     class Panel_EQDis extends Panel_Basic {
         public Panel_EQDis() {
             super(ST[4]);
@@ -362,6 +437,10 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         }
     }
 
+    /**
+     * Panel_EQAng is a subclass of Panel_Basic that checks for equal angles between two sets of points.
+     * It overrides the Cal_Value and getLex methods to provide specific functionality.
+     */
     class Panel_EQAng extends Panel_Basic {
         public Panel_EQAng() {
             super(ST[5]);

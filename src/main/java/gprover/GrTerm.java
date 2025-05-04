@@ -3,11 +3,9 @@ package gprover;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-4-17
- * Time: 13:16:18
- * To change this template use File | Settings | File Templates.
+ * The GrTerm class represents a geometric term in the theorem proving framework.
+ * It includes properties for coefficients, polynomial terms, construction type,
+ * elimination terms, simplifiers, and a linked list of geometric terms.
  */
 public class GrTerm {
 
@@ -27,28 +25,39 @@ public class GrTerm {
 
     public String text = "";
 
+    /**
+     * Returns the text representation of this geometric term.
+     *
+     * @return the text representing this geometric term.
+     */
     public String toString() {
         return text;
     }
 
-    public DTerm getps1() {
-        return ps1;
-    }
-
-    public XTerm getds1() {
-        if (ps1 != null)
-            return ps1.p;
-        else return null;
-    }
-
+    /**
+     * Sets the PTN (property tracking number) for this term.
+     *
+     * @param n the new PTN value.
+     */
     public void setPTN(int n) {
         ptn = n;
     }
 
+    /**
+     * Retrieves the PTN (property tracking number) of this term.
+     *
+     * @return the current PTN value.
+     */
     public int getPTN() {
         return ptn;
     }
 
+    /**
+     * Checks whether this geometric term is equivalent to zero.
+     * Determines zero based on the first polynomial term or its coefficient.
+     *
+     * @return true if the term is zero; false otherwise.
+     */
     public boolean isZero() {
         if (ps1 == null) {
             if (c1 == 0)
@@ -60,6 +69,12 @@ public class GrTerm {
         return false;
     }
 
+    /**
+     * Retrieves all XTerm objects from the first polynomial term.
+     * Cuts the mark from the first XTerm in the resulting list.
+     *
+     * @return a vector containing all XTerm objects.
+     */
     public Vector getAllxterm() {
         Vector v = new Vector();
         if (ps1 != null && ps1.p != null) {
@@ -81,6 +96,11 @@ public class GrTerm {
         return v;
     }
 
+    /**
+     * Retrieves all variables present in the first and second polynomial terms.
+     *
+     * @return a vector containing all variables.
+     */
     public Vector getAllvars() {
         Vector v = new Vector();
         getPSVar(v, ps1);
@@ -88,6 +108,12 @@ public class GrTerm {
         return v;
     }
 
+    /**
+     * Collects variables recursively from a chain of DTerm objects and adds them to the provided vector.
+     *
+     * @param v the vector to which variables are added.
+     * @param d the DTerm chain to process.
+     */
     void getPSVar(Vector v, DTerm d) {
         while (d != null) {
             getPVar(v, d.p);
@@ -95,12 +121,17 @@ public class GrTerm {
         }
     }
 
+    /**
+     * Retrieves a variable from an XTerm and its associated DTerm chain,
+     * adding them to the provided vector.
+     *
+     * @param v the vector to which the variable is added.
+     * @param x the XTerm from which the variable is retrieved.
+     */
     void getPVar(Vector v, XTerm x) {
         if (x == null) return;
         if (x.var != null)
             v.add(x.var);
         getPSVar(v, x.ps);
     }
-
-
 }

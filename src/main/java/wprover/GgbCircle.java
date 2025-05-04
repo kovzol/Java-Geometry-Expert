@@ -2,13 +2,26 @@ package wprover;
 
 import java.util.Objects;
 
+/**
+ * Represents a circle in GeoGebra with a name.
+ */
 public class GgbCircle {
     private String name;
 
+    /**
+     * Constructs a new GgbCircle with the specified name.
+     *
+     * @param name the name of the circle
+     */
     public GgbCircle(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns the name of the circle.
+     *
+     * @return the name of the circle
+     */
     public String getName() {
         return name;
     }

@@ -9,11 +9,7 @@ import java.io.DataInputStream;
 import java.io.FileOutputStream;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ${Yezheng}
- * Date: 2004-12-9
- * Time: 12:25:19
- * To change this template use File | Settings | File Templates.
+ * Represents a geometric line with various properties and methods.
  */
 public class CLine extends CClass {
     final public static int LLine = 0;
@@ -45,6 +41,12 @@ public class CLine extends CClass {
     final static int Height = 2000; // should be modified here.
 
 
+/**
+     * Draws the line on the given graphics context.
+     *
+     * @param g2 the graphics context
+     * @param selected whether the line is selected
+     */
     public void draw(Graphics2D g2, boolean selected) {
         if (!isdraw()) return;
 
@@ -84,17 +86,30 @@ public class CLine extends CClass {
         }
     }
 
+    /**
+     * Draws the line on the given graphics context.
+     *
+     * @param g2 the graphics context
+     */
     public void draw(Graphics2D g2) {
         draw(g2, false);
     }
 
+    /**
+     * Returns the type of the line as a string.
+     *
+     * @return the type of the line
+     */
     public String TypeString() {
         if (m_name == null) return GExpert.getLanguage("Line");
-        // String st = Language.getLs(40, "line");
-        // if (m_name == null) return st;
         return GExpert.getTranslationViaGettext("Line {0}", m_name);
     }
 
+    /**
+     * Returns the simple name of the line.
+     *
+     * @return the simple name of the line
+     */
     public String getSimpleName() {
         CPoint pl[] = this.getTowSideOfLine();
 
@@ -112,22 +127,40 @@ public class CLine extends CClass {
         return s;
     }
 
+    /**
+     * Returns the description of the line.
+     *
+     * @return the description of the line
+     */
     public String getDescription() {
         String s = this.getSimpleName();
-        // String st = Language.getLs(40, "line ");
         return GExpert.getTranslationViaGettext("Line {0}", s);
-        // return st + s;
     }
 
+    /**
+     * Sets the extent of the line.
+     *
+     * @param n the extent to set
+     */
     public void setExtent(int n) {
         extent = n;
     }
 
+    /**
+     * Returns the extent of the line.
+     *
+     * @return the extent of the line
+     */
     public int getExtent() {
         return extent;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////
+    /**
+     * Draws an ALine.
+     *
+     * @param line the line to draw
+     * @param g2 the graphics context
+     */
     public static void drawALine(CLine line, Graphics2D g2) {
         if (line.points.size() >= 2) {
             drawLLine(line, g2);
@@ -138,6 +171,12 @@ public class CLine extends CClass {
         drawXLine(pt.getx(), pt.gety(), k, g2);
     }
 
+    /**
+     * Draws an ABLine.
+     *
+     * @param line the line to draw
+     * @param g2 the graphics context
+     */
     public static void drawABLine(CLine line, Graphics2D g2) {
         if (line.points.size() >= 2) {
             drawLLine(line, g2);
@@ -148,6 +187,12 @@ public class CLine extends CClass {
         drawXLine(pt.getx(), pt.gety(), k, g2);
     }
 
+    /**
+     * Draws a TCLine.
+     *
+     * @param line the line to draw
+     * @param g2 the graphics context
+     */
     public static void drawTCLine(CLine line, Graphics2D g2) {
         if (line.points.size() >= 2) {
             drawLLine(line, g2);
@@ -158,6 +203,12 @@ public class CLine extends CClass {
         drawXLine(pt.getx(), pt.gety(), k, g2);
     }
 
+    /**
+     * Draws a BLine.
+     *
+     * @param line the line to draw
+     * @param g2 the graphics context
+     */
     public static void drawBLine(CLine line, Graphics2D g2) {
         if (line.points.size() >= 2) {
             drawLLine(line, g2);
@@ -173,6 +224,12 @@ public class CLine extends CClass {
         drawXLine(x, y, k, g2);
     }
 
+    /**
+     * Draws a CCLine.
+     *
+     * @param line the line to draw
+     * @param g2 the graphics context
+     */
     public static void drawCCLine(CLine line, Graphics2D g2) {
         if (line.points.size() >= 2) {
             drawLLine(line, g2);
@@ -217,6 +274,12 @@ public class CLine extends CClass {
         g2.drawLine((int) xa, (int) ya, (int) xb, (int) yb);
     }
 
+    /**
+     * Draws an SLine.
+     *
+     * @param line the line to draw
+     * @param g2 the graphics context
+     */
     public static void drawSLine(CLine line, Graphics2D g2) {
         if (line.points.size() >= 2) {
             drawLLine(line, g2);
@@ -233,6 +296,14 @@ public class CLine extends CClass {
 
     }
 
+    /**
+     * Draws a line given a point and a slope.
+     *
+     * @param x0 the x-coordinate of the point
+     * @param y0 the y-coordinate of the point
+     * @param k the slope of the line
+     * @param g2 the graphics context
+     */
     public static void drawXLine(double x0, double y0, double k, Graphics2D g2) {
         if (Math.abs(1 / k) < CMisc.ZERO) {
             double x = x0;
@@ -250,6 +321,12 @@ public class CLine extends CClass {
         }
     }
 
+    /**
+     * Draws a TLine.
+     *
+     * @param line the line to draw
+     * @param g2 the graphics context
+     */
     public static void drawTLine(CLine line, Graphics2D g2) {
         if (line.points.size() >= 2) {
             drawLLine(line, g2);
@@ -263,6 +340,12 @@ public class CLine extends CClass {
         drawXLine(p.getx(), p.gety(), -1 / k, g2);
     }
 
+    /**
+     * Draws a PLine.
+     *
+     * @param line the line to draw
+     * @param g2 the graphics context
+     */
     public static void drawPLine(CLine line, Graphics2D g2) {
         if (line.points.size() >= 2) {
             drawLLine(line, g2);
@@ -278,6 +361,12 @@ public class CLine extends CClass {
         drawXLine(p.getx(), p.gety(), l.getK(), g2);
     }
 
+    /**
+     * Draws an LLine.
+     *
+     * @param line the line to draw
+     * @param g2 the graphics context
+     */
     public static void drawLLine(CLine line, Graphics2D g2) {
 
         CPoint[] pl = line.getMaxMinPoint();
@@ -305,8 +394,13 @@ public class CLine extends CClass {
         }
     }
 
-    ///   /////////////////////////////////////
-
+    /**
+     * Draws a parallel line to the given line through the specified point.
+     *
+     * @param line the line to which the parallel line is drawn
+     * @param pt the point through which the parallel line passes
+     * @param g2 the graphics context
+     */
     public static void drawPParaLine(CLine line, CPoint pt, Graphics2D g2) {
         if (line.isVertical()) {
             double x = pt.getx();
@@ -324,6 +418,13 @@ public class CLine extends CClass {
         }
     }
 
+    /**
+     * Draws a perpendicular line to the given line through the specified point.
+     *
+     * @param line the line to which the perpendicular line is drawn
+     * @param pt the point through which the perpendicular line passes
+     * @param g2 the graphics context
+     */
     public static void drawTPerpLine(CLine line, CPoint pt, Graphics2D g2) {
         if (line.isHorizonal()) {
             double x = pt.getx();
@@ -344,6 +445,11 @@ public class CLine extends CClass {
     }
     /////////////////////////////////////////////
 
+    /**
+     * Returns the names of all points on the line.
+     *
+     * @return a string containing the names of all points on the line
+     */
     public String getAllPointName() {
         String s = new String();
         for (int i = 0; i < points.size(); i++) {
@@ -356,6 +462,12 @@ public class CLine extends CClass {
         return s;
     }
 
+    /**
+     * Returns the second point on the line that is not the given point.
+     *
+     * @param t the point to exclude
+     * @return the second point on the line, or null if there is no such point
+     */
     public CPoint getSecondPoint(CPoint t) {
         CPoint p = null;
 
@@ -369,6 +481,11 @@ public class CLine extends CClass {
         return p;
     }
 
+    /**
+     * Returns the first point on the line.
+     *
+     * @return the first point on the line, or null if there is no such point
+     */
     public CPoint getfirstPoint() {
         CPoint p = null;
 
@@ -383,6 +500,12 @@ public class CLine extends CClass {
 
     }
 
+    /**
+     * Returns a point on the line that is not the given point.
+     *
+     * @param t the point to exclude
+     * @return a point on the line that is not the given point, or null if there is no such point
+     */
     public CPoint getAPointBut(CPoint t) {
         for (int i = 0; i < points.size(); i++) {
             CPoint pt = (CPoint) points.get(i);
@@ -391,6 +514,11 @@ public class CLine extends CClass {
         return null;
     }
 
+    /**
+     * Returns the point on the line with the maximum x-coordinate.
+     *
+     * @return the point on the line with the maximum x-coordinate, or null if there is no such point
+     */
     public CPoint getMaxXPoint() {
         CPoint p = null;
 
@@ -404,6 +532,11 @@ public class CLine extends CClass {
         return p;
     }
 
+    /**
+     * Checks if the line has two free points at its ends.
+     *
+     * @return true if the line has two free points at its ends, false otherwise
+     */
     public boolean isTwoEndFreePoints() {
         CPoint p1, p2;
         p1 = p2 = null;
@@ -423,48 +556,12 @@ public class CLine extends CClass {
         return p1.isAFreePoint() && p2.isAFreePoint();
     }
 
-    public boolean isParallel(CLine line) {
-        if (type != PLine)
-            return false;
-        for (int i = 0; i < cons.size(); i++) {
-            Constraint cs = (Constraint) cons.get(i);
-            if (cs.GetConstraintType() != Constraint.PARALLEL)
-                continue;
-            CLine line1 = (CLine) cs.getelement(0);
-            CLine line2 = (CLine) cs.getelement(1);
-            if (line2 == this) {
-                CLine l = line1;
-                line1 = line2;
-                line2 = l;
-            }
-            if (line2 == line)
-                return true;
-            if (line2.type == CLine.PLine)
-                return line2.isParallel(line);
-        }
-        return false;
-    }
-
-    public boolean isVertical(CLine line) {
-        for (int i = 0; i < cons.size(); i++) {
-            Constraint cs = (Constraint) cons.get(i);
-            if (cs.GetConstraintType() != Constraint.PERPENDICULAR)
-                continue;
-            CLine line1 = (CLine) cs.getelement(0);
-            CLine line2 = (CLine) cs.getelement(1);
-            if (line2 == this) {
-                CLine l = line1;
-                line1 = line2;
-                line2 = l;
-            }
-            if (line2 == line && line1 == this)
-                return true;
-            return false;
-        }
-
-        return false;
-    }
-
+    /**
+     * Returns the point on the line with the smallest x-index that is not the given point.
+     *
+     * @param px the point to exclude
+     * @return the point on the line with the smallest x-index that is not the given point, or null if there is no such point
+     */
     public CPoint get_Lpt1(CPoint px) {
         if (px == null) return null;
         CPoint p1 = null;
@@ -478,6 +575,14 @@ public class CLine extends CClass {
         return p1;
     }
 
+    /**
+     * Returns the point on the line that forms a vector with the given point and coordinates.
+     *
+     * @param px the point to exclude
+     * @param x the x-coordinate of the vector
+     * @param y the y-coordinate of the vector
+     * @return the point on the line that forms a vector with the given point and coordinates, or null if there is no such point
+     */
     public CPoint get_Lptv(CPoint px, double x, double y) {      // Vector (x,y),px == (x,y),p
         if (px == null) return null;
         CPoint p1 = null;
@@ -494,6 +599,11 @@ public class CLine extends CClass {
         return p1;
     }
 
+    /**
+     * Returns the two points on the line with the smallest and largest x-index.
+     *
+     * @return an array containing the two points on the line with the smallest and largest x-index, or null if there are not enough points
+     */
     public CPoint[] getTowSideOfLine() {
         CPoint p1, p2;
         p1 = p2 = null;
@@ -516,17 +626,32 @@ public class CLine extends CClass {
         return pl;
     }
 
+    /**
+     * Returns the description of the line.
+     *
+     * @return the description of the line
+     */
     public String getDiscription() {
         CPoint[] s = this.getTowSideOfLine();
         if (s == null) return m_name;
         return s[0].m_name + s[1].m_name;
     }
 
-
+    /**
+     * Returns the maximum and minimum points of the line.
+     *
+     * @return an array containing the maximum and minimum points, or null if there are less than 2 points
+     */
     public CPoint[] getMaxMinPoint() {
         return getMaxMinPoint(true);
     }
 
+    /**
+     * Returns the maximum and minimum points of the line, optionally considering visibility.
+     *
+     * @param ckv whether to consider visibility of points
+     * @return an array containing the maximum and minimum points, or null if there are less than 2 points
+     */
     public CPoint[] getMaxMinPoint(boolean ckv) {
         if (points.size() < 2) return null;
 
@@ -576,12 +701,24 @@ public class CLine extends CClass {
         return pl;
     }
 
+    /**
+     * Returns the constraint at the specified index.
+     *
+     * @param i the index of the constraint
+     * @return the constraint at the specified index, or null if the index is out of bounds
+     */
     public Constraint getcons(int i) {
         if (i >= 0 && i < cons.size())
             return (Constraint) cons.get(i);
         return null;
     }
 
+    /**
+     * Returns the first constraint of the specified type.
+     *
+     * @param t the type of the constraint
+     * @return the first constraint of the specified type, or null if no such constraint exists
+     */
     public Constraint getconsByType(int t) {
         for (int i = 0; i < cons.size(); i++) {
             Constraint c = (Constraint) cons.get(i);
@@ -590,28 +727,52 @@ public class CLine extends CClass {
         return null;
     }
 
+    /**
+     * Checks if the line contains the specified points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @return true if the line contains both points, false otherwise
+     */
     public boolean containPTs(CPoint p1, CPoint p2) {
         return points.contains(p1) && points.contains(p2);
     }
 
+    /**
+     * Checks if the line contains the specified point.
+     *
+     * @param p the point
+     * @return true if the line contains the point, false otherwise
+     */
     public boolean containPT(CPoint p) {
         return points.contains(p);
     }
 
-    public int getconsSize() {
-        return cons.size();
-    }
-
+    /**
+     * Returns the number of points in the line.
+     *
+     * @return the number of points in the line
+     */
     public int getPtsSize() {
         return points.size();
     }
 
+    /**
+     * Returns the point at the specified index.
+     *
+     * @param n the index of the point
+     * @return the point at the specified index, or null if the index is out of bounds
+     */
     public CPoint getPoint(int n) {
         if (n < 0 || n >= points.size()) return null;
         return (CPoint) points.get(n);
     }
 
-
+    /**
+     * Checks if the line is vertical.
+     *
+     * @return true if the line is vertical, false otherwise
+     */
     public boolean isVertical() {
         if (points.size() >= 2) {
             CPoint p1 = (CPoint) points.get(0);
@@ -651,6 +812,11 @@ public class CLine extends CClass {
 
     }
 
+    /**
+     * Checks if the line is horizontal.
+     *
+     * @return true if the line is horizontal, false otherwise
+     */
     public boolean isHorizonal() {
         if (this.type == CLine.LLine) {
             CPoint p1 = (CPoint) points.get(0);
@@ -682,6 +848,11 @@ public class CLine extends CClass {
         return false;
     }
 
+    /**
+     * Calculates the slope (k) of the line.
+     *
+     * @return the slope of the line
+     */
     public double getK() {
         if (points.size() >= 2) {
             CPoint p1 = (CPoint) points.get(0);
@@ -800,6 +971,14 @@ public class CLine extends CClass {
         return 0.0;
     }
 
+    /**
+     * Calculates the slope (k) for a line defined by three other lines.
+     *
+     * @param ln1 the first line
+     * @param ln2 the second line
+     * @param ln3 the third line
+     * @return the calculated slope
+     */
     public static double getALineK(CLine ln1, CLine ln2, CLine ln3) {
         CPoint lp1[] = ln1.getTowSideOfLine();
         CPoint lp2[] = ln2.getTowSideOfLine();
@@ -807,6 +986,17 @@ public class CLine extends CClass {
         return getALineK(lp1[0], lp1[1], lp2[0], lp2[1], lp3[0], lp3[1]);
     }
 
+    /**
+     * Calculates the slope (k) for a line defined by six points.
+     *
+     * @param p1 the first point
+     * @param p2 the second point
+     * @param p3 the third point
+     * @param p4 the fourth point
+     * @param p5 the fifth point
+     * @param p6 the sixth point
+     * @return the calculated slope
+     */
     public static double getALineK(CPoint p1, CPoint p2, CPoint p3, CPoint p4, CPoint p5, CPoint p6) {
         double x1 = p1.getx();
         double y1 = p1.gety();
@@ -825,6 +1015,11 @@ public class CLine extends CClass {
         return t1 / t2;
     }
 
+    /**
+     * Adds a point to the line.
+     *
+     * @param a the point to add
+     */
     public void addApoint(CPoint a) {
         if (a == null) return;
         for (int i = 0; i < points.size(); i++)
@@ -833,25 +1028,33 @@ public class CLine extends CClass {
         points.add(a);
     }
 
+    /**
+     * Adds a constraint to the line.
+     *
+     * @param cs the constraint to add
+     */
     public void addconstraint(Constraint cs) {
         if (cs == null) return;
         if (!cons.contains(cs))
             cons.add(cs);
     }
 
-    public void clearpoints() {
-        points.clear();
-    }
-
-    public void setColorType(String c) {
-        String str = new String(c);
-    }
-
+    /**
+     * Constructs a CLine with a specified type.
+     *
+     * @param type the type of the line
+     */
     public CLine(int type) {
         super(CClass.LINE);
         this.type = type;
     }
 
+    /**
+     * Constructs a CLine with a specified point and type.
+     *
+     * @param A the point
+     * @param type the type of the line
+     */
     public CLine(CPoint A, int type) {
         super(CClass.LINE);
 
@@ -859,6 +1062,13 @@ public class CLine extends CClass {
         this.type = type;
     }
 
+    /**
+     * Constructs a CLine with two points and a specified type.
+     *
+     * @param A the first point
+     * @param B the second point
+     * @param Type the type of the line
+     */
     public CLine(CPoint A, CPoint B, int Type) {
         super(CClass.LINE);
         this.addApoint(A);
@@ -866,12 +1076,25 @@ public class CLine extends CClass {
         type = Type;
     }
 
+    /**
+     * Constructs a CLine with two points.
+     *
+     * @param A the first point
+     * @param B the second point
+     */
     public CLine(CPoint A, CPoint B) {
         super(CClass.LINE);
         this.addApoint(A);
         this.addApoint(B);
     }
 
+    /**
+     * Constructs a CLine with two points and a specified color.
+     *
+     * @param A the first point
+     * @param B the second point
+     * @param color the color of the line
+     */
     public CLine(CPoint A, CPoint B, String color) {
         super(CClass.LINE);
         //  this.color = color;
@@ -879,6 +1102,13 @@ public class CLine extends CClass {
         this.addApoint(B);
     }
 
+    /**
+     * Constructs a CLine with a name and two points.
+     *
+     * @param name the name of the line
+     * @param A the first point
+     * @param B the second point
+     */
     public CLine(String name, CPoint A, CPoint B) {
         super(CClass.LINE);
         this.m_name=name;
@@ -886,7 +1116,13 @@ public class CLine extends CClass {
         this.addApoint(B);
     }
 
-
+    /**
+     * Checks if two points are on the same line.
+     *
+     * @param A the first point
+     * @param B the second point
+     * @return true if both points are on the same line, false otherwise
+     */
     public boolean sameLine(CPoint A, CPoint B) {
         CPoint p = new CPoint();
         int counter = 0;
@@ -903,18 +1139,23 @@ public class CLine extends CClass {
         }
     }
 
+    /**
+     * Checks if a point is on the line.
+     *
+     * @param p the point to check
+     * @return true if the point is on the line, false otherwise
+     */
     public boolean pointOnLine(CPoint p) {
         return points.contains(p);
     }
 
-    public boolean pointOnLineN(CPoint p) {
-        return this.distance(p.getx(), p.gety()) < CMisc.ZERO;
-    }
-
-    public boolean pointOnLine(double x, double y) {
-        return this.distance(x, y) < CMisc.ZERO;
-    }
-
+    /**
+     * Checks if two points are equal.
+     *
+     * @param A the first point
+     * @param B the second point
+     * @return true if both points are equal, false otherwise
+     */
     public boolean isEqual(CPoint A, CPoint B) {
         if (A.x1.xindex == B.x1.xindex && A.y1.xindex == B.y1.xindex)
             return true;
@@ -922,17 +1163,17 @@ public class CLine extends CClass {
         return false;
     }
 
-    public CPoint getSideMostPoint(CPoint p, int x, int y) {
-        CPoint pp = null;
-        for (int i = 0; i < points.size(); i++) {
-            CPoint tp = (CPoint) points.get(i);
-            if ((x - tp.getx()) * (p.getx() - tp.getx()) > 0 || (y - tp.gety()) * (p.gety() - tp.gety()) > 0
-                    && (pp == null || pp.x1.xindex > tp.x1.xindex))
-                pp = tp;
-        }
-        return pp;
-    }
-
+    /**
+     * Checks if the mouse is on the line.
+     *
+     * @param x the x-coordinate of the mouse
+     * @param y the y-coordinate of the mouse
+     * @param x1 the x-coordinate of the first point of the line
+     * @param y1 the y-coordinate of the first point of the line
+     * @param x2 the x-coordinate of the second point of the line
+     * @param y2 the y-coordinate of the second point of the line
+     * @return true if the mouse is on the line, false otherwise
+     */
     public static boolean mouse_on_line(double x, double y, double x1, double y1, double x2, double y2) {
         double k = -(y2 - y1) / (x2 - x1);
 
@@ -943,6 +1184,14 @@ public class CLine extends CClass {
         return len < CMisc.PIXEPS;
     }
 
+    /**
+     * Calculates the distance from a point to a line.
+     *
+     * @param ln the line
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @return the distance from the point to the line
+     */
     public static double distanceToPoint(CLine ln, double x, double y) {
 
         int n = ln.getPtsSize();
@@ -999,12 +1248,16 @@ public class CLine extends CClass {
 
     }
 
-
-    public static double distanceToPoint(CPoint p, CPoint p1, CPoint p2) {
-        return distanceToPoint(p.getx(), p.gety(), (p1.getx() - p2.getx()) / (p1.gety() - p2.gety()), p1.getx(), p1.gety());
-
-    }
-
+    /**
+     * Calculates the distance from a point to a line given the slope.
+     *
+     * @param x1 the x-coordinate of the first point of the line
+     * @param y1 the y-coordinate of the first point of the line
+     * @param k the slope of the line
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @return the distance from the point to the line
+     */
     public static double distanceToPoint(double x1, double y1, double k, double x, double y) {
         k = -k;
 
@@ -1016,6 +1269,13 @@ public class CLine extends CClass {
 
     }
 
+    /**
+     * Checks if a point is inside the line segment.
+     *
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @return true if the point is inside the line segment, false otherwise
+     */
     public boolean inside(double x, double y) {
         if (this.ext_type == ET_ENDLESS)
             return true;
@@ -1060,6 +1320,14 @@ public class CLine extends CClass {
         return (e1 <= 0 && e2 <= 0);
     }
 
+    /**
+     * Checks if a point is inside the line segment within a given tolerance.
+     *
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @param eps the tolerance
+     * @return true if the point is inside the line segment within the tolerance, false otherwise
+     */
     public boolean inside(double x, double y, double eps) {
         if (this.ext_type == ET_ENDLESS)
             return true;
@@ -1105,10 +1373,24 @@ public class CLine extends CClass {
         return (e1 <= 0 && e2 <= 0);
     }
 
+    /**
+     * Checks if a point is near the line.
+     *
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @return true if the point is near the line, false otherwise
+     */
     public boolean nearline(double x, double y) {     // is the point near the line
         return distanceToPoint(this, x, y) < CMisc.PIXEPS;
     }
 
+    /**
+     * Selects the line if a point is near it.
+     *
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @return true if the line is selected, false otherwise
+     */
     public boolean select(double x, double y) {
         if (!visible) return false;
 
@@ -1120,25 +1402,23 @@ public class CLine extends CClass {
         return false;
     }
 
+    /**
+     * Calculates the distance from a point to this line.
+     *
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @return the distance from the point to this line
+     */
     public double distance(double x, double y) {
         return distanceToPoint(this, x, y);
     }
 
-    public boolean isOnMiddle(double x, double y) {
-        if (points.size() != 2)
-            return false;
-        CPoint p1 = (CPoint) points.get(0);
-        CPoint p2 = (CPoint) points.get(1);
-
-        double dx = (p1.getx() + p2.getx()) / 2;
-        double dy = (p1.gety() + p2.gety()) / 2;
-        if (Math.abs(p1.getx() - p2.getx()) < CMisc.PIXEPS &&
-                Math.abs(p1.gety() - p2.gety()) < CMisc.PIXEPS)
-            return false;
-
-        return Math.abs(x - dx) < CMisc.PIXEPS && Math.abs(y - dy) < CMisc.PIXEPS;
-    }
-
+    /**
+     * Checks if the given point is on the middle of the line.
+     *
+     * @param pt the point to check
+     * @return true if the point is on the middle of the line, false otherwise
+     */
     public boolean pointonMiddle(CPoint pt) {
         if (points.size() != 2)
             return false;
@@ -1157,6 +1437,11 @@ public class CLine extends CClass {
         return true;
     }
 
+    /**
+     * Sets the location of the given point to be on this line.
+     *
+     * @param pt the point to set on the line
+     */
     public void pointonline(CPoint pt) {      //set the location of the point to line
         if (this.type == CCLine)
             return;
@@ -1212,6 +1497,13 @@ public class CLine extends CClass {
 
     }
 
+    /**
+     * Finds the common points between a line and a circle.
+     *
+     * @param ln the line
+     * @param c the circle
+     * @return an array of common points between the line and the circle
+     */
     public static CPoint[] commonPoint(CLine ln, Circle c) {
         CPoint t1, t2;
         t1 = t2 = null;
@@ -1243,6 +1535,13 @@ public class CLine extends CClass {
         }
     }
 
+    /**
+     * Finds the common point between two lines.
+     *
+     * @param line0 the first line
+     * @param line1 the second line
+     * @return the common point between the two lines, or null if there is no common point
+     */
     public static CPoint commonPoint(CLine line0, CLine line1) {
         for (int i = 0; i < line0.points.size(); i++) {
             CPoint p1 = (CPoint) line0.points.get(i);
@@ -1256,6 +1555,12 @@ public class CLine extends CClass {
         return null;
     }
 
+    /**
+     * Checks if this line is the same as another line.
+     *
+     * @param line2 the other line to compare
+     * @return true if the lines are the same, false otherwise
+     */
     public boolean sameLine(CLine line2) {
         if (line2 == null) return false;
         if (this.points.size() != line2.points.size()) return false;
@@ -1263,6 +1568,15 @@ public class CLine extends CClass {
         return this.points.containsAll(line2.points);
     }
 
+    /**
+     * Calculates the intersection point of two line segments.
+     *
+     * @param p1 the first point of the first line segment
+     * @param p2 the second point of the first line segment
+     * @param p3 the first point of the second line segment
+     * @param p4 the second point of the second line segment
+     * @return an array containing the x and y coordinates of the intersection point, or null if there is no intersection
+     */
     public static double[] Intersect(CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         double result[] = new double[2];
         if (Math.abs(p1.getx() - p2.getx()) < CMisc.ZERO) {
@@ -1289,10 +1603,23 @@ public class CLine extends CClass {
         return result;
     }
 
+    /**
+     * Checks if a slope is considered vertical.
+     *
+     * @param r the slope to check
+     * @return true if the slope is vertical, false otherwise
+     */
     public static boolean isVerticalSlop(double r) {
         return Math.abs(r) > CMisc.MAX_SLOPE;
     }
 
+    /**
+     * Checks if two lines are perpendicular.
+     *
+     * @param line0 the first line
+     * @param line1 the second line
+     * @return true if the lines are perpendicular, false otherwise
+     */
     public static boolean isPerp(CLine line0, CLine line1) {
         if (line0 == null || line1 == null)
             return false;
@@ -1306,6 +1633,13 @@ public class CLine extends CClass {
         return Math.abs(k0 * k1 + 1) < CMisc.ZERO;
     }
 
+    /**
+     * Calculates the intersection point of two lines.
+     *
+     * @param line0 the first line
+     * @param line1 the second line
+     * @return an array containing the x and y coordinates of the intersection point, or null if there is no intersection
+     */
     public static double[] Intersect(CLine line0, CLine line1) {
         if (line0 == null || line1 == null)
             return null;
@@ -1350,6 +1684,13 @@ public class CLine extends CClass {
         return result;
     }
 
+    /**
+     * Saves the line to a PostScript file.
+     *
+     * @param fp the file output stream
+     * @param stype the style type
+     * @throws IOException if an I/O error occurs
+     */
     public void SavePS(FileOutputStream fp, int stype) throws IOException {
         if (!visible) return;
 
@@ -1362,7 +1703,12 @@ public class CLine extends CClass {
 
     }
 
-
+    /**
+     * Saves the line to a data output stream.
+     *
+     * @param out the data output stream
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException {
         super.Save(out);
 
@@ -1384,6 +1730,13 @@ public class CLine extends CClass {
         out.writeInt(extent);
     }
 
+    /**
+     * Loads the line from a data input stream.
+     *
+     * @param in the data input stream
+     * @param dp the draw process
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in, DrawProcess dp) throws IOException {
         if (CMisc.version_load_now < 0.01) {
             m_id = in.readInt();

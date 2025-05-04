@@ -4,34 +4,55 @@ import java.awt.*;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yezheng
- * Date: 2006-5-3
- * Time: 12:35:47
- * To change this template use File | Settings | File Templates.
+ * JLine class represents a line in a graphical context.
+ * It allows adding points, drawing the line, and setting properties like infinite drawing.
  */
 public class JLine {
     private boolean ext = false;
 
     Vector vlist = new Vector();
 
+    /**
+     * Constructs a new JLine.
+     */
     public JLine() {
     }
 
+    /**
+     * Sets whether the line should be drawn infinitely.
+     *
+     * @param inf true to draw the line infinitely, false otherwise
+     */
     public void setDrawInfinite(boolean inf) {
         ext = inf;
     }
 
+    /**
+     * Adds a point to the list of points defining the line.
+     *
+     * @param p the point to add
+     */
     public void addAPoint(CPoint p) {
         if (p != null && !vlist.contains(p)) {
             vlist.add(p);
         }
     }
 
+    /**
+     * Draws the line on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     * @return true if the drawing was successful, false otherwise
+     */
     public boolean draw(Graphics2D g2) {
         return true;
     }
 
+    /**
+     * Draws the line between the maximum and minimum points on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     */
     public void drawLine(Graphics2D g2) {
         CPoint[] pl = getMaxMinPoint();
         if (pl != null) {
@@ -39,13 +60,11 @@ public class JLine {
                 g2.drawLine((int) pl[0].getx(), (int) pl[0].gety(),
                         (int) pl[1].getx(), (int) pl[1].gety());
             } else {
-
                 if (Math.abs(pl[0].getx() - pl[1].getx()) < CMisc.ZERO) {
                     double x = pl[0].getx();
                     double y1 = 0;
                     double y2 = 2000;
                     g2.drawLine((int) x, (int) y1, (int) x, (int) y2);
-
                 } else {
                     double k = (pl[1].gety() - pl[0].gety()) /
                             (pl[1].getx() - pl[0].getx());
@@ -55,14 +74,16 @@ public class JLine {
                     double y2 = k * (x2 - pl[0].getx()) + pl[0].gety();
                     g2.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
                 }
-
             }
         }
-//        drawPt(g2);
-
+        // drawPt(g2);
     }
 
-
+    /**
+     * Draws the points defining the line on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     */
     public void drawPt(Graphics2D g2) {
         for (int i = 0; i < vlist.size(); i++) {
             CPoint pt = (CPoint) vlist.get(i);
@@ -73,9 +94,13 @@ public class JLine {
         }
     }
 
+    /**
+     * Fills the points defining the line with white color on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     */
     public void fillPt(Graphics2D g2) {
         g2.setColor(Color.white);
-
         for (int i = 0; i < vlist.size(); i++) {
             CPoint pt = (CPoint) vlist.get(i);
             int x = (int) pt.getx();
@@ -83,9 +108,13 @@ public class JLine {
             int r = pt.getRadius();
             g2.fillOval(x - r - 1, y - r - 1, 2 * r + 1, 2 * r + 1);
         }
-
     }
 
+    /**
+     * Sets the flashing mode for all points defining the line.
+     *
+     * @param t true to enable flashing mode, false to disable
+     */
     public void setInFlashMode(boolean t) {
         for (int i = 0; i < vlist.size(); i++) {
             CPoint pt = (CPoint) vlist.get(i);
@@ -93,10 +122,21 @@ public class JLine {
         }
     }
 
+    /**
+     * Checks if the specified point is contained in the list of points defining the line.
+     *
+     * @param pt the point to check
+     * @return true if the point is contained in the list, false otherwise
+     */
     public boolean containPt(CPoint pt) {
         return vlist.contains(pt);
     }
 
+    /**
+     * Gets the maximum and minimum points defining the line.
+     *
+     * @return an array containing the maximum and minimum points, or null if there are less than two points
+     */
     public CPoint[] getMaxMinPoint() {
         if (vlist.size() < 2) {
             return null;
@@ -111,7 +151,6 @@ public class JLine {
         p2 = null;
         for (int i = 1; i < vlist.size(); i++) {
             CPoint p = (CPoint) vlist.get(i);
-
             if (p.getx() < p1.getx()) {
                 if (p2 == null) {
                     p2 = p1;
@@ -140,7 +179,6 @@ public class JLine {
                     p2 = p;
                 }
             }
-
         }
 
         CPoint[] pl = new CPoint[2];

@@ -10,6 +10,10 @@ import java.io.DataInputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * RuleListDialog is a dialog that displays a list of rules and allows the user to interact with them.
+ * It extends JBaseDialog and provides functionality for loading and displaying rules.
+ */
 public class RuleListDialog extends JBaseDialog {
 
     private GExpert gxInstance;
@@ -18,36 +22,36 @@ public class RuleListDialog extends JBaseDialog {
     private ruleDpanel dpane;
     private JPanel split;
 
+    /**
+     * Constructs a new RuleListDialog with the specified GExpert instance.
+     *
+     * @param gx the GExpert instance to associate with this dialog
+     */
     public RuleListDialog(GExpert gx) {
         super(gx.getFrame());
         gxInstance = gx;
         init();
     }
 
+    /**
+     * Constructs a new RuleListDialog with no associated GExpert instance.
+     */
     public RuleListDialog() {
         gxInstance = null;
         init();
     }
 
-
+    /**
+     * Initializes the RuleListDialog by setting up the panels, listeners, and window properties.
+     */
     public void init() {
         if (gxInstance != null && CMisc.isApplication())
             this.setAlwaysOnTop(true);
-
-//        if (gxInstance != null)
-//            gxInstance.addDependentDialog(this);
-
 
         this.setTitle(GExpert.getLanguage("Rule"));
         this.setModal(false);
 
         scroll = new JScrollPane((rpane = new RuleViewPane(gxInstance)));
-
-//        {
-//            public Dimension getPreferredSize() {
-//                return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
-//            }
-//        }));
 
         dpane = new ruleDpanel();
 
@@ -61,6 +65,13 @@ public class RuleListDialog extends JBaseDialog {
             this.setLocation(gxInstance.getX(), gxInstance.getY() + gxInstance.getHeight() - 500);
     }
 
+    /**
+     * Loads a rule based on the type and index.
+     *
+     * @param t the type of the rule
+     * @param n the index of the rule
+     * @return true if the rule is loaded successfully, false otherwise
+     */
     public boolean loadRule(int t, int n) {
         GRule r;
         if (t == 0)
@@ -82,11 +93,19 @@ public class RuleListDialog extends JBaseDialog {
         return rf;
     }
 
+    /**
+     * A custom JPanel that displays rule details and handles mouse events.
+     */
     class ruleDpanel extends JPanel implements MouseListener {
         private JLabel label1, label2;
         private JEditorPane epane;
         private int rt1, rt2;
 
+        /**
+         * Returns the maximum size of this component.
+         *
+         * @return the maximum size of this component
+         */
         public Dimension getMaximumSize() {
             Dimension dm = super.getMaximumSize();
             Dimension dm2 = super.getPreferredSize();
@@ -94,6 +113,9 @@ public class RuleListDialog extends JBaseDialog {
             return dm2;
         }
 
+        /**
+         * Constructs a new ruleDpanel.
+         */
         public ruleDpanel() {
             this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             JPanel p = new JPanel(new FlowLayout(FlowLayout.LEADING));
@@ -110,16 +132,17 @@ public class RuleListDialog extends JBaseDialog {
             this.add(epane);
         }
 
+        /**
+         * Sets the rule to be displayed in this panel.
+         *
+         * @param t the type of the rule
+         * @param r the rule to display
+         */
         public void setRule(int t, GRule r) {
             rt1 = t;
             rt2 = r.type;
 
             String sh;
-            /*
-            if (t == 0)
-                sh = "RULE " + r.type;//+ " for Deductive Database Method";
-            else sh = "RULE " + r.type;//+ " for Full Angle Method";
-             */
             sh = GExpert.getTranslationViaGettext("Rule {0}", r.type + "");
 
             label1.setText(sh);
@@ -132,6 +155,11 @@ public class RuleListDialog extends JBaseDialog {
             epane.setText(s);
         }
 
+        /**
+         * Handles mouse click events to open the rule's help page.
+         *
+         * @param e the mouse event
+         */
         public void mouseClicked(MouseEvent e) {
             String dr = GExpert.getUserDir();
             String sp = GExpert.getFileSeparator();
@@ -139,7 +167,6 @@ public class RuleListDialog extends JBaseDialog {
                 GExpert.openURL("file:///" + dr + sp + "help" + sp + "GDD" + sp + "r" + rt2 + ".html");
             else
                 GExpert.openURL("file:///" + dr + sp + "help" + sp + "FULL" + sp + "r" + rt2 + ".html");
-
         }
 
         public void mousePressed(MouseEvent e) {
@@ -153,19 +180,30 @@ public class RuleListDialog extends JBaseDialog {
 
         public void mouseExited(MouseEvent e) {
         }
-
     }
 
+    /**
+     * A custom JPanel that displays and interacts with rules in a graphical format.
+     * Implements MouseListener, ComponentListener, and MouseMotionListener interfaces.
+     */
     class RuleViewPane extends JPanel implements MouseListener, ComponentListener, MouseMotionListener {
         DrawTextProcess dx;
         int xx, yy;
         double scale = 1.0;
         protected Rectangle rc = new Rectangle(0, 0, 0, 0);
 
+        /**
+         * Returns the preferred size of this component.
+         *
+         * @return the preferred size of this component
+         */
         public Dimension getPreferredSize() {
             return new Dimension((int) rc.getWidth() + 20, (int) rc.getHeight() + 20);
         }
 
+        /**
+         * Resets the size of the component based on the points bounds.
+         */
         public void resetSize() {
             if (dx == null) return;
             Vector v1 = dx.pointlist;
@@ -182,10 +220,18 @@ public class RuleListDialog extends JBaseDialog {
             scrollToCenter();
         }
 
+        /**
+         * Invoked when the component's size changes.
+         *
+         * @param e the component event
+         */
         public void componentResized(ComponentEvent e) {
             resetSize();
         }
 
+        /**
+         * Scrolls the view to the center of the component.
+         */
         public void scrollToCenter() {
             Rectangle rc1 = scroll.getViewport().getBounds();
             JScrollBar b1 = scroll.getHorizontalScrollBar();
@@ -203,6 +249,9 @@ public class RuleListDialog extends JBaseDialog {
         public void componentHidden(ComponentEvent e) {
         }
 
+        /**
+         * Centers all objects within the view.
+         */
         public void centerAllObject() {
             Vector v1 = dx.pointlist;
             this.getPointsBounds(v1);
@@ -211,6 +260,13 @@ public class RuleListDialog extends JBaseDialog {
             yy = (int) ((this.getHeight() - rc.getHeight() * scale) / 2 - rc.getY() * scale);
         }
 
+        /**
+         * Loads a rule based on the type and index.
+         *
+         * @param t the type of the rule
+         * @param n the index of the rule
+         * @return true if the rule is loaded successfully, false otherwise
+         */
         public boolean loadRule(int t, int n) {
             String s = n + "";
 
@@ -236,19 +292,11 @@ public class RuleListDialog extends JBaseDialog {
 
         }
 
-        private void loadRemote(String sh) {
-            try {
-                URL ul = new URL(/*gxInstance.getDocumentBase()*/ CMisc.getHomeDirectory(), sh);
-                URLConnection urlc = ul.openConnection();
-                urlc.connect();
-                InputStream instream = urlc.getInputStream();
-                DataInputStream in = new DataInputStream(instream);
-                dx.Load(in);
-            }
-            catch (IOException ee) {
-            }
-        }
-
+        /**
+         * Constructs a new RuleViewPane with the specified GExpert instance.
+         *
+         * @param gx the GExpert instance
+         */
         public RuleViewPane(GExpert gx) {
             gxInstance = gx;
             xx = yy = 0;
@@ -273,6 +321,12 @@ public class RuleListDialog extends JBaseDialog {
             //this.setBackground(Color.lightGray);
         }
 
+        /**
+         * Returns the bounds of the points in the given vector.
+         *
+         * @param v the vector of points
+         * @return the bounds of the points
+         */
         public Rectangle getPointsBounds(Vector v) {
             if (v.size() == 0) return rc;
             CPoint p1 = (CPoint) v.get(0);
@@ -296,6 +350,11 @@ public class RuleListDialog extends JBaseDialog {
             return rc;
         }
 
+        /**
+         * Invoked when a mouse button is pressed on a component.
+         *
+         * @param e the mouse event
+         */
         public void mouseDragged(MouseEvent e) {
             dx.DWMouseDrag((e.getX() - xx) / scale, (e.getY() - yy) / scale);
             dx.reCalculate();
@@ -303,6 +362,11 @@ public class RuleListDialog extends JBaseDialog {
             this.repaint();
         }
 
+        /**
+         * Invoked when the mouse cursor has been moved onto a component but no buttons have been pushed.
+         *
+         * @param e the mouse event
+         */
         public void mouseMoved(MouseEvent e) {
             dx.DWMouseMove((e.getX() - xx) / scale, (e.getY() - yy) / scale);
             dx.reCalculate();
@@ -312,7 +376,11 @@ public class RuleListDialog extends JBaseDialog {
         public void mouseClicked(MouseEvent e) {
         }
 
-
+        /**
+         * Invoked when a mouse button has been pressed on a component.
+         *
+         * @param e the mouse event
+         */
         public void mousePressed(MouseEvent e) {
             dx.DWButtonDown((e.getX() - xx) / scale, (e.getY() - yy) / scale);
             dx.reCalculate();
@@ -320,7 +388,11 @@ public class RuleListDialog extends JBaseDialog {
             this.repaint();
         }
 
-
+        /**
+         * Invoked when a mouse button has been released on a component.
+         *
+         * @param e the mouse event
+         */
         public void mouseReleased(MouseEvent e) {
             dx.DWButtonUp((e.getX() - xx) / scale, (e.getY() - yy) / scale);
             dx.reCalculate();
@@ -328,15 +400,17 @@ public class RuleListDialog extends JBaseDialog {
             this.repaint();
         }
 
-
         public void mouseEntered(MouseEvent e) {
         }
-
 
         public void mouseExited(MouseEvent e) {
         }
 
-
+        /**
+         * Paints this component.
+         *
+         * @param g the graphics context to use for painting
+         */
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;

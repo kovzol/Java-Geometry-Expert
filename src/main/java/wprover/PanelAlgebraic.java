@@ -13,6 +13,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+/**
+ * PanelAlgebraic is an abstract class that extends JScrollPane and implements
+ * Runnable and ActionListener interfaces. It provides methods for handling
+ * algebraic operations and displaying results in a text pane.
+ */
 public abstract class PanelAlgebraic extends JScrollPane implements Runnable, ActionListener {
     protected DrawProcess dp;
     protected GeoPoly poly = GeoPoly.getPoly();
@@ -25,26 +30,40 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
     protected TMono _mremainder = null;
     protected RunningDialog rund;
 
+    /**
+     * Retrieves the language string for the specified key.
+     *
+     * @param n the key index (not used)
+     * @param s the key for the language string
+     * @return the language string associated with the key
+     * @deprecated This method is deprecated. Use GExpert.getLanguage(s) directly.
+     */
     @Deprecated
     public String getLanguage(int n, String s) {
         return GExpert.getLanguage(s);
-
-        /*
-        if (lan == null)
-            return s;
-
-        return lan.getString(n, s);
-         */
     }
 
+    /**
+     * Checks if the panel is currently running.
+     *
+     * @return true if the panel is running, false otherwise
+     */
     public boolean isRunning() {
         return running;
     }
 
+    /**
+     * Stops the panel from running.
+     */
     public void stop() {
         running = false;
     }
 
+    /**
+     * Sets the GExpert instance and updates the language settings.
+     *
+     * @param gx the GExpert instance to set
+     */
     public void setXInstance(GExpert gx) {
         if (gx != null) {
             this.gxInstance = gx;
@@ -52,7 +71,12 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         }
     }
 
-
+    /**
+     * Constructs a new PanelAlgebraic with the specified DrawProcess and WuTextPane.
+     *
+     * @param dp    the DrawProcess instance to associate with this panel
+     * @param tpane the WuTextPane instance to associate with this panel
+     */
     public PanelAlgebraic(DrawProcess dp, WuTextPane tpane) {
         super(tpane);
         this.dp = dp;
@@ -60,14 +84,25 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         tpane.addListnerToButton(this);
     }
 
+    /**
+     * Abstract method to stop the panel from running.
+     * Must be implemented by subclasses.
+     */
     public abstract void stopRunning();
 
-
+    /**
+     * Clears all content from the text pane and stops the panel from running.
+     */
     public void clearAll() {
         running = false;
         tpane.clearAll();
     }
 
+    /**
+     * Adds a string to the text pane with a newline.
+     *
+     * @param s the string to add
+     */
     protected void addString(String s) {
         try {
             StyledDocument doc = tpane.getStyledDocument();
@@ -75,9 +110,14 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         } catch (BadLocationException ble) {
             System.err.println("Couldn't insert initial text into text pane.");
         }
-
     }
 
+    /**
+     * Adds a string to the text pane with the specified style.
+     *
+     * @param s    the string to add
+     * @param type the style type to apply
+     */
     protected void addString(String s, String type) {
         try {
             StyledDocument doc = tpane.getStyledDocument();
@@ -85,9 +125,11 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         } catch (BadLocationException ble) {
             System.err.println("Couldn't insert initial text into text pane.");
         }
-
     }
 
+    /**
+     * Adds a button to the text pane.
+     */
     protected void addButton() {
         try {
             StyledDocument doc = tpane.getStyledDocument();
@@ -97,6 +139,11 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         }
     }
 
+    /**
+     * Adds a bold string to the text pane.
+     *
+     * @param s the string to add
+     */
     protected void addString1(String s) {
         try {
             StyledDocument doc = tpane.getStyledDocument();
@@ -106,6 +153,11 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         }
     }
 
+    /**
+     * Adds a header string to the text pane with newlines before and after.
+     *
+     * @param s the string to add
+     */
     protected void addString2(String s) {
         try {
             StyledDocument doc = tpane.getStyledDocument();
@@ -115,6 +167,11 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         }
     }
 
+    /**
+     * Adds a header string to the text pane with a newline after.
+     *
+     * @param s the string to add
+     */
     protected void addString2s(String s) {
         try {
             StyledDocument doc = tpane.getStyledDocument();
@@ -124,7 +181,9 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         }
     }
 
-
+    /**
+     * Adds the algebraic form of the points to the text pane.
+     */
     protected void addAlgebraicForm() {
         addString2s(getLanguage(1101, "The Algebraic Form:"));
         Vector vp = dp.getPointList();
@@ -147,10 +206,13 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         addString1("\n");
     }
 
-
+    /**
+     * Handles action events for the panel.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         JTextArea a = new JTextArea();
-//        a.setWrapStyleWord(true);
         a.setLineWrap(true);
         String s = GeoPoly.getInstance().getExpandedPrint(_mremainder);
         a.setText(s);
@@ -163,81 +225,28 @@ public abstract class PanelAlgebraic extends JScrollPane implements Runnable, Ac
         dlg.setVisible(true);
     }
 
+    /**
+     * Scrolls the text pane to the end.
+     */
     protected void scrollToEnd() {
         JScrollBar bar = this.getVerticalScrollBar();
         bar.setValue(bar.getMaximum());
         repaint();
     }
 
+    /**
+     * Retrieves the TMono representation of the specified construction.
+     *
+     * @param c the construction
+     * @return the TMono representation of the construction
+     */
     protected TMono getTMono(Cons c) {
         return dp.getTMono(c);
     }
 
+    /**
+     * Runs the panel's main process.
+     */
     public void run() {
-    }
-
-    public TPoly get_ndgs(Vector vlist, int z) {
-        TPoly pp = null;
-        for (int i = 0; i < vlist.size(); i++) {
-            Cons c = (Cons) vlist.get(i);
-            if (c.type != Gib.C_POINT) {
-                TMono mx = dp.getTMono(c);
-                if (mx != null) {
-                    mx = poly.n_ndg(mx, z++);
-                    pp = poly.ppush(mx, pp);
-                }
-            }
-        }
-        return pp;
-    }
-
-    public Vector get_ndgs(int param, Vector vlist) {
-
-        Vector pp = new Vector();
-        for (int i = 0; i < vlist.size(); i++) {
-            Cons c = (Cons) vlist.get(i);
-            if (c.type != Gib.C_POINT) {
-                TMono mx = get_ndg(param--, c.type, dp.getPoints(c));
-                if (mx != null)
-                    pp.add(0, mx);
-            }
-        }
-        return pp;
-    }
-
-    public Vector get_ndgsx(int param, Vector vlist) {
-
-        Vector pp = new Vector();
-        for (int i = 0; i < vlist.size(); i++) {
-            TMono m = (TMono) vlist.get(i);
-            m = poly.n_ndg(m, param--);
-            poly.ppush(m, pp);
-        }
-        return pp;
-    }
-
-    public TMono get_ndg(int z, int t, CPoint[] pp) {
-        switch (t) {
-            case Gib.C_I_LL:  // AB // CD.
-                return poly.n_ndg(poly.parallel(pp[1], pp[2], pp[3], pp[4]), z);
-            case Gib.C_I_LP:
-                return poly.n_ndg(poly.parallel(pp[1], pp[2], pp[4], pp[5]), z);
-            case Gib.C_I_LT:
-                return poly.n_ndg(poly.perpendicular(pp[1], pp[2], pp[4], pp[5]), z);
-            case Gib.C_I_PP:
-                return poly.n_ndg(poly.parallel(pp[2], pp[3], pp[5], pp[6]), z);
-            case Gib.C_FOOT:
-                return poly.n_ndg(poly.isotropic(pp[2], pp[3]), z);
-            case Gib.C_I_LB:
-                return poly.n_ndg(poly.perpendicular(pp[0], pp[1], pp[2], pp[3]), z);
-            case Gib.C_SQUARE:
-                return poly.n_ndg(poly.isotropic(pp[0], pp[1]), z);
-            case Gib.C_O_C:
-                return poly.n_ndg(poly.isotropic(pp[1], pp[2]), z);
-            case Gib.C_CIRCUM:
-                return poly.n_ndg(poly.collinear(pp[1], pp[2], pp[3]), z);
-
-        }
-        return null;
     }
 }

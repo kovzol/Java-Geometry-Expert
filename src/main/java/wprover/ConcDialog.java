@@ -7,6 +7,10 @@ import java.util.Vector;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * ConcDialog is a dialog for selecting geometric conclusions.
+ * It allows the user to select points and check geometric properties.
+ */
 public class ConcDialog extends JBaseDialog implements ActionListener, ItemListener {
     int type = 0; // 0. Conclusion   1. NDGS.
     final static String[] ts = {
@@ -31,7 +35,7 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             "Special Angle",
             "Angles Equation",
             "Segment Equation"
-    };//CST.s_conc_detail;
+    };
 
 
     final public static int CONCLUSION_OK = 0;
@@ -53,15 +57,30 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
     private condPane Pane2;
 
 
+    /**
+     * Sets the type of the dialog.
+     *
+     * @param t the type to set
+     */
     public void setType(int t) {
         this.type = t;
     }
 
+    /**
+     * Changes the action listener for the OK button.
+     *
+     * @param ls the new ActionListener to set
+     */
     public void changeBOKListener(ActionListener ls) {
         bok.removeActionListener(this);
         bok.addActionListener(ls);
     }
 
+    /**
+     * Sets the conclusion in the dialog.
+     *
+     * @param c the conclusion to set
+     */
     public void setCns(Cons c) {
         if (c == null)
             return;
@@ -75,6 +94,12 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         }
     }
 
+    /**
+     * Constructs a ConcDialog with the specified GExpert instance and title.
+     *
+     * @param gx the GExpert instance
+     * @param title the title of the dialog
+     */
     public ConcDialog(GExpert gx, String title) {
         super(gx.getFrame(), title);
         this.setTitle(title);
@@ -83,9 +108,13 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         init();
         this.setPoints(gx.dp.getPointList());
         this.setModal(false);
-
     }
 
+    /**
+     * Sets the value of ltext1 based on the given type.
+     *
+     * @param t the type to set
+     */
     private void setLtext1Value(int t) {
         if (model) return;
 
@@ -104,16 +133,10 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         }
     }
 
-    public ConcDialog(GExpert frame) {
-        super(frame.getFrame(), "Add Conclusion");
-        this.setModal(false);
-        model = false;
-        init();
-    }
-
+    /**
+     * Initializes the dialog components.
+     */
     private void init() {
-
-
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
@@ -123,7 +146,6 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         ic1 = GExpert.createImageIcon("images/ptree/hook.gif");
         ic2 = GExpert.createImageIcon("images/ptree/cross.gif");
         ic3 = GExpert.createImageIcon("images/ptree/question.gif");
-
 
         int len = ts.length;
         String[] ss = new String[len];
@@ -188,7 +210,6 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         Pane1.add(textPane);
         cardPane.add(Pane1, "1");
 
-
         JPanel bottomPane = new JPanel();
         bottomPane.setLayout(new BoxLayout(bottomPane, BoxLayout.X_AXIS));
 
@@ -205,7 +226,6 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         bclear.setActionCommand("Clear");
         bcancel.setActionCommand("Cancel");
 
-
         contentPane.add(cardPane);
         contentPane.add(bottomPane);
         this.add(contentPane);
@@ -221,6 +241,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         this.resetAllItem();
     }
 
+    /**
+     * Sets the points in the combo boxes.
+     *
+     * @param v the vector of points to set
+     */
     public void setPoints(Vector v) {
         for (int i = 0; i < vlist.size(); i++) {
             JComboBox b = (JComboBox) vlist.get(i);
@@ -242,6 +267,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         Pane2.setPoints(v);
     }
 
+    /**
+     * Returns the number of points left to be selected.
+     *
+     * @return the number of points left to be selected
+     */
     private int ptLeftTobeSelect() {
         int n = 0;
 
@@ -260,6 +290,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         return n;
     }
 
+    /**
+     * Handles item state changes for the combo boxes.
+     *
+     * @param e the ItemEvent triggered by the user
+     */
     public void itemStateChanged(ItemEvent e) {
         if (!this.isVisible()) return;
         Object source = e.getSource();
@@ -306,18 +341,22 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         }
     }
 
+    /**
+     * Checks if the input is finished.
+     *
+     * @return true if the input is finished, false otherwise
+     */
     private boolean inputFinished() {
         return 0 == ptLeftTobeSelect();
     }
 
-    private void showTipText() {
-
-    }
-
+    /**
+     * Selects a point in the combo boxes.
+     *
+     * @param p the point to select
+     */
     public void selectAPoint(CPoint p) {
-
         Pane2.selectAPoint(p);
-
 
         for (int i = 0; i < vlist.size(); i++) {
             JComboBox b = (JComboBox) vlist.get(i);
@@ -333,9 +372,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
                 return;
             }
         }
-
     }
 
+    /**
+     * Resets all combo boxes and labels.
+     */
     private void resetAllItem() {
         bok.setEnabled(false);
         ltext1.setIcon(ic3);
@@ -344,7 +385,6 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         for (int i = 0; i < vlist.size(); i++) {
             JComboBox b = (JComboBox) vlist.get(i);
             b.setSelectedIndex(-1);
-
         }
         for (int i = 0; i < vlist1.size(); i++) {
             JComboBox b = (JComboBox) vlist1.get(i);
@@ -352,9 +392,13 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         }
         bx1.setSelectedIndex(0);
         bx2.setSelectedIndex(0);
-
     }
 
+    /**
+     * Returns the number of points required for the selected item.
+     *
+     * @return the number of points required
+     */
     private int getStatePointsCount() {
         switch (bt.getSelectedIndex()) {
             case 0:
@@ -369,7 +413,6 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             case 5:
             case 11:
             case 13:
-
                 return 4;
             case 7:
             case 8:
@@ -382,6 +425,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         return -1;
     }
 
+    /**
+     * Updates the visibility of combo boxes based on the selected item ID.
+     *
+     * @param id the ID of the selected item
+     */
     private void setItemChanged(int id) {
         switch (id) {
             case 0:
@@ -398,7 +446,6 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             case 5:
             case 11:
             case 13:
-
                 this.setVisibleBox1(4);
                 break;
             case 7:
@@ -409,7 +456,6 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             case 12:
                 this.setVisibleBox1(8);
                 break;
-
         }
         if (id == 13) {
             setRatioVisible();
@@ -423,16 +469,22 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         }
     }
 
+    /**
+     * Sets the angles in the combo box for special angles.
+     */
     public void setSAngle() {
         bx1.removeAllItems();
         int[] angles = {0, 15, 30, 36, 45, 72, 75, 90, 120, 135, 150, 180};
-        for (int i: angles) {
+        for (int i : angles) {
             bx1.addItem(i);
         }
         bx1.setVisible(true);
         bx2.setVisible(false);
     }
 
+    /**
+     * Sets the ratio values in the combo boxes.
+     */
     public void setRatioVisible() {
         bx1.removeAllItems();
         bx2.removeAllItems();
@@ -445,6 +497,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         bx2.setVisible(true);
     }
 
+    /**
+     * Handles action events for the buttons.
+     *
+     * @param e the ActionEvent triggered by the user
+     */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equalsIgnoreCase("OK")) {
@@ -455,7 +512,6 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
                 gxInstance.getpprove().set_conclusion(getProve(), this.checkValid());
             else
                 gxInstance.getpprove().add_ndgs(getProve());
-
         } else if (command.equalsIgnoreCase("Cancel")) {
             returnValue = CONCLUSION_CANCEL;
             this.setVisible(false);
@@ -465,6 +521,12 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         }
     }
 
+    /**
+     * Displays the dialog and returns the result.
+     *
+     * @param s the string to select in the combo box
+     * @return the return value indicating the result of the dialog
+     */
     public int showDialog(String s) {
         if (model == false)
             this.setPoints(gxInstance.dp.getPointList());
@@ -478,11 +540,14 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         bt.setSelectedItem(s);
         ltext.setText("");
         return returnValue;
-
     }
 
+    /**
+     * Sets the visibility of the first set of combo boxes based on the number of items.
+     *
+     * @param num the number of items to be visible
+     */
     private void setVisibleBox1(int num) {
-
         int k = num / 2;
         for (int i = 0; i < vlist.size(); i++) {
             JComboBox obj = (JComboBox) vlist.get(i);
@@ -500,6 +565,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         }
     }
 
+    /**
+     * Sets the visibility of the second set of combo boxes based on the number of items.
+     *
+     * @param num the number of items to be visible
+     */
     private void setVisibleBox(int num) {
         for (int i = 0; i < vlist.size(); i++) {
             JComboBox obj = (JComboBox) vlist.get(i);
@@ -514,13 +584,13 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         }
     }
 
-    private String vs(int id1, int id2) {
-        if (id1 == 0)
-            return ((JComboBox) vlist.get(id2)).getSelectedItem().toString();
-        else
-            return ((JComboBox) vlist1.get(id2)).getSelectedItem().toString();
-    }
-
+    /**
+     * Returns the selected point from the combo boxes.
+     *
+     * @param id1 the ID of the combo box set (0 or 1)
+     * @param id2 the index of the combo box within the set
+     * @return the selected point
+     */
     private CPoint vspt(int id1, int id2) {
         if (id1 == 0) {
             return (CPoint) ((JComboBox) vlist.get(id2)).getSelectedItem();
@@ -528,34 +598,23 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             return (CPoint) ((JComboBox) vlist1.get(id2)).getSelectedItem();
         }
     }
-//  "Collinear",
-//            "Parallel",
-//            "Perpendicular",
-//            "Midpoint",
-//            "Cyclic",
-//            "Equal Distance",
-//            "Equal Angle",
-//
-//            "Similiar Triangle",
-//            "Congruent Triangle",
-//            "Equalateral Triangle",
-//
-//            "Bisect",
-//            "Tangent",
-//
-//            "Equal Product",
-//            "Ratio",
-//
-//            "Special Angle",
-//            "Angles Equation",
-//            "Segment Equation"
 
+    /**
+     * Checks if the selected item is valid.
+     *
+     * @return true if the selected item is valid, false otherwise
+     */
     public boolean checkValid() {
         int id = bt.getSelectedIndex();
         return checkValid(id);
-
     }
 
+    /**
+     * Checks if the selected item with the given ID is valid.
+     *
+     * @param id the ID of the selected item
+     * @return true if the selected item is valid, false otherwise
+     */
     public boolean checkValid(int id) {
         switch (id) {
             case 0:  // COLLINEAR
@@ -572,12 +631,10 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
                 return DrawBase.check_eqdistance(vspt(0, 0), vspt(0, 1), vspt(1, 0), vspt(1, 1));
             case 6:
                 return DrawBase.check_eqangle(vspt(0, 0), vspt(0, 1), vspt(0, 2), vspt(0, 3), vspt(1, 0), vspt(1, 1), vspt(1, 2), vspt(1, 3));
-
             case 7:  //Similiar Triangle
                 return DrawBase.check_simtri(vspt(0, 0), vspt(0, 1), vspt(0, 2), vspt(1, 0), vspt(1, 1), vspt(1, 2));
             case 8:  //Congruent Triangle
                 return DrawBase.check_congtri(vspt(0, 0), vspt(0, 1), vspt(0, 2), vspt(1, 0), vspt(1, 1), vspt(1, 2));
-
             case 9:  //Equilateral Triangle
                 return DrawBase.check_eqdistance(vspt(0, 0), vspt(0, 1), vspt(0, 1), vspt(0, 2)) &&
                         DrawBase.check_eqdistance(vspt(0, 0), vspt(0, 1), vspt(0, 0), vspt(0, 2));
@@ -585,7 +642,6 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
                 return DrawBase.check_bisect(vspt(0, 0), vspt(0, 1), vspt(0, 2));
             case 11: //Tangent
                 return DrawBase.check_perp(vspt(0, 0), vspt(0, 1), vspt(0, 2), vspt(0, 1));
-
             case 12: { //Eq_product
                 double d1 = DrawBase.sdistance(vspt(0, 0), vspt(0, 1));
                 double d2 = DrawBase.sdistance(vspt(0, 2), vspt(0, 3));
@@ -598,12 +654,16 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
                 int t2 = getRatioValue(2);
                 return DrawBase.check_eqdistance(vspt(0, 0), vspt(0, 1), vspt(1, 0), vspt(1, 1), t1, t2);
             }
-
         }
         return false;
     }
 
-
+    /**
+     * Returns the ratio value from the combo box.
+     *
+     * @param id the ID of the combo box (1 or 2)
+     * @return the ratio value
+     */
     private int getRatioValue(int id) {
         if (id == 1) {
             String s1 = bx1.getSelectedItem().toString();
@@ -616,25 +676,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         }
     }
 
-    public MAssertion getProveM() {
-        int id = bt.getSelectedIndex();
-        if (id < 0) return null;
-        MAssertion ass = new MAssertion(id);
-        for (int i = 0; i < vlist.size(); i++) {
-            JComboBox b = (JComboBox) vlist.get(i);
-            if (b.isEnabled() && b.getSelectedIndex() < 0) {
-                ass.addItem(b.getSelectedItem());
-            }
-        }
-        for (int i = 0; i < vlist1.size(); i++) {
-            JComboBox b = (JComboBox) vlist1.get(i);
-            if (b.isEnabled() && b.getSelectedIndex() < 0) {
-                ass.addItem(b.getSelectedItem());
-            }
-        }
-        return ass;
-    }
-
+    /**
+     * Returns the conclusion based on the selected points and type.
+     *
+     * @return the conclusion object
+     */
     public Cons getProve() {
         JComboBox box1 = (JComboBox) vlist.get(0);
         if (box1.getItemCount() == 0) return null;
@@ -690,14 +736,6 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         return c;
     }
 
-    public String getSpecialAngle() {
-        Object o = bx1.getSelectedItem();
-        if (o != null)
-            return o.toString();
-        else
-            return null;
-    }
-
     class condPane extends JPanel implements ActionListener {
 
         JComboBox[] bx = new JComboBox[3];
@@ -709,6 +747,10 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
         JPopupMenu mint;
 
 
+        /**
+         * Constructs a condPane object.
+         * Initializes the layout, buttons, combo boxes, and other components.
+         */
         public condPane() {
             this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             field.setFont(font);
@@ -757,6 +799,9 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             field.setFocusable(true);
         }
 
+        /**
+         * Clears the text field and resets the combo boxes.
+         */
         public void clear() {
             field.setText("");
             bx[0].setSelectedIndex(-1);
@@ -767,6 +812,12 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             ltext1.setText("");
         }
 
+        /**
+         * Sets the status of the condPane.
+         * Updates the visibility and enabled state of the combo boxes based on the status.
+         *
+         * @param s the status to set (0 for segment, 1 for angle)
+         */
         public void setStatus(int s) {
             if (s == 0) {
                 bx[2].setVisible(false);
@@ -783,13 +834,16 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             bx[2].setSelectedIndex(-1);
         }
 
+        /**
+         * Handles action events for the buttons and menu items.
+         *
+         * @param e the ActionEvent triggered by the user
+         */
         public void actionPerformed(ActionEvent e) {
             Object o = e.getSource();
             if (o == b3) {
-                {
-                    addPtsText1();
-                    addText(" * ");
-                }
+                addPtsText1();
+                addText(" * ");
             } else if (o == b1) {
                 addPtsText1();
                 addText(" + ");
@@ -799,9 +853,9 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             } else if (o == b4) {
                 addPtsText1();
                 addText(" = ");
-            } else if (o == b5)
+            } else if (o == b5) {
                 mint.show(b5, 0, b5.getHeight());
-            else if (o == badd) {
+            } else if (o == badd) {
                 addText(getPts());
             } else {
                 String s = e.getActionCommand();
@@ -809,17 +863,30 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             }
         }
 
+        /**
+         * Adds the selected points text to the field if the add button is enabled.
+         */
         public void addPtsText1() {
             if (!badd.isEnabled())
                 return;
             addText(getPts());
         }
 
+        /**
+         * Appends the specified text to the field and unselects the combo boxes.
+         *
+         * @param s the text to add
+         */
         public void addText(String s) {
             field.setText(field.getText() + s);
             unselect();
         }
 
+        /**
+         * Sets the points in the combo boxes.
+         *
+         * @param v the vector of points to set
+         */
         public void setPoints(Vector v) {
             for (int i = 0; i < 3; i++) {
                 bx[i].removeAllItems();
@@ -831,6 +898,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             }
         }
 
+        /**
+         * Selects a point in the combo boxes.
+         *
+         * @param o the point to select
+         */
         public void selectAPoint(Object o) {
             boolean set = false;
             for (int i = 0; i < 3; i++) {
@@ -839,13 +911,17 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
                     if (set == false) {
                         bx[i].setSelectedItem(o);
                         set = true;
-                    } else
+                    } else {
                         return;
+                    }
                 }
             }
             badd.setEnabled(true);
         }
 
+        /**
+         * Unselects all combo boxes and disables the add button.
+         */
         public void unselect() {
             for (int i = 0; i < 3; i++) {
                 bx[i].setSelectedIndex(-1);
@@ -853,18 +929,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             badd.setEnabled(false);
         }
 
-        public void getSelected(Vector v) {
-            for (int i = 0; i < 3 && bx[i].isEnabled(); i++) {
-                Object obj = bx[i].getSelectedItem();
-                if (obj != null)
-                    v.add(obj);
-                else {
-                    v.clear();
-                    return;
-                }
-            }
-        }
-
+        /**
+         * Returns the selected points as a string.
+         *
+         * @return the selected points
+         */
         public String getPts() {
             String s = "";
             for (int i = 0; i < 3 && bx[i].isEnabled(); i++) {
@@ -874,6 +943,11 @@ public class ConcDialog extends JBaseDialog implements ActionListener, ItemListe
             return s;
         }
 
+        /**
+         * Returns the value of the text field.
+         *
+         * @return the value of the text field
+         */
         public String getValue() {
             return field.getText();
         }

@@ -1,12 +1,8 @@
+package gprover;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2006-2-14
- * Time: 21:34:08
- * To change this template use File | Settings | File Templates.
- */                          
-package gprover;
+ * Represents a geometric circle with various properties and methods.
+ */
 public class ACir extends CClass
 {
     int lemma;
@@ -16,8 +12,11 @@ public class ACir extends CClass
     public int []pt;
     public int []d;
     public ACir nx;
-//    private int type;
 
+    /**
+     * Default constructor for ACir.
+     * Initializes the properties of the circle.
+     */
     public ACir()
     {
         type = lemma =0;

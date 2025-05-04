@@ -3,11 +3,9 @@ package wprover;
 import maths.TMono;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2005-7-28
- * Time: 13:31:13
- * To change this template use File | Settings | File Templates.
+ * CTextValue is a class that represents a mathematical expression in a tree structure.
+ * It can parse a string representation of the expression, evaluate it, and perform various
+ * mathematical functions.
  */
 public class CTextValue {
 
@@ -50,25 +48,50 @@ public class CTextValue {
     CTextValue left;
     CTextValue right;
 
-
+    /**
+     * Default constructor for CTextValue.
+     */
     public CTextValue() {
     }
 
+    /**
+     * Constructor for CTextValue with a specified type.
+     *
+     * @param t the type of the CTextValue
+     */
     private CTextValue(int t) {
         TYPE = t;
     }
 
-
+    /**
+     * Parses a string representation of a mathematical expression into a CTextValue object.
+     *
+     * @param str the string representation of the expression
+     * @return the parsed CTextValue object
+     */
     public static CTextValue parseString(String str) {
         TMono index = new TMono(0, 0, 0);
 
         return parseEntityA(str.toCharArray(), index);
     }
 
+    /**
+     * Parses a byte array representation of a mathematical expression into a CTextValue object.
+     *
+     * @param src the byte array representation of the expression
+     * @param index the index used for parsing
+     * @return the parsed CTextValue object
+     */
     public static CTextValue parse(byte[] src, TMono index) {
         return null;
     }
 
+    /**
+     * Gets the function index for a given function name.
+     *
+     * @param s the function name
+     * @return the index of the function, or -1 if not found
+     */
     public static int getFunction(String s) {
         for (int i = 0; i < sfunction.length; i++) {
             if (s.equalsIgnoreCase(sfunction[i]))
@@ -77,6 +100,13 @@ public class CTextValue {
         return -1;
     }
 
+    /**
+     * Parses a function name from the source character array.
+     *
+     * @param src the source character array
+     * @param index the index used for parsing
+     * @return the parsed function name
+     */
     public static String parseFunction(char[] src, TMono index) {
         parseSpace(src, index);
         int i = index.x;
@@ -95,7 +125,13 @@ public class CTextValue {
         return s;
     }
 
-
+    /**
+     * Parses an entity of type A from the source character array.
+     *
+     * @param src the source character array
+     * @param index the index used for parsing
+     * @return the parsed CTextValue object
+     */
     private static CTextValue parseEntityA(char[] src, TMono index) {
 
         CTextValue ct1 = parseEntityB(src, index);
@@ -131,6 +167,13 @@ public class CTextValue {
         return ct1;
     }
 
+    /**
+     * Parses an entity of type B from the source character array.
+     *
+     * @param src the source character array
+     * @param index the index used for parsing
+     * @return the parsed CTextValue object
+     */
     private static CTextValue parseEntityB(char[] src, TMono index) {
 
         parseSpace(src, index);
@@ -164,6 +207,13 @@ public class CTextValue {
         return ct1;
     }
 
+    /**
+     * Parses an entity of type C from the source character array.
+     *
+     * @param src the source character array
+     * @param index the index used for parsing
+     * @return the parsed CTextValue object
+     */
     private static CTextValue parseEntityC(char[] src, TMono index) { // ^
         parseSpace(src, index);
         CTextValue t1 = parseEntityD(src, index);
@@ -204,6 +254,13 @@ public class CTextValue {
         else return t1;
     }
 
+    /**
+     * Parses an entity of type D from the source character array.
+     *
+     * @param src the source character array
+     * @param index the index used for parsing
+     * @return the parsed CTextValue object
+     */
     private static CTextValue parseEntityD(char[] src, TMono index) { // (), x1,value.
 
 
@@ -274,35 +331,13 @@ public class CTextValue {
 
     }
 
-    private static char parseByte(char[] src, TMono index) {
-        parseSpace(src, index);
-        int i = index.x;
-        if (i >= src.length) return 0;
-
-        char b = src[i];
-        if (b != '+' && b != '-') {
-            index.x = i;
-            return 0;
-        }
-        index.x++;
-
-        parseSpace(src, index);
-        return b;
-    }
-
-    private static char parseByteB(char[] src, TMono index) {
-        parseSpace(src, index);
-        int i = index.x;
-        if (i >= src.length) return 0;
-
-        if (src[i] == '*' || src[i] == '/') {
-            index.x++;
-            parseSpace(src, index);
-            return src[i];
-        }
-        return 0;
-    }
-
+    /**
+     * Parses an integer value from the source character array.
+     *
+     * @param src the source character array
+     * @param index the index used for parsing
+     * @return the parsed integer value
+     */
     private static double parseInt(char[] src, TMono index) {
 
         parseSpace(src, index);
@@ -339,6 +374,12 @@ public class CTextValue {
         return v;
     }
 
+    /**
+     * Parses and skips spaces in the source character array.
+     *
+     * @param src the source character array
+     * @param index the index used for parsing
+     */
     private static void parseSpace(char[] src, TMono index) {
 
         int i = index.x;
@@ -352,64 +393,45 @@ public class CTextValue {
 
     }
 
-    private static String getAString(char[] src, TMono index) {
-        parseSpace(src, index);
-        int i = index.x;
-        String s = new String();
-
-        if (src == null || i >= src.length) return s;
-
-        while ((src[i] >= 'a' && src[i] <= 'z') || (src[i] >= 'A' && src[i] <= 'Z')) {
-            s += src[i];
-            i++;
-            if (i >= src.length) break;
-        }
-
-        if (s.length() != 0) {
-            index.x = i;
-            return s;
-        }
-
-
-        if (src[i] == '(' || src[i] == ')' || src[i] == '*' || src[i] == '/' || src[i] == '^') {
-            s += src[i];
-            index.x = i + 1;
-            return s;
-        }
-
-        while (src[i] >= '0' && src[i] <= '9') {
-            s += src[i];
-            i++;
-            if (i >= src.length) break;
-
-        }
-        if (s.length() != 0) {
-            index.x = i;
-            return s;
-        }
-        parseSpace(src, index);
-
-        return s;
-    }
-
+    /**
+     * Rounds a double value to three decimal places.
+     *
+     * @param r the double value to round
+     * @return the rounded double value
+     */
     public static double roud3(double r) {
         return Math.round(r * 1000 + 0.1) / 1000.0;
     }
 
+    /**
+     * Calculates the value of this CTextValue object using the specified DrawProcess.
+     *
+     * @param dp the DrawProcess used for calculation
+     */
     public void calculate(DrawProcess dp) {
         double r = calvalue(this, dp);
         this.dvalue = roud3(r);
     }
 
+    /**
+     * Calculates the value of the specified CTextValue object using the specified DrawProcess.
+     *
+     * @param ct the CTextValue object to calculate
+     * @param dp the DrawProcess used for calculation
+     * @return the calculated double value
+     */
     public static double calvalue(CTextValue ct, DrawProcess dp) {
         if (ct == null) return 0.0;
         return dp.calculate(ct);
     }
 
-//    "sin", "cos", "tan", "arcsin", "arccos", "arctan",
-
-    //            "abs", "sqrt", "ln", "log", "sgn", "round", "trunc"}
-
+    /**
+     * Calculates the result of a mathematical function on a given value.
+     *
+     * @param n the function index
+     * @param v the value to apply the function to
+     * @return the result of the function
+     */
     public static double cal_func(int n, double v) {
         switch (n) {
             case 0:

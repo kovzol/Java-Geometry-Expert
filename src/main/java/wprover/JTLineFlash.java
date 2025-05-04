@@ -5,10 +5,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
+/**
+ * JTLineFlash is a class that extends JFlash and implements ActionListener.
+ * It is used to create a flashing effect on two lines in a JPanel.
+ */
 public class JTLineFlash extends JFlash implements ActionListener {
     JLine ln1, ln2;
 
+    /**
+     * Constructs a new JTLineFlash with the specified JPanel.
+     *
+     * @param p the JPanel to associate with this JTLineFlash
+     */
     public JTLineFlash(JPanel p) {
         super(p);
         timer = new Timer(TIME_INTERVAL, this);
@@ -16,6 +24,15 @@ public class JTLineFlash extends JFlash implements ActionListener {
         ln2 = new JLine();
     }
 
+    /**
+     * Constructs a new JTLineFlash with the specified JPanel and four CPoints.
+     *
+     * @param p  the JPanel to associate with this JTLineFlash
+     * @param p1 the first CPoint of the first line
+     * @param p2 the second CPoint of the first line
+     * @param p3 the first CPoint of the second line
+     * @param p4 the second CPoint of the second line
+     */
     public JTLineFlash(JPanel p, CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         super(p);
         timer = new Timer(TIME_INTERVAL, this);
@@ -27,6 +44,12 @@ public class JTLineFlash extends JFlash implements ActionListener {
         ln2.addAPoint(p4);
     }
 
+    /**
+     * Draws the flashing effect on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     * @return true if the drawing was successful, false otherwise
+     */
     public boolean draw(Graphics2D g2) {
 
         g2.setColor(color);

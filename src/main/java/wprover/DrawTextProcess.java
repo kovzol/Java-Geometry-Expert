@@ -11,11 +11,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Vector;
 
+/**
+ * DrawTextProcess is a class that handles the construction and animation of geometric diagrams
+ * based on textual input. It extends the DrawProcess class and provides methods for managing
+ * construction steps, point attributes, and geometric constraints.
+ */
 public class DrawTextProcess extends DrawProcess {
 
     private Timer cons_timer;
     double PX, PY;
 
+    /**
+     * Checks if the construction process is currently active.
+     *
+     * @return true if the construction process is active, false otherwise
+     */
     public boolean inConstruction() {
         if (gt == null)
             return false;
@@ -24,6 +34,11 @@ public class DrawTextProcess extends DrawProcess {
         return nd > 1 && nd < n && n > 0;
     }
 
+    /**
+     * Checks if the construction process is finished.
+     *
+     * @return true if the construction process is finished, false otherwise
+     */
     public boolean isConsFinished() {
         if (gt == null)
             return true;
@@ -32,6 +47,11 @@ public class DrawTextProcess extends DrawProcess {
         return nd > n;
     }
 
+    /**
+     * Sets the construction lines for the given geometric term.
+     *
+     * @param g the geometric term
+     */
     public void setConstructLines(GTerm g) {
         cleardText();
         this.clearAll();
@@ -39,11 +59,20 @@ public class DrawTextProcess extends DrawProcess {
         nd = 1;
     }
 
+    /**
+     * Clears the construction text.
+     */
     public void cleardText() {
         gt = null;
         nd = 1;
     }
 
+    /**
+     * Animates a diagram from the given string.
+     *
+     * @param s the string representing the animation
+     * @return true if the animation was successfully loaded, false otherwise
+     */
     public boolean animateDiagramFromString(String s) {
         AnimateC an = new AnimateC();
         if (false == an.loadAnimationString(s, this)) {
@@ -60,6 +89,11 @@ public class DrawTextProcess extends DrawProcess {
         return true;
     }
 
+    /**
+     * Automatically constructs the diagram from the given geometric term.
+     *
+     * @param g the geometric term
+     */
     public void autoConstruct(GTerm g) {
 
         cleardText();
@@ -115,6 +149,12 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
+    /**
+     * Writes the positions of points to the given output stream.
+     *
+     * @param out the output stream to write to
+     * @throws IOException if an I/O error occurs
+     */
     public void writePointPosition(FileOutputStream out) throws IOException {
         int n = pointlist.size();
         for (int i = 0; i < n; i++) {
@@ -152,6 +192,11 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
+    /**
+     * Adds an auxiliary point to the construction.
+     *
+     * @param ax the auxiliary point to add
+     */
     public void addAuxPoint(AuxPt ax) {
         if (this.isConsFinished()) {
             int act = gxInstance.dp.CurrentAction;
@@ -186,11 +231,22 @@ public class DrawTextProcess extends DrawProcess {
 
     }
 
+    /**
+     * Sets the attributes of a point as constructed.
+     *
+     * @param pt the point to set attributes for
+     */
     public void setPointAttrAsConstructed(CPoint pt) {
         pt.setRadius(6);
         pt.setColor(8);
     }
 
+    /**
+     * Adds a free point to the construction.
+     *
+     * @param c the construction object
+     * @return true if a free point was added, false otherwise
+     */
     public boolean addFreePt(Cons c) {
         int[] pp = c.ps;
         for (int i = 0; i < pp.length && pp[i] != 0; i++) {
@@ -201,6 +257,12 @@ public class DrawTextProcess extends DrawProcess {
         return false;
     }
 
+    /**
+     * Adds a geometric term point to the construction.
+     *
+     * @param c the construction object
+     * @return true if a geometric term point was added, false otherwise
+     */
     public boolean addGTPt(Cons c) {
         int[] pp = c.ps;
         int i = 0;
@@ -217,6 +279,12 @@ public class DrawTextProcess extends DrawProcess {
         return false;
     }
 
+    /**
+     * Adds a point to the construction by its index.
+     *
+     * @param n the index of the point
+     * @return the added point
+     */
     public CPoint addPt2(int n) {
         int x = gt.getPointsNum();
         for (int i = 1; i <= x && i < n; i++) {
@@ -227,6 +295,13 @@ public class DrawTextProcess extends DrawProcess {
         return addPt(n);
     }
 
+    /**
+     * Adds a point to a line in the construction.
+     *
+     * @param p1 the index of the point to add
+     * @param p2 the index of the first point of the line
+     * @param p3 the index of the second point of the line
+     */
     public void addPt2Line(int p1, int p2, int p3) {
         CLine ln = fd_line(p2, p3);
         if (ln == null)
@@ -239,10 +314,23 @@ public class DrawTextProcess extends DrawProcess {
         this.addConstraintToList(cs);
     }
 
+    /**
+     * Handles mouse down events at the specified coordinates.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     */
     public void mouseDown(double x, double y) {
         mouseDown(x, y, false);
     }
 
+    /**
+     * Handles mouse down events at the specified coordinates with an option to clear constraints.
+     *
+     * @param x  the x-coordinate
+     * @param y  the y-coordinate
+     * @param cc a flag indicating whether to clear constraints
+     */
     public void mouseDown(double x, double y, boolean cc) {
 
         if (CurrentAction == CONSTRUCT_FROM_TEXT) {
@@ -276,13 +364,29 @@ public class DrawTextProcess extends DrawProcess {
                 } else finishConstruction();
             } else if (addPt2(gt.getPointsNum()) == null)
                 finishConstruction();
-        } else
-
-        {
+        } else {
             super.DWButtonDown(x, y);
         }
     }
 
+    /**
+     * Processes the provided construction point and applies the appropriate geometric constraints
+     * and operations based on its type.
+     *
+     * <p>This method examines the type of the provided construction object and executes the corresponding
+     * logic to update the constraint and geometric element lists. Depending on the provided parameters,
+     * it adds points, lines, circles, angles, or other entities and registers constraints related to them.</p>
+     *
+     * @param pt    the construction object encapsulating geometric data and type information
+     * @param type  the specific type of construction operation to execute
+     * @param pp    an array of integers representing indices for points and other parameters
+     * @param cc    a boolean flag indicating whether to perform specific additional operations
+     * @param index an identifier used for certain point creation methods
+     * @param x     the x-coordinate value used for point creation if applicable
+     * @param y     the y-coordinate value used for point creation if applicable
+     * @param cp    a CPoint object that will be updated or used during the construction
+     * @param pss   an array of additional parameters used for constructing constants or constraints
+     */
     public void pointAdded(Cons pt, int type, int[] pp, boolean cc, int index, double x, double y, CPoint cp, Object[] pss) {
         switch (pt.type) {
             case GDDBase.C_POINT: {
@@ -1212,6 +1316,12 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
+    /**
+     * Finds a constant parameter by its name.
+     *
+     * @param name the name of the constant parameter
+     * @return the constant parameter, or null if not found
+     */
     public Param findConstantParam(String name) {
         for (int i = 0; i < constraintlist.size(); i++) {
             Constraint cs = (Constraint) constraintlist.get(i);
@@ -1225,6 +1335,13 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
+    /**
+     * Adds visual flashing effects for up to three objects.
+     *
+     * @param c1 the first object to flash
+     * @param c2 the second object to flash
+     * @param c3 the third object to flash
+     */
     public void addObjectFlash(CClass c1, CClass c2, CClass c3) {
         clearFlash();
         int n = CMisc.getFlashInterval();
@@ -1236,13 +1353,12 @@ public class DrawTextProcess extends DrawProcess {
         }
 
         if (c2 != null) {
-
             JFlash f = this.getObjectFlash(c2);
             f.setDealy(n / 2);
             addFlash1(f);
         }
 
-        if (c2 != null) {
+        if (c3 != null) {
             JFlash f = this.getObjectFlash(c3);
             f.setDealy(n / 2);
             addFlash1(f);
@@ -1250,12 +1366,16 @@ public class DrawTextProcess extends DrawProcess {
         panel.repaint();
     }
 
+    /**
+     * Renders visual flashing effects for a given construction.
+     *
+     * @param c the construction
+     */
     public void flashcons(Cons c) {
         if (c == null)
             return;
         switch (c.type) {
             case Gib.C_POINT:
-//                this.setObjectListForFlash(this.fd_line());
                 break;
             case Gib.C_O_L:
                 addObjectFlash(fd_point(c.ps[0]), fd_line(c.ps[1], c.ps[2]), null);
@@ -1306,11 +1426,12 @@ public class DrawTextProcess extends DrawProcess {
             default:
                 addObjectFlash(fd_point(c.ps[0]), null, null);
                 break;
-
-
         }
     }
 
+    /**
+     * Finishes the construction process.
+     */
     public void finishConstruction() {
         gxInstance.setActionMove();
         this.SetCurrentAction(MOVE);
@@ -1319,6 +1440,11 @@ public class DrawTextProcess extends DrawProcess {
         this.flashCond(gterm().getConc(), true);
     }
 
+    /**
+     * Adds lines or circles based on the given condition.
+     *
+     * @param cc the condition
+     */
     public void addConcLineOrCircle(Cond cc) {
         if (cc == null) return;
 
@@ -1335,6 +1461,11 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
+    /**
+     * Adds all lines based on the given points.
+     *
+     * @param pp the points
+     */
     public void addAllLn(int[] pp) {
         SelectList.clear();
         int p1, p2;
@@ -1355,6 +1486,12 @@ public class DrawTextProcess extends DrawProcess {
         this.addToSelectList(addLn(p2, pp[0]));
     }
 
+    /**
+     * Retrieves a point by its index.
+     *
+     * @param i the index of the point
+     * @return the point, or null if not found
+     */
     CPoint getPt(int i) {
         String s = gterm().getPtName(i);
 
@@ -1366,12 +1503,23 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
+    /**
+     * Checks if a point is free.
+     *
+     * @param n the index of the point
+     * @return true if the point is free, false otherwise
+     */
     public boolean isFreePoint(int n) {
         GTerm gt = gterm();
         return gt.isFreePoint(n);
     }
 
-
+    /**
+     * Adds a point by its index.
+     *
+     * @param index the index of the point
+     * @return the added point
+     */
     CPoint addPt(int index) {
         ProPoint pt = gterm().getProPoint(index);
         CPoint cp = null;
@@ -1388,16 +1536,39 @@ public class DrawTextProcess extends DrawProcess {
         return cp;
     }
 
+    /**
+     * Adds a point by its index and sets its coordinates.
+     *
+     * @param index the index of the point
+     * @param x     the x-coordinate of the point
+     * @param y     the y-coordinate of the point
+     * @return the added point
+     */
     CPoint addPt(int index, double x, double y) {
         CPoint p = this.addPt(index);
         p.setXY(x, y);
         return p;
     }
 
+    /**
+     * Finds a line between two points.
+     *
+     * @param a the index of the first point
+     * @param b the index of the second point
+     * @return the line, or null if not found
+     */
     CLine fd_line(int a, int b) {
         return fd_line(getPt(a), getPt(b));
     }
 
+    /**
+     * Finds a parallel line through a point.
+     *
+     * @param a the index of the point
+     * @param b the index of the first point of the line
+     * @param c the index of the second point of the line
+     * @return the parallel line, or null if not found
+     */
     CLine fd_p_line(int a, int b, int c) {
         CPoint A = getPt(a);
         CLine ln = fd_line(b, c);
@@ -1418,6 +1589,14 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
+    /**
+     * Finds a perpendicular line through a point.
+     *
+     * @param a the index of the point
+     * @param b the index of the first point of the line
+     * @param c the index of the second point of the line
+     * @return the perpendicular line, or null if not found
+     */
     CLine fd_t_line(int a, int b, int c) {
         CPoint A = getPt(a);
         CLine ln = fd_line(b, c);
@@ -1438,26 +1617,13 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
-    CLine fd_b_line(int a, int b, int c) {
-        CPoint A = getPt(a);
-        CPoint B = getPt(b);
-        CPoint C = getPt(c);
-        for (int i = 0; i < constraintlist.size(); i++) {
-            Constraint cs = (Constraint) constraintlist.get(i);
-            int t = cs.GetConstraintType();
-            if (t == Constraint.PERPBISECT) {
-                CPoint p1 = (CPoint) cs.getelement(0);
-                CPoint p2 = (CPoint) cs.getelement(1);
-                CPoint p3 = (CPoint) cs.getelement(1);
-
-                if (A == p1 && ((B == p2 && C == p3) || (B == p3 && C == p2))) {
-                    return this.fd_line(b, c);
-                }
-            }
-        }
-        return null;
-    }
-
+    /**
+     * Adds a circle through two points.
+     *
+     * @param o the index of the center point
+     * @param a the index of the point on the circle
+     * @return the added circle
+     */
     Circle ad_circle(int o, int a) {
         Circle c = fd_circle(o, a);
         if (c != null) {
@@ -1468,21 +1634,14 @@ public class DrawTextProcess extends DrawProcess {
         return c;
     }
 
-
-    Circle fd_circle3(int a, int b, int c) {
-        CPoint A = getPt(a);
-        CPoint B = getPt(b);
-        CPoint C = getPt(c);
-        for (int i = 0; i < circlelist.size(); i++) {
-            Circle cc = (Circle) circlelist.get(i);
-            if (cc.points.contains(A) && cc.points.contains(B) &&
-                    cc.points.contains(C)) {
-                return cc;
-            }
-        }
-        return null;
-    }
-
+    /**
+     * Adds a perpendicular line through a point.
+     *
+     * @param a the index of the point
+     * @param b the index of the first point of the line
+     * @param c the index of the second point of the line
+     * @return the added perpendicular line
+     */
     CLine addTLn(int a, int b, int c) {
         CPoint p1 = getPt(a);
         CLine lp = this.fd_line(b, c);
@@ -1497,6 +1656,14 @@ public class DrawTextProcess extends DrawProcess {
         return ln;
     }
 
+    /**
+     * Adds a parallel line through a point.
+     *
+     * @param a the index of the point
+     * @param b the index of the first point of the line
+     * @param c the index of the second point of the line
+     * @return the added parallel line
+     */
     CLine addPLn(int a, int b, int c) {
         CPoint p1 = getPt(a);
         CLine lp = this.fd_line(b, c);
@@ -1511,6 +1678,13 @@ public class DrawTextProcess extends DrawProcess {
         return ln;
     }
 
+    /**
+     * Adds a line between two points.
+     *
+     * @param a the index of the first point
+     * @param b the index of the second point
+     * @return the added line, or null if the points are invalid
+     */
     CLine addLn(int a, int b) {
         if (a == 0 || b == 0 || a == b)
             return null;
@@ -1522,23 +1696,19 @@ public class DrawTextProcess extends DrawProcess {
             CLine line = new CLine(p1, p2, CLine.LLine);
             this.addLineToList(line);
             return line;
-
         } else {
             return ln;
         }
     }
 
 
-    public CPoint llmeet(CLine ln, CLine ln1) {
-        for (int i = 0; i < ln.points.size(); i++) {
-            CPoint t = (CPoint) ln.points.get(i);
-            if (ln1.points.contains(t)) {
-                return t;
-            }
-        }
-        return null;
-    }
-
+    /**
+     * Finds the intersection point between a circle and a line.
+     *
+     * @param c  the circle
+     * @param ln the line
+     * @return the intersection point, or null if no intersection
+     */
     public CPoint lcmeet(Circle c, CLine ln) {
         for (int i = 0; i < c.points.size(); i++) {
             CPoint t = (CPoint) c.points.get(i);
@@ -1550,6 +1720,14 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
+    /**
+     * Finds the intersection point between a circle and a line, excluding a specific point.
+     *
+     * @param c  the circle
+     * @param ln the line
+     * @param p1 the point to exclude from the search
+     * @return the intersection point, or null if no intersection
+     */
     public CPoint lcmeet(Circle c, CLine ln, CPoint p1) {
         for (int i = 0; i < c.points.size(); i++) {
             CPoint t = (CPoint) c.points.get(i);
@@ -1560,6 +1738,12 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
+    /**
+     * Renders visual flashing effects for a given condition.
+     *
+     * @param co the condition
+     * @param fb a flag indicating whether to clear existing flash effects
+     */
     public void flashCond(Cond co, boolean fb) {
         if (this.pointlist.size() == 0) {
             return;
@@ -1582,7 +1766,13 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
-
+    /**
+     * Retrieves a flash effect for a given condition.
+     *
+     * @param co the condition
+     * @param fb a flag indicating whether to clear existing flash effects
+     * @return the flash effect
+     */
     public JFlash getCond(Cond co, boolean fb) {
         if (this.pointlist.size() == 0) {
             return null;
@@ -1591,6 +1781,12 @@ public class DrawTextProcess extends DrawProcess {
         return getFlashCond(panel, co, fb);
     }
 
+    /**
+     * Adds a congruence flash effect for a given condition.
+     *
+     * @param co the condition
+     * @param cl a flag indicating whether to clear existing flash effects
+     */
     public void addCongFlash(Cond co, boolean cl) {
         if (co == null) {
             return;
@@ -1602,6 +1798,12 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
+    /**
+     * Adds an angle congruence flash effect for a given condition.
+     *
+     * @param co the condition
+     * @param cl a flag indicating whether to clear existing flash effects
+     */
     public void addAcongFlash(Cond co, boolean cl) {
         if (co.pred == Gib.CO_ACONG) {
             if (cl) {
@@ -1618,22 +1820,13 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
-    public Vector getAcongFlash(JPanel panel, Cond co) {
-        Vector v = new Vector();
-        if (co.pred == Gib.CO_ACONG) {
-            int[] vp = co.p;
-            if (vp[0] == 0) {
-                return null;
-            }
-            JFlash f = getAngleFlash(panel, vp[0], vp[1], vp[2], vp[3]);
-
-            v.add(f);
-            f = getAngleFlash(panel, vp[4], vp[5], vp[6], vp[7]);
-            v.add(f);
-        }
-        return v;
-    }
-
+    /**
+     * Adds a line between two points.
+     *
+     * @param a the first point
+     * @param b the second point
+     * @return the line, or null if the points are invalid
+     */
     public CLine add_Line(CPoint a, CPoint b) {
         if (a == null || b == null) return null;
         CLine ln = fd_line(a, b);
@@ -1643,6 +1836,15 @@ public class DrawTextProcess extends DrawProcess {
         return ln;
     }
 
+    /**
+     * Adds a line with specific color and dash style between two points.
+     *
+     * @param a     the first point
+     * @param b     the second point
+     * @param color the color of the line
+     * @param d     the dash style of the line
+     * @return the line
+     */
     public CLine addLnWC(CPoint a, CPoint b, int color, int d) {
         CLine ln = null;
         if ((ln = this.fd_line(a, b)) == null) {
@@ -1655,15 +1857,28 @@ public class DrawTextProcess extends DrawProcess {
         return ln;
     }
 
+    /**
+     * Retrieves a point from a condition by its index.
+     *
+     * @param c the condition
+     * @param n the index of the point
+     * @return the point, or null if not found
+     */
     public CPoint getPtN(Cons c, int n) {
         if (c == null) return null;
         Object o = c.getPTN(n);
         if (o == null) return null;
         String s = o.toString();
         return this.findPoint(s);
-
     }
 
+    /**
+     * Adds auxiliary conditions for a given condition.
+     *
+     * @param co  the condition
+     * @param aux a flag indicating whether to add auxiliary conditions
+     * @return a vector of added lines
+     */
     public Vector addCondAux(Cons co, boolean aux) {
         Vector vl = new Vector();
         if (co == null) {
@@ -1683,9 +1898,7 @@ public class DrawTextProcess extends DrawProcess {
             break;
             case Gib.CO_PARA:
             case Gib.CO_PERP:
-            case Gib.CO_CONG:
-
-            {
+            case Gib.CO_CONG: {
                 CLine ln1 = this.addLnWC(getPtN(co, 0), getPtN(co, 1), DrawData.RED, d);
                 CLine ln2 = this.addLnWC(getPtN(co, 2), getPtN(co, 3), DrawData.RED, d);
                 vl.add(ln1);
@@ -1716,11 +1929,26 @@ public class DrawTextProcess extends DrawProcess {
         return vl;
     }
 
+    /**
+     * Retrieves a flash effect for a given condition.
+     *
+     * @param panel the panel to display the flash effect
+     * @param co    the condition
+     * @param fb    a flag indicating whether to clear existing flash effects
+     * @return the flash effect
+     */
     public JFlash getFlashCond(JPanel panel, Cond co, boolean fb) {
         JFlash f = this.getFlashCond(panel, co);
         return f;
     }
 
+    /**
+     * Retrieves a flash effect for a given condition.
+     *
+     * @param panel the panel to display the flash effect
+     * @param co    the condition
+     * @return the flash effect
+     */
     public JFlash getFlashCond(JPanel panel, Cond co) {
 
         if (this.pointlist.size() == 0) {
@@ -1816,10 +2044,31 @@ public class DrawTextProcess extends DrawProcess {
 
     }
 
+    /**
+     * Retrieves an angle flash effect for two lines intersecting at a point.
+     *
+     * @param panel the panel to display the flash effect
+     * @param p1    the first point of the first line
+     * @param p2    the second point of the first line
+     * @param p3    the first point of the second line
+     * @param p4    the second point of the second line
+     * @return the angle flash effect
+     */
     public JFlash getAngleFlash(JPanel panel, int p1, int p2, int p3, int p4) {
         return getMAngleFlash(panel, fd_point(p1), fd_point(p2), fd_point(p3), fd_point(p4), 1); // full angle.
     }
 
+    /**
+     * Retrieves a modified angle flash effect for two lines intersecting at a point.
+     *
+     * @param panel the panel to display the flash effect
+     * @param p1    the first point of the first line
+     * @param p2    the second point of the first line
+     * @param p3    the first point of the second line
+     * @param p4    the second point of the second line
+     * @param t     the type of angle flash effect
+     * @return the modified angle flash effect
+     */
     public JFlash getMAngleFlash(JPanel panel, CPoint p1, CPoint p2, CPoint p3, CPoint p4, int t) {
         CAngle ag = fd_angle_m(p1, p2, p3, p4);
         if (ag != null) {
@@ -1843,14 +2092,11 @@ public class DrawTextProcess extends DrawProcess {
         return f;
     }
 
-    public void flashMpnode(MObject obj) {
-        if (obj instanceof MAssertion) {
-
-        } else if (obj instanceof MDrObj) {
-
-        }
-    }
-
+    /**
+     * Retrieves the number of area flash effects.
+     *
+     * @return the number of area flash effects
+     */
     public int getAreaFlashNumber() {
         int n = 0;
         for (int i = 0; i < flashlist.size(); i++) {
@@ -1862,6 +2108,12 @@ public class DrawTextProcess extends DrawProcess {
         return n;
     }
 
+    /**
+     * Retrieves an area flash effect for a given drawing object.
+     *
+     * @param d the drawing object
+     * @return the area flash effect
+     */
     public JFlash getAreaFlash(MDrObj d) {
         int n = this.getAreaFlashNumber();
         Vector v = new Vector();
@@ -1880,6 +2132,12 @@ public class DrawTextProcess extends DrawProcess {
         return f;
     }
 
+    /**
+     * Retrieves a flash effect for a given drawing object.
+     *
+     * @param d the drawing object
+     * @return the flash effect
+     */
     public JFlash getDrobjFlash(MDrObj d) {
         int t1 = d.getType1();
         if (t1 == MDrObj.LINE) {
@@ -1907,6 +2165,11 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
+    /**
+     * Renders visual flashing effects for a given node.
+     *
+     * @param n the node
+     */
     public void flashmnode(MNode n) {
 
         for (int i = 0; i < n.objSize(); i++) {
@@ -1915,10 +2178,21 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
+    /**
+     * Renders visual flashing effects for a given object.
+     *
+     * @param obj the object
+     */
     public void flashmobj(MObject obj) {
         flashmobj(obj, true);
     }
 
+    /**
+     * Renders visual flashing effects for a given object.
+     *
+     * @param obj   the object
+     * @param clear whether to clear existing flash effects
+     */
     public void flashmobj(MObject obj, boolean clear) {
         if (obj == null) {
             return;
@@ -1967,6 +2241,12 @@ public class DrawTextProcess extends DrawProcess {
         }
     }
 
+    /**
+     * Adds a flash effect for a line.
+     *
+     * @param p1 the first point of the line
+     * @param p2 the second point of the line
+     */
     public void addlineFlash(CPoint p1, CPoint p2) {
         JLineFlash f = new JLineFlash(panel);
         int id = f.addALine();
@@ -1975,6 +2255,12 @@ public class DrawTextProcess extends DrawProcess {
         addFlash1(f);
     }
 
+    /**
+     * Adds a flash effect for an infinite line.
+     *
+     * @param p1 the first point of the line
+     * @param p2 the second point of the line
+     */
     public void addInfinitelineFlash(CPoint p1, CPoint p2) {
         JLineFlash f = new JLineFlash(panel);
         int id = f.addALine();
@@ -1984,6 +2270,19 @@ public class DrawTextProcess extends DrawProcess {
         addFlash1(f);
     }
 
+    /**
+     * Renders visual flashing effects for a given assertion.
+     *
+     * <p>
+     * This method examines the type of the provided <code>MAssertion</code> and
+     * displays the corresponding flash pattern based on the assertion type.
+     * It supports various assertion types such as collinearity, parallelism,
+     * equality of distances, perpendicularity, cyclic configurations, angle equality,
+     * midpoint conditions, congruency, triangle properties, and several others.
+     * </p>
+     *
+     * @param ass the geometric assertion to be processed and flashed; may be null
+     */
     public void flashassert(MAssertion ass) {
         if (ass == null)
             return;
@@ -2221,11 +2520,24 @@ public class DrawTextProcess extends DrawProcess {
 
     }
 
+    /**
+     * Adds a flash effect to enlarge a point.
+     *
+     * @param pt the point to enlarge
+     */
     public void addPtEnlargeFlash(CPoint pt) {
         JPointEnlargeFlash f = new JPointEnlargeFlash(panel, pt);
         this.addFlash1(f);
     }
 
+    /**
+     * Adds a flash effect for congruent segments.
+     *
+     * @param p1 the first point of the first segment
+     * @param p2 the second point of the first segment
+     * @param p3 the first point of the second segment
+     * @param p4 the second point of the second segment
+     */
     public void addCGFlash(CPoint p1, CPoint p2, CPoint p3, CPoint p4) {
         JCgFlash f1 = new JCgFlash(panel);
         f1.addACg(p1, p2);
@@ -2240,6 +2552,11 @@ public class DrawTextProcess extends DrawProcess {
         this.startFlash();
     }
 
+    /**
+     * Adds a flash effect for an area based on an assertion.
+     *
+     * @param ass the assertion containing the area information
+     */
     public void addAreaFlash1(MAssertion ass) {
         int n = this.getAreaFlashNumber();
         JAreaFlash f = new JAreaFlash(panel, n);
@@ -2249,6 +2566,11 @@ public class DrawTextProcess extends DrawProcess {
         this.addFlash1(f);
     }
 
+    /**
+     * Adds a flash effect for an area based on an assertion.
+     *
+     * @param ass the assertion containing the area information
+     */
     public void addAreaFlash(MAssertion ass) {
         int n = this.getAreaFlashNumber();
         JAreaFlash f = new JAreaFlash(panel, n);
@@ -2258,6 +2580,15 @@ public class DrawTextProcess extends DrawProcess {
         this.addFlash1(f);
     }
 
+    /**
+     * Retrieves an angle flash effect for two lines intersecting at a point.
+     *
+     * @param panel the panel to display the flash effect
+     * @param p     the intersection point
+     * @param l1    the first line
+     * @param l2    the second line
+     * @return the angle flash effect
+     */
     public JFlash getAngleFlashLL(JPanel panel, int p, LLine l1, LLine l2) {
         int a, b;
 
@@ -2273,6 +2604,12 @@ public class DrawTextProcess extends DrawProcess {
         return f;
     }
 
+    /**
+     * Adds a flash effect for a geometric class.
+     *
+     * @param cc    the geometric class
+     * @param panel the panel to display the flash effect
+     */
     public void flashattr(gprover.CClass cc, JPanel panel) {
         if (cc == null)
             return;
@@ -2457,12 +2794,15 @@ public class DrawTextProcess extends DrawProcess {
 
     }
 
-    public void falshPropoint(ProPoint pt) {
-        switch (pt.type) {
-            case Gib.C_CIRCUM:
-        }
-    }
-
+    /**
+     * Finds and returns a JAngleFlash from the flash list that matches the given four points.
+     *
+     * @param a the first point
+     * @param b the second point
+     * @param c the third point
+     * @param d the fourth point
+     * @return the matching JAngleFlash if found; otherwise, null
+     */
     public JAngleFlash find_angFlash(CPoint a, CPoint b, CPoint c, CPoint d) {
         for (int i = 0; i < flashlist.size(); i++) {
             JFlash flash = (JFlash) flashlist.get(i);
@@ -2476,6 +2816,13 @@ public class DrawTextProcess extends DrawProcess {
         return null;
     }
 
+    /**
+     * Creates or retrieves a flash angle based on an XTerm object.
+     * The flash is added to the flash list and its color is adjusted based on the PV value.
+     *
+     * @param x the XTerm object containing variable and point indices information
+     * @return the created or restarted flash; null if the XTerm, its variable, or any required point is not found
+     */
     public JFlash addFlashXtermAngle(XTerm x) {
         if (x == null) {
             return null;
@@ -2518,7 +2865,16 @@ public class DrawTextProcess extends DrawProcess {
         return f;
     }
 
-
+    /**
+     * Creates or retrieves a flash angle based on the given point indices.
+     * The flash is added to the flash list and the panel is repainted.
+     *
+     * @param a the index of the first point
+     * @param b the index of the second point
+     * @param c the index of the third point
+     * @param d the index of the fourth point
+     * @return the created or restarted flash; null if any of the points is not found
+     */
     public JFlash addFlashAngle(int a, int b, int c, int d) {
         CPoint p1 = fd_point(a);
         CPoint p2 = fd_point(b);
@@ -2539,17 +2895,11 @@ public class DrawTextProcess extends DrawProcess {
         return f;
     }
 
-    public void addauxPoint(int m1, int m2) {
-        CLine ln = this.fd_line(m1, m2);
-        if (ln != null) {
-            return;
-        }
-        ln = this.addLn(m1, m2);
-        ln.m_dash = 3;
-        ln.m_color = DrawData.getColorIndex(Color.red);
-        ln.m_width = 1;
-    }
-
+    /**
+     * Processes auxiliary proof text to add the corresponding flashes, marks, or polygons.
+     *
+     * @param cpt the CProveText object containing condition and proof information
+     */
     public void addaux(CProveText cpt) {
         Cond co = cpt.getcond();
         if (co == null) {
@@ -2712,6 +3062,13 @@ public class DrawTextProcess extends DrawProcess {
         this.UndoAdded("step");
     }
 
+    /**
+     * Determines and returns an array of four point indices for defining an angle from the given array.
+     * Adjustments are made using line intersections if the direct configuration is ambiguous.
+     *
+     * @param pt an array of point indices relevant to the angle
+     * @return an array of four point indices that define the angle
+     */
     int[] get4PtsForAngle(int[] pt) {
         int[] p = new int[4];
         boolean rt1, rt2;
@@ -2806,6 +3163,14 @@ public class DrawTextProcess extends DrawProcess {
         return p;
     }
 
+    /**
+     * Calculates the cosine of the angle formed by three points identified by their indices.
+     *
+     * @param a the index of the first point
+     * @param b the index of the second point (vertex of the angle)
+     * @param c the index of the third point
+     * @return the cosine of the angle formed at point b
+     */
     double cos3Pt(int a, int b, int c) {
         CPoint p1 = this.fd_point(a);
         CPoint p2 = this.fd_point(b);
@@ -2820,6 +3185,12 @@ public class DrawTextProcess extends DrawProcess {
         return cs;
     }
 
+    /**
+     * Adds a CAngle to the angle list.
+     * If an angle with similar intersection is already present, the radius is adjusted before adding.
+     *
+     * @param ag the CAngle object to be added
+     */
     public void addAngleToList2(CAngle ag) {
         int num = 0;
         double[] p = CLine.Intersect(ag.lstart, ag.lend);
@@ -2841,20 +3212,4 @@ public class DrawTextProcess extends DrawProcess {
         }
         this.addAngleToList(ag);
     }
-
-
-    Constraint find_constraint(int t, Object obj1, Object obj2) {
-        for (int i = 0; i < constraintlist.size(); i++) {
-            Constraint c = (Constraint) constraintlist.get(i);
-            if (c.GetConstraintType() != t) {
-                continue;
-            }
-            Vector v = c.getAllElements();
-            if (v.contains(obj1) && v.contains(obj2)) {
-                return c;
-            }
-        }
-        return null;
-    }
-
 }

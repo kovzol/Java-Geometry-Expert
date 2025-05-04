@@ -11,24 +11,48 @@ import java.awt.*;
 import maths.TMono;
 import maths.TPoly;
 
+/**
+ * PanelWu is a class that extends PanelAlgebraic and implements Runnable and
+ * MouseListener interfaces. It provides functionality for proving theorems
+ * using Wu's method and displaying the results in a text pane.
+ */
 public class PanelWu extends PanelAlgebraic implements Runnable, MouseListener {
     private TMono mremainder;
 
 
+    /**
+     * Constructs a new PanelWu with the specified DrawProcess and WuTextPane.
+     *
+     * @param dp    the DrawProcess instance to associate with this panel
+     * @param tpane the WuTextPane instance to associate with this panel
+     */
     public PanelWu(DrawProcess dp, WuTextPane tpane) {
         super(dp, tpane);
         tpane.addMouseListener(this);
     }
 
+    /**
+     * Sets the language for the panel.
+     *
+     * @param lan the Language instance to set
+     */
     public void setLanguage(Language lan) {
         this.lan = lan;
     }
 
+    /**
+     * Stops the running process if it is currently running.
+     */
     public void stopRunning() {
         if (!running)
             return;
     }
 
+    /**
+     * Initiates the proving process with the given GTerm.
+     *
+     * @param tm the GTerm instance representing the term to prove
+     */
     public void prove(GTerm tm) {
         if (running)
             return;
@@ -40,6 +64,14 @@ public class PanelWu extends PanelAlgebraic implements Runnable, MouseListener {
         main.start();
     }
 
+    /**
+     * Adds a division step to the text pane.
+     *
+     * @param index the index of the division step
+     * @param m1    the TMono instance representing the polynomial
+     * @param x     the variable index
+     * @param t     the time taken for the division step
+     */
     protected void addDiv(int index, TMono m1, int x, long t) {
         index++;
         String s = "R_" + (index - 1) + " = prem(R_" + index + ", h_" + (index - 1) + ") =  ["
@@ -47,6 +79,13 @@ public class PanelWu extends PanelAlgebraic implements Runnable, MouseListener {
         addString(s);
     }
 
+    /**
+     * Divides the given polynomial by the terms in the specified TPoly.
+     *
+     * @param m1 the polynomial to divide
+     * @param p1 the TPoly containing the terms to divide by
+     * @return 0 if the division is successful, 1 if the process is interrupted
+     */
     protected int div(TMono m1, TPoly p1) {
         if (poly.pzerop(m1))
             return 0;
@@ -96,13 +135,21 @@ public class PanelWu extends PanelAlgebraic implements Runnable, MouseListener {
         return 1;
     }
 
+    /**
+     * Retrieves the TMono representation of the specified construction.
+     *
+     * @param c the construction
+     * @return the TMono representation of the construction
+     */
     public TMono getTMono(Cons c) {
         TMono m = dp.getTMono(c);
 
         return m;
     }
 
-
+    /**
+     * Runs the main process for computing the Groebner basis.
+     */
     public void run() {
         if (gt == null) {
             running = false;
@@ -141,7 +188,6 @@ public class PanelWu extends PanelAlgebraic implements Runnable, MouseListener {
             }
         }
 
-
         addString2(GExpert.getLanguage("The Triangulized Hypotheses:"));
         TPoly p1 = dp.getPolyList();
         int i = 0;
@@ -149,7 +195,6 @@ public class PanelWu extends PanelAlgebraic implements Runnable, MouseListener {
             addString("h" + i++ + ": " + poly.printSPoly(p1.poly));
             p1 = p1.next;
         }
-
 
         addString2(GExpert.getLanguage("The conclusion:"));
         addString1(sc + "\n");
@@ -189,6 +234,11 @@ public class PanelWu extends PanelAlgebraic implements Runnable, MouseListener {
         running = false;
     }
 
+    /**
+     * Handles mouse click events to show the popup menu.
+     *
+     * @param e the mouse event
+     */
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() > 1) {
             if (mremainder != null) {

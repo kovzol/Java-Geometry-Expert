@@ -7,11 +7,8 @@ import java.io.IOException;
 import java.io.DataInputStream;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 2005-3-3
- * Time: 13:54:48
- * To change this template use File | Settings | File Templates.
+ * The DrawType class represents a drawing type with properties such as color index, dash style, and width.
+ * It provides methods to save and load its state, set properties, and retrieve color information.
  */
 public class DrawType {
     int color_index;
@@ -19,21 +16,32 @@ public class DrawType {
     int width;
 
 
+/**
+     * Default constructor for the DrawType class.
+     */
     public DrawType()
     {
     }
-    public DrawType(int ci, int dash, int width)
-    {
-        color_index = ci;
-        this.dash = dash;
-        this.width = width;
-    }
+
+    /**
+     * Saves the current state of the DrawType object to a DataOutputStream.
+     *
+     * @param out the DataOutputStream to write to
+     * @throws IOException if an I/O error occurs
+     */
     public void Save(DataOutputStream out) throws IOException
     {
         out.writeInt(color_index);
         out.writeInt(dash);
         out.writeInt(width);
     }
+
+    /**
+     * Loads the state of the DrawType object from a DataInputStream.
+     *
+     * @param in the DataInputStream to read from
+     * @throws IOException if an I/O error occurs
+     */
     public void Load(DataInputStream in) throws IOException
     {
         color_index = in.readInt();
@@ -41,54 +49,43 @@ public class DrawType {
         width = in.readInt();
     }
 
-    public void setdrawType(Graphics2D g2)
-    {
-        if(color_index >= 0)
-            g2.setColor(DrawData.getColor(color_index));
-
-        float d =0;
-        if(dash >=0 )
-           d = (float) DrawData.getDash(dash);
-        float w = (float) DrawData.getWidth(width);
-
-        if(dash >0)
-        {
-            float dash[] = {d};
-            g2.setStroke(new BasicStroke(w, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 5.0f, dash, 0.0f));
-        }else g2.setStroke(new BasicStroke(w));
-
-    }
-
-
-    public void setColorIndex(int id)
-    {
-      color_index = id;
-    }
+    /**
+     * Sets the dash style for the DrawType object.
+     *
+     * @param dash the dash style to set
+     */
     public void setDash(int dash)
     {
         this.dash = dash;
     }
+
+    /**
+     * Sets the width for the DrawType object.
+     *
+     * @param width the width to set
+     */
     public void setWidth(int width)
     {
         this.width = width;
     }
+
+    /**
+     * Retrieves the color index of the DrawType object.
+     *
+     * @return the color index
+     */
     public int getColorIndex()
     {
         return color_index;
     }
+
+    /**
+     * Retrieves the color corresponding to the color index of the DrawType object.
+     *
+     * @return the color
+     */
     public Color getColor()
     {
         return DrawData.getColor(color_index);
     }
-    public int getDashIndex()
-    {
-        return dash;
-    }
-    public int getWidthIndex()
-    {
-        return width;
-    }
-////////////// ///////////
-
-
 }

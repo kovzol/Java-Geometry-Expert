@@ -8,143 +8,160 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-6-24
- * Time: 10:54:36
- * To change this template use File | Settings | File Templates.
+ * JBaseDialog is a custom dialog class that extends JDialog and implements
+ * ContainerListener and KeyListener interfaces. It provides functionality to
+ * handle key events and manage child components within the dialog.
  */
 public class JBaseDialog extends JDialog implements ContainerListener, KeyListener {
 
+    /**
+     * Constructs a new JBaseDialog with the specified frame, title, and modality.
+     *
+     * @param frame the parent frame
+     * @param title the title of the dialog
+     * @param modal true if the dialog should be modal, false otherwise
+     */
     public JBaseDialog(Frame frame, String title, boolean modal) {
         super(frame, title, modal);
         addKeyAndContainerListenerRecursively(this);
     }
 
+    /**
+     * Constructs a new JBaseDialog with the specified frame and modality.
+     *
+     * @param frame the parent frame
+     * @param modal true if the dialog should be modal, false otherwise
+     */
     public JBaseDialog(Frame frame, boolean modal) {
         this(frame, "", modal);
     }
 
+    /**
+     * Constructs a new JBaseDialog with no specified frame, title, or modality.
+     */
     public JBaseDialog() {
         super();
         addKeyAndContainerListenerRecursively(this);
     }
 
+    /**
+     * Constructs a new JBaseDialog with the specified frame and title.
+     *
+     * @param f     the parent frame
+     * @param title the title of the dialog
+     */
     public JBaseDialog(Frame f, String title) {
         super(f, title);
         addKeyAndContainerListenerRecursively(this);
     }
 
+    /**
+     * Constructs a new JBaseDialog with the specified frame.
+     *
+     * @param f the parent frame
+     */
     public JBaseDialog(Frame f) {
         super(f);
         addKeyAndContainerListenerRecursively(this);
     }
 
-//The following function is recursive and is intended for internal use only. It is private to prevent anyone calling it from other classes
-//The function takes a Component as an argument and adds this Dialog as a KeyListener to it.
-//Besides it checks if the component is actually a Container and if it is, there  are 2 additional things to be done to this Container :
-// 1 - add this Dialog as a ContainerListener to the Container
-// 2 - call this function recursively for every child of the Container.
-
+    /**
+     * Adds this dialog as a KeyListener and ContainerListener to the specified component
+     * and its children recursively.
+     *
+     * @param c the component to add listeners to
+     */
     private void addKeyAndContainerListenerRecursively(Component c) {
-//To be on the safe side, try to remove KeyListener first just in case it has been added before.
-//If not, it won't do any harm
         c.removeKeyListener(this);
-//Add KeyListener to the Component passed as an argument
         c.addKeyListener(this);
 
         if (c instanceof Container) {
-
-//Component c is a Container. The following cast is safe.
             Container cont = (Container) c;
-
-//To be on the safe side, try to remove ContainerListener first just in case it has been added before.
-//If not, it won't do any harm
             cont.removeContainerListener(this);
-//Add ContainerListener to the Container.
             cont.addContainerListener(this);
 
-//Get the Container's array of children Components.
             Component[] children = cont.getComponents();
-
-//For every child repeat the above operation.
             for (int i = 0; i < children.length; i++) {
                 addKeyAndContainerListenerRecursively(children[i]);
             }
         }
     }
 
-//The following function is the same as the function above with the exception that it does exactly the opposite - removes this Dialog
-//from the listener lists of Components.
-
+    /**
+     * Removes this dialog as a KeyListener and ContainerListener from the specified component
+     * and its children recursively.
+     *
+     * @param c the component to remove listeners from
+     */
     private void removeKeyAndContainerListenerRecursively(Component c) {
         c.removeKeyListener(this);
 
         if (c instanceof Container) {
-
             Container cont = (Container) c;
-
             cont.removeContainerListener(this);
 
             Component[] children = cont.getComponents();
-
             for (int i = 0; i < children.length; i++) {
                 removeKeyAndContainerListenerRecursively(children[i]);
             }
         }
     }
 
-
-    //ContainerListener interface
     /**
-     * ******************************************************
+     * Called when a component is added to a container.
+     *
+     * @param e the container event
      */
-
-//This function is called whenever a Component or a Container is added to another Container belonging to this Dialog
     public void componentAdded(ContainerEvent e) {
         addKeyAndContainerListenerRecursively(e.getChild());
     }
 
-    //This function is called whenever a Component or a Container is removed from another Container belonging to this Dialog
+    /**
+     * Called when a component is removed from a container.
+     *
+     * @param e the container event
+     */
     public void componentRemoved(ContainerEvent e) {
         removeKeyAndContainerListenerRecursively(e.getChild());
     }
 
-    /**********************************************************/
-
-
-    //KeyListener interface
     /**
-     * ******************************************************
+     * Called when a key is pressed in a component.
+     *
+     * @param e the key event
      */
-//This function is called whenever a Component belonging to this Dialog (or the Dialog itself) gets the KEY_PRESSED event
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_ESCAPE) {
-//Key pressed is the ESCAPE key. Hide this Dialog.
             setVisible(false);
         } else if (code == KeyEvent.VK_ENTER) {
-//Key pressed is the ENTER key. Redefine performEnterAction() in subclasses to respond to depressing the ENTER key.
             performEnterAction(e);
         }
-
-//Insert code to process other keys here
     }
 
-    //We need the following 2 functions to complete imlementation of KeyListener
+    /**
+     * Called when a key is released in a component.
+     *
+     * @param e the key event
+     */
     public void keyReleased(KeyEvent e) {
     }
 
+    /**
+     * Called when a key is typed in a component.
+     *
+     * @param e the key event
+     */
     public void keyTyped(KeyEvent e) {
     }
 
     /**
-     * ********************************************************
+     * Performs the default action when the Enter key is pressed.
+     * Subclasses can override this method to provide custom behavior.
+     *
+     * @param e the key event
      */
-
     void performEnterAction(KeyEvent e) {
-//Default response to ENTER key pressed goes here
-//Redefine this function in subclasses to respond to ENTER key differently
     }
 
 }

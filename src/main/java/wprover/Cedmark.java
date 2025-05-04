@@ -7,13 +7,8 @@ import java.io.DataInputStream;
 import java.io.FileOutputStream;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ye
- * Date: 2005-8-23
- * Time: 14:50:02
- * To change this template use File | Settings | File Templates.
- *
- * This class represents an equality mark between two points.
+ * Represents a Cedmark object, which is a type of equality mark in a geometric drawing.
+ * It extends the CClass class and provides methods for drawing and saving the equality mark.
  */
 public class Cedmark extends CClass {
     private static int DEFAULT_LEN = 8;
@@ -152,15 +147,6 @@ public class Cedmark extends CClass {
         double xx2 = x + dy * length;
         double yy2 = y - dx * length;
         g2.drawLine((int) xx1, (int) yy1, (int) xx2, (int) yy2);
-    }
-
-    /**
-     * Draws the equality mark using the given Graphics2D object and a point.
-     *
-     * @param g2 the Graphics2D object
-     * @param d the point
-     */
-    void draw(Graphics2D g2, CPoint d) {
     }
 
     /**

@@ -10,11 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: Nov 29, 2006
- * Time: 1:01:15 PM
- * To change this template use File | Settings | File Templates.
+ * RatioSelectDialog is a dialog that allows the user to input two integers
+ * representing a ratio. It extends JBaseDialog and implements ActionListener.
  */
 public class RatioSelectDialog extends JBaseDialog implements ActionListener {
     IntTextField field1, field2;
@@ -22,6 +19,11 @@ public class RatioSelectDialog extends JBaseDialog implements ActionListener {
     boolean returnValue;
 
 
+    /**
+     * Constructs a new RatioSelectDialog with the specified GExpert instance.
+     *
+     * @param f the GExpert instance to associate with this dialog
+     */
     public RatioSelectDialog(GExpert f) {
         super(f.getFrame(), true);
         this.setTitle(f.getLanguage("Set the ratio"));
@@ -61,9 +63,13 @@ public class RatioSelectDialog extends JBaseDialog implements ActionListener {
 
         if (CMisc.isApplication())
             this.setAlwaysOnTop(true);
-
     }
 
+    /**
+     * Handles action events for the dialog buttons.
+     *
+     * @param e the ActionEvent triggered by the buttons
+     */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == button1)
             returnValue = true;
@@ -71,16 +77,29 @@ public class RatioSelectDialog extends JBaseDialog implements ActionListener {
         this.setVisible(false);
     }
 
+    /**
+     * Gets the value from the first input field.
+     *
+     * @return the integer value from the first input field
+     */
     public int getValue1() {
         String s = field1.getText();
         return Integer.parseInt(s);
     }
 
+    /**
+     * Gets the value from the second input field.
+     *
+     * @return the integer value from the second input field
+     */
     public int getValue2() {
         String s = field2.getText();
         return Integer.parseInt(s);
     }
 
+    /**
+     * Centers the dialog window relative to its owner.
+     */
     public void centerWindow() {
         Window wo = this.getOwner();
         int x = wo.getX();
@@ -90,15 +109,34 @@ public class RatioSelectDialog extends JBaseDialog implements ActionListener {
         this.setLocation(x + w / 2 - 200 / 2, y + h / 2 - 120 / 2);
     }
 
+    /**
+     * IntTextField is a custom JTextField that only accepts integer input.
+     */
     class IntTextField extends JTextField {
+        /**
+         * Constructs a new IntTextField with the specified default value and size.
+         *
+         * @param defval the default integer value
+         * @param size   the size of the text field
+         */
         public IntTextField(int defval, int size) {
             super("" + defval, size);
         }
 
+        /**
+         * Creates the default model for the text field, which is an IntTextDocument.
+         *
+         * @return the default document model
+         */
         protected Document createDefaultModel() {
             return new IntTextDocument();
         }
 
+        /**
+         * Checks if the current text in the field is a valid integer.
+         *
+         * @return true if the text is a valid integer, false otherwise
+         */
         public boolean isValid() {
             try {
                 Integer.parseInt(getText());
@@ -110,6 +148,11 @@ public class RatioSelectDialog extends JBaseDialog implements ActionListener {
             }
         }
 
+        /**
+         * Gets the integer value from the text field.
+         *
+         * @return the integer value, or 0 if the text is not a valid integer
+         */
         public int getValue() {
             try {
                 return Integer.parseInt(getText());
@@ -118,7 +161,18 @@ public class RatioSelectDialog extends JBaseDialog implements ActionListener {
             }
         }
 
+        /**
+         * IntTextDocument is a custom PlainDocument that only allows integer input.
+         */
         class IntTextDocument extends PlainDocument {
+            /**
+             * Inserts a string into the document, ensuring that it remains a valid integer.
+             *
+             * @param offs the offset at which to insert the string
+             * @param str  the string to insert
+             * @param a    the attribute set
+             * @throws BadLocationException if the insert position is invalid
+             */
             public void insertString(int offs, String str, AttributeSet a)
                     throws BadLocationException {
                 if (str == null)

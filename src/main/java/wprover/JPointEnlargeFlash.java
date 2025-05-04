@@ -6,11 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ye
- * Date: 2008-1-11
- * Time: 23:41:44
- * To change this template use File | Settings | File Templates.
+ * JPointEnlargeFlash is a class that extends JFlash and implements ActionListener.
+ * It is used to create a flashing effect on a point in a JPanel.
  */
 public class JPointEnlargeFlash extends JFlash implements ActionListener {
 
@@ -21,6 +18,12 @@ public class JPointEnlargeFlash extends JFlash implements ActionListener {
 //    private int mradius = 0;
 
 
+    /**
+     * Constructs a new JPointEnlargeFlash with the specified JPanel and CPoint.
+     *
+     * @param p  the JPanel to associate with this JPointEnlargeFlash
+     * @param pt the CPoint to apply the flashing effect on
+     */
     public JPointEnlargeFlash(JPanel p, CPoint pt) {
         super(p);
         this.pt = pt;
@@ -28,10 +31,21 @@ public class JPointEnlargeFlash extends JFlash implements ActionListener {
         nnn = pt.m_radius;
     }
 
+    /**
+     * Draws the flashing effect on the specified Graphics2D context.
+     *
+     * @param g2 the Graphics2D context to draw on
+     * @return true if the drawing was successful, false otherwise
+     */
     public boolean draw(Graphics2D g2) {
         return true;
     }
 
+    /**
+     * Handles action events for the timer.
+     *
+     * @param e the action event
+     */
     public void actionPerformed(ActionEvent e) {
         n--;
         if (n <= 0) stop();
@@ -42,9 +56,11 @@ public class JPointEnlargeFlash extends JFlash implements ActionListener {
         }
 
         panel.repaint();
-
     }
 
+    /**
+     * Stops the flashing effect and resets the point's radius.
+     */
     public void stop() {
         pt.m_radius = (nnn);
         super.stop();

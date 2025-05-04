@@ -3,36 +3,51 @@ package wprover;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
+/**
+ * A custom JPanel that handles various mouse and component events.
+ * Implements MouseListener, MouseMotionListener, MouseWheelListener, and ComponentListener.
+ */
 class DPanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener {
 
+    /** Constant for draw mode. */
     final public static int DRAW = 0;
+    /** Constant for construction mode. */
     final public static int CONS = 1;    // construction.
     DrawTextProcess dp = new DrawTextProcess();
+    /** The input type, either DRAW or CONS. */
     private int Input_type = DRAW; // draw  ,1 : prove
     GExpert gxInstance;
 
-    public void SetInputType(int type) {
-        this.Input_type = type;
-    }
-
+    /**
+     * Clears all components from the panel.
+     */
     public void clearAll() {
         this.removeAll();
     }
 
-    public void SetDrawType(int type) {
-        this.Input_type = DRAW;
-        dp.SetCurrentAction(type);
-    }
-
+    /**
+     * Sets the animation step.
+     *
+     * @param step the step value to set
+     */
     public void setStep(double step) {
         dp.animate.Setstep(step);
     }
 
+    /**
+     * Checks if an action needs to proceed based on the prover's state.
+     *
+     * @return true if the action needs to proceed, false otherwise
+     */
     public boolean actionNeedProceed() {
         return gxInstance == null || !gxInstance.getpprove().isProverRunning();
     }
 
+    /**
+     * Constructor for DPanel.
+     *
+     * @param gx the GExpert instance
+     */
     public DPanel(GExpert gx) {
         gxInstance = gx;
 
@@ -42,18 +57,22 @@ class DPanel extends JPanel implements MouseListener, MouseMotionListener, Mouse
         this.setDoubleBuffered(true);
         this.setLayout(null);
         this.addComponentListener(this);
-//        this.setBorder(BorderFactory.createLineBorder(Color.lightGray));
-//        this.setBorder(new GBevelBorder(GBevelBorder.RAISED));
         this.setBackground(CMisc.getBackGroundColor());
     }
 
-
+    /**
+     * Recalculates and repaints the panel.
+     */
     public void repaintAndCalculate() {
         dp.reCalculate();
         this.repaint();
     }
 
-
+    /**
+     * Handles animation based on the type.
+     *
+     * @param type the type of animation (0: on time, 1: start, 2: stop)
+     */
     public void onAnimate(int type) {
         if (type == 1) //start
             dp.animationStart();
@@ -63,18 +82,22 @@ class DPanel extends JPanel implements MouseListener, MouseMotionListener, Mouse
             dp.animationOntime();
 
         repaint();
-
     }
 
+    /**
+     * Returns the preferred size of the panel.
+     *
+     * @return the preferred size
+     */
     public Dimension getPreferredSize() {
-//        Rectangle rc = dp.getBounds();
-//
-//        int x = (int) (Math.abs(rc.getX() + rc.getWidth())) + 20;
-//        int y = (int) (Math.abs(rc.getY() + rc.getHeight())) + 20;
-//        return new Dimension(x, y);
         return super.getPreferredSize();
     }
 
+    /**
+     * Handles mouse pressed events.
+     *
+     * @param e the MouseEvent
+     */
     public void mousePressed(MouseEvent e) {
         if (!this.actionNeedProceed())
             return;
@@ -93,23 +116,30 @@ class DPanel extends JPanel implements MouseListener, MouseMotionListener, Mouse
         }
     }
 
+    /**
+     * Handles mouse dragged events.
+     *
+     * @param e the MouseEvent
+     */
     public void mouseDragged(MouseEvent e) {
         if (!this.actionNeedProceed())
             return;
 
         int button = e.getButton();
         if (button == MouseEvent.BUTTON3) {
-
             return;
         }
         if (Input_type == 0) {
             dp.DWMouseDrag(e.getX(), e.getY());
             repaint();
-        } else {
         }
     }
 
-
+    /**
+     * Handles mouse released events.
+     *
+     * @param e the MouseEvent
+     */
     public void mouseReleased(MouseEvent e) {
         if (!this.actionNeedProceed())
             return;
@@ -124,9 +154,12 @@ class DPanel extends JPanel implements MouseListener, MouseMotionListener, Mouse
         }
     }
 
+    /**
+     * Handles mouse moved events.
+     *
+     * @param e the MouseEvent
+     */
     public void mouseMoved(MouseEvent e) {
-
-
         int button = e.getButton();
 
         if (button == MouseEvent.BUTTON3)
@@ -137,6 +170,11 @@ class DPanel extends JPanel implements MouseListener, MouseMotionListener, Mouse
         }
     }
 
+    /**
+     * Handles mouse clicked events.
+     *
+     * @param e the MouseEvent
+     */
     public void mouseClicked(MouseEvent e) {
         if (!this.actionNeedProceed())
             return;
@@ -145,69 +183,82 @@ class DPanel extends JPanel implements MouseListener, MouseMotionListener, Mouse
             dp.DWMouseRightClick(e.getX(), e.getY());
         else if (e.getClickCount() > 1)
             dp.DWMouseDbClick(e.getX(), e.getY());
-
     }
 
+    /**
+     * Handles mouse exited events.
+     *
+     * @param e the MouseEvent
+     */
     public void mouseExited(MouseEvent e) {
-//        if (!this.actionNeedProceed())
-//            return;
-
         dp.setMouseInside(false);
         this.repaint();
     }
 
+    /**
+     * Handles mouse entered events.
+     *
+     * @param e the MouseEvent
+     */
     public void mouseEntered(MouseEvent e) {
-//        if (!this.actionNeedProceed())
-//            return;
-
         dp.setMouseInside(true);
         this.repaint();
     }
 
+    /**
+     * Handles mouse wheel moved events.
+     *
+     * @param e the MouseWheelEvent
+     */
     public void mouseWheelMoved(MouseWheelEvent e) {
-//        if (!this.actionNeedProceed())
-//            return;
-
         int n = e.getScrollAmount();
         dp.DWMouseWheel(e.getX(), e.getY(), n, e.getWheelRotation());
         this.repaint();
     }
 
-
+    /**
+     * Handles component resized events.
+     *
+     * @param e the ComponentEvent
+     */
     public void componentResized(ComponentEvent e) {
     }
 
+    /**
+     * Handles component moved events.
+     *
+     * @param e the ComponentEvent
+     */
     public void componentMoved(ComponentEvent e) {
     }
 
+    /**
+     * Handles component shown events.
+     *
+     * @param e the ComponentEvent
+     */
     public void componentShown(ComponentEvent e) {
     }
 
+    /**
+     * Handles component hidden events.
+     *
+     * @param e the ComponentEvent
+     */
     public void componentHidden(ComponentEvent e) {
 
     }
 
-
+    /**
+     * Paints the component.
+     *
+     * @param g the Graphics object
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         Dimension dm = this.getSize();
         dp.SetDimension(dm.getWidth(), dm.getHeight());
         dp.paintPoint(g);
-//        paintBD(g);
-    }
-
-
-    final private static BasicStroke bstroke = new BasicStroke(1.0f);
-
-    public void paintBD(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(bstroke);
-        g2.setColor(Color.LIGHT_GRAY);
-        int w = this.getWidth() - 1;
-        int h = this.getHeight() - 1;
-
-        g2.drawLine(0, h, w, h);
-        g2.drawLine(w, 0, w, h);
     }
 }
