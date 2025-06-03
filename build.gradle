@@ -119,7 +119,7 @@ distributions {
     main {
         distributionBaseName = 'jgex'
         contents {
-            into("bin") { from 'src/docs'}
+            into("bin") { from 'src/main/resources/docs'}
         }
     }
 }
