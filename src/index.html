@@ -1,0 +1,18 @@
+<!-- this is the initialization file needed to run this application in the browser through/with CheerpJ -->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>CheerpJ test</title>
+    <script src="https://cjrtnc.leaningtech.com/4.1/loader.js"></script>
+</head>
+<body>
+<script>
+    (async function () {
+        await cheerpjInit({ version: 11 , enableDebug: true});
+        cheerpjCreateDisplay(1400, 800);
+        await cheerpjRunJar("/app/Java-Geometry-Expert-0.86.jar");
+    })();
+</script>
+</body>
+</html>

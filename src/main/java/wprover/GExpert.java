@@ -28,11 +28,15 @@ import java.awt.dnd.*;
 import java.awt.datatransfer.*;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 import org.apache.commons.cli.*;
 
@@ -803,11 +807,209 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
      * @param menu the menu to which the example files will be added
      */
     void addAllExamples(JMenu menu) {
-        String user_directory = getUserDir();
-        String sp = GExpert.getFileSeparator();
-        String dr = user_directory + sp + "examples";
-        File dir = new File(dr);
-        this.addDirectory(dir, menu, dr);
+        addDirectory(menu, "docs/examples");
+    }
+
+    /**
+     * Populate a JMenu by scanning a folder on the classpath.
+     * @param menu        the menu to fill
+     * @param resourceDir the resource path (e.g. "docs/examples")
+     */
+    void addDirectory(JMenu menu, String resourceDir) {
+        try {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            URL dirUrl = cl.getResource(resourceDir + "/");
+            if (dirUrl == null) return;
+
+            if (dirUrl.getProtocol().equals("file")) {
+                // running in IDE/Gradle on disk
+                File folder = new File(dirUrl.toURI());
+                File[] files = folder.listFiles();
+                // Sort files using custom comparator
+                Arrays.sort(files, new Comparator<File>() {
+                    @Override
+                    public int compare(File f1, File f2) {
+                        // If both are directories or both are files, use custom ordering
+                        if (f1.isDirectory() == f2.isDirectory()) {
+                            String name1 = f1.getName();
+                            String name2 = f2.getName();
+
+                            // Check if both names start with numbers
+                            if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
+                                // Extract the numeric prefix
+                                String num1 = name1.replaceAll("^(\\d+).*", "$1");
+                                String num2 = name2.replaceAll("^(\\d+).*", "$1");
+
+                                // If numeric parts are different, compare them numerically
+                                if (!num1.equals(num2)) {
+                                    return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                                }
+                            }
+                            // If one name starts with a number and the other doesn't, prioritize the one with number
+                            else if (name1.matches("^\\d+.*")) {
+                                return -1;
+                            }
+                            else if (name2.matches("^\\d+.*")) {
+                                return 1;
+                            }
+
+                            // Otherwise, use alphabetical order
+                            return name1.compareTo(name2);
+                        }
+
+                        // Directories come before files
+                        return f1.isDirectory() ? -1 : 1;
+                    }
+                });
+                for (File f : files) {
+                    handleEntry(menu, resourceDir, f.getName(), f.isDirectory());
+                }
+            } else {
+                // running from JAR(specifically for CheerpJ)
+                String path = resourceDir + "/";
+                try {
+                    // Use JarFile approach to get all entries
+                    URL jarUrl = cl.getResource(path);
+                    if (jarUrl != null) {
+                        String jarPath = jarUrl.toString();
+                        if (jarPath.startsWith("jar:file:")) {
+                            jarPath = jarPath.substring(9, jarPath.indexOf("!"));
+                            try (JarFile jar = new JarFile(jarPath)) {
+                                Enumeration<JarEntry> entries = jar.entries();
+                                // first collect all entries to process
+                                java.util.Map<String, Boolean> processedDirs = new java.util.HashMap<>();
+                                java.util.List<String> filesToProcess = new java.util.ArrayList<String>();
+
+                                while (entries.hasMoreElements()) {
+                                    JarEntry entry = entries.nextElement();
+                                    String entryName = entry.getName();
+
+                                    if (entryName.startsWith(path)) {
+                                        String relativePath = entryName.substring(path.length());
+                                        if (relativePath.isEmpty()) continue;
+
+                                        int slashIndex = relativePath.indexOf('/');
+                                        if (slashIndex == -1) {
+                                            filesToProcess.add(relativePath);
+                                        } else {
+                                            // subdirectory
+                                            String dirName = relativePath.substring(0, slashIndex);
+                                            if (!processedDirs.containsKey(dirName)) {
+                                                processedDirs.put(dirName, true);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Sort directories using custom comparator
+                                java.util.List<String> dirNames = new java.util.ArrayList<>(processedDirs.keySet());
+                                Collections.sort(dirNames, new Comparator<String>() {
+                                    @Override
+                                    public int compare(String name1, String name2) {
+                                        // Check if both names start with numbers
+                                        if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
+                                            // Extract the numeric prefix
+                                            String num1 = name1.replaceAll("^(\\d+).*", "$1");
+                                            String num2 = name2.replaceAll("^(\\d+).*", "$1");
+
+                                            // If numeric parts are different, compare them numerically
+                                            if (!num1.equals(num2)) {
+                                                return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                                            }
+                                        }
+                                        // If one name starts with a number and the other doesn't, prioritize the one with number
+                                        else if (name1.matches("^\\d+.*")) {
+                                            return -1;
+                                        }
+                                        else if (name2.matches("^\\d+.*")) {
+                                            return 1;
+                                        }
+
+                                        // Otherwise, use alphabetical order
+                                        return name1.compareTo(name2);
+                                    }
+                                });
+
+                                // Process directories in sorted order
+                                for (String dirName : dirNames) {
+                                    handleEntry(menu, resourceDir, dirName, true);
+                                }
+
+                                // Sort files using custom comparator
+                                Collections.sort(filesToProcess, new Comparator<String>() {
+                                    @Override
+                                    public int compare(String name1, String name2) {
+                                        // Check if both names start with numbers
+                                        if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
+                                            // Extract the numeric prefix
+                                            String num1 = name1.replaceAll("^(\\d+).*", "$1");
+                                            String num2 = name2.replaceAll("^(\\d+).*", "$1");
+
+                                            // If numeric parts are different, compare them numerically
+                                            if (!num1.equals(num2)) {
+                                                return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                                            }
+                                        }
+                                        // If one name starts with a number and the other doesn't, prioritize the one with number
+                                        else if (name1.matches("^\\d+.*")) {
+                                            return -1;
+                                        }
+                                        else if (name2.matches("^\\d+.*")) {
+                                            return 1;
+                                        }
+
+                                        // Otherwise, use alphabetical order
+                                        return name1.compareTo(name2);
+                                    }
+                                });
+
+                                // process all files in this directory
+                                for (String fileName : filesToProcess) {
+                                    handleEntry(menu, resourceDir, fileName, false);
+                                }
+                            }
+                        } else {
+                            // fallback to JarInputStream if jar-file protocol not available
+                            try (InputStream is = cl.getResourceAsStream(path);
+                                 JarInputStream jin = new JarInputStream(is)) {
+                                JarEntry e;
+                                while ((e = jin.getNextJarEntry()) != null) {
+                                    String name = e.getName();
+                                    if (name.startsWith(path)) {
+                                        String entry = name.substring(path.length());
+                                        if (!entry.isEmpty() && !entry.contains("/")) {
+                                            handleEntry(menu, resourceDir, entry, false);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    // log the exception but continue processing
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void handleEntry(JMenu menu, String base, String name, boolean isDir) {
+        if (isDir) {
+            JMenu sub = new JMenu(name);
+            menu.add(sub);
+            addDirectory(sub, base + "/" + name);
+        } else if (name.endsWith(".gex")) {
+            String label = name.substring(0, name.length() - 4);
+            JMenuItem item = new JMenuItem(label);
+            item.addActionListener(this);
+            // store the resource path for later loading
+            item.setName(base + "/" + name);
+            item.setToolTipText(name);
+            item.setActionCommand("example");
+            addMenu(menu, item);
+        }
     }
 
     /**
@@ -823,7 +1025,41 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
         if (f.isDirectory()) {
             File contents[] = f.listFiles();
-            Arrays.sort(contents);
+            Arrays.sort(contents, new Comparator<File>() {
+                @Override
+                public int compare(File f1, File f2) {
+                    // If both are directories or both are files, use custom ordering
+                    if (f1.isDirectory() == f2.isDirectory()) {
+                        String name1 = f1.getName();
+                        String name2 = f2.getName();
+
+                        // Check if both names start with numbers
+                        if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
+                            // Extract the numeric prefix
+                            String num1 = name1.replaceAll("^(\\d+).*", "$1");
+                            String num2 = name2.replaceAll("^(\\d+).*", "$1");
+
+                            // If numeric parts are different, compare them numerically
+                            if (!num1.equals(num2)) {
+                                return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                            }
+                        }
+                        // If one name starts with a number and the other doesn't, prioritize the one with number
+                        else if (name1.matches("^\\d+.*")) {
+                            return -1;
+                        }
+                        else if (name2.matches("^\\d+.*")) {
+                            return 1;
+                        }
+
+                        // Otherwise, use alphabetical order
+                        return name1.compareTo(name2);
+                    }
+
+                    // Directories come before files
+                    return f1.isDirectory() ? -1 : 1;
+                }
+            });
             int n = contents.length - 1;
             for (int i = n; i >= 0; i--) {
                 if (contents[i].isDirectory()) {
@@ -1446,7 +1682,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         d.setCursor(Cursor.getDefaultCursor());
 
         if (command.equals("example")) {
-            this.openAFile(new File(pname + "/" + tip));
+            this.openResourceFile(pname);
         } else if (command.equals("Save as PS")) {
             if (!need_save())
                 return;
@@ -2640,6 +2876,60 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     }
 
     /**
+     * Opens and loads a project file from a resource path.
+     * 
+     * @param resourcePath the path of the resource to open
+     * @return true if the file was successfully loaded, false otherwise
+     */
+    public boolean openResourceFile(String resourcePath) {
+        try {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            InputStream is = cl.getResourceAsStream(resourcePath);
+            if (is == null) return false;
+
+            boolean r = true;
+            if (2 == this.Clear()) // cancel option.
+                return false;
+
+            dp.clearAll();
+            String fileName = resourcePath.substring(resourcePath.lastIndexOf('/') + 1);
+            dp.setName(fileName);
+
+            DataInputStream in = new DataInputStream(is);
+            r = dp.Load(in);
+
+            if (CMisc.version_load_now < 0.035) {
+                this.showppanel(true);
+            } else if (CMisc.version_load_now == 0.035) {
+                MNode n = new MNode();
+                n.Load(in, dp);
+                pprove.loadMTree(n);
+                this.showppanel(false);
+            } else if (CMisc.version_load_now >= 0.036) {
+                pprove.LoadProve(in);
+            }
+            in.close();
+            dp.stopUndoFlash();
+            dp.reCalculate();
+
+            CMisc.version_load_now = 0;
+            CMisc.onFileSavedOrLoaded();
+            updateTitle();
+            return r;
+        } catch (IOException ee) {
+            StackTraceElement[] tt = ee.getStackTrace();
+
+            String s = ee.toString();
+            for (int i = 0; i < tt.length; i++) {
+                if (tt[i] != null)
+                    s += tt[i].toString() + "\n";
+            }
+            System.out.println(s);
+        }
+        return false;
+    }
+
+    /**
      * Adds right-side buttons to the provided tool bar.
      *
      * @param toolBar the tool bar to which the right-side buttons are added
@@ -3547,40 +3837,101 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     }
 
     /**
-     * Opens the specified URL in the system's default web browser.
+     * Checks if the application is running in a JAR file (including CheerpJ web environment).
+     *
+     * @return true if running from a JAR file, false otherwise.
+     */
+    public static boolean isRunningFromJar() {
+        URL resource = GExpert.class.getResource("/wprover/GExpert.class");
+        return resource != null && resource.toString().startsWith("jar:");
+    }
+
+    /**
+     * Checks if the application is running in a CheerpJ web environment.
+     * 
+     * @return true if likely running in CheerpJ, false otherwise.
+     */
+    public static boolean isRunningInCheerpJ() {
+        // check if running in a browser environment (CheerpJ)
+        try {
+            // cheerpJ sets this property
+            return System.getProperty("java.vm.name", "").contains("CheerpJ") || 
+                   // alternative detection method
+                   (isRunningFromJar() && System.getProperty("browser", "false").equals("true"));
+        } catch (Exception e) {
+            // if we can't determine, assume not in CheerpJ
+            return false;
+        }
+    }
+
+    /**
+     * Opens the specified URL in the system's default web browser or handles it appropriately
+     * for the current environment (desktop or web/CheerpJ).
      *
      * @param url the URL to open.
      */
     public static void openURL(String url) {
-        String osName = System.getProperty("os.name");
-        try {
-            if (osName.startsWith("Mac OS")) {
-                Class fileMgr = Class.forName("com.apple.eio.FileManager");
-                Method openURL = fileMgr.getDeclaredMethod("openURL",
-                        new Class[]{String.class});
-                openURL.invoke(null, new Object[]{url});
-            } else if (osName.startsWith("Windows")) {
-                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
-            } else { //assume Unix or Linux
-                String[] browsers = {
-                        "firefox", "opera", "konqueror", "epiphany",
-                        "mozilla", "netscape"};
-                String browser = null;
-                for (int count = 0; count < browsers.length && browser == null;
-                     count++) {
-                    if (Runtime.getRuntime().exec(new String[]{"which", browsers[count]}).waitFor() == 0) {
-                        browser = browsers[count];
+        // check if we're running in CheerpJ/web environment
+        if (isRunningInCheerpJ()) {
+            try {
+                // for file:/// URLs in CheerpJ, we need to handle them differently
+                if (url.startsWith("file:///")) {
+                    // convert file:/// URL to a relative path for resource loading
+                    String relativePath = url.substring(url.indexOf("/help/"));
+
+                    // in CheerpJ, we can use JavaScript to open the URL in a new tab/window
+                    // this requires the resources to be available at the relative path from the web root
+                    String jsCode = "window.open('" + relativePath + "', '_blank');";
+
+                    // execute JavaScript via CheerpJ's JavaScript bridge
+                    Class<?> jsClass = Class.forName("com.leaningtech.client.Global");
+                    Method evalMethod = jsClass.getMethod("eval", String.class);
+                    evalMethod.invoke(null, jsCode);
+                    return;
+                }
+
+                // for regular URLs (http, https), use JavaScript to open them
+                String jsCode = "window.open('" + url + "', '_blank');";
+                Class<?> jsClass = Class.forName("com.leaningtech.client.Global");
+                Method evalMethod = jsClass.getMethod("eval", String.class);
+                evalMethod.invoke(null, jsCode);
+            } catch (Exception e) {
+                // fallback to showing a message with the URL if JavaScript bridge fails
+                JOptionPane.showMessageDialog(null, 
+                    GExpert.getTranslationViaGettext("Please open this URL in your browser: {0}", url));
+            }
+        } else {
+            // original desktop behavior
+            String osName = System.getProperty("os.name");
+            try {
+                if (osName.startsWith("Mac OS")) {
+                    Class fileMgr = Class.forName("com.apple.eio.FileManager");
+                    Method openURL = fileMgr.getDeclaredMethod("openURL",
+                            new Class[]{String.class});
+                    openURL.invoke(null, new Object[]{url});
+                } else if (osName.startsWith("Windows")) {
+                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+                } else { //assume Unix or Linux
+                    String[] browsers = {
+                            "firefox", "opera", "konqueror", "epiphany",
+                            "mozilla", "netscape"};
+                    String browser = null;
+                    for (int count = 0; count < browsers.length && browser == null;
+                         count++) {
+                        if (Runtime.getRuntime().exec(new String[]{"which", browsers[count]}).waitFor() == 0) {
+                            browser = browsers[count];
+                        }
+                    }
+                    if (browser == null) {
+                        throw new Exception("Could not find web browser");
+                    } else {
+                        Runtime.getRuntime().exec(new String[]{browser, url});
                     }
                 }
-                if (browser == null) {
-                    throw new Exception("Could not find web browser");
-                } else {
-                    Runtime.getRuntime().exec(new String[]{browser, url});
-                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, GExpert.getTranslationViaGettext("Can not open link {0}", url) + "\n" +
+                        e.getMessage());
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, GExpert.getTranslationViaGettext("Can not open link {0}", url) + "\n" +
-                    e.getMessage());
         }
     }
 
@@ -4041,4 +4392,3 @@ class TStateButton extends JToggleButton {
         super.setSelected(b);
     }
 }
-

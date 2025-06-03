@@ -161,18 +161,24 @@ application {
 }
 
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     manifest {
         attributes(
                 'Main-Class': application.mainClass
         )
     }
     mustRunAfter "msgFmtAll"
+    //to create an uber jar with all dependencies included
+    from {
+        configurations.runtimeClasspath.collect{it.isDirectory() ? it:zipTree(it)}
+    }
 }
 
 run {
     mustRunAfter "msgFmtAll"
-    File runningDir = new File('src/docs')
-    workingDir = runningDir
+//    File runningDir = new File('src/main/resources/docs')
+//    workingDir = runningDir
 }
 
 javadoc {
@@ -183,7 +189,7 @@ javapackager {
     description = "JGEX combines dynamic geometry software, automated geometry theorem prover with a visually dynamic approach for presenting proofs."
     mainClass = applicationMainClass
     bundleJre = true
-    additionalResources = [ file ("src/docs/examples"), file ("src/docs/help"), file("src/docs/import"), file("src/docs/rules") ]
+    additionalResources = [ file ("src/main/resources/docs/examples"), file ("src/main/resources/docs/help"), file("src/main/resources/docs/import"), file("src/main/resources/docs/rules") ]
     organizationName = "JGEX Contributors"
     url = "https://github.com/kovzol/Java-Geometry-Expert"
     organizationEmail = "jgex@googlegroups.com"
@@ -220,7 +226,7 @@ task runGproverMain(type: JavaExec) {
     description "A command line based test for the GProver, checking all input examples."
     mustRunAfter "msgFmtAll"
     classpath = sourceSets.main.runtimeClasspath
-    File runningDir = new File('src/docs')
+    File runningDir = new File('src/main/resources/docs')
     workingDir = runningDir
     mainClass = 'gprover.Main'
 }
@@ -229,7 +235,7 @@ task runGproverMain2(type: JavaExec) {
     description "A test for the GProver that allows to select a .gex file for checking."
     mustRunAfter "msgFmtAll"
     classpath = sourceSets.main.runtimeClasspath
-    File runningDir = new File('src/docs')
+    File runningDir = new File('src/main/resources/docs')
     workingDir = runningDir
     mainClass = 'gprover.Main2'
 }
