@@ -1,7 +1,17 @@
 package gprover;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.Vector;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * The main class for the GProver application.
@@ -30,11 +40,11 @@ public class Main {
         try {
             String user_directory = System.getProperty("user.dir");
             String sp = File.separator;
+            // examples are displayed through this method
             String dr = user_directory + sp + "examples";
-            File file = new File(dr);
 
             Vector vm = new Vector();
-            readThems(file, vm);
+            readThems(dr, vm);
             for (int id = 0; id < vm.size(); id++) {
                 GTerm gt = (GTerm) vm.get(id);
                 System.out.print(id + " : " + gt.getName() + "\t\t");
@@ -96,7 +106,7 @@ public class Main {
             Cm.print("Total = " + vm.size() + ";  t =  " + t + ",  f = " + f + ", n = " + n);
             long t2 = System.currentTimeMillis();
             Cm.print("Time = " + (t2 - t1) / 1000.0);
-        } catch (IOException ee) {
+        } catch (IOException | URISyntaxException ee) {
             System.err.println("IOException: " + ee);
         }
     }
@@ -108,27 +118,60 @@ public class Main {
      * @param v the vector to store the geometric terms
      * @throws IOException if an I/O error occurs
      */
-    static void readThems(File file, Vector v) throws IOException {
-        File[] sf = file.listFiles(new FileFilter() {
-            public boolean accept(File pathname) {
-                String nm = pathname.getName();
-                return !(nm.contains("."));
-            }
-        });
-        for (int i = 0; i < sf.length; i++) {
-            if (sf[i].isDirectory())
-                readThems(sf[i], v);
-            else {
-                BufferedReader in = new BufferedReader(new FileReader(sf[i]));
+    /**
+     * Recursively read all “.gex”‐style term files from a resource directory on the classpath.
+     */
+    static void readThems(String resourceDir, Vector<GTerm> v) throws IOException, URISyntaxException {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        URL dirUrl = cl.getResource(resourceDir + "/");
+        if (dirUrl == null) return;
 
-                while (true) {
-                    GTerm tm = new GTerm();
-                    if (!tm.readAterm(in)) break;
-                    tm.setName(sf[i].getName());
-                    v.add(tm);
+        if (dirUrl.getProtocol().equals("file")) {
+            // running in IDE or exploded build
+            Path folder = Paths.get(dirUrl.toURI());
+            try (DirectoryStream<Path> ds = Files.newDirectoryStream(folder)) {
+                for (Path p : ds) {
+                    String nm = p.getFileName().toString();
+                    if (Files.isDirectory(p)) {
+                        readThems(resourceDir + "/" + nm, v);
+                    } else {
+                        loadTerms(cl.getResourceAsStream(resourceDir + "/" + nm), nm, v);
+                    }
                 }
-                in.close();
+            }
+        } else if (dirUrl.getProtocol().equals("jar")) {
+            // running from JAR
+            String path = dirUrl.getPath();
+            String jarPath = path.substring(path.indexOf("file:" ) + 5, path.indexOf("!"));
+            try (JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"))) {
+                String prefix = resourceDir + "/";
+                Enumeration<JarEntry> en = jar.entries();
+                while (en.hasMoreElements()) {
+                    JarEntry entry = en.nextElement();
+                    String name = entry.getName();
+                    if (!name.startsWith(prefix) || entry.isDirectory()) continue;
+                    String rel = name.substring(prefix.length());
+                    if (rel.contains("/")) {
+                        String sub = rel.substring(0, rel.indexOf('/'));
+                        readThems(resourceDir + "/" + sub, v);
+                    } else {
+                        loadTerms(cl.getResourceAsStream(name), rel, v);
+                    }
+                }
             }
         }
     }
+
+    private static void loadTerms(InputStream is, String fileName, Vector<GTerm> v) throws IOException {
+        if (is == null) return;
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
+            while (true) {
+                GTerm tm = new GTerm();
+                if (!tm.readAterm(in)) break;
+                tm.setName(fileName);
+                v.add(tm);
+            }
+        }
+    }
+
 }

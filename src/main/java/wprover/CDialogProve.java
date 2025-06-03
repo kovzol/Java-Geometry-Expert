@@ -8,8 +8,17 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.event.PopupMenuEvent;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Vector;
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 /**
  * This class represents a dialog for proving geometric terms.
@@ -99,11 +108,213 @@ class ProvePane extends JPanel
      * Sets the rule list for this panel.
      */
     public void setRuleList() {
-        String user_directory = GExpert.getUserDir();
-        File f = new File(user_directory + "/wprover/rules");
+        String user_directory = GExpert.getUserDir() + "/wprover/rules";
         mrule = new JMenu("-->");
-        addDirectory(mrule, f, "rules");
+        addDirectory(mrule, user_directory);
     }
+
+
+    /**
+     * Populate a JMenu by scanning a folder on the classpath.
+     * @param menu        the menu to fill
+     * @param resourceDir the resource path (e.g. "docs/examples")
+     */
+    public void addDirectory(JMenu menu, String resourceDir) {
+        try {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            URL dirUrl = cl.getResource(resourceDir + "/");
+            if (dirUrl == null) return;
+
+            if (dirUrl.getProtocol().equals("file")) {
+                // running in IDE/Gradle on disk
+                File folder = new File(dirUrl.toURI());
+                File[] files = folder.listFiles();
+                // Sort files using custom comparator
+                Arrays.sort(files, new Comparator<File>() {
+                    @Override
+                    public int compare(File f1, File f2) {
+                        // If both are directories or both are files, use custom ordering
+                        if (f1.isDirectory() == f2.isDirectory()) {
+                            String name1 = f1.getName();
+                            String name2 = f2.getName();
+
+                            // Check if both names start with numbers
+                            if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
+                                // Extract the numeric prefix
+                                String num1 = name1.replaceAll("^(\\d+).*", "$1");
+                                String num2 = name2.replaceAll("^(\\d+).*", "$1");
+
+                                // If numeric parts are different, compare them numerically
+                                if (!num1.equals(num2)) {
+                                    return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                                }
+                            }
+                            // If one name starts with a number and the other doesn't, prioritize the one with number
+                            else if (name1.matches("^\\d+.*")) {
+                                return -1;
+                            }
+                            else if (name2.matches("^\\d+.*")) {
+                                return 1;
+                            }
+
+                            // Otherwise, use alphabetical order
+                            return name1.compareTo(name2);
+                        }
+
+                        // Directories come before files
+                        return f1.isDirectory() ? -1 : 1;
+                    }
+                });
+                for (File f : files) {
+                    handleEntry(menu, resourceDir, f.getName(), f.isDirectory());
+                }
+            } else {
+                // running from JAR(specifically for CheerpJ)
+                String path = resourceDir + "/";
+                try {
+                    // Use JarFile approach to get all entries
+                    URL jarUrl = cl.getResource(path);
+                    if (jarUrl != null) {
+                        String jarPath = jarUrl.toString();
+                        if (jarPath.startsWith("jar:file:")) {
+                            jarPath = jarPath.substring(9, jarPath.indexOf("!"));
+                            try (JarFile jar = new JarFile(jarPath)) {
+                                Enumeration<JarEntry> entries = jar.entries();
+                                // First collect all entries to process
+                                java.util.Map<String, Boolean> processedDirs = new java.util.HashMap<>();
+                                java.util.List<String> filesToProcess = new java.util.ArrayList<String>();
+
+                                while (entries.hasMoreElements()) {
+                                    JarEntry entry = entries.nextElement();
+                                    String entryName = entry.getName();
+
+                                    if (entryName.startsWith(path)) {
+                                        String relativePath = entryName.substring(path.length());
+                                        if (relativePath.isEmpty()) continue;
+
+                                        int slashIndex = relativePath.indexOf('/');
+                                        if (slashIndex == -1) {
+                                            // Direct file in this directory
+                                            filesToProcess.add(relativePath);
+                                        } else {
+                                            // Subdirectory
+                                            String dirName = relativePath.substring(0, slashIndex);
+                                            if (!processedDirs.containsKey(dirName)) {
+                                                processedDirs.put(dirName, true);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Sort directories using custom comparator
+                                java.util.List<String> dirNames = new java.util.ArrayList<>(processedDirs.keySet());
+                                Collections.sort(dirNames, new Comparator<String>() {
+                                    @Override
+                                    public int compare(String name1, String name2) {
+                                        // Check if both names start with numbers
+                                        if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
+                                            // Extract the numeric prefix
+                                            String num1 = name1.replaceAll("^(\\d+).*", "$1");
+                                            String num2 = name2.replaceAll("^(\\d+).*", "$1");
+
+                                            // If numeric parts are different, compare them numerically
+                                            if (!num1.equals(num2)) {
+                                                return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                                            }
+                                        }
+                                        // If one name starts with a number and the other doesn't, prioritize the one with number
+                                        else if (name1.matches("^\\d+.*")) {
+                                            return -1;
+                                        }
+                                        else if (name2.matches("^\\d+.*")) {
+                                            return 1;
+                                        }
+
+                                        // Otherwise, use alphabetical order
+                                        return name1.compareTo(name2);
+                                    }
+                                });
+
+                                // Process directories in sorted order
+                                for (String dirName : dirNames) {
+                                    handleEntry(menu, resourceDir, dirName, true);
+                                }
+
+                                // Sort files using custom comparator
+                                Collections.sort(filesToProcess, new Comparator<String>() {
+                                    @Override
+                                    public int compare(String name1, String name2) {
+                                        // Check if both names start with numbers
+                                        if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
+                                            // Extract the numeric prefix
+                                            String num1 = name1.replaceAll("^(\\d+).*", "$1");
+                                            String num2 = name2.replaceAll("^(\\d+).*", "$1");
+
+                                            // If numeric parts are different, compare them numerically
+                                            if (!num1.equals(num2)) {
+                                                return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                                            }
+                                        }
+                                        // If one name starts with a number and the other doesn't, prioritize the one with number
+                                        else if (name1.matches("^\\d+.*")) {
+                                            return -1;
+                                        }
+                                        else if (name2.matches("^\\d+.*")) {
+                                            return 1;
+                                        }
+
+                                        // Otherwise, use alphabetical order
+                                        return name1.compareTo(name2);
+                                    }
+                                });
+
+                                // Process all files in this directory
+                                for (String fileName : filesToProcess) {
+                                    handleEntry(menu, resourceDir, fileName, false);
+                                }
+                            }
+                        } else {
+                            // Fallback to JarInputStream if jar:file: protocol not available
+                            try (InputStream is = cl.getResourceAsStream(path);
+                                 JarInputStream jin = new JarInputStream(is)) {
+                                JarEntry e;
+                                while ((e = jin.getNextJarEntry()) != null) {
+                                    String name = e.getName();
+                                    if (name.startsWith(path)) {
+                                        String entry = name.substring(path.length());
+                                        if (!entry.isEmpty() && !entry.contains("/")) {
+                                            handleEntry(menu, resourceDir, entry, false);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    // Log the exception but continue processing
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void handleEntry(JMenu menu, String base, String name, boolean isDir) {
+        if (isDir) {
+            JMenu sub = new JMenu(name);
+            menu.add(sub);
+            addDirectory(sub, base + "/" + name);
+        } else if (name.endsWith(".gex")) {
+            String label = name.substring(0, name.length() - 4);
+            JMenuItem item = new JMenuItem(label);
+            item.addActionListener(this);
+            // store the _resource_ path for later loading
+            item.setName(base + "/" + name);
+            menu.add(item);
+        }
+    }
+
 
     /**
      * Adds directories and files to the given menu.
@@ -112,6 +323,7 @@ class ProvePane extends JPanel
      * @param f the directory file
      * @param apath the path of the directory
      */
+    /*
     public void addDirectory(JMenu menu, File f, String apath) {
         if (!f.exists()) return;
         File[] flist = f.listFiles();
@@ -134,7 +346,7 @@ class ProvePane extends JPanel
                 addDirectory(m, flist[i], apath + sp + sn);
             }
         }
-    }
+    }*/
 
     /**
      * Sets the value for the panel.
@@ -447,5 +659,3 @@ class ProvePane extends JPanel
     public void popupMenuCanceled(PopupMenuEvent e) {
     }
 }
-
-
