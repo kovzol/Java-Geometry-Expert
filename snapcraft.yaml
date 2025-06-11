@@ -37,9 +37,14 @@ parts:
     plugin: dump
     source-type: git
     override-build: |
-      snapcraftctl build
-      export JAVAC=/usr/lib/jvm/java-11-openjdk-amd64/bin/javac && \
-      ./gradlew installDist && \
+      JAVAC=/usr/lib/jvm/java-11-openjdk-amd64/bin/javac
+      set +u # ignore unbound variables
+      if [ "$https_proxy" != "" ]; then
+        https_proxy_host=$(echo $https_proxy | cut -d'/' -f3 | cut -d':' -f1)
+        https_proxy_port=$(echo $https_proxy | cut -d'/' -f3 | cut -d':' -f2)
+        gradle_opts="-Dhttp.proxyHost=$https_proxy_host -Dhttp.proxyPort=$https_proxy_port -Dhttps.proxyHost=$https_proxy_host -Dhttps.proxyPort=$https_proxy_port -Djava.net.useSystemProxies=true"
+        fi
+      ./gradlew $gradle_opts installDist && \
       mkdir -p ../install/usr/share/jgex && \
       cp -a build/install/jgex/lib/*.jar ../install/usr/share/jgex && \
       mkdir -p ../install/root && \
