@@ -1,6 +1,6 @@
 #!/bin/bash
-# This script runs all .ggb files from ../docs/import/ggb-benchmarks,
-# proves them via the GDD method and saves the proof tree as .gv and .png in ../docs.
+# This script runs all .ggb files from ../main/resources/docs/import/ggb-benchmarks,
+# proves them via the GDD method and saves the proof tree as .gv and .png in ../main/resources/docs.
 
 # Run this script with
 # xvfb-run -a -s "-screen 0 1280x800x24" ./import-ggb-prove-gdd-export-gv-png
@@ -11,7 +11,7 @@
 # "snap" uses the snapcraft installation and considered therefore faster.
 
 
-BENCHMARKS_FOLDER=../docs/import/ggb-benchmarks # this may be changed on demand
+BENCHMARKS_FOLDER=../main/resources/docs/import/ggb-benchmarks # this may be changed on demand
 TIMEOUT=5 # JGEX forgets to quit sometimes, this timeout ensures proper exit
 
 test -x $BENCHMARKS_FOLDER || {
@@ -61,21 +61,21 @@ for FULLNAME in `find $BENCHMARKS_FOLDER -name '*.ggb' | sort`; do
  GV=$GV_DIR/$NAME.gv
  rm -f $GV # remove a possible successful export from a previous run
  if [ "$1" = "snap" ]; then
-  /bin/time -o ../docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT jgex -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME > ../docs/$NAME.log 2>&1
+  /bin/time -o ../main/resources/docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT jgex -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME > ../main/resources/docs/$NAME.log 2>&1
  else
   pushd ../.. >/dev/null
   RUNTIME=`pwd`/build/install/jgex/bin/Java-Geometry-Expert
-  /bin/time -o src/docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT $RUNTIME -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME > src/docs/$NAME.log 2>&1
+  /bin/time -o src/main/resources/docs/$NAME.txt /usr/bin/timeout -k $((TIMEOUT+1)) $TIMEOUT $RUNTIME -p gdd -o $NAME.gv -x $MYDIR/$FULLNAME > src/main/resources/docs/$NAME.log 2>&1
   popd >/dev/null
   fi
- PROBLEM=`cat ../docs/$NAME.log | grep "Unimplemented\|Unidentified\|Unsupported\|Exception" | grep -v "org.graphper.draw.ExecuteException" | head -1`
+ PROBLEM=`cat ../main/resources/docs/$NAME.log | grep "Unimplemented\|Unidentified\|Unsupported\|Exception" | grep -v "org.graphper.draw.ExecuteException" | head -1`
  test -s $GV && {
   MD5SUM=`md5sum $GV | cut -f1 -d" "`
   if [ "$MD5SUM" = "d872444bcef19cb5462bb9a4fb4e9fb3" -o "$MD5SUM" = "3c964068bf7b811e7570449adc59af0e" -o "$MD5SUM" = "dd5ece2abd55b6f9b27df4df90e66fdf" ]; then
    echo -e "$WARNING_COLOR$NAME unsuccessful: empty gv tree, $PROBLEM$RESUME_COLOR"
    BAD=$((BAD+1))
   else
-   dot -Tpng $GV > ../docs/$NAME.png
+   dot -Tpng $GV > ../main/resources/docs/$NAME.png
    LENGTH=`cat $GV | wc -l`
    echo -e "$CORRECT_COLOR$NAME successful: $LENGTH lines of gv output$RESUME_COLOR"
    GOOD=$((GOOD+1))

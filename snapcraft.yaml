@@ -1,8 +1,8 @@
 name: jgex
 architectures:
   - build-on: amd64
-base: core18
-version: '0.86'
+base: core20
+version: '0.87'
 summary: Java Geometry Expert
 description: |
   JGEX combines dynamic geometry software,
@@ -16,11 +16,11 @@ confinement: strict
 apps:
   jgex:
     extensions:
-      - gnome-3-28
-    command: $SNAP/bin/jgex
+      - gnome-3-38
+    command: bin/jgex
     environment:
       JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
-      PATH: $JAVA_HOME/jre/bin:$PATH
+      PATH: $JAVA_HOME/bin:$PATH
       JAVA_OPTS: -Djava.util.prefs.userRoot="$SNAP_USER_DATA"
       LIBGL_DRIVERS_PATH: $SNAP/usr/lib/x86_64-linux-gnu/dri
       LC_ALL: C.UTF-8
@@ -34,24 +34,24 @@ parts:
   jgex:
     build-packages: [gettext, openjdk-11-jdk]
     source: https://github.com/kovzol/Java-Geometry-Expert.git
-    plugin: gradle
+    plugin: dump
     source-type: git
     override-build: |
       snapcraftctl build
-      ./gradlew installDist
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/jgex
-      cp -a build/install/jgex/lib/*.jar $SNAPCRAFT_PART_INSTALL/usr/share/jgex
-      mkdir -p $SNAPCRAFT_PART_INSTALL/root
-      cp -a build/install/jgex/bin/examples $SNAPCRAFT_PART_INSTALL/root
-      cp -a build/install/jgex/bin/help $SNAPCRAFT_PART_INSTALL/root
-      cp -a build/install/jgex/bin/import $SNAPCRAFT_PART_INSTALL/root
-      cp -a build/install/jgex/bin/rules $SNAPCRAFT_PART_INSTALL/root
-      echo "#!/bin/bash" > $SNAPCRAFT_PART_INSTALL/bin/jgex
-      echo "JGEX_WD=~/.jgex # working directory" >> $SNAPCRAFT_PART_INSTALL/bin/jgex
-      echo "test -d \$JGEX_WD || (mkdir -p \$JGEX_WD; cd \$SNAP/root; cp -a -u * \$JGEX_WD)" >> $SNAPCRAFT_PART_INSTALL/bin/jgex
-      echo "cd \$JGEX_WD" >> $SNAPCRAFT_PART_INSTALL/bin/jgex
-      echo "java -cp \$SNAP/usr/share/jgex/\\* wprover.GExpert \$*" >> $SNAPCRAFT_PART_INSTALL/bin/jgex
-      chmod 755 $SNAPCRAFT_PART_INSTALL/bin/jgex
+      ./gradlew installDist && \
+      mkdir -p ../install/usr/share/jgex && \
+      cp -a build/install/jgex/lib/*.jar ../install/usr/share/jgex && \
+      mkdir -p ../install/root && \
+      cp -a build/install/jgex/bin/examples ../install/root && \
+      cp -a build/install/jgex/bin/help ../install/root && \
+      cp -a build/install/jgex/bin/import ../install/root && \
+      cp -a build/install/jgex/bin/rules ../install/root && \
+      echo "#!/bin/bash" > ../install/bin/jgex && \
+      echo "JGEX_WD=~/.jgex # working directory" >> ../install/bin/jgex && \
+      echo "test -d \$JGEX_WD || (mkdir -p \$JGEX_WD; cd \$SNAP/root; cp -a -u * \$JGEX_WD)" >> ../install/bin/jgex && \
+      echo "cd \$JGEX_WD" >> ../install/bin/jgex && \
+      echo "java -cp \$SNAP/usr/share/jgex/\\* wprover.GExpert \$*" >> ../install/bin/jgex && \
+      chmod 755 ../install/bin/jgex
 
     stage-packages:
       - bash
@@ -72,3 +72,4 @@ parts:
       snapcraftctl prime
       rm -f usr/lib/jvm/java-11-openjdk-*/lib/security/blacklisted.certs
       rm -fr jar
+

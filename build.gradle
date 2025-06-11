@@ -31,7 +31,7 @@ apply plugin: 'io.github.fvarrui.javapackager.plugin'
 
 // Global settings:
 group = 'io.github.kovzol'
-ext.softwareVersion = '0.86'
+ext.softwareVersion = '0.87'
 
 // These are default settings based on Gradle's standard layout:
 ext.poDir = 'src/main/po'

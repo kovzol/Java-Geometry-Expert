@@ -6,7 +6,7 @@ package wprover;
  */
 public class Version {
 
-    private static String sversion = "0.86";
+    private static String sversion = "0.87";
     private static String data = "2024-11-26";
     private static String project = "Geometry Expert";
 
