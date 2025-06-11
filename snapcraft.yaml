@@ -38,6 +38,7 @@ parts:
     source-type: git
     override-build: |
       snapcraftctl build
+      export JAVAC=/usr/lib/jvm/java-11-openjdk-amd64/bin/javac && \
       ./gradlew installDist && \
       mkdir -p ../install/usr/share/jgex && \
       cp -a build/install/jgex/lib/*.jar ../install/usr/share/jgex && \
