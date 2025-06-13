@@ -1178,7 +1178,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         addImageToItem(item);
         item = addAMenu(menu, "Save GDD Proof as GraphViz File", null, this);
         addImageToItem(item);
-
+        item = addAMenu(menu, "Open GDD Proof in GraphViz Online", null, this);
+        addImageToItem(item);
         menu.addSeparator();
         item = addAMenu(menu, "Print", "Print the client area", 'P', this);
         addImageToItem(item, "print");
@@ -1765,6 +1766,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
 
         } else if (command.equalsIgnoreCase("Save GDD Proof as GraphViz File")) {
             this.saveGDDProofAsGraphViz(src);
+        } else if (command.equalsIgnoreCase("Open GDD Proof in GraphViz Online")) {
+            this.openGDDProofGraphVizOnline();
         } else if (command.equals("Save as Text")) {
             if (!need_save())
                 return;
@@ -2235,6 +2238,14 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         } catch (Exception ee) {
             ee.printStackTrace();
         }
+    }
+
+    /**
+     * Opens the GDD proof as a GraphViz file in GraphViz Online.
+     */
+    private void openGDDProofGraphVizOnline() {
+        openURL("https://dreampuf.github.io/GraphvizOnline/?engine=dot#"
+                + PanelProve.graphvizProgram);
     }
 
     /**
