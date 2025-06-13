@@ -1674,6 +1674,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
         ret += ", style = \"" + s + "\", shape = " + f + ", fillcolor = \"" + c + "\"];\n";
         return ret;
+        return ret; // an intentional error to check GitHub Actions
     }
 
     /**
