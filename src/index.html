@@ -1,19 +1,29 @@
-<!-- this is the initialization file needed to run this application in the browser through/with CheerpJ -->
+<!-- This is the initialization file needed to run this application in the browser through/with CheerpJ -->
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8" />
-    <title>JGEX (CheerpJ version)</title>
+    <title>Java Geometry Expert CheerpJ version</title>
     <script src="https://cjrtnc.leaningtech.com/4.1/loader.js"></script>
-</head>
-<body>
-<script>
-    (async function () {
-        await cheerpjInit({ version: 11 , enableDebug: true});
-        cheerpjCreateDisplay(1400, 800);
-        await cheerpjRunJar("/app/Java-Geometry-Expert-0.87.jar");
-        <!-- TODO: Change the version number by copying it from the Java source dynamically. -->
-    })();
-</script>
-</body>
+  </head>
+  <body>
+    <script>
+      function execCb(cmdPath, argsArray) {
+        // Check for the xdg-open command
+        if (cmdPath == "xdg-open") {
+          // Open a new browser window
+          // argsArray will be "http://www.example.com" in our case
+          window.open(argsArray, "_blank");
+        }
+      }
+
+      (async function () {
+        await cheerpjInit({ version: 11, enableDebug: true, execCallback: execCb });
+        cheerpjCreateDisplay(1400, 650);
+        // modify this accordingly:
+        await cheerpjRunJar("/app/zoltan/jgex-cheerpj-dev/Java-Geometry-Expert-0.87.jar");
+        // TODO: Change the version number by copying it from the Java source dynamically.
+      })();
+    </script>
+  </body>
 </html>

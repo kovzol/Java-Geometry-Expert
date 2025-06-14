@@ -3892,6 +3892,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             try {
                 // for file:/// URLs in CheerpJ, we need to handle them differently
                 if (url.startsWith("file:///")) {
+                    // FIXME: This does not work at the moment.
                     // convert file:/// URL to a relative path for resource loading
                     String relativePath = url.substring(url.indexOf("/help/"));
 
@@ -3907,10 +3908,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                 }
 
                 // for regular URLs (http, https), use JavaScript to open them
-                String jsCode = "window.open('" + url + "', '_blank');";
-                Class<?> jsClass = Class.forName("com.leaningtech.client.Global");
-                Method evalMethod = jsClass.getMethod("eval", String.class);
-                evalMethod.invoke(null, jsCode);
+                String command = "xdg-open " + url;
+                Runtime.getRuntime().exec(command);
             } catch (Exception e) {
                 // fallback to showing a message with the URL if JavaScript bridge fails
                 JOptionPane.showMessageDialog(null, 
