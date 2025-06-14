@@ -3624,6 +3624,12 @@ msgstr "Rozmiar"
 msgid "Date Modified"
 msgstr "Data modyfikacji"
 
+msgid "No GDD proof has been achieved yet"
+msgstr ""
+
+msgid "Open GDD Proof in GraphViz Online"
+msgstr ""
+
 #~ msgid "Set One"
 #~ msgstr "Zbiór Jeden"
 

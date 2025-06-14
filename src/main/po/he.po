@@ -3601,6 +3601,12 @@ msgstr "גודל"
 msgid "Date Modified"
 msgstr "שונה לאחרונה בתאריך"
 
+msgid "No GDD proof has been achieved yet"
+msgstr ""
+
+msgid "Open GDD Proof in GraphViz Online"
+msgstr ""
+
 #~ msgid "Set One"
 #~ msgstr "קבוצה 1"
 

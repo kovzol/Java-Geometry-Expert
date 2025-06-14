@@ -3499,3 +3499,9 @@ msgstr "Zuletzt geändert am"
 
 #~ msgid "Freezed"
 #~ msgstr "Eingefriert"
+
+msgid "No GDD proof has been achieved yet"
+msgstr "Noch kein GDD-Beweis wurde generiert"
+
+msgid "Open GDD Proof in GraphViz Online"
+msgstr "GDD-Beweis in GraphViz Online öffnen"

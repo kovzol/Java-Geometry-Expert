@@ -3587,6 +3587,12 @@ msgstr "Veličina fonta"
 msgid "Date Modified"
 msgstr "Datum promene"
 
+msgid "No GDD proof has been achieved yet"
+msgstr ""
+
+msgid "Open GDD Proof in GraphViz Online"
+msgstr ""
+
 #~ msgid "Set One"
 #~ msgstr "Podesi jedan"
 

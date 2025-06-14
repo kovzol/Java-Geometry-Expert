@@ -3580,6 +3580,12 @@ msgstr "字体大小"
 msgid "Date Modified"
 msgstr ""
 
+msgid "No GDD proof has been achieved yet"
+msgstr ""
+
+msgid "Open GDD Proof in GraphViz Online"
+msgstr ""
+
 #~ msgid "Set One"
 #~ msgstr "集合一"
 

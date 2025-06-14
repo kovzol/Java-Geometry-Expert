@@ -3548,6 +3548,12 @@ msgstr "Méret"
 msgid "Date Modified"
 msgstr "Módosítás dátuma"
 
+msgid "No GDD proof has been achieved yet"
+msgstr "Még nem készült GDD-bizonyítás"
+
+msgid "Open GDD Proof in GraphViz Online"
+msgstr "A GDD-bizonyítás megnyitása GraphViz Online-ban"
+
 #~ msgid "Set One"
 #~ msgstr "1. halmaz"
 

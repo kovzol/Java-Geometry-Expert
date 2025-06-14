@@ -3593,6 +3593,13 @@ msgstr "Taille"
 msgid "Date Modified"
 msgstr "Date de modification"
 
+msgid "No GDD proof has been achieved yet"
+msgstr ""
+
+#, fuzzy
+msgid "Open GDD Proof in GraphViz Online"
+msgstr "Sauvegarder la preuve GDD comme fichier GraphViz"
+
 #~ msgid "Set One"
 #~ msgstr "Ensemble un"
 

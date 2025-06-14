@@ -3541,6 +3541,12 @@ msgstr "اندازه فونت"
 msgid "Date Modified"
 msgstr ""
 
+msgid "No GDD proof has been achieved yet"
+msgstr ""
+
+msgid "Open GDD Proof in GraphViz Online"
+msgstr ""
+
 #~ msgid "Set One"
 #~ msgstr "مجموعه یک"
 

@@ -2243,7 +2243,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
      * Opens the GDD proof as a GraphViz file in GraphViz Online.
      */
     private void openGDDProofGraphVizOnline() {
-        try {
+        if (PanelProve.graphvizProgram.length() == 0) {
+            JOptionPane.showMessageDialog(null,
+                    GExpert.getTranslationViaGettext("No GDD proof has been achieved yet"));
+        } else try {
             URL url = new URL("https://dreampuf.github.io/GraphvizOnline/?engine=dot#" + PanelProve.graphvizProgram);
             URI uri = new URI(url.getProtocol(), url.getUserInfo(), IDN.toASCII(url.getHost()), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
             String correctEncodedURL = uri.toASCIIString();
