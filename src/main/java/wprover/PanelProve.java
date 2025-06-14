@@ -1902,7 +1902,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     // This may duplicate some entries, FIXME:
                     hypotheses += "\"" + st + "\" [ fillcolor = \"" + COLOR_HYPOTHESIS
                             + "\", shape = " + FORM_HYPOTHESIS + ", style = \"" + STYLE_HYPOTHESIS
-                            + "\", tooltip = \" \" ];\n";
+                            + "\", tooltip = \" \"];\n";
                 }
             }
             Cond leaf = searchSubCond(root, num);

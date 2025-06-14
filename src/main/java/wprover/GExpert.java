@@ -27,8 +27,7 @@ import java.io.*;
 import java.awt.dnd.*;
 import java.awt.datatransfer.*;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -2244,8 +2243,14 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
      * Opens the GDD proof as a GraphViz file in GraphViz Online.
      */
     private void openGDDProofGraphVizOnline() {
-        openURL("https://dreampuf.github.io/GraphvizOnline/?engine=dot#"
-                + PanelProve.graphvizProgram);
+        try {
+            URL url = new URL("https://dreampuf.github.io/GraphvizOnline/?engine=dot#" + PanelProve.graphvizProgram);
+            URI uri = new URI(url.getProtocol(), url.getUserInfo(), IDN.toASCII(url.getHost()), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+            String correctEncodedURL = uri.toASCIIString();
+            openURL(correctEncodedURL);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
