@@ -30,7 +30,10 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
     public AboutDialog(GExpert f) {
         gx = f;
 
-        this.setBorder(BorderFactory.createCompoundBorder(new DropShadowBorder(), BorderFactory.createLineBorder(color, 4)));
+        if (!GExpert.isRunningInCheerpJ()) {
+            // FIXME: This does not work properly in CheerpJ.
+            this.setBorder(BorderFactory.createCompoundBorder(new DropShadowBorder(), BorderFactory.createLineBorder(color, 4)));
+        }
         JPanel panel = new JPanel();
         panel.setBackground(color);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
