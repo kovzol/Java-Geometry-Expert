@@ -34,9 +34,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.*;
 
@@ -807,8 +809,49 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
      * @param menu the menu to which the example files will be added
      */
     void addAllExamples(JMenu menu) {
-        addDirectory(menu, "docs/examples");
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream("examples.txt")) {
+            if (in == null) {
+                return;
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            List<String> paths = reader.lines().collect(Collectors.toList());
+            Map<String, JMenu> menuMap = new HashMap<>();
+            menuMap.put("", menu); // root
+
+            for (String path : paths) {
+                if (!path.endsWith(".gex")) continue;
+
+                String[] parts = path.split("/");
+                String filename = parts[parts.length - 1];
+                String label = filename.substring(0, filename.length() - 4);
+
+                // Create submenus if needed
+                String currentPath = "";
+                JMenu parent = menu;
+                for (int i = 0; i < parts.length - 1; i++) {
+                    currentPath = currentPath.isEmpty() ? parts[i] : currentPath + "/" + parts[i];
+                    if (!menuMap.containsKey(currentPath)) {
+                        JMenu submenu = new JMenu(parts[i]);
+                        menuMap.put(currentPath, submenu);
+                        parent.add(submenu);
+                    }
+                    parent = menuMap.get(currentPath);
+                }
+
+                JMenuItem item = new JMenuItem(label);
+                item.setActionCommand("example");
+                item.setName("docs/examples/" + path); // used for loading
+                item.setToolTipText(path);
+                item.addActionListener(this);
+                parent.add(item);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * Populate a JMenu by scanning a folder on the classpath.
