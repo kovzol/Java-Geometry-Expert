@@ -817,11 +817,13 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
     void addDirectory(JMenu menu, String resourceDir) {
         try {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            URL dirUrl = cl.getResource(resourceDir + "/");
-            if (dirUrl == null) return;
+            try {
+                URL dirUrl = cl.getResource(resourceDir + "/");
+                if (dirUrl == null) return;
 
-            if (dirUrl.getProtocol().equals("file")) {
+                // 1. Assume first that we are
                 // running in IDE/Gradle on disk
+                // if (dirUrl.getProtocol().equals("file")) ...
                 File folder = new File(dirUrl.toURI());
                 File[] files = folder.listFiles();
                 // Sort files using custom comparator
@@ -863,134 +865,147 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                 for (File f : files) {
                     handleEntry(menu, resourceDir, f.getName(), f.isDirectory());
                 }
-            } else {
-                // running from JAR(specifically for CheerpJ)
-                String path = resourceDir + "/";
+            if (files.length > 0) {
+                // we assume that at least one file was found
+                return; // so no further work is needed
+            }
+            } catch (Exception ex) {
+                // Problem when getting URL.
+            }
+
+            // 2. assume that running from JAR (specifically for CheerpJ)
+            String path = resourceDir + "/";
+            try {
+                // Use JarFile approach to get all entries
                 try {
-                    // Use JarFile approach to get all entries
-                    URL jarUrl = cl.getResource(path);
-                    if (jarUrl != null) {
-                        String jarPath = jarUrl.toString();
-                        if (jarPath.startsWith("jar:file:")) {
-                            jarPath = jarPath.substring(9, jarPath.indexOf("!"));
-                            try (JarFile jar = new JarFile(jarPath)) {
-                                Enumeration<JarEntry> entries = jar.entries();
-                                // first collect all entries to process
-                                java.util.Map<String, Boolean> processedDirs = new java.util.HashMap<>();
-                                java.util.List<String> filesToProcess = new java.util.ArrayList<String>();
+                        URL jarUrl = cl.getResource(path);
+                        if (jarUrl != null) {
+                            String jarPath = jarUrl.toString();
+                            if (jarPath.startsWith("jar:file:")) {
+                                jarPath = jarPath.substring(9, jarPath.indexOf("!"));
+                                jarPath = jarPath.replace("%20", " "); // fix path
+                                try (JarFile jar = new JarFile(jarPath)) {
+                                    Enumeration<JarEntry> entries = jar.entries();
+                                    // first collect all entries to process
+                                    java.util.Map<String, Boolean> processedDirs = new java.util.HashMap<>();
+                                    java.util.List<String> filesToProcess = new java.util.ArrayList<String>();
 
-                                while (entries.hasMoreElements()) {
-                                    JarEntry entry = entries.nextElement();
-                                    String entryName = entry.getName();
+                                    while (entries.hasMoreElements()) {
+                                        JarEntry entry = entries.nextElement();
+                                        String entryName = entry.getName();
 
-                                    if (entryName.startsWith(path)) {
-                                        String relativePath = entryName.substring(path.length());
-                                        if (relativePath.isEmpty()) continue;
+                                        if (entryName.startsWith(path)) {
+                                            String relativePath = entryName.substring(path.length());
+                                            if (relativePath.isEmpty()) continue;
 
-                                        int slashIndex = relativePath.indexOf('/');
-                                        if (slashIndex == -1) {
-                                            filesToProcess.add(relativePath);
-                                        } else {
-                                            // subdirectory
-                                            String dirName = relativePath.substring(0, slashIndex);
-                                            if (!processedDirs.containsKey(dirName)) {
-                                                processedDirs.put(dirName, true);
+                                            int slashIndex = relativePath.indexOf('/');
+                                            if (slashIndex == -1) {
+                                                filesToProcess.add(relativePath);
+                                            } else {
+                                                // subdirectory
+                                                String dirName = relativePath.substring(0, slashIndex);
+                                                if (!processedDirs.containsKey(dirName)) {
+                                                    processedDirs.put(dirName, true);
+                                                }
                                             }
                                         }
                                     }
-                                }
 
-                                // Sort directories using custom comparator
-                                java.util.List<String> dirNames = new java.util.ArrayList<>(processedDirs.keySet());
-                                Collections.sort(dirNames, new Comparator<String>() {
-                                    @Override
-                                    public int compare(String name1, String name2) {
-                                        // Check if both names start with numbers
-                                        if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
-                                            // Extract the numeric prefix
-                                            String num1 = name1.replaceAll("^(\\d+).*", "$1");
-                                            String num2 = name2.replaceAll("^(\\d+).*", "$1");
+                                    // Sort directories using custom comparator
+                                    java.util.List<String> dirNames = new java.util.ArrayList<>(processedDirs.keySet());
+                                    Collections.sort(dirNames, new Comparator<String>() {
+                                        @Override
+                                        public int compare(String name1, String name2) {
+                                            // Check if both names start with numbers
+                                            if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
+                                                // Extract the numeric prefix
+                                                String num1 = name1.replaceAll("^(\\d+).*", "$1");
+                                                String num2 = name2.replaceAll("^(\\d+).*", "$1");
 
-                                            // If numeric parts are different, compare them numerically
-                                            if (!num1.equals(num2)) {
-                                                return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                                                // If numeric parts are different, compare them numerically
+                                                if (!num1.equals(num2)) {
+                                                    return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                                                }
                                             }
-                                        }
-                                        // If one name starts with a number and the other doesn't, prioritize the one with number
-                                        else if (name1.matches("^\\d+.*")) {
-                                            return -1;
-                                        }
-                                        else if (name2.matches("^\\d+.*")) {
-                                            return 1;
-                                        }
-
-                                        // Otherwise, use alphabetical order
-                                        return name1.compareTo(name2);
-                                    }
-                                });
-
-                                // Process directories in sorted order
-                                for (String dirName : dirNames) {
-                                    handleEntry(menu, resourceDir, dirName, true);
-                                }
-
-                                // Sort files using custom comparator
-                                Collections.sort(filesToProcess, new Comparator<String>() {
-                                    @Override
-                                    public int compare(String name1, String name2) {
-                                        // Check if both names start with numbers
-                                        if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
-                                            // Extract the numeric prefix
-                                            String num1 = name1.replaceAll("^(\\d+).*", "$1");
-                                            String num2 = name2.replaceAll("^(\\d+).*", "$1");
-
-                                            // If numeric parts are different, compare them numerically
-                                            if (!num1.equals(num2)) {
-                                                return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                                            // If one name starts with a number and the other doesn't, prioritize the one with number
+                                            else if (name1.matches("^\\d+.*")) {
+                                                return -1;
                                             }
-                                        }
-                                        // If one name starts with a number and the other doesn't, prioritize the one with number
-                                        else if (name1.matches("^\\d+.*")) {
-                                            return -1;
-                                        }
-                                        else if (name2.matches("^\\d+.*")) {
-                                            return 1;
-                                        }
+                                            else if (name2.matches("^\\d+.*")) {
+                                                return 1;
+                                            }
 
-                                        // Otherwise, use alphabetical order
-                                        return name1.compareTo(name2);
+                                            // Otherwise, use alphabetical order
+                                            return name1.compareTo(name2);
+                                        }
+                                    });
+
+                                    // Process directories in sorted order
+                                    for (String dirName : dirNames) {
+                                        handleEntry(menu, resourceDir, dirName, true);
                                     }
-                                });
 
-                                // process all files in this directory
-                                for (String fileName : filesToProcess) {
-                                    handleEntry(menu, resourceDir, fileName, false);
+                                    // Sort files using custom comparator
+                                    Collections.sort(filesToProcess, new Comparator<String>() {
+                                        @Override
+                                        public int compare(String name1, String name2) {
+                                            // Check if both names start with numbers
+                                            if (name1.matches("^\\d+.*") && name2.matches("^\\d+.*")) {
+                                                // Extract the numeric prefix
+                                                String num1 = name1.replaceAll("^(\\d+).*", "$1");
+                                                String num2 = name2.replaceAll("^(\\d+).*", "$1");
+
+                                                // If numeric parts are different, compare them numerically
+                                                if (!num1.equals(num2)) {
+                                                    return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+                                                }
+                                            }
+                                            // If one name starts with a number and the other doesn't, prioritize the one with number
+                                            else if (name1.matches("^\\d+.*")) {
+                                                return -1;
+                                            }
+                                            else if (name2.matches("^\\d+.*")) {
+                                                return 1;
+                                            }
+
+                                            // Otherwise, use alphabetical order
+                                            return name1.compareTo(name2);
+                                        }
+                                    });
+
+                                    // process all files in this directory
+                                    for (String fileName : filesToProcess) {
+                                        handleEntry(menu, resourceDir, fileName, false);
+                                    }
                                 }
                             }
-                        } else {
-                            // fallback to JarInputStream if jar-file protocol not available
-                            try (InputStream is = cl.getResourceAsStream(path);
-                                 JarInputStream jin = new JarInputStream(is)) {
-                                JarEntry e;
-                                while ((e = jin.getNextJarEntry()) != null) {
-                                    String name = e.getName();
-                                    if (name.startsWith(path)) {
-                                        String entry = name.substring(path.length());
-                                        if (!entry.isEmpty() && !entry.contains("/")) {
-                                            handleEntry(menu, resourceDir, entry, false);
-                                        }
-                                    }
-                                }
+                            return; // success
+                        }
+
+                } catch (Exception ex) {
+                    // Error with file handling.
+                }
+                // 3. fallback to JarInputStream if jar-file protocol not available
+                try (InputStream is = cl.getResourceAsStream(path);
+                    JarInputStream jin = new JarInputStream(is)) {
+                    JarEntry e;
+                    while ((e = jin.getNextJarEntry()) != null) {
+                        String name = e.getName();
+                        if (name.startsWith(path)) {
+                            String entry = name.substring(path.length());
+                            if (!entry.isEmpty() && !entry.contains("/")) {
+                                handleEntry(menu, resourceDir, entry, false);
                             }
                         }
                     }
-                } catch (Exception e) {
-                    // log the exception but continue processing
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                // log the exception but continue processing
+                e.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            // log the exception but continue processing
+            e.printStackTrace();
         }
     }
 
@@ -3695,10 +3710,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         frame.pack();
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setSize(1200, 900);
+        int frameWidth = 1000;
+        int frameHeight = 700;
+        frame.setSize(frameWidth, frameHeight);
 
-        frame.setLocation((int) (screenSize.getWidth() - 1200) / 2,
-                (int) (screenSize.getHeight() - 900) / 2); //center
+        frame.setLocation((int) (screenSize.getWidth() - frameWidth) / 2,
+                (int) (screenSize.getHeight() - frameHeight) / 2); //center
         frame.setVisible(true);
 
         // In case there were command line requests, let us do them:
