@@ -131,7 +131,7 @@ public class CTrace extends CClass {
 
         for (int i = 0; i < Num; i++) {
             if (!dlns)
-                g2.fillOval(PX[i] - radius / 2, PY[i] - radius / 2, radius, radius);
+                ShapeDrawer.fillEllipse(g2, PX[i] - radius / 2.0, PY[i] - radius / 2.0, radius, radius);
             if (dlns) {
                 if (oObj != null && oObj.get_type() == CClass.CIRCLE)
                     drawALN(PX[i], PY[i], PX[(i + 1) % Num], PY[(i + 1) % Num], g2);
@@ -150,7 +150,7 @@ public class CTrace extends CClass {
      * @param y1 the y coordinate of the second point
      * @param g2 the Graphics2D object
      */
-    public void drawALN(int x, int y, int x1, int y1, Graphics2D g2) {
+    public void drawALN(double x, double y, double x1, double y1, Graphics2D g2) {
 
         if ((x1 < -0 || x1 > 1000) && (x < -0 || x > 1000))
             return;
@@ -158,12 +158,12 @@ public class CTrace extends CClass {
         if ((y1 < -0 || y1 > 1000) && (y < -0 || y > 1000))
             return;
 
-        int dx = x - x1;
-        int dy = y - y1;
+        double dx = x - x1;
+        double dy = y - y1;
         if(dx > MAXLEN || dx < - MAXLEN || dy > MAXLEN || dy < -MAXLEN)
             return;
 
-        g2.drawLine(x, y, x1, y1);
+        ShapeDrawer.drawLine(g2, x, y, x1, y1);
     }
 
     /**

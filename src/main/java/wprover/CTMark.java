@@ -198,8 +198,8 @@ public class CTMark extends CClass {
             super.setDrawSelect(g2);
         }
 
-        g2.drawLine((int) (fx + dx), (int) (fy + dy), (int) (ex), (int) (ey));
-        g2.drawLine((int) (fx + dx1), (int) (fy + dy1), (int) (ex), (int) (ey));
+        ShapeDrawer.drawLine(g2, (fx + dx), (fy + dy), ex, ey);
+        ShapeDrawer.drawLine(g2, (fx + dx1),(fy + dy1),ex, ey);
 
         pos1x = (int) (fx + dx);
         pos1y = (int) (fy + dy);

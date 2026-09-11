@@ -88,7 +88,7 @@ public class JCgFlash extends JFlash implements ActionListener {
             CPoint p2 = (CPoint) vlist.get(i * 2 + 1);
             g2.setStroke(BStroke2);
             g2.setColor(Color.white);
-            g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) p2.getx(), (int) p2.gety());
+            ShapeDrawer.drawLine(g2, p1.getx(), p1.gety(), p2.getx(), p2.gety());
         }
 
         double r = -1;
@@ -132,10 +132,10 @@ public class JCgFlash extends JFlash implements ActionListener {
 
                 draw(g2, p1, p2);
                 g2.setStroke(Dash);
-                g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) p2.getx(), (int) p2.gety());
+                ShapeDrawer.drawLine(g2, p1.getx(),  p1.gety(), p2.getx(),  p2.gety());
             } else {
                 g2.setColor(Color.white);
-                g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) p2.getx(), (int) p2.gety());
+                ShapeDrawer.drawLine(g2, p1.getx(),  p1.gety(), p2.getx(), p2.gety());
             }
         }
         return true;
@@ -216,6 +216,6 @@ public class JCgFlash extends JFlash implements ActionListener {
 
         double xx2 = x + dy * length;
         double yy2 = y - dx * length;
-        g2.drawLine((int) xx1, (int) yy1, (int) xx2, (int) yy2);
+        ShapeDrawer.drawLine(g2, xx1, yy1, xx2, yy2);
     }
 }

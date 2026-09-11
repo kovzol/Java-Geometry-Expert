@@ -64,7 +64,7 @@ public class JLine {
                     double x = pl[0].getx();
                     double y1 = 0;
                     double y2 = 2000;
-                    g2.drawLine((int) x, (int) y1, (int) x, (int) y2);
+                    ShapeDrawer.drawLine(g2, x,y1,x,y2);
                 } else {
                     double k = (pl[1].gety() - pl[0].gety()) /
                             (pl[1].getx() - pl[0].getx());
@@ -72,7 +72,7 @@ public class JLine {
                     double x2 = 2000;
                     double y1 = k * (0 - pl[0].getx()) + pl[0].gety();
                     double y2 = k * (x2 - pl[0].getx()) + pl[0].gety();
-                    g2.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+                    ShapeDrawer.drawLine(g2, x1,y1,x2,y2);
                 }
             }
         }
@@ -87,10 +87,10 @@ public class JLine {
     public void drawPt(Graphics2D g2) {
         for (int i = 0; i < vlist.size(); i++) {
             CPoint pt = (CPoint) vlist.get(i);
-            int x = (int) pt.getx();
-            int y = (int) pt.gety();
+            double x = pt.getx();
+            double y = pt.gety();
             int r = pt.getRadius();
-            g2.drawOval(x - r - 1, y - r - 1, 2 * r + 1, 2 * r + 1);
+            ShapeDrawer.drawEllipse(g2, x - r - 1, y - r - 1, 2 * r + 1, 2 * r + 1);
         }
     }
 

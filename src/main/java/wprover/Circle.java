@@ -72,7 +72,7 @@ public class Circle extends CClass {
         y1 = o.y1.value;
         r = getRadius();
         if (r < CMisc.MAX_DRAW_LEN)
-            g2.drawOval((int) (x1 - r), (int) (y1 - r), 2 * (int) r, 2 * (int) r);
+            ShapeDrawer.drawEllipse(g2, x1 - r, y1 - r,2 *  r, 2 *  r);
         else {
             if (points.size() < 2) return;
             CPoint p1, p2;
@@ -100,7 +100,7 @@ public class Circle extends CClass {
             y1 = p1.gety() - dy * 2000 / sl;
             double x2 = p1.getx() + dx * 2000 / sl;
             double y2 = p1.gety() + dy * 2000 / sl;
-            g2.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+            ShapeDrawer.drawLine(g2, x1, y1, x2, y2);
         }
     }
 
@@ -590,6 +590,4 @@ public class Circle extends CClass {
             }
         }
     }
-
-
 }

@@ -259,6 +259,19 @@ class DPanel extends JPanel implements MouseListener, MouseMotionListener, Mouse
 
         Dimension dm = this.getSize();
         dp.SetDimension(dm.getWidth(), dm.getHeight());
+
+
+        // Setting rendering hits to fix things like line not connecting to the center of a point, but being 0.5px shifted down
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(
+                RenderingHints.KEY_STROKE_CONTROL,
+                RenderingHints.VALUE_STROKE_PURE
+        );
+        g2.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON
+        );
+
         dp.paintPoint(g);
     }
 }

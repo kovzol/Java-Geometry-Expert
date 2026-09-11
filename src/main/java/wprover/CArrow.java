@@ -110,12 +110,12 @@ public class CArrow extends CClass {
         }
         //   g2.drawLine((int) x1, (int) y1, (int) (xx1 + 8 * dy), (int) (yy1 - 8 * dx));
         //   g2.drawLine((int) x2, (int) y2, (int) (xx2 + 8 * dy), (int) (yy2 - 8 * dx));
-        g2.drawLine((int) xx1, (int) yy1, (int) px1, (int) py1);
-        g2.drawLine((int) xx1, (int) yy1, (int) px2, (int) py2);
+        ShapeDrawer.drawLine(g2, xx1, yy1, px1, py1);
+        ShapeDrawer.drawLine(g2, xx1, yy1, px2, py2);
         //      g2.drawLine((int) xx2, (int) yy2, (int) qx1, (int) qy1);
         //      g2.drawLine((int) xx2, (int) yy2, (int) qx2, (int) qy2);
 
-        g2.drawLine((int) xx1, (int) yy1, (int) xx2, (int) yy2);
+        ShapeDrawer.drawLine(g2, xx1, yy1, xx2, yy2);
         g2.setColor(Color.black);
     }
 
@@ -217,7 +217,6 @@ public class CArrow extends CClass {
         angle = in.readInt();
         length = in.readInt();
     }
-
 }
 
 

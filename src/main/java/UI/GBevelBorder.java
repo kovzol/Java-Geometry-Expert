@@ -1,5 +1,7 @@
 package UI;
 
+import wprover.ShapeDrawer;
+
 import javax.swing.border.SoftBevelBorder;
 import java.awt.*;
 
@@ -51,11 +53,9 @@ public class GBevelBorder extends SoftBevelBorder {
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(bstroke);
         g2.setColor(Color.LIGHT_GRAY);
-        int w = width;
-        int h = height;
 
-        g2.drawLine(0, 0, 0, h);
-        g2.drawLine(0, 0, w, 0);
+        ShapeDrawer.drawLine(g2, 0, 0, 0, height);
+        ShapeDrawer.drawLine(g2,0, 0, width, 0);
     }
 
     /**
@@ -73,47 +73,49 @@ public class GBevelBorder extends SoftBevelBorder {
         Color oldColor = g.getColor();
         g.translate(x, y);
 
+        Graphics2D g2 = (Graphics2D) g;
+
         if (bevelType == RAISED) {
             g.setColor(getHighlightOuterColor(c));
-            g.drawLine(0, 0, width - 2, 0);
-            g.drawLine(0, 0, 0, height - 2);
-            g.drawLine(1, 1, 1, 1);
+            ShapeDrawer.drawLine(g2,0, 0, width - 2, 0);
+            ShapeDrawer.drawLine(g2, 0, 0, 0, height - 2);
+            ShapeDrawer.drawLine(g2, 1, 1, 1, 1);
 
             g.setColor(getHighlightInnerColor(c));
-            g.drawLine(2, 1, width - 2, 1);
-            g.drawLine(1, 2, 1, height - 2);
-            g.drawLine(2, 2, 2, 2);
-            g.drawLine(0, height - 1, 0, height - 2);
-            g.drawLine(width - 1, 0, width - 1, 0);
+            ShapeDrawer.drawLine(g2, 2, 1, width - 2, 1);
+            ShapeDrawer.drawLine(g2, 1, 2, 1, height - 2);
+            ShapeDrawer.drawLine(g2, 2, 2, 2, 2);
+            ShapeDrawer.drawLine(g2,0, height - 1, 0, height - 2);
+            ShapeDrawer.drawLine(g2, width - 1, 0, width - 1, 0);
 
             if (type == 0) {
                 g.setColor(getShadowOuterColor(c));
-                g.drawLine(2, height - 1, width - 1, height - 1);
-                g.drawLine(width - 1, 2, width - 1, height - 1);
+                ShapeDrawer.drawLine(g2, 2, height - 1, width - 1, height - 1);
+                ShapeDrawer.drawLine(g2, width - 1, 2, width - 1, height - 1);
 
                 g.setColor(getShadowInnerColor(c));
-                g.drawLine(width - 2, height - 2, width - 2, height - 2);
+                ShapeDrawer.drawLine(g2, width - 2, height - 2, width - 2, height - 2);
             }
 
         } else if (bevelType == LOWERED) {
             g.setColor(getShadowOuterColor(c));
-            g.drawLine(0, 0, width - 2, 0);
-            g.drawLine(0, 0, 0, height - 2);
-            g.drawLine(1, 1, 1, 1);
+            ShapeDrawer.drawLine(g2,0, 0, width - 2, 0);
+            ShapeDrawer.drawLine(g2,0, 0, 0, height - 2);
+            ShapeDrawer.drawLine(g2,1, 1, 1, 1);
 
             g.setColor(getShadowInnerColor(c));
-            g.drawLine(2, 1, width - 2, 1);
-            g.drawLine(1, 2, 1, height - 2);
-            g.drawLine(2, 2, 2, 2);
-            g.drawLine(0, height - 1, 0, height - 2);
-            g.drawLine(width - 1, 0, width - 1, 0);
+            ShapeDrawer.drawLine(g2, 2, 1, width - 2, 1);
+            ShapeDrawer.drawLine(g2, 1, 2, 1, height - 2);
+            ShapeDrawer.drawLine(g2, 2, 2, 2, 2);
+            ShapeDrawer.drawLine(g2, 0, height - 1, 0, height - 2);
+            ShapeDrawer.drawLine(g2, width - 1, 0, width - 1, 0);
 
             g.setColor(getHighlightOuterColor(c));
-            g.drawLine(2, height - 1, width - 1, height - 1);
-            g.drawLine(width - 1, 2, width - 1, height - 1);
+            ShapeDrawer.drawLine(g2, 2, height - 1, width - 1, height - 1);
+            ShapeDrawer.drawLine(g2, width - 1, 2, width - 1, height - 1);
 
             g.setColor(getHighlightInnerColor(c));
-            g.drawLine(width - 2, height - 2, width - 2, height - 2);
+            ShapeDrawer.drawLine(g2, width - 2, height - 2, width - 2, height - 2);
         }
         g.translate(-x, -y);
         g.setColor(oldColor);

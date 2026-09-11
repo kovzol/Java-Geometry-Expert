@@ -69,10 +69,10 @@ public class RectangleSelectionDialog extends JBaseDialog implements MouseListen
                 g2.setStroke(CMisc.DashedStroke1);
 
                 g2.setColor(Color.red);
-                g2.drawLine(x1, y1, x1, y2);
-                g2.drawLine(x1, y1, x2, y1);
-                g2.drawLine(x1, y2, x2, y2);
-                g2.drawLine(x2, y1, x2, y2);
+                ShapeDrawer.drawLine(g2, x1, y1, x1, y2);
+                ShapeDrawer.drawLine(g2, x1, y1, x2, y1);
+                ShapeDrawer.drawLine(g2, x1, y2, x2, y2);
+                ShapeDrawer.drawLine(g2, x2, y1, x2, y2);
 
 
             }

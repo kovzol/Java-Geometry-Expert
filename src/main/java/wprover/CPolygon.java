@@ -126,7 +126,7 @@ public class CPolygon extends CClass {
                 if (selected) {
                     g2.setStroke(CMisc.SelectPolygonStroke);
                     g2.setColor(super.getColor().darker());
-                    g2.drawOval(xpoints[0] - r1, ypoints[0] - r1, 2 * r1, 2 * r1);
+                    ShapeDrawer.drawEllipse(g2, xpoints[0] - r1, ypoints[0] - r1, 2 * r1, 2 * r1);
                 }
             }
         }
@@ -663,8 +663,8 @@ public void draw(Graphics2D g2, CPoint p) {
 
     g2.drawPolygon(xpoints, ypoints, n);
 
-    g2.drawLine(xpoints[0], ypoints[0], (int) p.getx(), (int) p.gety());
-    g2.drawLine(xpoints[n - 1], ypoints[n - 1], (int) p.getx(), (int) p.gety());
+    ShapeDrawer.drawLine(g2, xpoints[0], ypoints[0], p.getx(), p.gety());
+    ShapeDrawer.drawLine(g2, xpoints[n - 1], ypoints[n - 1], p.getx(), p.gety());
 }
 
 /**
@@ -740,13 +740,13 @@ public String getDescription() {
                         if ((y - ypoints[i + 1]) * (y - ypoints[i]) < 0 || (x - xpoints[i + 1]) * (x - xpoints[i]) < 0)
                             np = add_sort(y, ov, np);
                     }
-                    int dx = (int) x;
+                    double dx = x;
                     for (int j = 0; j < np - 1; j += 2) {
                         if (dtype == 0)
-                            g2.drawLine(dx, (int) ov[j], dx, (int) ov[j + 1]);
+                            ShapeDrawer.drawLine(g2, dx, ov[j], dx, ov[j + 1]);
                         else if (dtype == 1) {
-                            vpl.add(new Point(dx, (int) ov[j]));
-                            vpl.add(new Point(dx, (int) ov[j + 1]));
+                            vpl.add(new Point((int)Math.round(dx), (int) Math.round(ov[j])));
+                            vpl.add(new Point((int)Math.round(dx), (int)Math.round(ov[j + 1])));
                         }
                     }
                     x += step;
@@ -765,13 +765,13 @@ public String getDescription() {
                         if ((y - ypoints[i + 1]) * (y - ypoints[i]) < 0 || (x - xpoints[i + 1]) * (x - xpoints[i]) < 0)
                             np = add_sort(x, ov, np);
                     }
-                    int dy = (int) y;
+                    double dy = y;
                     for (int j = 0; j < np - 1; j += 2) {
                         if (dtype == 0)
-                            g2.drawLine((int) ov[j], dy, (int) ov[j + 1], dy);
+                            ShapeDrawer.drawLine(g2, ov[j], dy, ov[j + 1], dy);
                         else if (dtype == 1) {
-                            vpl.add(new Point((int) ov[j], dy));
-                            vpl.add(new Point((int) ov[j + 1], dy));
+                            vpl.add(new Point((int) Math.round(ov[j]), (int) Math.round(dy)));
+                            vpl.add(new Point((int) Math.round(ov[j + 1]), (int) Math.round(dy)));
                         }
                     }
                     y += step;
@@ -806,10 +806,10 @@ public String getDescription() {
                     }
                     for (int j = 0; j < np - 1; j += 2)
                         if (dtype == 0)
-                            g2.drawLine((int) ov[j], (int) (k * ov[j] + c), (int) ov[j + 1], (int) (k * ov[j + 1] + c));
+                            ShapeDrawer.drawLine(g2, ov[j], (k * ov[j] + c), ov[j + 1], (k * ov[j + 1] + c));
                         else if (dtype == 1) {
-                            vpl.add(new Point((int) ov[j], (int) (k * ov[j] + c)));
-                            vpl.add(new Point((int) ov[j + 1], (int) (k * ov[j + 1] + c)));
+                            vpl.add(new Point((int) Math.round(ov[j]), (int) Math.round((k * ov[j] + c))));
+                            vpl.add(new Point((int) Math.round(ov[j + 1]), (int) Math.round((k * ov[j + 1] + c))));
                         }
                     c += stepc;
                 }
@@ -842,10 +842,10 @@ public String getDescription() {
                     }
                     for (int j = 0; j < np - 1; j += 2)
                         if (dtype == 0)
-                            g2.drawLine((int) ov[j], (int) (k * ov[j] + c), (int) ov[j + 1], (int) (k * ov[j + 1] + c));
+                            ShapeDrawer.drawLine(g2, ov[j], (k * ov[j] + c), ov[j + 1], (k * ov[j + 1] + c));
                         else if (dtype == 1) {
-                            vpl.add(new Point((int) ov[j], (int) (k * ov[j] + c)));
-                            vpl.add(new Point((int) ov[j + 1], (int) (k * ov[j + 1] + c)));
+                            vpl.add(new Point((int) Math.round(ov[j]), (int) Math.round((k * ov[j] + c))));
+                            vpl.add(new Point((int) Math.round(ov[j + 1]), (int) Math.round(k * ov[j + 1] + c)));
                         }
                     c += stepc;
                 }

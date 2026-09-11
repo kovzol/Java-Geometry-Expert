@@ -8260,14 +8260,14 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
             }
             p2.setXY(x2, y1);
         } else {
-            g2.drawLine(x1, y1, x2, y2);
+            ShapeDrawer.drawLine(g2, x1, y1, x2, y2);
             return;
         }
 
         float dash[] = {2.0f};
         g2.setStroke(new BasicStroke(0.5f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 5.0f, dash, 0.0f));
-        g2.drawLine((int) p1.getx(), (int) p1.gety(), x, y);
+        ShapeDrawer.drawLine(g2, p1.getx(), p1.gety(), x, y);
     }
 
     /**
@@ -8277,10 +8277,6 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param g2 the graphics context used for drawing
      */
     public void drawCurrentAct(Graphics2D g2) {
-
-//        if (trackPoint != null) {
-//        }
-
         if (SHOWOBJECT == this.CurrentAction) {
             for (int i = 0; i < constraintlist.size(); i++) {
                 Constraint cs = (Constraint) constraintlist.get(i);
@@ -8367,7 +8363,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                         CLine ln2 = (CLine) SelectList.get(1);
                         CLine ln3 = (CLine) SelectList.get(2);
                         double k = CLine.getALineK(ln1, ln2, ln3);
-                        this.drawAuxLine((int) CatchPoint.getx(), (int) CatchPoint.gety(), k, g2);
+                        this.drawAuxLine(CatchPoint.getx(), CatchPoint.gety(), k, g2);
                         this.drawPointOrCross(g2);
                     }
                 }
@@ -8377,7 +8373,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                 if (STATUS == 1) {
                     if (FirstPnt == null)
                         break;
-                    g2.drawLine((int) FirstPnt.getx(), (int) FirstPnt.gety(), (int) CatchPoint.getx(), (int) CatchPoint.gety());
+                    ShapeDrawer.drawLine(g2, FirstPnt.getx(), FirstPnt.gety(), CatchPoint.getx(), CatchPoint.gety());
                     drawPointOrCross(g2);
                     if (CatchList.size() > 0) {
                         CLine ln = (CLine) CatchList.get(0);
@@ -8399,7 +8395,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                             }
                             g2.setColor(Color.red);
                             g2.setStroke(CMisc.DashedStroke);
-                            g2.drawLine((int) x1, (int) y1, (int) x, (int) y);
+                            ShapeDrawer.drawLine(g2, x1,y1, x, y);
 
                             if (ln.getExtent() != CLine.ET_ENDLESS) {
                                 CPoint[] spt = ln.getTowSideOfLine();
@@ -8409,9 +8405,9 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                                     double r = Math.pow(spt[1].getx() - spt[0].getx(), 2) + Math.pow(spt[1].gety() - spt[0].gety(), 2);
                                     if (r1 < r && r2 < r) {
                                     } else if (r1 > r2) {
-                                        g2.drawLine((int) spt[1].getx(), (int) spt[1].gety(), (int) x, (int) y);
+                                        ShapeDrawer.drawLine(g2, spt[1].getx(), spt[1].gety(), x, y);
                                     } else {
-                                        g2.drawLine((int) spt[0].getx(), (int) spt[0].gety(), (int) x, (int) y);
+                                        ShapeDrawer.drawLine(g2, spt[0].getx(), spt[0].gety(), x, y);
                                     }
 
                                 }
@@ -8445,7 +8441,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                         int y = (int) p3.gety();
                         g2.setStroke(CMisc.DashedStroke);
                         g2.setColor(Color.red);
-                        g2.drawOval((int) (x - radius), (int) (y - radius), (int) (2 * radius), (int) (2 * radius));
+                        ShapeDrawer.drawEllipse(g2, (x - radius), (y - radius), (2 * radius), (2 * radius));
                     }
                 }
                 this.drawCatchRect(g2);
@@ -8494,8 +8490,8 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     double x = CatchPoint.getx();
                     double y = CatchPoint.gety();
                     g2.setColor(Color.red);
-                    g2.drawLine((int) x, (int) y, (int) (x + dx), (int) (y + dy));
-                    this.drawCross((int) (x + dx), (int) (y + dy), 3, g2);
+                    ShapeDrawer.drawLine(g2, x, y, (x + dx), (y + dy));
+                    this.drawCross((x + dx),(y + dy), 3, g2);
                 }
             }
             break;
@@ -8522,7 +8518,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
 //                double r2 = Math.pow(xx - x2, 2) + Math.pow(yy - y2, 2);
                 g2.setColor(Color.red);
 //                if (r1 < r2) {
-                g2.drawLine((int) x1, (int) y1, (int) CatchPoint.getx(), (int) CatchPoint.gety());
+                ShapeDrawer.drawLine(g2, x1, y1, CatchPoint.getx(),CatchPoint.gety());
                 this.drawCross((int) (x1), (int) (y1), 3, g2);
 
 //                } else {
@@ -8558,11 +8554,11 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     CatchPoint.setXY(xr, yr);
                     drawCatchRect(g2);
                     g2.setColor(Color.red);
-                    g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) p2.getx(), (int) p2.gety());
-                    g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) xr, (int) yr);
-                    g2.drawLine((int) xr, (int) yr, (int) p2.getx(), (int) p2.gety());
+                    ShapeDrawer.drawLine(g2, p1.getx(), p1.gety(), p2.getx(), p2.gety());
+                    ShapeDrawer.drawLine(g2, p1.getx(), p1.gety(), xr,  yr);
+                    ShapeDrawer.drawLine(g2, xr, yr, p2.getx(), p2.gety());
                     g2.setStroke(CMisc.DashedStroke);
-                    g2.drawOval((int) (xx - dis / 2), (int) (yy - dis / 2), (int) dis, (int) dis);
+                    ShapeDrawer.drawEllipse(g2, (xx - dis / 2),  (yy - dis / 2), dis, dis);
                 } else {
                     if (n == 1) {
                         CPoint pt = (CPoint) SelectList.get(0);
@@ -8578,7 +8574,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                 for (int i = 0; i < solutionlist.size(); i++) {
                     CPoint p = (CPoint) solutionlist.get(i);
                     g2.setColor(Color.red);
-                    g2.drawOval((int) p.getx() - 18, (int) p.gety() - 18, 36, 36);
+                    ShapeDrawer.drawEllipse(g2, p.getx() - 18, p.gety() - 18, 36, 36);
                     p.draw(g2);
                 }
             }
@@ -8588,7 +8584,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     drawSmartPVLine(FirstPnt, SecondPnt, g2);
                     if (SelectList.size() == STATUS - 1) {
                         CPoint t1 = (CPoint) (SelectList.get(0));
-                        g2.drawLine((int) t1.getx(), (int) t1.gety(), (int) SecondPnt.getx(), (int) SecondPnt.gety());
+                        ShapeDrawer.drawLine(g2, t1.getx(), t1.gety(), SecondPnt.getx(), SecondPnt.gety());
                     }
                     if (SelectList.size() >= 2) {
                         CPoint t1 = (CPoint) SelectList.get(0);
@@ -8597,7 +8593,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
 
                         for (int i = 1; i < SelectList.size(); i++) {
                             CPoint tp = (CPoint) SelectList.get(i);
-                            g2.drawLine((int) t1.getx(), (int) t1.gety(), (int) tp.getx(), (int) tp.gety());
+                            ShapeDrawer.drawLine(g2, t1.getx(), t1.gety(), tp.getx(), tp.gety());
                             t1 = tp;
                         }
                     }
@@ -8635,11 +8631,11 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
 
                     if ((xc - xf) * (xc - xf) + (yc - yf) * (yc - yf) <
                             (xc - xs) * (xc - xs) + (yc - ys) * (yc - ys)) {
-                        g2.drawLine((int) x1, (int) y1, (int) xf, (int) yf);
-                        g2.drawLine((int) x2, (int) y2, (int) xf, (int) yf);
+                        ShapeDrawer.drawLine(g2, x1, y1, xf, yf);
+                        ShapeDrawer.drawLine(g2, x2, y2, xf, yf);
                     } else {
-                        g2.drawLine((int) x1, (int) y1, (int) xs, (int) ys);
-                        g2.drawLine((int) x2, (int) y2, (int) xs, (int) ys);
+                        ShapeDrawer.drawLine(g2, x1, y1, xs, ys);
+                        ShapeDrawer.drawLine(g2, x2, y2, xs, ys);
                     }
 
                 }
@@ -8671,10 +8667,10 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
 
                     drawPointOrCross(g2);
                     g2.setColor(Color.red);
-                    g2.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-                    g2.drawLine((int) x1, (int) y1, (int) x, (int) y);
-                    g2.drawLine((int) xt, (int) yt, (int) x, (int) y);
-                    g2.drawLine((int) xt, (int) yt, (int) x2, (int) y2);
+                    ShapeDrawer.drawLine(g2, x1, y1, x2, y2);
+                    ShapeDrawer.drawLine(g2, x1, y1, x, y);
+                    ShapeDrawer.drawLine(g2, xt, yt, x, y);
+                    ShapeDrawer.drawLine(g2, xt, yt, x2, y2);
                 } else
                     this.drawCatchRect(g2);
             }
@@ -8689,8 +8685,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                         CPoint pt = (CPoint) SelectList.get(0);
                         CPoint pt1 = (CPoint) SelectList.get(1);
                         g2.setColor(Color.red);
-                        g2.drawLine((int) pt.getx(), (int) pt.gety(),
-                                (int) pt1.getx(), (int) pt1.gety());
+                        ShapeDrawer.drawLine(g2, pt.getx(), pt.gety(), pt1.getx(), pt1.gety());
                         this.drawSmartPVLine(pt1, CatchPoint, g2);
                         this.drawPointOrCross(g2);
                     } else
@@ -8704,10 +8699,10 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                             (pt.getx() - pt1.getx()) + pt2.gety();
 
                     g2.setColor(Color.red);
-                    g2.drawLine((int) pt.getx(), (int) pt.gety(), (int) pt1.getx(), (int) pt1.gety());
-                    g2.drawLine((int) pt2.getx(), (int) pt2.gety(), (int) pt1.getx(), (int) pt1.gety());
-                    g2.drawLine((int) pt.getx(), (int) pt.gety(), (int) x, (int) y);
-                    g2.drawLine((int) pt2.getx(), (int) pt2.gety(), (int) x, (int) y);
+                    ShapeDrawer.drawLine(g2, pt.getx(), pt.gety(), pt1.getx(), pt1.gety());
+                    ShapeDrawer.drawLine(g2, pt2.getx(), pt2.gety(), pt1.getx(), pt1.gety());
+                    ShapeDrawer.drawLine(g2, pt.getx(), pt.gety(), x, y);
+                    ShapeDrawer.drawLine(g2, pt2.getx(), pt2.gety(), x, y);
                 }
             }
             break;
@@ -8723,9 +8718,9 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     drawSmartPVLine(p2, CatchPoint, g2);
                     double xt = p1.getx() + CatchPoint.getx() - p2.getx();
                     double yt = p1.gety() + CatchPoint.gety() - p2.gety();
-                    g2.drawLine((int) xt, (int) yt, (int) p1.getx(), (int) p1.gety());
-                    g2.drawLine((int) xt, (int) yt, (int) CatchPoint.getx(), (int) CatchPoint.gety());
-                    g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) p2.getx(), (int) p2.gety());
+                    ShapeDrawer.drawLine(g2, xt, yt, p1.getx(), p1.gety());
+                    ShapeDrawer.drawLine(g2, xt, yt, CatchPoint.getx(), CatchPoint.gety());
+                    ShapeDrawer.drawLine(g2, p1.getx(), p1.gety(), p2.getx(), p2.gety());
                     drawPointOrCross(g2);
                 }
             }
@@ -8758,12 +8753,10 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     double xt = x + p1.getx() - p2.getx();
                     double yt = y + p1.gety() - p2.gety();
 
-                    g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) p2.getx(),
-                            (int) p2.gety());
-                    g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) xt,
-                            (int) yt);
-                    g2.drawLine((int) p2.getx(), (int) p2.gety(), (int) x, (int) y);
-                    g2.drawLine((int) xt, (int) yt, (int) x, (int) y);
+                    ShapeDrawer.drawLine(g2, p1.getx(), p1.gety(), p2.getx(),      p2.gety());
+                    ShapeDrawer.drawLine(g2, p1.getx(), p1.gety(),  xt, yt);
+                    ShapeDrawer.drawLine(g2, p2.getx(), p2.gety(), x, y);
+                    ShapeDrawer.drawLine(g2, xt, yt, x, y);
 
                 }
             }
@@ -8796,11 +8789,11 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
 
                     if ((xc - xf) * (xc - xf) + (yc - yf) * (yc - yf) <
                             (xc - xs) * (xc - xs) + (yc - ys) * (yc - ys)) {
-                        g2.drawLine((int) x1, (int) y1, (int) xf, (int) yf);
-                        g2.drawLine((int) x2, (int) y2, (int) xf, (int) yf);
+                        ShapeDrawer.drawLine(g2, x1, y1, xf, yf);
+                        ShapeDrawer.drawLine(g2, x2, y2, xf, yf);
                     } else {
-                        g2.drawLine((int) x1, (int) y1, (int) xs, (int) ys);
-                        g2.drawLine((int) x2, (int) y2, (int) xs, (int) ys);
+                        ShapeDrawer.drawLine(g2, x1, y1, xs, ys);
+                        ShapeDrawer.drawLine(g2, x2, y2, xs, ys);
                     }
                 }
             }
@@ -8825,8 +8818,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     CPoint p1 = (CPoint) SelectList.get(0);
                     CatchPoint.draw(g2);
                     g2.setColor(Color.red);
-                    g2.drawLine((int) CatchPoint.getx(), (int) CatchPoint.gety(),
-                            (int) p1.getx(), (int) p1.gety());
+                    ShapeDrawer.drawLine(g2, CatchPoint.getx(), CatchPoint.gety(), p1.getx(), p1.gety());
                 } else if (STATUS == 2) {
                     if (SelectList.size() == 2) {
                         CPoint p1 = (CPoint) SelectList.get(0);
@@ -8834,12 +8826,9 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
 
                         CatchPoint.draw(g2);
                         g2.setColor(Color.red);
-                        g2.drawLine((int) CatchPoint.getx(), (int) CatchPoint.gety(),
-                                (int) p1.getx(), (int) p1.gety());
-                        g2.drawLine((int) CatchPoint.getx(), (int) CatchPoint.gety(),
-                                (int) p2.getx(), (int) p2.gety());
-                        g2.drawLine((int) p1.getx(), (int) p1.gety(), (int) p2.getx(),
-                                (int) p2.gety());
+                        ShapeDrawer.drawLine(g2, CatchPoint.getx(), CatchPoint.gety(), p1.getx(), p1.gety());
+                        ShapeDrawer.drawLine(g2, CatchPoint.getx(), CatchPoint.gety(), p2.getx(), p2.gety());
+                        ShapeDrawer.drawLine(g2, p1.getx(), p1.gety(), p2.getx(), p2.gety());
                     }
 
                 }
@@ -8881,7 +8870,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     g2.setColor(Color.red);
                     if (Math.abs(x) < CMisc.MAX_DRAW_LEN && Math.abs(y) < CMisc.MAX_DRAW_LEN &&
                             radius < CMisc.MAX_DRAW_LEN) {
-                        g2.drawOval((int) (x - radius), (int) (y - radius), (int) (2 * radius), (int) (2 * radius));
+                        ShapeDrawer.drawEllipse(g2, (x - radius), (y - radius), (2 * radius), (2 * radius));
                     }
                     this.drawPointOrCross(g2);
                 } else
@@ -8922,10 +8911,10 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                 if (mouseInside) {
                     g2.setStroke(CMisc.DashedStroke);
                     g2.setColor(Color.red);
-                    int x = (int) CatchPoint.getx();
-                    int y = (int) CatchPoint.gety();
-                    g2.drawLine(x, 0, x, (int) Height);
-                    g2.drawLine(0, y, (int) Width, y);
+                    double x = CatchPoint.getx();
+                    double y =  CatchPoint.gety();
+                    ShapeDrawer.drawLine(g2, x, 0, x, Height);
+                    ShapeDrawer.drawLine(g2, 0, y, Width, y);
                 }
             }
             break;
@@ -8936,7 +8925,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     CPoint t1 = p.getPreviousePoint(p1);
                     CPoint t2 = p.getNextPoint(p1);
                     if (p1 != null && t1 != null && t2 != null) {
-                        this.drawAuxLine((int) p1.getx(), (int) p1.gety(), (t2.gety() - t1.gety()) / (t2.getx() - t1.getx()), g2);
+                        this.drawAuxLine(p1.getx(), p1.gety(), (t2.gety() - t1.gety()) / (t2.getx() - t1.getx()), g2);
                         double[] r = getPTInterSection(CatchPoint.getx(), CatchPoint.gety(), p1.getx(), p1.gety()
                                 , t1.getx(), t1.gety(), t2.getx(), t2.gety());
                         this.drawCross((int) r[0], (int) r[1], 2, g2);
@@ -8954,7 +8943,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     p.draw(g2, false, false, vx1, vy1, true, x1, y1, vangle);
                     if (STATUS == 2 && FirstPnt != null) {
                         g2.setColor(Color.red);
-                        g2.drawLine((int) CatchPoint.getx(), (int) CatchPoint.gety(), (int) x1, (int) y1);
+                        ShapeDrawer.drawLine(g2, CatchPoint.getx(), CatchPoint.gety(), x1, y1);
                         drawCross((int) FirstPnt.getx(), (int) FirstPnt.gety(), 2, g2);
                         if (ThirdPnt != null)
                             drawCross((int) (ThirdPnt.getx() + vx1), (int) (ThirdPnt.gety() + vy1), 2, g2);
@@ -9076,17 +9065,17 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param k  the slope of the line
      * @param g2 the Graphics2D context used for drawing
      */
-    public void drawAuxLine(int x, int y, double k, Graphics2D g2) {
+    public void drawAuxLine(double x, double y, double k, Graphics2D g2) {
         g2.setColor(Color.red);
         g2.setStroke(CMisc.DashedStroke);
         double max = CMisc.MAX_DRAW_LEN;
         if (Math.abs(k) > CMisc.MAX_K) {
-            g2.drawLine(x, 0, x, (int) max);
+            ShapeDrawer.drawLine(g2, x, 0, x, max);
         } else {
             if (k < 1 && k > -1) {
-                g2.drawLine(0, (int) (y - k * x), (int) max, (int) (y + k * (max - x)));
+                ShapeDrawer.drawLine(g2, 0, (y - k * x), max, (y + k * (max - x)));
             } else {
-                g2.drawLine((int) (x - y / k), 0, (int) (x + (max - y) / k), (int) max);
+                ShapeDrawer.drawLine(g2, (x - y / k), 0, (x + (max - y) / k), max);
             }
         }
     }

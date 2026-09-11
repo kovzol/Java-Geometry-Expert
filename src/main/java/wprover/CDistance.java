@@ -183,16 +183,16 @@ public class CDistance extends CClass {
             g2.setStroke(new BasicStroke(3));
             g2.setColor(Color.pink);
         }
-        g2.drawLine((int) x1, (int) y1, (int) (xx1 + 8 * dy), (int) (yy1 - 8 * dx));
-        g2.drawLine((int) x2, (int) y2, (int) (xx2 + 8 * dy), (int) (yy2 - 8 * dx));
-        g2.drawLine((int) xx1, (int) yy1, (int) px1, (int) py1);
-        g2.drawLine((int) xx1, (int) yy1, (int) px2, (int) py2);
-        g2.drawLine((int) xx2, (int) yy2, (int) qx1, (int) qy1);
-        g2.drawLine((int) xx2, (int) yy2, (int) qx2, (int) qy2);
+        ShapeDrawer.drawLine(g2, x1,  y1, (xx1 + 8 * dy), (yy1 - 8 * dx));
+        ShapeDrawer.drawLine(g2, x2, y2, (xx2 + 8 * dy), (yy2 - 8 * dx));
+        ShapeDrawer.drawLine(g2, xx1, yy1, px1, py1);
+        ShapeDrawer.drawLine(g2, xx1, yy1,px2, py2);
+        ShapeDrawer.drawLine(g2, xx2, yy2, qx1, qy1);
+        ShapeDrawer.drawLine(g2, xx2, yy2, qx2, qy2);
 
-        g2.drawLine((int) xx1, (int) yy1, (int) xx2, (int) yy2);
+        ShapeDrawer.drawLine(g2, xx1, yy1, xx2, yy2);
         g2.setColor(Color.black);
-        g2.drawString("" + pstart.m_name + pend.m_name + " = " + ((float) ((int) (dis * 100))) / 100, (int) ((xx1 + xx2) / 2), (int) ((yy1 + yy2) / 2));
+        g2.drawString(pstart.m_name + pend.m_name + " = " + ((float) ((int) (dis * 100))) / 100, (int) ((xx1 + xx2) / 2), (int) ((yy1 + yy2) / 2));
     }
 
     /**
