@@ -1,7 +1,7 @@
 name: jgex
 architectures:
   - build-on: amd64
-base: core20
+base: core22
 version: '0.88'
 summary: Java Geometry Expert
 description: |
@@ -16,10 +16,10 @@ confinement: strict
 apps:
   jgex:
     extensions:
-      - gnome-3-38
+      - gnome
     command: bin/jgex
     environment:
-      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
+      JAVA_HOME: $SNAP/usr/lib/jvm/java-17-openjdk-amd64
       PATH: $JAVA_HOME/bin:$PATH
       JAVA_OPTS: -Djava.util.prefs.userRoot="$SNAP_USER_DATA"
       LIBGL_DRIVERS_PATH: $SNAP/usr/lib/x86_64-linux-gnu/dri
@@ -32,12 +32,12 @@ apps:
 
 parts:
   jgex:
-    build-packages: [gettext, openjdk-11-jdk]
+    build-packages: [gettext, openjdk-17-jdk]
     source: https://github.com/kovzol/Java-Geometry-Expert.git
     plugin: dump
     source-type: git
     override-build: |
-      JAVAC=/usr/lib/jvm/java-11-openjdk-amd64/bin/javac
+      JAVAC=/usr/lib/jvm/java-17-openjdk-amd64/bin/javac
       set +u # ignore unbound variables
       if [ "$https_proxy" != "" ]; then
         https_proxy_host=$(echo $https_proxy | cut -d'/' -f3 | cut -d':' -f1)
@@ -72,9 +72,9 @@ parts:
       - libgl1-mesa-dri
       - libgtk2.0-0
       - libasound2
-      - openjdk-11-jre
+      - openjdk-17-jre
       - firefox
     override-prime: |
       snapcraftctl prime
-      rm -f usr/lib/jvm/java-11-openjdk-*/lib/security/blacklisted.certs
+      rm -f usr/lib/jvm/java-17-openjdk-*/lib/security/blacklisted.certs
       rm -fr jar assets attic data-dir gnome-platform gradle src
