@@ -31,7 +31,7 @@ class DPanel extends JPanel implements MouseListener, MouseMotionListener, Mouse
      * @param step the step value to set
      */
     public void setStep(double step) {
-        dp.animate.Setstep(step);
+        dp.animate.setStep(step);
     }
 
     /**

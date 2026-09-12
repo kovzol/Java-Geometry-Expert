@@ -8,7 +8,7 @@ import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * NdgDialog is a custom dialog class that extends JBaseDialog and implements
@@ -190,31 +190,31 @@ public class NdgDialog extends JBaseDialog implements ActionListener, MouseMotio
      * @param v3 the vector containing simplified non-degenerate conditions
      * @param v4 the vector containing final non-degenerate conditions
      */
-    public void setValue(Vector v1, Vector v2, Vector v3, Vector v4) {
+    public void setValue(List<Object> v1, List<Object> v2, List<Object> v3, List<Object> v4) {
         model1.reset();
         model2.reset();
         model3.reset();
 
-        for (int i = 0; i < v1.size(); i++) {
-            Cons c = (Cons) v1.get(i);
+        for (Object value : v1) {
+            Cons c = (Cons) value;
             CNdg d = fd_ndg(c, v2);
             model1.addElement(c, d);
         }
 
-        for (int i = 0; i < v3.size(); i++) {
-            CNdg c = (CNdg) v3.get(i);
+        for (Object object : v3) {
+            CNdg c = (CNdg) object;
             model2.addElement(c);
         }
 
-        for (int i = 0; i < v4.size(); i++) {
-            CNdg c = (CNdg) v4.get(i);
+        for (Object o : v4) {
+            CNdg c = (CNdg) o;
             model3.addElement(c);
         }
         model3.addElement(" ");
 
         GeoPoly poly = GeoPoly.getPoly();
-        for (int i = 0; i < v4.size(); i++) {
-            CNdg c = (CNdg) v4.get(i);
+        for (Object o : v4) {
+            CNdg c = (CNdg) o;
             model3.addElement(poly.getAllPrinted(getTMono(c)));
         }
 
@@ -287,7 +287,7 @@ public class NdgDialog extends JBaseDialog implements ActionListener, MouseMotio
      * @param v2 the vector containing non-degenerate conditions
      * @return the non-degenerate condition associated with the construction, or null if not found
      */
-    public CNdg fd_ndg(Cons c, Vector v2) {
+    public CNdg fd_ndg(Cons c, List<Object> v2) {
         for (int i = 0; i < v2.size(); i++) {
             CNdg d = (CNdg) v2.get(i);
             if (d.dep == c)

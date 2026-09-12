@@ -1,7 +1,8 @@
 package wprover;
 
 import javax.swing.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 
 /**
@@ -9,7 +10,7 @@ import java.awt.*;
  * It allows for the creation of multiple instances and provides methods to manage them.
  */
 public class CCoBox extends JComboBox {
-    private static Vector instanceList = new Vector();
+    private static List<Object> instanceList = new ArrayList<>();
     int defaultindex = 0;
 
     /**

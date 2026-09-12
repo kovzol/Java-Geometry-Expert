@@ -37,14 +37,14 @@ public class PDFPageList extends PDFObject
   /**
    * This holds the pages
    */
-  private Vector<PDFPage> pages;
+  private List<PDFPage> pages;
         
   /**
    * This constructs a PDF Pages object.
    */
   public PDFPageList() {
     super("/Pages");
-    pages = new Vector<PDFPage>();
+    pages = new ArrayList<>();
   }
         
   /**
@@ -53,7 +53,7 @@ public class PDFPageList extends PDFObject
    * @param page PDFPage to add
    */
   public void add(PDFPage page) {
-    pages.addElement(page);
+    pages.add(page);
             
     // Tell the page of ourselves
     page.pdfPageList = this;
@@ -65,7 +65,7 @@ public class PDFPageList extends PDFObject
    * @return PDFPage at that position
    */
   public PDFPage getPage(int page) {
-    return (PDFPage)(pages.elementAt(page));
+    return (PDFPage)(pages.get(page));
   }
         
   /**

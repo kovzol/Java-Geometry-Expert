@@ -9,7 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The `AllSolutionDialog` class provides a dialog for displaying and interacting with
  * all possible solutions of a given problem within the GExpert application.
@@ -27,7 +29,7 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
     ConcDialog dlg;
     Cons cns;
 
-    Vector vblist, vlist;
+    List<Object> vblist, vlist;
     public int index;
 
     /**
@@ -105,8 +107,8 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
         panel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         this.getContentPane().add(panel);
 
-        vblist = new Vector();
-        vlist = new Vector();
+        vblist = new ArrayList<>();
+        vlist = new ArrayList<>();
         cross = GExpert.createImageIcon("images/ptree/cross.gif");
         hook = GExpert.createImageIcon("images/ptree/hook.gif");
 
@@ -119,7 +121,7 @@ public class AllSolutionDialog extends JBaseDialog implements ActionListener, Wi
      *
      * @param v A vector containing the solutions.
      */
-    public void setVlist(Vector v) {
+    public void setVlist(List<Object> v) {
         vblist.clear();
         vlist.clear();
 

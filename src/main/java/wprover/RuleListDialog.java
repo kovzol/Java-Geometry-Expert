@@ -3,12 +3,9 @@ package wprover;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-import java.util.Vector;
+import java.util.List;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.DataInputStream;
-import java.net.URL;
-import java.net.URLConnection;
+
 
 /**
  * RuleListDialog is a dialog that displays a list of rules and allows the user to interact with them.
@@ -206,7 +203,7 @@ public class RuleListDialog extends JBaseDialog {
          */
         public void resetSize() {
             if (dx == null) return;
-            Vector v1 = dx.pointlist;
+            List<Object> v1 = dx.pointlist;
             Rectangle rc = this.getPointsBounds(v1);
             double rx = RuleViewPane.this.getWidth();
             double ry = RuleViewPane.this.getHeight();
@@ -253,7 +250,7 @@ public class RuleListDialog extends JBaseDialog {
          * Centers all objects within the view.
          */
         public void centerAllObject() {
-            Vector v1 = dx.pointlist;
+            List<Object> v1 = dx.pointlist;
             this.getPointsBounds(v1);
 
             xx = (int) ((this.getWidth() - rc.getWidth() * scale) / 2 - rc.getX() * scale);
@@ -327,7 +324,7 @@ public class RuleListDialog extends JBaseDialog {
          * @param v the vector of points
          * @return the bounds of the points
          */
-        public Rectangle getPointsBounds(Vector v) {
+        public Rectangle getPointsBounds(List<Object> v) {
             if (v.size() == 0) return rc;
             CPoint p1 = (CPoint) v.get(0);
             double x, y, x1, y1;

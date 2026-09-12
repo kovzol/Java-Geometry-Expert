@@ -23,7 +23,8 @@ package pdf;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -37,9 +38,9 @@ public class PDFDocument implements Serializable
   protected int objser;
     
   /**
-   * This vector contains each indirect object within the document.
+   * This list contains each indirect object within the document.
    */
-  protected Vector<PDFObject> objects;
+  protected List<PDFObject> objects;
     
   /**
    * This is the Catalog object, which is required by each PDF Document
@@ -119,7 +120,7 @@ public class PDFDocument implements Serializable
   /**
    * This holds the current fonts
    */
-  private Vector<PDFFont> fonts;
+  private List<PDFFont> fonts;
     
       
   /**
@@ -136,8 +137,8 @@ public class PDFDocument implements Serializable
    */
   public PDFDocument(int pagemode) {
     objser = 1;
-    objects = new Vector<PDFObject>();
-    fonts = new Vector<PDFFont>();
+    objects = new ArrayList<>();
+    fonts = new ArrayList<>();
         
     // Now create some standard objects
     add(pdfPageList = new PDFPageList());
@@ -165,7 +166,7 @@ public class PDFDocument implements Serializable
    */
   public synchronized int add(PDFObject obj)
   {
-    objects.addElement(obj);
+    objects.add(obj);
     obj.objser=objser++; // create a new serial number
     obj.pdfDocument = this;  // so they can find the document they belong to
         
@@ -222,7 +223,7 @@ public class PDFDocument implements Serializable
     fontid++;
     PDFFont ft = new PDFFont("/F"+fontid,type,font,style);
     add(ft);
-    fonts.addElement(ft);
+    fonts.add(ft);
     return ft;
   }
     

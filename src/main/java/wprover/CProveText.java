@@ -8,7 +8,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.io.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * CProveText is a class that represents a proof text in a graphical user interface.
@@ -187,7 +188,7 @@ public class CProveText {
      * @param index the index
      * @param gc the boolean flag
      */
-    public CProveText(Vector vl, Cond co, int index, boolean gc) {
+    public CProveText(List<Object> vl, Cond co, int index, boolean gc) {
         m_co = co;
         rule = "";
         rpath = "";
@@ -206,7 +207,7 @@ public class CProveText {
         int n = co.getNo();
         Cond c = co.getPCO();
         boolean cons = true;
-        Vector vv = new Vector();
+        List<Object> vv = new ArrayList<>();
         while (c != null) {
             if (c.getNo() != 0) {
                 cons = false;
@@ -467,8 +468,8 @@ public class CProveText {
      *
      * @return the list of objects
      */
-    public Vector getObjectList() {
-        if (m_undo == null) return new Vector();
+    public List<Object> getObjectList() {
+        if (m_undo == null) return new ArrayList<Object>();
         return m_undo.objectlist;
     }
 
@@ -477,7 +478,7 @@ public class CProveText {
      *
      * @param v the list of objects to set
      */
-    public void setObjectList(Vector v) {
+    public void setObjectList(List<Object> v) {
         if (m_undo != null) {
             m_undo.objectlist.clear();
             m_undo.addObjectRelatedList(v);
@@ -586,7 +587,7 @@ public class CProveText {
      * @param v the list to populate with flash objects
      * @param dp the draw process
      */
-    public void getFlashObjectList(Vector v, DrawProcess dp) {
+    public void getFlashObjectList(List<Object> v, DrawProcess dp) {
         if (m_undo.m_type != UndoStruct.T_PROVE_NODE) {
             v.addAll(m_undo.getAllObjects(dp));
             return;

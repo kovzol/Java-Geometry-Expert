@@ -10,7 +10,8 @@ import maths.Param;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DrawBase is a class that provides methods for drawing geometric objects and handling user interactions.
@@ -59,22 +60,22 @@ public class DrawBase {
     final public static int CCTANGENT = 55;
 
 
-    protected Vector pointlist = new Vector();
-    protected Vector linelist = new Vector();
-    protected Vector circlelist = new Vector();
-    protected Vector anglelist = new Vector();
-    protected Vector constraintlist = new Vector();
-    protected Vector distancelist = new Vector();
-    protected Vector polygonlist = new Vector();
-    protected Vector textlist = new Vector();
-    protected Vector tracelist = new Vector();
-    protected Vector otherlist = new Vector();
+    protected List<Object> pointlist = new ArrayList<>();
+    protected List<Object> linelist = new ArrayList<>();
+    protected List<Object> circlelist = new ArrayList<>();
+    protected List<Object> anglelist = new ArrayList<>();
+    protected List<Object> constraintlist = new ArrayList<>();
+    protected List<Object> distancelist = new ArrayList<>();
+    protected List<Object> polygonlist = new ArrayList<>();
+    protected List<Object> textlist = new ArrayList<>();
+    protected List<Object> tracelist = new ArrayList<>();
+    protected List<Object> otherlist = new ArrayList<>();
 
-    Vector flashlist = new Vector();
+    List<Object> flashlist = new ArrayList<>();
 
 
-    protected Vector SelectList = new Vector();
-    protected Vector CatchList = new Vector();
+    protected List<Object> SelectList = new ArrayList<>();
+    protected List<Object> CatchList = new ArrayList<>();
     protected CPoint CatchPoint = this.CreateATempPoint(0, 0);
 
     protected int MouseX, MouseY, mouseCatchX, mouseCatchY;
@@ -313,7 +314,7 @@ public class DrawBase {
      * @param vlist a Vector used for additional drawing information
      * @param type the mode type (0 for drawing and 1 for PostScript)
      */
-    final public void drawPerpFoot(Graphics2D g2, Vector vlist, int type) { // 0: draw ,1: ps
+    final public void drawPerpFoot(Graphics2D g2, List<Object> vlist, int type) { // 0: draw ,1: ps
         for (int i = 0; i < constraintlist.size(); i++) {
             Constraint cs = (Constraint) constraintlist.get(i);
             double x, y;
@@ -409,7 +410,7 @@ public class DrawBase {
      * @param v the Vector from which elements will be removed
      * @param n the number of elements to remove from the end
      */
-    final public void removeFromeListLastNElements(Vector v, int n) {
+    final public void removeFromeListLastNElements(List<Object> v, int n) {
         if (v.size() < n) return;
         while (n-- > 0)
             v.remove(v.size() - 1);
@@ -429,8 +430,8 @@ public class DrawBase {
      *
      * @return a new Vector containing all points.
      */
-    final public Vector getPointList() {
-        Vector v = new Vector();
+    final public List<Object> getPointList() {
+        List<Object> v = new ArrayList<>();
         v.addAll(pointlist);
         return v;
     }
@@ -441,7 +442,7 @@ public class DrawBase {
      * @param list the Vector containing drawable objects.
      * @param g2 the Graphics2D object used for drawing.
      */
-    final public void drawList(Vector list, Graphics2D g2) {
+    final public void drawList(List<Object> list, Graphics2D g2) {
         if (list == null || list.size() == 0) {
             return;
         }
@@ -750,7 +751,7 @@ public class DrawBase {
      * @param p1 the first point defining the first line
      * @param p2 the second point defining the second line
      */
-    public void drawTTFoot(int type, Vector vlist, Graphics2D g2, double x, double y, CPoint pc, CPoint p1, CPoint p2) {
+    public void drawTTFoot(int type, List<Object> vlist, Graphics2D g2, double x, double y, CPoint pc, CPoint p1, CPoint p2) {
         if (p1 == null || p2 == null) return;
 
         if (CMisc.isApplication() && !CMisc.isFootMarkShown()) return;
@@ -874,7 +875,7 @@ public class DrawBase {
      * @param list the list of objects to be highlighted
      * @param g2 the Graphics2D context to use for drawing
      */
-    public void drawSelect(Vector list, Graphics2D g2) {
+    public void drawSelect(List<Object> list, Graphics2D g2) {
         for (int i = 0; i < list.size(); i++) {
             CClass cc = (CClass) list.get(i);
             if (cc != null)
@@ -1012,7 +1013,7 @@ public class DrawBase {
     public Rectangle getBounds() {
 
         Rectangle rc = new Rectangle(0, 0, 0, 0);
-        Vector v = pointlist;
+        List<Object> v = pointlist;
         double x, y, x1, y1;
         x = y = Integer.MIN_VALUE;
         x1 = y1 = Integer.MAX_VALUE;
@@ -1962,7 +1963,7 @@ public class DrawBase {
     public boolean containFreezedPoint() {
         for (int i = 0; i < pointlist.size(); i++) {
             CPoint p = (CPoint) pointlist.get(i);
-            if (p.isFreezed()) {
+            if (p.isFrozen()) {
                 return true;
             }
         }
@@ -1975,8 +1976,8 @@ public class DrawBase {
     public void unfreezeAllPoints() {
         for (int i = 0; i < pointlist.size(); i++) {
             CPoint p = (CPoint) pointlist.get(i);
-            if (p.isFreezed()) {
-                p.setFreezed(false);
+            if (p.isFrozen()) {
+                p.setFrozen(false);
             }
         }
     }
@@ -1989,7 +1990,7 @@ public class DrawBase {
     public boolean isFrozen() {
         for (int i = 0; i < pointlist.size(); i++) {
             CPoint p = (CPoint) pointlist.get(i);
-            if (p.isFreezed()) {
+            if (p.isFrozen()) {
                 gxInstance.setTextLabel2(GExpert.getLanguage("The diagram is frozen, use right click menu to unfreeze!"));
                 return true;
             }

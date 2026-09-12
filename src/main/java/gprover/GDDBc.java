@@ -9,7 +9,8 @@ package gprover;
 
 import wprover.GExpert;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * GDDBc class handles the geometric proof process and predicate management.
@@ -49,7 +50,7 @@ public class GDDBc extends GDDAux {
                 parse_llist();
             }
         } else {
-            Vector v = new Vector();
+            List<Object> v = new ArrayList<>();
             v.addAll(vauxpts);
             int n = v.size();
             if (n > 0) {
@@ -1426,7 +1427,7 @@ public class GDDBc extends GDDAux {
         Cond pr1;
         while (co != null) {
             show_pred(co);
-            Vector v = co.vlist;
+            List<Object> v = co.vlist;
             if (v != null)
                 for (int i = 0; i < v.size(); i++) {
                     pr1 = (Cond) v.get(i);
@@ -2310,9 +2311,9 @@ public class GDDBc extends GDDAux {
      * Inserts a CClass object into a sorted Vector based on its identifier.
      *
      * @param obj the CClass object to be inserted
-     * @param v the Vector collection maintaining sorted CClass objects
+     * @param v the List collection maintaining sorted CClass objects
      */
-    public void insertVector(CClass obj, Vector v) {
+    public void insertList(CClass obj, List<Object> v) {
         if(obj == null)
             return;
         
@@ -2333,12 +2334,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid MidPt objects
      */
-    public Vector getAll_md() {
-        Vector v = new Vector();
+    public List<Object> getAll_md() {
+        List<Object> v = new ArrayList<>();
         MidPt md = all_md.nx;
         while (md != null) {
             if (md.type != 0)
-                insertVector(md, v);
+                insertList(md, v);
             md = md.nx;
         }
         return v;
@@ -2349,12 +2350,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid LLine objects
      */
-    public Vector getAll_ln() {
-        Vector v = new Vector();
+    public List<Object> getAll_ln() {
+        List<Object> v = new ArrayList<>();
         LLine ln = all_ln.nx;
         while (ln != null) {
             if (ln.type != 0 && ln.no >= 2)
-                insertVector(ln, v);
+                insertList(ln, v);
             ln = ln.nx;
         }
         return v;
@@ -2365,12 +2366,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid PLine objects
      */
-    public Vector getAll_pn() {
-        Vector v = new Vector();
+    public List<Object> getAll_pn() {
+        List<Object> v = new ArrayList<>();
         PLine pn = all_pn.nx;
         while (pn != null) {
             if (pn.type != 0)
-                insertVector(pn, v);
+                insertList(pn, v);
             pn = pn.nx;
         }
         return v;
@@ -2381,12 +2382,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid TLine objects
      */
-    public Vector getAll_tn() {
-        Vector v = new Vector();
+    public List<Object> getAll_tn() {
+        List<Object> v = new ArrayList<>();
         TLine tn = all_tn.nx;
         while (tn != null) {
             if (tn.type != 0)
-                insertVector(tn, v);
+                insertList(tn, v);
             tn = tn.nx;
         }
         return v;
@@ -2397,12 +2398,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid ACir objects
      */
-    public Vector getAll_cir() {
-        Vector v = new Vector();
+    public List<Object> getAll_cir() {
+        List<Object> v = new ArrayList<>();
         ACir cr = all_cir.nx;
         while (cr != null) {
             if (cr.type != 0 && cr.no >= 2)
-                insertVector(cr, v);
+                insertList(cr, v);
             cr = cr.nx;
         }
         return v;
@@ -2413,12 +2414,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid AngSt objects
      */
-    public Vector getAll_as() {
-        Vector v = new Vector();
+    public List<Object> getAll_as() {
+        List<Object> v = new ArrayList<>();
         AngSt ast = all_ast.nx;
         while (ast != null) {
             if (ast.type != 0)
-                insertVector(ast, v);
+                insertList(ast, v);
             ast = ast.nx;
         }
         return v;
@@ -2429,12 +2430,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid AngleT objects
      */
-    public Vector getAll_at() {
-        Vector v = new Vector();
+    public List<Object> getAll_at() {
+        List<Object> v = new ArrayList<>();
         AngleT at = all_at.nx;
         while (at != null) {
             if (at.type != 0)
-                insertVector(at, v);
+                insertList(at, v);
             at = at.nx;
         }
         return v;
@@ -2445,12 +2446,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid AngTn objects
      */
-    public Vector getAll_atn() {
-        Vector v = new Vector();
+    public List<Object> getAll_atn() {
+        List<Object> v = new ArrayList<>();
         AngTn at = all_atn.nx;
         while (at != null) {
             if (at.type != 0)
-                insertVector(at, v);
+                insertList(at, v);
             at = at.nx;
         }
         return v;
@@ -2461,12 +2462,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid CSegs objects
      */
-    public Vector getAll_cg() {
-        Vector v = new Vector();
+    public List<Object> getAll_cg() {
+        List<Object> v = new ArrayList<>();
         CSegs cg = all_cgs.nx;
         while (cg != null) {
             if (cg.type != 0)
-                insertVector(cg, v);
+                insertList(cg, v);
             cg = cg.nx;
         }
         return v;
@@ -2477,12 +2478,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid CongSeg objects
      */
-    public Vector getAll_rg() {
-        Vector v = new Vector();
+    public List<Object> getAll_rg() {
+        List<Object> v = new ArrayList<>();
         CongSeg cg = all_rg.nx;
         while (cg != null) {
             if (cg.type != 0)
-                insertVector(cg, v);
+                insertList(cg, v);
             cg = cg.nx;
         }
         return v;
@@ -2493,12 +2494,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid RatioSeg objects
      */
-    public Vector getAll_ra() {
-        Vector v = new Vector();
+    public List<Object> getAll_ra() {
+        List<Object> v = new ArrayList<>();
         RatioSeg ra = all_ra.nx;
         while (ra != null) {
             if (ra.type != 0)
-                insertVector(ra, v);
+                insertList(ra, v);
             ra = ra.nx;
         }
         return v;
@@ -2509,12 +2510,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid STris objects
      */
-    public Vector getAll_sts() {
-        Vector v = new Vector();
+    public List<Object> getAll_sts() {
+        List<Object> v = new ArrayList<>();
         STris sts = all_sts.nx;
         while (sts != null) {
             if (sts.type != 0)
-                insertVector(sts, v);
+                insertList(sts, v);
             sts = sts.nx;
         }
         return v;
@@ -2525,12 +2526,12 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector of valid alternate STris objects
      */
-    public Vector getAll_cts() {
-        Vector v = new Vector();
+    public List<Object> getAll_cts() {
+        List<Object> v = new ArrayList<>();
         STris sts = all_cts.nx;
         while (sts != null) {
             if (sts.type != 0)
-                insertVector(sts, v);
+                insertList(sts, v);
             sts = sts.nx;
         }
         return v;
@@ -2545,11 +2546,11 @@ public class GDDBc extends GDDAux {
      * @param s3 the third string parameter
      * @return a Vector containing the matching fact objects
      */
-    public Vector search_a_fact(int t, String s1, String s2, String s3) {
+    public List<Object> search_a_fact(int t, String s1, String s2, String s3) {
         int t1 = this.fd_pt(s1);
         int t2 = this.fd_pt(s2);
         int t3 = this.fd_pt(s3);
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         Object o = null;
         switch (t) {
             case 0:
@@ -2610,7 +2611,7 @@ public class GDDBc extends GDDAux {
      * @param c the third point parameter
      * @param v the vector to collect matching angle transformation nodes
      */
-    private void fo_atn2(int a, int b, int c, Vector v) {
+    private void fo_atn2(int a, int b, int c, List<Object> v) {
         AngTn atn = all_atn.nx;
 
         while (atn != null) {
@@ -2633,7 +2634,7 @@ public class GDDBc extends GDDAux {
      * @param v the vector to collect the matching triangle nodes
      * @return always returns null
      */
-    STris fo_tri2(int a, int b, int c, Vector v) {
+    STris fo_tri2(int a, int b, int c, List<Object> v) {
         STris st = all_sts.nx;
         while (st != null) {
             if (on_sts1(a, b, c, st) >= 0) {
@@ -2661,7 +2662,7 @@ public class GDDBc extends GDDAux {
      * @param v the vector to collect matching segment objects
      * @return always returns null
      */
-    CClass fo_cg2(int a, int b, Vector v) {
+    CClass fo_cg2(int a, int b, List<Object> v) {
         CSegs cgs = all_cgs.nx;
 
         while (cgs != null) {
@@ -3149,12 +3150,12 @@ public class GDDBc extends GDDAux {
         if (ns == null) return;
         search_ns(ns);
 
-        Vector v = getPVector();
+        List<Object> v = getPVector();
         last_ns = ns;
         ns.nx = null;
         show_llists(v);
 
-        Vector vl = new Vector();
+        List<Object> vl = new ArrayList<>();
 
         while (v.size() != 0) {
 
@@ -3513,8 +3514,8 @@ public class GDDBc extends GDDAux {
      *
      * @return a Vector containing sorted node lists
      */
-    public Vector getPVector() {
-        Vector v = new Vector();
+    public List<Object> getPVector() {
+        List<Object> v = new ArrayList<>();
         LList ns = all_ns.nx;
         while (ns != null) {
             int n = ns.get_npt();
@@ -3567,7 +3568,7 @@ public class GDDBc extends GDDAux {
      *
      * @param v a vector containing node lists to be displayed
      */
-    public void show_llists(Vector v) {
+    public void show_llists(List<Object> v) {
 
         for (int i = 0; i < v.size(); i++) {
             LList ls = (LList) v.get(i);
@@ -3594,7 +3595,7 @@ public class GDDBc extends GDDAux {
      * @param ls the starting node list for the backup parsing process
      */
     void parse_bk_list(LList ls) {
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         while (ls != null) {
             v.add(0, ls);
             ls = ls.fr;

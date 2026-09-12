@@ -4,14 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JCgFlash is a class that extends JFlash and implements ActionListener.
  * It is used to create a flashing effect on a JPanel with specified points.
  */
 public class JCgFlash extends JFlash implements ActionListener {
-    Vector vlist = new Vector();
+    List<CPoint> vlist = new ArrayList<>();
     int length = 8;
     int dnum = 2;
     private boolean dTT = true;
@@ -84,8 +85,8 @@ public class JCgFlash extends JFlash implements ActionListener {
     public boolean draw(Graphics2D g2) {
         int num = vlist.size() / 2;
         for (int i = 0; i < num; i++) {
-            CPoint p1 = (CPoint) vlist.get(i * 2);
-            CPoint p2 = (CPoint) vlist.get(i * 2 + 1);
+            CPoint p1 = vlist.get(i * 2);
+            CPoint p2 = vlist.get(i * 2 + 1);
             g2.setStroke(BStroke2);
             g2.setColor(Color.white);
             ShapeDrawer.drawLine(g2, p1.getx(), p1.gety(), p2.getx(), p2.gety());
@@ -95,8 +96,8 @@ public class JCgFlash extends JFlash implements ActionListener {
         boolean all_eq = true;
 
         for (int i = 0; i < num; i++) {
-            CPoint p1 = (CPoint) vlist.get(i * 2);
-            CPoint p2 = (CPoint) vlist.get(i * 2 + 1);
+            CPoint p1 = vlist.get(i * 2);
+            CPoint p2 = vlist.get(i * 2 + 1);
             double r1 = DrawBase.sdistance(p1, p2);
 
             if (r < 0)
@@ -121,8 +122,8 @@ public class JCgFlash extends JFlash implements ActionListener {
         }
 
         for (int i = 0; i < num; i++) {
-            CPoint p1 = (CPoint) vlist.get(i * 2);
-            CPoint p2 = (CPoint) vlist.get(i * 2 + 1);
+            CPoint p1 = vlist.get(i * 2);
+            CPoint p2 = vlist.get(i * 2 + 1);
             if (n % 2 == 0) {
                 g2.setStroke(BStroke);
                 g2.setColor(DrawData.getColor(i + 3));

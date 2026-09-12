@@ -2,7 +2,8 @@ package wprover;
 
 import gprover.Cond;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,8 +17,8 @@ import java.io.FileOutputStream;
 public class CProveField {
     private boolean HEAD = false;
     CProveText cpname;
-    Vector clist;
-    Vector vlist;
+    List<Object> clist;
+    List<Object> vlist;
 
     CProveText pselect;
     CProveText pundo = null;
@@ -33,8 +34,8 @@ public class CProveField {
      */
     public CProveField() {
         pt = new Point(20, 20);
-        clist = new Vector();
-        vlist = new Vector();
+        clist = new ArrayList<>();
+        vlist = new ArrayList<>();
     }
 
     /**
@@ -97,10 +98,10 @@ public class CProveField {
      * @param v the vector of conditions
      * @param head the head flag indicating the type of proof field
      */
-    public CProveField(Vector v, boolean head) {
+    public CProveField(List<Object> v, boolean head) {
         pt = new Point(20, 20);
-        clist = new Vector();
-        vlist = new Vector();
+        clist = new ArrayList<>();
+        vlist = new ArrayList<>();
         HEAD = head;
         if (head) {
             cpname = new CProveText("", "theorem");
@@ -141,11 +142,11 @@ public class CProveField {
      *
      * @param ulist the vector of undo structures
      */
-    public CProveField(Vector ulist) {
+    public CProveField(List<Object> ulist) {
         pt = new Point(20, 20);
 
-        clist = new Vector();
-        vlist = new Vector();
+        clist = new ArrayList<Object>();
+        vlist = new ArrayList<Object>();
         for (int i = 0; i < ulist.size(); i++) {
             UndoStruct u = (UndoStruct) ulist.get(i);
             CProveText ct = new CProveText(u, i);
@@ -428,7 +429,7 @@ public class CProveField {
     public boolean next_prove_step(DrawProcess dp) {
         if (HEAD) {
             CBoolean find = new CBoolean(false);
-            Vector vl = new Vector();
+            List<Object>  vl = new ArrayList<>();
 
             CProveText ct = next_prove_step(dp, pundo, find);
             if (ct != null) {
@@ -453,7 +454,7 @@ public class CProveField {
      */
     public void setSelectedUndo(UndoStruct u, DrawProcess dp) {
         CProveText ct = pselect = findPText(u);
-        Vector vl = new Vector();
+        List<Object>  vl = new ArrayList<>();
         if (ct != null) {
 
             ct.getFlashObjectList(vl, dp);
@@ -837,7 +838,7 @@ public class CProveField {
         }
 
         int size = in.readInt();
-        clist = new Vector();
+        clist = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             CProveText ct = new CProveText();
             ct.Load(in, dp);
@@ -845,7 +846,7 @@ public class CProveField {
         }
 
         size = in.readInt();
-        vlist = new Vector();
+        vlist = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             CProveText ct = new CProveText();

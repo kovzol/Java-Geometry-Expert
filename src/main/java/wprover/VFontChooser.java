@@ -561,7 +561,7 @@ public class VFontChooser extends JBaseDialog {
                                 + str.substring(1);
                     }
 
-                    model.addElement(str);
+                    model.add(0, str);
                 }
             } catch (SQLException ex) {
                 System.err.println("appendResultSet: " + ex.toString());

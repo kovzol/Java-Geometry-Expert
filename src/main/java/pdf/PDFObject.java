@@ -159,7 +159,7 @@ public abstract class PDFObject implements Serializable
    * @param v Vector containing PDFObjects
    * @return String containing a PDF array
    */
-  public static String toArray(Vector<? extends PDFObject> v)
+  public static String toArray(List<? extends PDFObject> v)
   {
     if(v.size()==0)
       return "";

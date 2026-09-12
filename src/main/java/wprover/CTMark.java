@@ -80,12 +80,11 @@ public class CTMark extends CClass {
      * @param dy the delta y value
      */
     void move(double dx, double dy) {
-        double r[] = CLine.Intersect(ln1, ln2);
+        double[] r = CLine.Intersect(ln1, ln2);
         if (r == null || r.length == 0)
             return;
 
         int len = (int) (Math.sqrt(Math.pow(r[0] - dx, 2) + Math.pow(r[1] - dy, 2)));
-        int len1 = (int) (Math.sqrt(Math.pow(tx - dx, 2) + Math.pow(ty - dy, 2)));
         double ddx = tx - r[0];
         double ddy = ty - r[1];
         double ddx1 = dx - r[0];
@@ -111,7 +110,7 @@ public class CTMark extends CClass {
         if (!CLine.isPerp(ln1, ln2))
             return;
 
-        double r[] = CLine.Intersect(ln1, ln2);
+        double[] r = CLine.Intersect(ln1, ln2);
         if (r != null && r.length == 2) {
             if (ln1.inside(r[0], r[1]) && ln2.inside(r[0], r[1])) {
                 CPoint p = CLine.commonPoint(ln1, ln2);
@@ -131,8 +130,7 @@ public class CTMark extends CClass {
      * @return true if the mark is selected, false otherwise
      */
     boolean select(double x, double y) {
-        boolean xr = Math.pow(tx - x, 2) + Math.pow(ty - y, 2) < CMisc.PIXEPS * CMisc.PIXEPS;
-        return xr;
+        return Math.pow(tx - x, 2) + Math.pow(ty - y, 2) < CMisc.PIXEPS * CMisc.PIXEPS;
     }
 
     /**

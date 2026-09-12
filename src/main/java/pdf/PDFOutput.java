@@ -55,9 +55,9 @@ public class PDFOutput
   protected int offset;
   
   /**
-   * This vector contains offsets of each object
+   * This list contains offsets of each object
    */
-  protected Vector<PDFXref> offsets;
+  protected List<PDFXref> offsets;
   
   /**
    * This is used to track the /Root object (catalog)
@@ -79,7 +79,7 @@ public class PDFOutput
   {
     this.os = os;
     offset = 0;
-    offsets = new Vector<PDFXref>();
+    offsets = new ArrayList<>();
     baos = new ByteArrayOutputStream();
     
     // Now write the PDF header
@@ -109,7 +109,7 @@ public class PDFOutput
     if(ob instanceof PDFCatalog)   rootID=ob;
     if(ob instanceof PDFInfo)              infoID=ob;
     
-    offsets.addElement(new PDFXref(ob.getSerialID(),offset));
+    offsets.add(new PDFXref(ob.getSerialID(),offset));
     baos.reset();
     ob.write(baos);
     offset+=baos.size();
@@ -137,10 +137,10 @@ public class PDFOutput
     // but just in case:
     int firstid = 0;                    // First id in block
     int lastid = -1;                    // The last id used
-    Vector<PDFXref> block = new Vector<PDFXref>();        // xrefs in this block
+    List<PDFXref> block = new ArrayList<>();        // xrefs in this block
     
     // We need block 0 to exist
-    block.addElement(new PDFXref(0,0,65535));
+    block.add(new PDFXref(0,0,65535));
     
     for(PDFXref x : offsets) {
       
@@ -150,12 +150,12 @@ public class PDFOutput
       if(lastid>-1 && x.id != (lastid+1)) {
         // no, so write this block, and reset
         writeblock(firstid,block);
-        block.removeAllElements();
+        block.clear();
         firstid=-1;
       }
       
       // now add to block
-      block.addElement(x);
+      block.add(x);
       lastid = x.id;
     }
     
@@ -202,7 +202,7 @@ public class PDFOutput
    * @param block Vector containing the references in this block
    * @exception IOException on write error
    */
-  protected void writeblock(int firstid,Vector<PDFXref> block) throws IOException
+  protected void writeblock(int firstid, List<PDFXref> block) throws IOException
   {
     baos.write(Integer.toString(firstid).getBytes());
     baos.write(" ".getBytes());

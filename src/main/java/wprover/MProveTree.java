@@ -5,7 +5,8 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.DataOutputStream;
@@ -527,13 +528,13 @@ public class MProveTree extends JTree implements ActionListener {
 
         if (n.size() != 0) {
             nd.removeAllChildren();
-            n.removeAllElements();
+            n.clear();
             model.reload();
 
         }
 
         if (n.size() == 0) {
-            Vector v = n.getUndoList();
+            List<Object> v = n.getUndoList();
             if (v.size() > 1) {
                 for (int i = 0; i < v.size(); i++) {
                     UndoStruct u = (UndoStruct) v.get(i);
@@ -626,7 +627,7 @@ public class MProveTree extends JTree implements ActionListener {
         nd.getUserObject();
     }
 
-    public void addToProve(Vector v) {
+    public void addToProve(List<Object> v) {
     }
 
     public void stepEnd() {
@@ -831,11 +832,11 @@ public class MProveTree extends JTree implements ActionListener {
  * MNode is a class that represents a node in a tree structure, specifically for
  * managing mathematical objects and their associated undo structures.
  */
-class MNode extends Vector {
+class MNode extends ArrayList<Object> {
     private int index = -1;
 
-    Vector vundolist = new Vector();
-    Vector vlist = new Vector();
+    List<Object> vundolist = new ArrayList<>();
+    List<Object>  vlist = new ArrayList<>();
 
 
     public MNode() {
@@ -903,8 +904,8 @@ class MNode extends Vector {
         return vlist.size();
     }
 
-    public Vector getUndoList() {
-        Vector v = new Vector();
+    public List<Object> getUndoList() {
+        List<Object>  v = new ArrayList<>();
         v.addAll(vundolist);
         return v;
     }
@@ -925,8 +926,8 @@ class MNode extends Vector {
         return s;
     }
 
-    public Vector getAllUndoStruct() {
-        Vector v1 = new Vector();
+    public List<Object>  getAllUndoStruct() {
+        List<Object>  v1 = new ArrayList<>();
         v1.addAll(vundolist);
         return v1;
     }
@@ -1021,11 +1022,11 @@ class MSymbol extends MObject {
     final static ImageIcon PERP = GExpert.createImageIcon("images/symbol/perp.gif");
 
     public static String[] cSprefix = {"because", "hence"};
-    static Vector vlist;
+    static List<Object>  vlist;
     int type1;
 
     public static void createAllIcons() {
-        vlist = new Vector();
+        vlist = new ArrayList<>();
         for (int i = 0; i < cSprefix.length; i++) {
             ImageIcon icon = GExpert.createImageIcon("images/dtree/" +
                     cSprefix[i] + ".gif");
@@ -1135,7 +1136,7 @@ class MPrefix extends MObject {
  */
 class MDraw extends MObject {
 
-    private Vector vunlist = new Vector();
+    private List<Object>  vunlist = new ArrayList<>();
     private String str = "";
 
     public MDraw() {
@@ -1147,8 +1148,8 @@ class MDraw extends MObject {
         str = s;
     }
 
-    public Vector getAllUndoStruct() {
-        Vector v = new Vector();
+    public List<Object>  getAllUndoStruct() {
+        List<Object>  v = new ArrayList<>();
         v.addAll(vunlist);
         return v;
     }
@@ -1279,8 +1280,8 @@ class MDrObj extends MObject {
             "Please select three points", "Please select four points", "Please select N(>=3) points", "Please select three points",
             "Please select four points", "Please select four points", "Please select four points"};
 
-    static Vector vlist = new Vector();
-    Vector objlist = new Vector();
+    static List<Object>  vlist = new ArrayList<>();
+    List<Object>  objlist = new ArrayList<>();
     int type1;
 
     static void createAllIcons() {
@@ -1749,7 +1750,7 @@ class MRule extends MObject {
  * in the equation, as well as to load and save the equation data.
  */
 class MEquation extends MObject {
-    private Vector vlist = new Vector();
+    private List<Object>  vlist = new ArrayList<>();
 
     public MEquation() {
         super(EQUATION);
@@ -1902,7 +1903,7 @@ class MAssertion extends MObject {
     final public static int SAME_SIDE = 27;
 
 
-    private Vector objlist = new Vector();
+    private List<Object>  objlist = new ArrayList<>();
     private int type1;
 
     public MAssertion(int t) {

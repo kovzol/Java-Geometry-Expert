@@ -1,6 +1,7 @@
 package wprover;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The HelpMode class provides methods to manage and retrieve help items in GeoGebra.
@@ -10,7 +11,7 @@ public class HelpMode {
     /**
      * A vector to store help items.
      */
-    public static Vector items = new Vector();
+    public static List<Object> items = new ArrayList<>();
 
     /**
      * Retrieves the help mode filename for the given command.

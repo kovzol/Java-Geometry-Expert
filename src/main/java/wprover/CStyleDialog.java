@@ -6,7 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * CStyleDialog is a class that creates a dialog for selecting drawing styles, including color,
@@ -325,7 +326,7 @@ public class CStyleDialog extends FloatableToolBar {
      * selection. It extends the JPanel class and implements MouseListener to handle mouse events.
      */
     class PopComboRender extends JPanel implements MouseListener {
-        Vector vlist = new Vector();
+        List<Object> vlist = new ArrayList<>();
 
         public PopComboRender(int type) {
             this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.Vector;
+
 /**
  * A dialog for saving a proof as a GIF file in GeoGebra.
  */

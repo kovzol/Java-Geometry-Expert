@@ -9,7 +9,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.*;
 import java.awt.*;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * PPDialog is a class that extends JBaseDialog and implements ActionListener,
@@ -171,9 +171,9 @@ PPDialog extends JBaseDialog implements ActionListener, MouseMotionListener, Mou
         if (gt == null)
             return;
 
-        Vector v1 = gt.pc();
+        List<Object> v1 = gt.pc();
 
-        Vector v = gt.getAllNdgs(v1);
+        List<Object> v = gt.getAllNdgs(v1);
 
         model2.removeAllElements();
         model22.removeAllElements();
@@ -183,12 +183,12 @@ PPDialog extends JBaseDialog implements ActionListener, MouseMotionListener, Mou
 
         for (int i = 0; i < v1.size(); i++) {
             Cons c = (Cons) v1.get(i);
-            model1.addElement(c.toDDString());
+            model1.add(0, c.toDDString());
         }
 
         for (int i = 0; i < v.size(); i++) {
             Cons c = (Cons) v.get(i);
-            model2.addElement((i + 1) + ": " + c.toDString());
+            model2.add(0, (i + 1) + ": " + c.toDString());
         }
 
         for (int i = 0; i < v.size(); i++) {
@@ -197,7 +197,7 @@ PPDialog extends JBaseDialog implements ActionListener, MouseMotionListener, Mou
             //        String s = (i + 1) + ": ";
             //        if (m != null)
             //            s += poly.printNPoly(m);
-            //        model22.addElement(s);
+            //        model22.add(0, s);
         }
     }
 }

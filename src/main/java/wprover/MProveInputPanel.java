@@ -7,7 +7,8 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.border.LineBorder;
 import javax.swing.border.Border;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -596,7 +597,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         public symbolPanel() {
             this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
             MSymbol.createAllIcons();
-            box = new JComboBox(MSymbol.vlist);
+            box = new JComboBox(MSymbol.vlist.toArray());
             box.setAlignmentX(Component.LEFT_ALIGNMENT);
             this.add(box);
             box.addItemListener(this);
@@ -721,7 +722,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
 
         private JComboBox box;
         int pnum = 0;
-        private Vector vlist = new Vector();
+        private List<Object> vlist = new ArrayList<>();
         private MDrObj dobj;
         private JLabel labelx;
 
@@ -731,10 +732,10 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
             JPanel pane = new JPanel();
             pane.setLayout(new BoxLayout(pane, BoxLayout.X_AXIS));
 
-            box = new JComboBox(MDrObj.vlist);
+            box = new JComboBox(MDrObj.vlist.toArray());
             pane.add(box);
             box.addActionListener(this);
-            Vector v = dp.getPointList();
+            List<Object> v = dp.getPointList();
             pnum = v.size();
             this.add(Box.createHorizontalStrut(15));
             for (int i = 0; i < 5; i++) {
@@ -768,8 +769,8 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
 
         public void selectAPoint(CPoint p) {
-            for (int i = 0; i < vlist.size(); i++) {
-                JComboBox b = (JComboBox) vlist.get(i);
+            for (Object o : vlist) {
+                JComboBox b = (JComboBox) o;
                 if (b.getSelectedIndex() < 0) {
                     b.setSelectedItem(p);
                     return;
@@ -778,8 +779,8 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
 
         public boolean inputFinished() {
-            for (int i = 0; i < vlist.size(); i++) {
-                JComboBox b = (JComboBox) vlist.get(i);
+            for (Object o : vlist) {
+                JComboBox b = (JComboBox) o;
                 if (b.isEnabled() && b.getSelectedIndex() < 0)
                     return false;
             }
@@ -793,8 +794,8 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
             else
                 dobj.setType1(box.getSelectedIndex());
             dobj.clear();
-            for (int i = 0; i < vlist.size(); i++) {
-                JComboBox b = (JComboBox) vlist.get(i);
+            for (Object o : vlist) {
+                JComboBox b = (JComboBox) o;
                 if (b.isEnabled()) {
                     dobj.add(b.getSelectedItem());
                 } else
@@ -806,8 +807,8 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         public MDrObj getObject() {
             MDrObj d = new MDrObj(box.getSelectedIndex());
 
-            for (int i = 0; i < vlist.size(); i++) {
-                JComboBox b = (JComboBox) vlist.get(i);
+            for (Object o : vlist) {
+                JComboBox b = (JComboBox) o;
                 if (b.isEnabled()) {
                     d.add(b.getSelectedItem());
                 } else
@@ -851,8 +852,8 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         public void reset() {
 
             pnum = 0;
-            for (int i = 0; i < vlist.size(); i++) {
-                ((JComboBox) vlist.get(i)).setSelectedIndex(-1);
+            for (Object o : vlist) {
+                ((JComboBox) o).setSelectedIndex(-1);
             }
             dobj = null;
             box.setSelectedIndex(0);
@@ -903,12 +904,11 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
 
         private void pointupdate() {
-            Vector v = dp.getPointList();
-            for (int i = 0; i < vlist.size(); i++) {
-                JComboBox b = (JComboBox) vlist.get(i);
+            List<Object> v = dp.getPointList();
+            for (Object o : vlist) {
+                JComboBox b = (JComboBox) o;
                 b.removeAllItems();
-                for (int j = 0; j < v.size(); j++)
-                    b.addItem(v.get(j));
+                for (Object object : v) b.addItem(object);
                 b.setSelectedIndex(-1);
             }
         }
@@ -960,7 +960,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
      */
     class CommonEquationPanel extends JPanel implements ActionListener {
 
-        private Vector vlist = new Vector();
+        private List<Object> vlist = new ArrayList<>();
         private JPanel topPane;
         private JPanel pbottom;
         private MEquation eq;
@@ -987,9 +987,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
 
         private void addNewTerm() {
-            boolean b = true;
-            if (vlist.size() == 0)
-                b = false;
+            boolean b = !vlist.isEmpty();
             termPane opane = new termPane(b);
             topPane.add(opane);
             vlist.add(opane);
@@ -1027,8 +1025,8 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
             else
                 eq.clearAll();
 
-            for (int i = 0; i < vlist.size(); i++) {
-                termPane t = (termPane) vlist.get(i);
+            for (Object o : vlist) {
+                termPane t = (termPane) o;
                 eq.addTerm(t.getUserObject());
             }
             return eq;
@@ -1172,7 +1170,6 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
                 item.addActionListener(this);
             }
 
-//            this.addSeparator();
             menu.addSeparator();
             for (int i = 0; i < MSymbol.cSprefix.length; i++) {
                 JMenuItem item = new popSelectMenuItem("(" + getLanguage(MSymbol.cSprefix[i]) + ")", MSymbol.getSymbolIcon(i), 2, i);
@@ -1210,11 +1207,6 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
         }
 
         public void addAssertion(JMenu menu) {
-
-            int n1 = 8;
-
-//            JPanel panel1 = new JPanel(new GridLayout(10, 3));
-
             JMenu menu1 = new JMenu(getLanguage("Basic Assertions"));
 
             for (int i = 0; i < 12; i++) {
@@ -1233,9 +1225,6 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
                 menu1.add(item);
                 item.addActionListener(this);
             }
-
-            int n2 = 18;
-
 
             JMenu menu2 = new JMenu(getLanguage("Polygon Related"));
 
@@ -1303,7 +1292,7 @@ public class MProveInputPanel extends JToolBar implements ActionListener {
     /**
      * This class is used to show the select menu
      */
-    class popSelectMenuItem extends JMenuItem {
+    static class popSelectMenuItem extends JMenuItem {
         int m_id1, m_id2;
 
         public popSelectMenuItem(String text, int id1, int id2) {

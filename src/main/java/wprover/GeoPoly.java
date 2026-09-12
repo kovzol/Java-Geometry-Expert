@@ -6,8 +6,6 @@ import maths.TPoly;
 import gprover.Gib;
 import gprover.CNdg;
 
-import java.util.Vector;
-
 /**
  * GeoPoly is a singleton class that provides methods for constructing polynomial expressions
  * related to geometric properties and relationships.

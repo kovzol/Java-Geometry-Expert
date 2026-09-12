@@ -11,8 +11,8 @@ public class AnimateC {
 
     double bx, by;
 
-    double minwd = 0;
-    double minht = 0;
+    double minWd = 0;
+    double minHt = 0;
     double width = 0;
     double height = 0;
 
@@ -29,7 +29,7 @@ public class AnimateC {
 
     double gap = CMisc.ANIMATE_GAP;
 
-    int pindex = 0;
+    int pIndex = 0;
     int step_time = 0; // for trace;
 
     double delta = 0.05;
@@ -54,9 +54,11 @@ public class AnimateC {
         csa = n.csa;
         sia = n.sia;
         gap = n.gap;
-        pindex = n.pindex;
+        pIndex = n.pIndex;
         step_time = n.step_time;
         delta = n.delta;
+        minHt = n.minHt;
+        minWd = n.minWd;
     }
 
 
@@ -70,11 +72,11 @@ public class AnimateC {
             return null;
         }
 
-        String son = "\nANI " + pA.toString();
+        String son = "\nANI " + pA;
 
         if (onType == 1) {
             CLine ln = (CLine) onObj;
-            CPoint pl[] = ln.getTowSideOfLine();
+            CPoint[] pl = ln.getTowSideOfLine();
             if (pl == null) {
                 return null;
             }
@@ -104,9 +106,6 @@ public class AnimateC {
             return false;
         }
         s = s.substring(4);
-        if (s == null) {
-            return false;
-        }
         s = s.trim();
         int index = 0;
         int len = s.length();
@@ -203,7 +202,7 @@ public class AnimateC {
      *
      * @param step The step value to set.
      */
-    void Setstep(double step) {
+    void setStep(double step) {
         gap = step + delta;
 
         if (onType == 3) {
@@ -225,7 +224,7 @@ public class AnimateC {
         }
 
         CTrace ct = (CTrace) onObj;
-        double len = ct.Roud_length();
+        double len = ct.roudLength();
         int n = ct.getPointSize();
         if (n == 0) {
             return 0;
@@ -270,40 +269,49 @@ public class AnimateC {
      */
     public void reCalculate() {
         if (onType == 2) {
-            Circle c = (Circle) onObj;
-            CPoint pt = c.getSidePoint();
-            double rx = c.o.getx();
-            double ry = c.o.gety();
-            double r = Math.sqrt(Math.pow(pt.getx() - rx, 2) +
-                    Math.pow(pt.gety() - ry, 2));
+            double r = calculateR();
             csa = Math.cos(-gap / r);
             sia = Math.sin(-gap / r);
         } else if (onType == 1) {
             CLine line = (CLine) onObj;
             CPoint[] pp = line.getTowSideOfLine();
             if (line.isVertical()) {
-                dx = (pp[1].getx() - pp[0].getx());
-                dy = (pp[1].gety() - pp[0].gety());
-                double r = Math.sqrt(dx * dx + dy * dy);
-                dx = dx / r;
-                dy = dy / r;
+                updateDxDy(pp);
             } else {
                 if (pp[0] == pA) {
                     pp[0] = pp[1];
                     pp[1] = pA;
                 }
 
-                dx = (pp[1].getx() - pp[0].getx());
-                dy = (pp[1].gety() - pp[0].gety());
-                double r = Math.sqrt(dx * dx + dy * dy);
-                dx = dx / r;
-                dy = dy / r;
+                updateDxDy(pp);
             }
         } else if (onType == 3) {
 
         } else {
             CMisc.print("Error,undifined on type ");
         }
+    }
+
+    private double calculateR() {
+        Circle c = (Circle) onObj;
+        CPoint pt = c.getSidePoint();
+        double rx = c.o.getx();
+        double ry = c.o.gety();
+        return Math.sqrt(Math.pow(pt.getx() - rx, 2) +
+                Math.pow(pt.gety() - ry, 2));
+    }
+
+    /**
+     * Updates dx and dy based on the first 2 element of the argument CPoint list.
+     * @param pp an array of CPoints
+     */
+
+    private void updateDxDy(CPoint[] pp) {
+        dx = (pp[1].getx() - pp[0].getx());
+        dy = (pp[1].gety() - pp[0].gety());
+        double r = Math.sqrt(dx * dx + dy * dy);
+        dx = dx / r;
+        dy = dy / r;
     }
 
     /**
@@ -352,16 +360,11 @@ public class AnimateC {
      */
     public int getRounds() {
         if (onType == 2) {
-            Circle c = (Circle) onObj;
-            CPoint pt = c.getSidePoint();
-            double rx = c.o.getx();
-            double ry = c.o.gety();
-            double r = Math.sqrt(Math.pow(pt.getx() - rx, 2) +
-                    Math.pow(pt.gety() - ry, 2));
+            double r = calculateR();
             return (int) Math.abs(Math.PI * r * 2 / gap);
         } else if (onType == 1) {
-            int n1 = (int) Math.abs((width - minwd) / (gap * dx));
-            int n2 = (int) Math.abs((height - minht) / (gap * dy));
+            int n1 = (int) Math.abs((width - minWd) / (gap * dx));
+            int n2 = (int) Math.abs((height - minHt) / (gap * dy));
             return Math.min(n1, n2) * 2;
         }
         return 0;
@@ -391,7 +394,7 @@ public class AnimateC {
         } else if (onType == 1) {
             double x = pA.getx() + gap * dx;
             double y = pA.gety() + gap * dy;
-            if (x < minwd || x > width || y < minht || y > height) {
+            if (x < minWd || x > width || y < minHt || y > height) {
                 dx = -dx;
                 dy = -dy;
                 r = false;
@@ -404,11 +407,11 @@ public class AnimateC {
             if (len == 0) {
                 return r;
             }
-            if (pindex >= len) {
-                pindex = 0;
+            if (pIndex >= len) {
+                pIndex = 0;
             }
-            pA.setXY(ct.getPtxi(pindex), ct.getPtyi(pindex));
-            pindex++;
+            pA.setXY(ct.getPtXi(pIndex), ct.getPtYi(pIndex));
+            pIndex++;
         }
 
         x = pA.getx();
@@ -449,7 +452,7 @@ public class AnimateC {
         out.writeDouble(csa);
         out.writeDouble(sia);
         out.writeDouble(gap);
-        out.writeInt(pindex);
+        out.writeInt(pIndex);
         out.writeInt(step_time);
 
     }
@@ -485,12 +488,10 @@ public class AnimateC {
         csa = in.readDouble();
         sia = in.readDouble();
         gap = in.readDouble();
-        pindex = in.readInt();
+        pIndex = in.readInt();
         step_time = in.readInt();
 
     }
-
-
 }
 
 

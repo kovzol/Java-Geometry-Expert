@@ -1,6 +1,6 @@
 package gprover;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * The Prover class provides static methods for performing geometric proofs and computations.
@@ -224,7 +224,7 @@ public class Prover {
      * @param s3 the third search parameter
      * @return a Vector of matching facts
      */
-    public static Vector search_a_fact(int t, String s1, String s2, String s3) {
+    public static List<Object> search_a_fact(int t, String s1, String s2, String s3) {
         return db.search_a_fact(t, s1, s2, s3);
     }
 
@@ -277,7 +277,7 @@ public class Prover {
      * @param v4 vector to store the fourth group of statements
      * @return true if the nondiscussed statements were successfully retrieved; false otherwise
      */
-    public static boolean getAllNdgs(GTerm gt, Vector v1, Vector v2, Vector v3, Vector v4) {
+    public static boolean getAllNdgs(GTerm gt, List<Object> v1, List<Object> v2, List<Object> v3, List<Object> v4) {
         try {
             Prover.gt = gt;
             if (dbfull == null)

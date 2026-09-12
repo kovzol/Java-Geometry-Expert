@@ -5,7 +5,8 @@ import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * ListTree provides a tabbed interface with two panels:
  * - "Construct History": displays a list of undo structures.
@@ -16,7 +17,7 @@ public class ListTree extends JTabbedPane
         implements ActionListener, MouseListener, ListSelectionListener {
 
     public GExpert gxInstance;
-    public Vector undolist;
+    public List<Object> undolist;
     private JList list, listx;
     private DefaultListModel model, modelx;
     private CProperty prop;
@@ -33,7 +34,7 @@ public class ListTree extends JTabbedPane
         JPanel pane1 = new JPanel();
         pane1.setLayout(new BoxLayout(pane1, BoxLayout.Y_AXIS));
         gxInstance = gx;
-        undolist = new Vector();
+        undolist = new ArrayList<>();
         model = new DefaultListModel();
         list = new JList(model);
         list.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -180,16 +181,16 @@ public class ListTree extends JTabbedPane
 
         DrawProcess dp = gxInstance.dp;
 
-        Vector v = dp.undolist;
+        List<Object> v = dp.undolist;
         undolist.addAll(v);
         for (int i = 0; i < undolist.size(); i++)
-            model.addElement(undolist.get(i));
+            model.add(0, undolist.get(i));
 
-        Vector vx = dp.getAllSolidObj();
+        List<Object> vx = dp.getAllSolidObj();
 
         for (Object o : vx) {
             if (o != null)
-                modelx.addElement(o);
+                modelx.add(0, o);
         }
     }
 

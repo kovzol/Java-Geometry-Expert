@@ -7,10 +7,12 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.IOException;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.util.List;
 
 
 /**
@@ -21,7 +23,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
  */
 public class TextFrame extends JBaseDialog implements ItemListener,
         ActionListener, FocusListener, MouseListener {
-    JEditorPane textpane = null;
+    JEditorPane textPane = null;
     CText text = null;
 
     JComboBox fonts, sizes, styles, color;
@@ -30,7 +32,7 @@ public class TextFrame extends JBaseDialog implements ItemListener,
     String fontchoice = "fontchoice";
     int stChoice = 0;
     String siChoice = "10";
-    Vector fontfamily;
+    List<String> fontfamily;
     //    Font defaultFont = new Font("Dialog", Font.PLAIN, 16);
     GExpert gxInstance;
 
@@ -42,7 +44,6 @@ public class TextFrame extends JBaseDialog implements ItemListener,
      * Sets up the layout and components for the text editing toolbar.
      */
     public void init() {
-
         Font tf = new Font("Dialog", Font.PLAIN, 12);
 
         getContentPane().setLayout(new BorderLayout());
@@ -56,19 +57,18 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         topPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        String envfonts[] = gEnv.getAvailableFontFamilyNames();
+        String[] envFonts = gEnv.getAvailableFontFamilyNames();
 
         Font cfont = new Font("Dialog", Font.PLAIN, 16);
 
-        fontfamily = new Vector();
-        for (int i = 1; i < envfonts.length; i++)
-            fontfamily.addElement(envfonts[i]);
-        fonts = new JComboBox(fontfamily);
+        fontfamily = new ArrayList<>();
+        fontfamily.addAll(Arrays.asList(envFonts).subList(1, envFonts.length)); // wonder why skip first font
+        fonts = new JComboBox<>(fontfamily.toArray());
         fonts.setFont(tf);
 
         fonts.setMaximumRowCount(9);
         fonts.addItemListener(this);
-        fontchoice = envfonts[0];
+        fontchoice = envFonts[0];
         topPanel.add(fonts);
         topPanel.add(Box.createHorizontalStrut(5));
 
@@ -79,7 +79,7 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         for (int i = 0; i < n; i++)
             o[i] = fz[i];
 
-        sizes = new JComboBox(o);
+        sizes = new JComboBox<>(o);
 
         sizes.setFont(tf);
         sizes.setMaximumRowCount(20);
@@ -88,7 +88,7 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         topPanel.add(Box.createHorizontalStrut(5));
 
 
-        styles = new JComboBox(new Object[]{
+        styles = new JComboBox<>(new Object[]{
                 "PLAIN",
                 "BOLD",
                 "ITALIC"});
@@ -126,7 +126,7 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         tb.add(topPanel);
         tb.setFloatable(false);
 
-        textpane.addMouseListener(this);
+        textPane.addMouseListener(this);
         this.setCurrentFont(cfont);
         getContentPane().add(BorderLayout.SOUTH, tb);
     }
@@ -152,7 +152,7 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         styles.setSelectedIndex(type);
 
         for (int i = 0; i < sizes.getItemCount(); i++) {
-            int s = ((Integer) sizes.getItemAt(i)).intValue();
+            int s = ((Integer) sizes.getItemAt(i));
             if (s == size) {
                 sizes.setSelectedIndex(i);
                 break;
@@ -177,9 +177,9 @@ public class TextFrame extends JBaseDialog implements ItemListener,
 
         if (CMisc.isApplication())
             this.setAlwaysOnTop(true);
-        textpane = new JEditorPane();
+        textPane = new JEditorPane();
         this.init();
-        this.getContentPane().add(new JScrollPane(textpane));
+        this.getContentPane().add(new JScrollPane(textPane));
         text = null;
         //       setCurrentFont(gxInstance.getDefaultFont());
         this.setSize(550, 200);
@@ -194,8 +194,8 @@ public class TextFrame extends JBaseDialog implements ItemListener,
     void setText(CText tx) {
         if (tx != null) {
             text = tx;
-            textpane.setText(tx.getText());
-            textpane.setFont(tx.getFont());
+            textPane.setText(tx.getText());
+            textPane.setFont(tx.getFont());
             Font f = tx.getFont();
             color.setSelectedIndex(tx.m_color);
             setCurrentFont(f);
@@ -203,7 +203,7 @@ public class TextFrame extends JBaseDialog implements ItemListener,
         } else {
             this.setTitle(GExpert.getLanguage("Text"));
             text = null;
-            textpane.setText("");
+            textPane.setText("");
         }
     }
 
@@ -233,11 +233,11 @@ public class TextFrame extends JBaseDialog implements ItemListener,
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == bok) {
-            String str = textpane.getText();
+            String str = textPane.getText();
 
             CText ct = text;
             if (ct == null) {
-                if (str == null || str.length() == 0) {
+                if (str == null || str.isEmpty()) {
                     this.setVisible(false);
                     return;
                 }
@@ -263,9 +263,9 @@ public class TextFrame extends JBaseDialog implements ItemListener,
             int size = ((Integer) sizes.getSelectedItem()).intValue();
             int type = styles.getSelectedIndex();
             Font f = new Font(s, type, size);
-            textpane.setFont(f);
+            textPane.setFont(f);
             int id = color.getSelectedIndex();
-            textpane.setForeground(DrawData.getColor(id));
+            textPane.setForeground(DrawData.getColor(id));
             if (text != null)
                 text.m_color = (id);
         }
@@ -285,8 +285,8 @@ public class TextFrame extends JBaseDialog implements ItemListener,
      */
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3) {
-            new TextPopupMenu(textpane.getSelectionStart()
-                    != textpane.getSelectionEnd()).show(textpane, e.getX(), e.getY());
+            new TextPopupMenu(textPane.getSelectionStart()
+                    != textPane.getSelectionEnd()).show(textPane, e.getX(), e.getY());
         }
     }
 
@@ -353,30 +353,30 @@ public class TextFrame extends JBaseDialog implements ItemListener,
             String s = e.getActionCommand();
             if (s.equalsIgnoreCase("Cut")) {
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                StringSelection stringSelection = new StringSelection(textpane.getSelectedText());
+                StringSelection stringSelection = new StringSelection(textPane.getSelectedText());
                 clipboard.setContents(stringSelection, TextPopupMenu.this);
-                int st = textpane.getSelectionStart();
-                int ed = textpane.getSelectionEnd();
-                String text = textpane.getText();
-                textpane.setText(text.substring(0, st) + text.substring(ed, text.length()));
+                int st = textPane.getSelectionStart();
+                int ed = textPane.getSelectionEnd();
+                String text = textPane.getText();
+                textPane.setText(text.substring(0, st) + text.substring(ed));
 
             } else if (s.equalsIgnoreCase("Copy")) {
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                StringSelection stringSelection = new StringSelection(textpane.getSelectedText());
+                StringSelection stringSelection = new StringSelection(textPane.getSelectedText());
                 clipboard.setContents(stringSelection, this);
             } else if (s.equalsIgnoreCase("Paste")) {
-                int st = textpane.getSelectionStart();
-                int ed = textpane.getSelectionEnd();
-                String text = textpane.getText();
-                textpane.setText(text.substring(0, st) + getClipboardContents() + text.substring(ed, text.length()));
+                int st = textPane.getSelectionStart();
+                int ed = textPane.getSelectionEnd();
+                String text = textPane.getText();
+                textPane.setText(text.substring(0, st) + getClipboardContents() + text.substring(ed));
             } else if (s.equalsIgnoreCase("Delete")) {
-                int st = textpane.getSelectionStart();
-                int ed = textpane.getSelectionEnd();
-                String text = textpane.getText();
-                textpane.setText(text.substring(0, st) + text.substring(ed, text.length()));
+                int st = textPane.getSelectionStart();
+                int ed = textPane.getSelectionEnd();
+                String text = textPane.getText();
+                textPane.setText(text.substring(0, st) + text.substring(ed));
             } else if (s.equalsIgnoreCase("Select All")) {
-                textpane.setSelectionStart(0);
-                textpane.setSelectionEnd(textpane.getText().length());
+                textPane.setSelectionStart(0);
+                textPane.setSelectionEnd(textPane.getText().length());
             }
         }
 

@@ -9,7 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DrawTextProcess is a class that handles the construction and animation of geometric diagrams
@@ -349,7 +350,7 @@ public class DrawTextProcess extends DrawProcess {
                         if (index != nd)
                             this.UndoAdded(pt.toDString(), false);
                     } else {
-                        Vector v = addCondAux(gterm().getConclusion(), false);
+                        List<Object> v = addCondAux(gterm().getConclusion(), false);
                         Cond cc1 = gterm().getConc();
                         addConcLineOrCircle(cc1);
                         if (gterm().isTermAnimated()) {
@@ -577,7 +578,7 @@ public class DrawTextProcess extends DrawProcess {
                     cp = getPt(pp[0]);
                     Circle c1 = this.ad_circle(pp[1], pp[2]);
                     Circle c2 = this.ad_circle(pp[3], pp[4]);
-                    Vector vlist = Circle.CommonPoints(c1, c2);
+                    List<Object> vlist = Circle.CommonPoints(c1, c2);
                     if (vlist.size() == 1) {
                         CPoint t = (CPoint) vlist.get(0);
                         Constraint cs = new Constraint(Constraint.INTER_CC1, cp, t, c1, c2);
@@ -1031,7 +1032,7 @@ public class DrawTextProcess extends DrawProcess {
             case Gib.C_I_SS: {
                 Circle c1 = this.fd_circle(pp[1], pp[2], pp[3]);
                 Circle c2 = this.fd_circle(pp[4], pp[5], pp[6]);
-                Vector v = Circle.CommonPoints(c1, c2);
+                List<Object> v = Circle.CommonPoints(c1, c2);
                 if (v.size() == 0) {
                     cp = addPt(index, x, y);
                     Constraint cs = new Constraint(Constraint.PONCIRCLE, cp, c1);
@@ -1879,8 +1880,8 @@ public class DrawTextProcess extends DrawProcess {
      * @param aux a flag indicating whether to add auxiliary conditions
      * @return a vector of added lines
      */
-    public Vector addCondAux(Cons co, boolean aux) {
-        Vector vl = new Vector();
+    public List<Object> addCondAux(Cons co, boolean aux) {
+        List<Object> vl = new ArrayList<>();
         if (co == null) {
             return vl;
         }
@@ -2116,7 +2117,7 @@ public class DrawTextProcess extends DrawProcess {
      */
     public JFlash getAreaFlash(MDrObj d) {
         int n = this.getAreaFlashNumber();
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         for (int i = 0; i < d.getObjectNum(); i++)
             v.add((CPoint) d.getObject(i));
 
@@ -2212,7 +2213,7 @@ public class DrawTextProcess extends DrawProcess {
             break;
             case MObject.DRAW: {
                 MDraw d = (MDraw) obj;
-                Vector v = d.getAllUndoStruct();
+                List<Object> v = d.getAllUndoStruct();
                 this.setUndoListForFlash1(v);
             }
             break;
@@ -2938,7 +2939,7 @@ public class DrawTextProcess extends DrawProcess {
                         ce2.setdnum(aux_mark);
                         ce1.setColor(aux_mark + 2);
                         ce2.setColor(aux_mark + 2);
-                        Vector v = new Vector();
+                        List<Object> v = new ArrayList<>();
                         v.add(ce1);
                         v.add(ce2);
                         this.flashStep(v);
@@ -2970,7 +2971,7 @@ public class DrawTextProcess extends DrawProcess {
                     if (ta == null || ta1 == null) {
                         aux_angle++;
                     }
-                    Vector v = new Vector();
+                    List<Object> v = new ArrayList<>();
 
                     String ss1, ss2;
                     ss1 = ss2 = null;
@@ -3024,7 +3025,7 @@ public class DrawTextProcess extends DrawProcess {
                 poly2.addAPoint(fd_point(co.p[3]));
                 this.polygonlist.add(poly1);
                 this.polygonlist.add(poly2);
-                Vector v = new Vector();
+                List<Object> v = new ArrayList<>();
                 v.add(poly1);
                 v.add(poly2);
                 this.flashStep(v);

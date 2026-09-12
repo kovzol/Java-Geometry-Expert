@@ -2,7 +2,8 @@ package gprover;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JGEX supports loading and saving scripts in a simple textual format.
@@ -28,9 +29,9 @@ public class GTerm {
     private String aniString = "";
 
     // array of points in the current construction
-    private Vector gpoints = new Vector();
+    private List<Object> gpoints = new ArrayList<>();
     // array of construction steps of the current construction
-    private Vector gcons = new Vector();
+    private List<Object> gcons = new ArrayList<>();
     public Cond conc = new Cond();
 
     // name of construction
@@ -38,8 +39,8 @@ public class GTerm {
     private boolean generated = false;
     private boolean is_position_set = false;
 
-    private Vector ccons = new Vector();
-    private Vector ncons = new Vector();
+    private List<Object> ccons = new ArrayList<>();
+    private List<Object> ncons = new ArrayList<>();
 
     /**
      * Constructs a new GTerm instance.
@@ -65,8 +66,8 @@ public class GTerm {
      *
      * @return a vector of CNdg objects representing non degenerate constraints
      */
-    public Vector getNcons() {
-        Vector v = new Vector();
+    public List<Object> getNcons() {
+        List<Object> v = new ArrayList<>();
 
         for (int i = 0; i < ncons.size(); i++) {
             Cons c = (Cons) ncons.get(i);
@@ -115,7 +116,7 @@ public class GTerm {
      *
      * @return the vector of constraint objects
      */
-    public Vector getCons() {
+    public List<Object> getCons() {
         return gcons;
     }
 
@@ -161,9 +162,9 @@ public class GTerm {
      *
      * @return a vector of point names
      */
-    public Vector getAllptsText() {
+    public List<Object> getAllptsText() {
 
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         for (int i = 0; i < gpoints.size(); i++) {
             ProPoint p = (ProPoint) gpoints.get(i);
             v.add(p.name);
@@ -270,7 +271,7 @@ public class GTerm {
      * @throws IOException if an I/O error occurs
      */
     public boolean readAterm(BufferedReader in) throws IOException {
-        Vector glines = new Vector();
+        List<Object> glines = new ArrayList<>();
         int status = 0;
 
         while (true) {
@@ -371,7 +372,7 @@ public class GTerm {
      */
     public boolean readAterm(DataInputStream in) throws IOException {
         int n = in.readInt();
-        Vector glines = new Vector();
+        List<Object> glines = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             int m = in.readInt();
             byte[] b = new byte[m];
@@ -461,7 +462,7 @@ public class GTerm {
      */
     public boolean readAterm2(DataInputStream in) throws IOException {
         int n = in.readInt();
-        Vector glines = new Vector();
+        List<Object> glines = new ArrayList<>();
 
         for (int i = 0; i < n; i++) {
             String s = in.readUTF();
@@ -488,7 +489,7 @@ public class GTerm {
      *
      * @param v the vector containing new constraints
      */
-    public void addConsV(Vector v) {
+    public void addConsV(List<Object> v) {
         this.clear();
         gcons.addAll(v);
     }
@@ -499,7 +500,7 @@ public class GTerm {
      * @param glines the vector containing construction lines
      * @return true if the generation is successful; false otherwise
      */
-    public boolean generate(Vector glines) {
+    public boolean generate(List<Object> glines) {
         if (generated)
             return true;
 
@@ -916,7 +917,7 @@ public class GTerm {
         gcons.add(c);
 
 //        poly po = new poly();
-//        Vector v = new Vector();
+//        Vector v = new ArrayList<>();
 //        char[] cm = sf.toCharArray();
 //        StringBuffer c = new StringBuffer();
 //        int tt = 0;
@@ -1384,9 +1385,9 @@ public class GTerm {
      *
      * @return a vector containing the processed constraints.
      */
-    public Vector pc() {
-        Vector vlist = new Vector();
-        Vector v = new Vector();
+    public List<Object> pc() {
+        List<Object> vlist = new ArrayList<>();
+        List<Object> v = new ArrayList<>();
         Cons conc = null;
         ccons.clear();
 
@@ -1462,7 +1463,7 @@ public class GTerm {
      * Aggregates and computes all circle constraints from the current constraint data.
      */
     public void getAllCircles() {
-        Vector v = ccons;
+        List<Object> v = ccons;
 
         for (int i = 0; i < v.size(); i++) {
             Cons c1 = (Cons) v.get(i);
@@ -1641,7 +1642,7 @@ public class GTerm {
      * @param v  the vector of constraints to search through.
      * @return the constraint that contains the point, or null if no such constraint exists.
      */
-    public Cons getcons(int pt, Vector v) {
+    public Cons getcons(int pt, List<Object> v) {
         for (int i = 0; i < v.size(); i++) {
             Cons c = (Cons) v.get(i);
             if (c.contains(pt)) {
@@ -1658,9 +1659,9 @@ public class GTerm {
      * @param v the vector of constraints from which to generate non-degenerate constraints.
      * @return a vector containing all non-degenerate constraints.
      */
-    public Vector getAllNdgs(Vector v) {
+    public List<Object> getAllNdgs(List<Object> v) {
 
-        Vector v1 = new Vector();
+        List<Object> v1 = new ArrayList<>();
         for (int i = 0; i < v.size(); i++) {
             Cons c = (Cons) v.get(i);
             generateCons(c, v1);
@@ -1674,7 +1675,7 @@ public class GTerm {
      * @param c the original constraint used as a basis for generating non-degenerate constraints.
      * @param v the vector to which the generated constraints will be added.
      */
-    public void generateCons(Cons c, Vector v) {
+    public void generateCons(Cons c, List<Object> v) {
         switch (c.type) {
 
             case Gib.C_O_C:
@@ -2073,7 +2074,7 @@ public class GTerm {
      * @param c the non-degenerate constraint to add.
      * @param v the vector in which the constraint is to be added.
      */
-    public void addNDG(Cons c, Vector v) {
+    public void addNDG(Cons c, List<Object> v) {
         if (c == null) return;
 
         for (int i = 0; i < v.size(); i++) {

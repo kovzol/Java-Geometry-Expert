@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.*;
 import java.net.URL;
-import java.util.EventObject;
 
 /**
  * CProperty is a JPanel that displays property panels for different geometric objects.
@@ -217,9 +216,9 @@ public class CProperty extends JPanel implements ActionListener {
      * @return the created JTable
      */
     public static JTable createTable(Object obj1, Object obj2) {
-        Object data[][] = {{obj1, obj2}};
-        String[] sname = {"", ""};
-        JTable tb = new JTable(data, sname);
+        Object[][] data = {{obj1, obj2}};
+        String[] sName = {"", ""};
+        JTable tb = new JTable(data, sName);
 
         tb.setRowHeight(20);
         tb.setPreferredSize(new Dimension(70, 20));
@@ -325,7 +324,7 @@ public class CProperty extends JPanel implements ActionListener {
 
 
             int ci = dp.m_color;
-            ((CCoBox) color).setSelectedIndex(ci);
+            color.setSelectedIndex(ci);
             line_type.setSelectedIndex(dp.m_dash);
             line_width.setSelectedIndex(dp.m_width);
             current_data = dp;
@@ -457,7 +456,7 @@ public class CProperty extends JPanel implements ActionListener {
             int row = e.getFirstRow();
             int column = e.getColumn();
             TableModel model = (TableModel) e.getSource();
-            Object data = model.getValueAt(row, column);
+            Object data = model.getValueAt(row, column); // why data is not used?
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -617,16 +616,16 @@ public class CProperty extends JPanel implements ActionListener {
             if (row == 0)
                 pt.m_name = data.toString();
             else if (row == 1) {
-                Integer r = Integer.parseInt(data.toString());
-                pt.setRadius(r.intValue());
+                int r = Integer.parseInt(data.toString());
+                pt.setRadius(r);
             } else if (row == 2) {
-                Double d = Double.parseDouble(data.toString());
-                pt.setXY(d.doubleValue(), pt.gety());
+                double d = Double.parseDouble(data.toString());
+                pt.setXY(d, pt.gety());
             } else if (row == 3) {
-                Double d = Double.parseDouble(data.toString());
-                pt.setXY(pt.getx(), d.doubleValue());
+                double d = Double.parseDouble(data.toString());
+                pt.setXY(pt.getx(), d);
             } else if (row == 4) {
-                pt.setFreezed(Boolean.parseBoolean(data.toString()));
+                pt.setFrozen(Boolean.parseBoolean(data.toString()));
             }
             d.repaint();
 
@@ -639,7 +638,7 @@ public class CProperty extends JPanel implements ActionListener {
             table.setValueAt(p.getRadiusValue(), 1, 1);
             table.setValueAt(round(p.getx()), 2, 1);
             table.setValueAt(round(p.gety()), 3, 1);
-            table.setValueAt(pt.isFreezed(), 4, 1);
+            table.setValueAt(pt.isFrozen(), 4, 1);
             border.setTitle(p.TypeString());
 
         }
@@ -679,8 +678,7 @@ public class CProperty extends JPanel implements ActionListener {
             TableColumn cn1 = tb1.getColumnModel().getColumn(1);
             JComboBox comboBox = new JComboBox();
 
-            for (int i = 0; i < type.length; i++)
-                comboBox.addItem(getLanguage(type[i]));
+            for (String s : type) comboBox.addItem(getLanguage(s));
 
             cn1.setCellEditor(new DefaultCellEditor(comboBox));
             DefaultTableCellRenderer renderer =
@@ -691,8 +689,7 @@ public class CProperty extends JPanel implements ActionListener {
             tbt = CProperty.createTable(getLanguage("Angle Text"), "");
             TableColumn cnt = tbt.getColumnModel().getColumn(1);
             comboBox = new JComboBox();
-            for (int i = 0; i < text_type.length; i++)
-                comboBox.addItem(text_type[i]);
+            for (String s : text_type) comboBox.addItem(s);
 
             cnt.setCellEditor(new DefaultCellEditor(comboBox));
             renderer = new DefaultTableCellRenderer();
@@ -1181,8 +1178,8 @@ public class CProperty extends JPanel implements ActionListener {
     /**
      * Table model for the property table.
      */
-    class propertyTableModel extends AbstractTableModel {
-        private String[] names = {"", ""};
+    static class propertyTableModel extends AbstractTableModel {
+        private final String[] names = {"", ""};
         private Object[][] data = null;
 
         public propertyTableModel(Object[][] d) {
@@ -1214,11 +1211,7 @@ public class CProperty extends JPanel implements ActionListener {
         }
 
         public boolean isCellEditable(int row, int col) {
-            if (col < 1) {
-                return false;
-            } else {
-                return true;
-            }
+            return col >= 1;
         }
 
         public void setValueAt(Object value, int row, int col) {
@@ -1232,9 +1225,9 @@ public class CProperty extends JPanel implements ActionListener {
      * Table model for the point properties.
      */
     class PointTableModel extends AbstractTableModel {
-        private String[] names = {"", ""};
-        private Object[][] data = {
-                {getLanguage("Name"), new String()},
+        private final String[] names = {"", ""};
+        private final Object[][] data = {
+                {getLanguage("Name"), ""},
                 {getLanguage("Radius"), -1},
                 {getLanguage("X Coordinate"), 0},
                 {getLanguage("Y Coordinate"), 0},
@@ -1262,11 +1255,7 @@ public class CProperty extends JPanel implements ActionListener {
         }
 
         public boolean isCellEditable(int row, int col) {
-            if (col < 1) {
-                return false;
-            } else {
-                return true;
-            }
+            return col >= 1;
         }
 
         public void setValueAt(Object value, int row, int col) {
@@ -1279,10 +1268,10 @@ public class CProperty extends JPanel implements ActionListener {
      * Table model for the line properties.
      */
     class LineTableModel extends AbstractTableModel {
-        private String[] names = {"", ""};
-        private Object[][] data = {
-                {getLanguage("Name"), new String()},
-                {getLanguage("Point on Line"), new String()},
+        private final String[] names = {"", ""};
+        private final Object[][] data = {
+                {getLanguage("Name"), ""},
+                {getLanguage("Point on Line"), ""},
                 {"X1 ", 0},
                 {"Y1 ", 0},
                 {"X2 ", 0},
@@ -1310,11 +1299,7 @@ public class CProperty extends JPanel implements ActionListener {
         }
 
         public boolean isCellEditable(int row, int col) {
-            if (col < 1) {
-                return false;
-            } else {
-                return true;
-            }
+            return col >= 1;
         }
 
         public void setValueAt(Object value, int row, int col) {
@@ -1327,11 +1312,11 @@ public class CProperty extends JPanel implements ActionListener {
      * Table model for the circle properties.
      */
     class CircleTableModel extends AbstractTableModel {
-        private String[] names = {"", ""};
-        private Object[][] data = {
-                {getLanguage("Name"), new String()},
-                {getLanguage("Point on Circle"), new String()},
-                {getLanguage( "Center"), new String()},
+        private final String[] names = {"", ""};
+        private final Object[][] data = {
+                {getLanguage("Name"), ""},
+                {getLanguage("Point on Circle"), ""},
+                {getLanguage( "Center"), ""},
                 {getLanguage("Center X"), 0},
                 {getLanguage("Center Y"), 0},
                 {getLanguage("Radius"), 0}
@@ -1358,11 +1343,7 @@ public class CProperty extends JPanel implements ActionListener {
         }
 
         public boolean isCellEditable(int row, int col) {
-            if (col < 1 || row >= 1) {
-                return false;
-            } else {
-                return true;
-            }
+            return col >= 1 && row < 1;
         }
 
         public void setValueAt(Object value, int row, int col) {
@@ -1402,11 +1383,7 @@ public class CProperty extends JPanel implements ActionListener {
         }
 
         public boolean isCellEditable(int row, int col) {
-            if (col < 1) {
-                return false;
-            } else {
-                return true;
-            }
+            return col >= 1;
         }
 
         public void setValueAt(Object value, int row, int col) {

@@ -3,7 +3,8 @@ package wprover;
 import gprover.Gib;
 import gprover.Rules;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * RuleList is a class that manages a list of rules for GDD and FULL types.
@@ -15,16 +16,16 @@ public class RuleList {
 
     }
 
-    final public static Vector GDDLIST = new Vector();
-    final public static Vector FULLLIST = new Vector();
+    final public static List<Object> GDDLIST = new ArrayList<>();
+    final public static List<Object> FULLLIST = new ArrayList<>();
 
     /**
      * Retrieves all GDD rules.
      *
      * @return a Vector containing all GDD rules
      */
-    public static Vector getAllGDDRules() {
-        Vector v = new Vector();
+    public static List<Object> getAllGDDRules() {
+        List<Object> v = new ArrayList<>();
         v.addAll(GDDLIST);
         return v;
     }
@@ -34,8 +35,8 @@ public class RuleList {
      *
      * @return a Vector containing all FULL rules
      */
-    public static Vector getAllFullRules() {
-        Vector v = new Vector();
+    public static List<Object> getAllFullRules() {
+        List<Object> v = new ArrayList<>();
         v.addAll(FULLLIST);
         return v;
     }
@@ -73,7 +74,7 @@ public class RuleList {
      * @param vs   the vector to load the rules into
      * @param type the type of rules to load
      */
-    private static void loadRules(String[] src, Vector vs, int type) {
+    private static void loadRules(String[] src, List<Object> vs, int type) {
         String s, s1, s2;
         s = s1 = s2 = null;
 

@@ -3,7 +3,8 @@ package wprover;
 import gprover.Gib;
 import gprover.Cons;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
@@ -111,7 +112,7 @@ public class Constraint {
 
     int id = CMisc.id_count++;
     private int ConstraintType = 0;
-    private Vector elementlist = new Vector();
+    private List<Object> elementlist = new ArrayList<>();
     int proportion = 1;
     boolean is_poly_genereate = true;
 
@@ -161,8 +162,8 @@ public class Constraint {
      *
      * @return a vector containing all elements in the element list
      */
-    public Vector getAllElements() {
-        Vector v = new Vector();
+    public List<Object> getAllElements() {
+        List<Object> v = new ArrayList<>();
         v.addAll(elementlist);
         return v;
     }
@@ -211,7 +212,7 @@ public class Constraint {
      * @param type the type of the constraint
      * @param olist a vector containing the elements
      */
-    public Constraint(int type, Vector olist) {
+    public Constraint(int type, List<Object> olist) {
         this.ConstraintType = type;
         elementlist.addAll(olist);
         PolyGenerate();
@@ -1715,7 +1716,7 @@ public class Constraint {
             CPoint p1 = (CPoint) elementlist.get(0);
             Circle c1 = (Circle) elementlist.get(1);
             Circle c2 = (Circle) elementlist.get(2);
-            Vector v = Circle.CommonPoints(c1, c2);
+            List<Object> v = Circle.CommonPoints(c1, c2);
             TPoly tp = null;
             int n = v.size();
             CPoint p2 = null;
@@ -1879,7 +1880,7 @@ public class Constraint {
             CLine ln = (CLine) this.getelement(2);
             Circle c = (Circle) this.getelement(3);
             CPoint o = c.o;
-            Vector pts = ln.points;
+            List<Object> pts = ln.points;
             for (int i = 0; i < pts.size(); i++)
                 if (pts.get(i) != pc) {
                     pl = (CPoint) pts.get(i);
@@ -2161,7 +2162,7 @@ public class Constraint {
      * @param t the type of the constraint
      * @param v the vector of points
      */
-    public void add_des(int t, Vector v) {
+    public void add_des(int t, List<Object> v) {
         Cons csd = new Cons(t);
         csd.setId(id);
         for (int i = 0; i < v.size(); i++)

@@ -82,8 +82,8 @@ public class GIFProcessDialog extends JBaseDialog implements ActionListener {
         public void run() {
             double[] r = dp.getParameter();
 
-            am.minwd = rect.getX() + 5;
-            am.minht = rect.getY() + 5;
+            am.minWd = rect.getX() + 5;
+            am.minHt = rect.getY() + 5;
             am.width = rect.getX() + rect.getWidth() - 5;
             am.height = rect.getY() + rect.getHeight() - 5;
 

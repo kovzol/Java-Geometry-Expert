@@ -9,8 +9,9 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Vector;
+import java.util.List;
 import java.io.*;
 
 import gprover.CClass;
@@ -551,14 +552,14 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 Object cc = node.getUserObject();
                 if (cc == null)
                     return;
-                Vector vp = dp.getPointList();
+                List<Object> vp = dp.getPointList();
                 if (vp.size() == 0)
                     return;
 
                 if (cc instanceof GrTerm) {
                     dp.clearFlash();
                     GrTerm gr = (GrTerm) cc;
-                    Vector list = gr.getAllxterm();
+                    List<Object> list = gr.getAllxterm();
 
                     for (int i = 0; i < list.size(); i++) {
                         XTerm x = (XTerm) list.get(i);
@@ -567,7 +568,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 } else if (cc instanceof ElTerm) {
                     dp.clearFlash();
                     ElTerm e1 = (ElTerm) cc;
-                    Vector vl = e1.getAllCond();
+                    List<Object> vl = e1.getAllCond();
                     for (int i = 0; i < vl.size(); i++) {
                         Cond c = (Cond) vl.get(i);
                         if (c.pred == Gib.CO_CYCLIC &&
@@ -576,7 +577,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                             dp.addCongFlash(c, false);
                         }
                     }
-                    Vector list = e1.getAllxterm();
+                    List<Object> list = e1.getAllxterm();
                     for (int i = 0; i < list.size(); i++) {
                         XTerm x = (XTerm) list.get(i);
                         dp.addFlashXtermAngle(x);
@@ -1000,7 +1001,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         db.gen_dbase_text();
         int size;
 
-        Vector v1 = db.getAll_ln();
+        List<Object> v1 = db.getAll_ln();
         size = v1.size();
         if (size != 0) {
             add_predicates(getLanguage("lines") + " (" + size + ")", v1);
@@ -1073,7 +1074,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
 
         v1 = db.getAll_rg();
-        Vector v2 = db.getAll_ra();
+        List<Object> v2 = db.getAll_ra();
         v1.addAll(v2);
         size = v1.size();
         if (size != 0) {
@@ -1100,7 +1101,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                     getLanguage("Warning"), JOptionPane.WARNING_MESSAGE);
             return;
         }
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         v.add(node);
         int s1 = dp.linelist.size();
         int s2 = dp.circlelist.size();
@@ -1116,7 +1117,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             Object obj = n.getUserObject();
             if (obj instanceof GrTerm) {
                 GrTerm g = (GrTerm) obj;
-                Vector v1 = g.getAllvars();
+                List<Object> v1 = g.getAllvars();
                 for (int i = 0; i < v1.size(); i++) {
                     Var vr = (Var) v1.get(i);
                     CLine ln1 = dp.addLn(vr.pt[0], vr.pt[1]);
@@ -1133,7 +1134,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 }
             } else if (obj instanceof ElTerm) {
                 ElTerm el = (ElTerm) obj;
-                Vector v1 = el.getAllxterm();
+                List<Object> v1 = el.getAllxterm();
                 for (int i = 0; i < v1.size(); i++) {
                     XTerm x = (XTerm) v1.get(i);
                     Var vr = x.var;
@@ -1220,7 +1221,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     public void generate() {
         //drawProcess dp = gxInstance.dp;
-        Vector v = dp.getConstructionFromDraw();
+        List<Object> v = dp.getConstructionFromDraw();
         int n = dp.getPointSize();
         condPane.setVector(v);
         if (0 == dp.getRedolistSize())
@@ -2045,7 +2046,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     }
 
-    private void createNodes(Vector vl) {
+    private void createNodes(List<Object> vl) {
 
         for (int i = 0; i < vl.size(); i++) {
             Cond co = (Cond) vl.get(i);
@@ -2116,7 +2117,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
     }
 
-    public void add_predicates(String sh, Vector v) {
+    public void add_predicates(String sh, List<Object> v) {
         DefaultMutableTreeNode no = new DefaultMutableTreeNode(sh);
         top_db.add(no);
 
@@ -2127,7 +2128,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         }
     }
 
-    public void addProveTree(Vector vl, Vector vd) {
+    public void addProveTree(List<Object> vl, List<Object> vd) {
         clearAll();
         if (vl.size() == 0) {
             return;
@@ -2145,7 +2146,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
     }
 
-    public void setListData(Vector v) {
+    public void setListData(List<Object> v) {
         condPane.setConstruction(v);
     }
 
@@ -2385,7 +2386,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         GTerm gt = null;
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
-            Vector v = new Vector();
+            List<Object> v = new ArrayList<>();
             while (true) {
                 gt = new GTerm();
                 if (gt.readAterm(reader)) {
@@ -2750,7 +2751,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             } else if (s.equals("NDG"))
                 PanelProve.this.showNDGs();
             else if (s.equalsIgnoreCase("All solutions")) {
-                Vector v = dp.calculate_allResults();
+                List<Object> v = dp.calculate_allResults();
                 AllSolutionDialog dlg = new AllSolutionDialog(gxInstance);
                 dlg.setVlist(v);
                 dlg.autoFiltered();
@@ -2845,10 +2846,10 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
         g.pc();
 
 //        Vector v = g.pc();
-        Vector v1 = new Vector();
-        Vector v2 = new Vector();
-        Vector v3 = new Vector();
-        Vector v4 = new Vector();
+        List<Object> v1 = new ArrayList<>();
+        List<Object>  v2 = new ArrayList<>();
+        List<Object>  v3 = new ArrayList<>();
+        List<Object>  v4 = new ArrayList<>();
 
         if (!Prover.getAllNdgs(g, v1, v2, v3, v4))
             return;
@@ -3107,14 +3108,14 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             return gt != null;
         }
 
-        public Vector getAllPts() {
+        public List<Object> getAllPts() {
             return gt.getAllptsText();
         }
 
         public GTerm getTerm() {
             if (gt == null) return null;
 
-            Vector v = dp.getPointList();
+            List<Object> v = dp.getPointList();
             for (int i = 0; i < v.size(); i++) {
                 CPoint p = (CPoint) v.get(i);
                 gt.add_pt(p.getname());
@@ -3175,10 +3176,10 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             sconc = null;
         }
 
-        public void setConstruction(Vector v) {
+        public void setConstruction(List<Object> v) {
         }
 
-        public void setVector(Vector v) {
+        public void setVector(List<Object> v) {
             if (gt == null)
                 gt = new GTerm();
 
@@ -3194,8 +3195,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             Cons c = sconc;
             if (c != null) {
                 gt.setConclusion(c);
-                listModel.addElement(c);
-                listModelx.addElement(c.toDString());
+                listModel.add(0, c);
+                listModelx.add(0, c.toDString());
                 gt.ge_cpt();
 //                dp.flashCond(gt.getConc(), true);
             }
@@ -3219,11 +3220,11 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             listModel.removeAllElements();
             listModelx.removeAllElements();
 
-            Vector v = gt.getCons();
+            List<Object> v = gt.getCons();
             for (int i = 0; i < v.size(); i++) {
                 Cons c = (Cons) v.get(i);
-                listModel.addElement(c);
-                listModelx.addElement(c.toDString());
+                listModel.add(0, c);
+                listModelx.add(0, c.toDString());
             }
         }
 
@@ -3233,7 +3234,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
 
         class clistRender extends JPanel implements ListCellRenderer {
             private boolean selected = false;
-            private Vector vlist = new Vector();
+            private List<Object> vlist = new ArrayList<>();
 
 
             public clistRender() {

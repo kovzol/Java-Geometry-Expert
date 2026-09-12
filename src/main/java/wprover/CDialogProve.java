@@ -10,12 +10,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Vector;
+import java.util.*;
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -43,7 +40,7 @@ public class CDialogProve extends JBaseDialog {
      *
      * @param v the vector of selected items
      */
-    public void setSelect(Vector v) {
+    public void setSelect(List<Object> v) {
         m_cp.setSelect(v);
     }
 }
@@ -60,14 +57,14 @@ class ProvePane extends JPanel
     private JTextArea proveField;
     private JList selectField;
     private DefaultListModel listModel;
-    private Vector vlist;
+    private List<Object> vlist;
     private GExpert gxInstance;
 
     private CProveText cptext;
     private JButton b_select, b_ok, b_cancel;
 
     private ColorButtonPanel color_captain, color_text;
-    private Vector fontfamily;
+    private List<Object> fontfamily;
     private JComboBox bfonts, bsize;
     private JCheckBox cbox;
 
@@ -86,7 +83,7 @@ class ProvePane extends JPanel
     public ProvePane(GExpert gx, JDialog dlg) {
         gxInstance = gx;
         dialog = dlg;
-        vlist = new Vector();
+        vlist = new ArrayList<>();
         setRuleList();
 
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
@@ -360,7 +357,7 @@ class ProvePane extends JPanel
         captainField.setText(cp.getHead());
         proveField.setText(cp.getMessage());
         proveField.setForeground(cp.getMessageColor());
-        Vector v = cp.getObjectList();
+        List<Object> v = cp.getObjectList();
         vlist.clear();
 
         for (int i = 0; i < v.size(); i++) {
@@ -393,7 +390,7 @@ class ProvePane extends JPanel
         listModel.clear();
         for (int i = 0; i < vlist.size(); i++) {
             CClass cc = (CClass) vlist.get(i);
-            listModel.addElement(cc.TypeString());
+            listModel.add(0, cc.TypeString());
         }
     }
 
@@ -505,7 +502,7 @@ class ProvePane extends JPanel
      *
      * @param v the vector of selected items
      */
-    public void setSelect(Vector v) {
+    public void setSelect(List<Object> v) {
         vlist.clear();
         vlist.addAll(v);
         for (int i = 0; i < v.size(); i++) {
@@ -579,8 +576,8 @@ class ProvePane extends JPanel
         String envfonts[] = gEnv.getAvailableFontFamilyNames();
         fontfamily = new Vector();
         for (int i = 1; i < envfonts.length; i++)
-            fontfamily.addElement(envfonts[i]);
-        bfonts = new JComboBox(fontfamily);
+            fontfamily.add(envfonts[i]);
+        bfonts = new JComboBox(fontfamily.toArray());
         bfonts.setMaximumRowCount(9);
         bfonts.addItemListener(this);
         lbpanel.add(bfonts);

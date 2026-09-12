@@ -9,8 +9,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.EventObject;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * RuleDialog is a class that extends JBaseDialog and implements ChangeListener,
@@ -37,7 +38,7 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
 
         Object rootNodes[] = new Object[6];
         int i = 0;
-        Vector vrule = RuleList.getAllGDDRules();
+        List<Object> vrule = RuleList.getAllGDDRules();
 
         rootNodes[0] = createNameVector(GExpert.getLanguage("Rules related to parallel lines"), vrule, i, i += 3);
         rootNodes[1] = createNameVector(GExpert.getLanguage("Rules related to perpendicular lines"), vrule, ++i, i += 3);
@@ -46,8 +47,8 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         rootNodes[4] = createNameVector(GExpert.getLanguage("Rules related to triangles"), vrule, ++i, i += 14);
         rootNodes[5] = createNameVector(GExpert.getLanguage("Other rules"), vrule, ++i, i += 5);
 
-        Vector rootVector = new NamedVector("Root", rootNodes);
-        tree = new JTree(rootVector);
+        List<Object> rootVector = new NamedList<>("Root", rootNodes);
+        tree = new JTree(rootVector.toArray());
 
         CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer();
         tree.setCellRenderer(renderer);
@@ -61,10 +62,10 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
         pane.addTab(GExpert.getLanguage("Rules for the GDD Method"), scrollPane);
         pane.addChangeListener(this);
 
-        Vector vfull = RuleList.getAllFullRules();
+        List<Object> vfull = RuleList.getAllFullRules();
         Object rNodes[] = new Object[1];
         rNodes[0] = createNameVector(GExpert.getLanguage("Full Rules"), vfull, 0, 28);
-        treef = new JTree(new NamedVector("Root", rNodes));
+        treef = new JTree(new NamedList("Root", rNodes).toArray());
         treef.setCellRenderer(renderer);
         treef.addMouseListener(this);
 
@@ -105,10 +106,10 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
      * @param t2    the ending index of the subset
      * @return the created NamedVector
      */
-    private Vector createNameVector(String n, Vector vlist, int t1, int t2) {
+    private List<Object> createNameVector(String n, List<Object> vlist, int t1, int t2) {
         CheckBoxNode[] list1 = new CheckBoxNode[t2 - t1 + 1];
         createCheckBox(list1, vlist, t1, t2);
-        Vector v1 = new NamedVector(n, list1);
+        List<Object> v1 = new NamedList(n, list1);
         return v1;
     }
 
@@ -120,7 +121,7 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
      * @param t1    the starting index of the subset
      * @param t2    the ending index of the subset
      */
-    private void createCheckBox(CheckBoxNode[] list, Vector vlist, int t1, int t2) {
+    private void createCheckBox(CheckBoxNode[] list, List<Object> vlist, int t1, int t2) {
         int index = 0;
         for (int i = t1; i < vlist.size() && i <= t2; i++) {
             GRule r = (GRule) vlist.get(i);
@@ -339,20 +340,19 @@ public class RuleDialog extends JBaseDialog implements ChangeListener, ActionLis
     /**
      * NamedVector is a class that extends Vector and adds a name attribute.
      */
-    class NamedVector extends Vector {
-        String name;
+    static class NamedList<T> extends ArrayList<T> {
+        private final String name;
 
-        public NamedVector(String name) {
+        public NamedList(String name) {
             this.name = name;
         }
 
-        public NamedVector(String name, Object elements[]) {
+        public NamedList(String name, T[] elements) {
             this.name = name;
-            for (int i = 0, n = elements.length; i < n; i++) {
-                add(elements[i]);
-            }
+            this.addAll(Arrays.asList(elements));
         }
 
+        @Override
         public String toString() {
             return name;
         }

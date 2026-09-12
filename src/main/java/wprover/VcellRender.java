@@ -12,7 +12,8 @@ import javax.swing.border.LineBorder;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import static wprover.GExpert.getLanguage;
 
@@ -55,8 +56,8 @@ class VcellRender extends JPanel {
  * for the rendering of tree nodes with specific content and behavior.
  */
 class BookCellRenderer extends VcellRender implements TreeCellRenderer {
-    Vector renderlist = new Vector();
-    Vector renderlist1 = new Vector();
+    List<Object> renderlist = new ArrayList<>();
+    List<Object> renderlist1 = new ArrayList<>();
 
     /**
      * Constructs a BookCellRenderer with the specified number of labels.
@@ -151,7 +152,7 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
 
             if (userObject instanceof GrTerm) {
                 GrTerm gr = (GrTerm) userObject;
-                Vector v = gr.getAllxterm();
+                List<Object> v = gr.getAllxterm();
                 int index = v.size();
                 int k = 0;
                 if (index >= 0) {
@@ -176,7 +177,7 @@ class BookCellRenderer extends VcellRender implements TreeCellRenderer {
                 }
             } else if (userObject instanceof ElTerm) {
                 ElTerm el = (ElTerm) userObject;
-                Vector v = el.getAllxterm();
+                List<Object> v = el.getAllxterm();
                 int k = 0;
                 if (node.getParent() != null) {
                     setLabelObject1(k++, 0, getLanguage("because"));
@@ -305,8 +306,8 @@ class BookCellEditor extends BasicCellEditor implements MouseListener {
 class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
     public static int cond_no = 0;
 
-    Vector renderlist = new Vector();
-    Vector renderlist1 = new Vector();
+    List<Object> renderlist = new ArrayList<>();
+    List<Object> renderlist1 = new ArrayList<>();
     VcellRender cell = new VcellRender();
     ItemLabel selectLabel = null;
 
@@ -416,7 +417,7 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
 
             if (userObject instanceof GrTerm) {
                 GrTerm gr = (GrTerm) userObject;
-                Vector v = gr.getAllxterm();
+                List<Object> v = gr.getAllxterm();
                 int index = v.size();
                 int k = 0;
                 if (index >= 0) {
@@ -445,7 +446,7 @@ class BasicCellEditor extends AbstractCellEditor implements TreeCellEditor {
                 }
             } else if (userObject instanceof ElTerm) {
                 ElTerm el = (ElTerm) userObject;
-                Vector v = el.getAllxterm();
+                List<Object> v = el.getAllxterm();
                 int k = 0;
                 if (node.getParent() != null) {
                     setLabelObject1(k++, 0, getLanguage("because"));

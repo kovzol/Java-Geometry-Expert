@@ -1,8 +1,9 @@
 package maths;
 
 
-import java.util.Vector;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class provides basic polynomial operations.
@@ -878,7 +879,7 @@ public class PolyBasic {
      * @param m the polynomial to push
      * @param v the vector to push into
      */
-    public void ppush(TMono m, Vector v) {
+    public void ppush(TMono m, List<Object> v) {
         if (m == null) return;
 
         for (int i = 0; i < v.size(); i++) {
@@ -2419,7 +2420,7 @@ public class PolyBasic {
      * @param t the time limit for reduction
      * @return the reduced polynomial
      */
-    public Vector bb_reduce(Vector vlist, long t) {
+    public List<Object> bb_reduce(List<Object> vlist, long t) {
         bb_reduce(vlist, t, false);
         return vlist;
     }
@@ -2432,7 +2433,7 @@ public class PolyBasic {
      * @param s a flag indicating whether to use a special reduction method
      * @return the reduced polynomial
      */
-    public Vector bb_reduce(Vector vlist, long t, boolean s) {
+    public List<Object> bb_reduce(List<Object> vlist, long t, boolean s) {
 
 
         while (true) {
@@ -2483,7 +2484,7 @@ public class PolyBasic {
      * @param vlist the list of polynomials to reduce
      * @return the reduced polynomial
      */
-    public TMono b_reduce(TMono m1, Vector vlist) {
+    public TMono b_reduce(TMono m1, List<Object> vlist) {
         if (m1 == null) return null;
 
         while (true) {
@@ -2612,7 +2613,7 @@ public class PolyBasic {
      *
      * @param v the vector of polynomials to print
      */
-    public void printVpoly(Vector v) {
+    public void printVpoly(List<Object> v) {
         for (int i = 0; i < v.size(); i++)
             this.print((TMono) v.get(i));
         System.out.println("\n");
@@ -2624,7 +2625,7 @@ public class PolyBasic {
      * @param v the vector of polynomials
      * @return the Groebner basis as a vector of polynomials
      */
-    public Vector g_basis(Vector v) {
+    public List<Object> g_basis(List<Object> v) {
         while (true) {
             bb_reduce(v, System.currentTimeMillis());
 
@@ -2632,7 +2633,7 @@ public class PolyBasic {
                 break;
 
             //          this.printVpoly(v);
-            Vector tp = s_polys(v);
+            List<Object> tp = s_polys(v);
 
             for (int i = 0; i < tp.size(); i++) {
                 ppush((TMono) tp.get(i), v);
@@ -2650,9 +2651,9 @@ public class PolyBasic {
      * @param vlist the vector of polynomials
      * @return the S-polynomials as a vector of polynomials
      */
-    public Vector s_polys(Vector vlist) {
+    public List<Object> s_polys(List<Object> vlist) {
 
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         for (int i = 0; i < vlist.size(); i++) {
             TMono m1 = (TMono) vlist.get(i);
             for (int j = i + 1; j < vlist.size(); j++) {
@@ -2903,7 +2904,7 @@ public class PolyBasic {
      * @param v the polynomial
      * @param dx the value to add
      */
-    public void upValueTM(Vector v, int dx) {
+    public void upValueTM(List<Object> v, int dx) {
         if (dx == 0)
             return;
 
@@ -2918,7 +2919,7 @@ public class PolyBasic {
      * @param v the polynomial
      * @param dx the value to add
      */
-    public void upValueDM(Vector v, int dx) {
+    public void upValueDM(List<Object> v, int dx) {
         for (int i = 0; i < v.size(); i++) {
             TDono d = (TDono) v.get(i);
 
@@ -2933,7 +2934,7 @@ public class PolyBasic {
      * @param v the vector of polynomials
      * @return the maximum value of x
      */
-    public int getMaxX(Vector v) {
+    public int getMaxX(List<Object> v) {
         int x = 0;
 
         for (int i = 0; i < v.size(); i++) {
@@ -2977,7 +2978,7 @@ public class PolyBasic {
      * @param v the vector of polynomials
      * @return true if the polynomial is finished, false otherwise
      */
-    public boolean gb_finished(Vector v) {
+    public boolean gb_finished(List<Object> v) {
         for (int i = 0; i < v.size(); i++) {
             TMono m = (TMono) v.get(i);
             if (plength(m) == 1 && m.x == 0 && m.value() != 0)
@@ -2991,7 +2992,7 @@ public class PolyBasic {
      *
      * @param v the vector of polynomials
      */
-    public void ndg_reduce(Vector v) {
+    public void ndg_reduce(List<Object> v) {
         for (int i = 0; i < v.size(); i++) {
             TMono m = (TMono) v.get(i);
             if (m.deg == 0) {
@@ -3008,8 +3009,8 @@ public class PolyBasic {
      * @param dx the value to add
      * @return the conditions as a vector of polynomials
      */
-    public Vector getcnds(Vector v, int dx) {
-        Vector v1 = new Vector();
+    public List<Object> getcnds(List<Object> v, int dx) {
+        List<Object> v1 = new ArrayList<>();
         for (int i = 0; i < v.size(); i++) {
             TMono m = (TMono) v.get(i);
             if (ctLessdx1(m, dx)) {
@@ -3029,8 +3030,8 @@ public class PolyBasic {
      * @param dx the value to add
      * @return a vector of parsed Dono objects
      */
-    public Vector parseCommonDono(Vector v, int dx) {
-        Vector v1 = new Vector();
+    public List<Object> parseCommonDono(List<Object> v, int dx) {
+        List<Object> v1 = new ArrayList<>();
         for (int i = 0; i < v.size(); i++) {
             TDono d = (TDono) v.get(i);
             for (int j = i + 1; j < v.size(); j++) {
@@ -3056,7 +3057,7 @@ public class PolyBasic {
      *
      * @param v the vector of polynomials
      */
-    public void eraseCommonDono(Vector v) {
+    public void eraseCommonDono(List<Object> v) {
         for (int i = 0; i < v.size(); i++) {
             TDono d = (TDono) v.get(i);
             for (int j = i + 1; j < v.size(); j++) {
@@ -3211,7 +3212,7 @@ public class PolyBasic {
      * @param dx the value to add
      * @return the reduced polynomial
      */
-    public TMono reduceMDono(TMono mm, Vector v, int dx) {
+    public TMono reduceMDono(TMono mm, List<Object> v, int dx) {
         TMono m = mm;
 
         while (true) {
@@ -3268,7 +3269,7 @@ public class PolyBasic {
      * @param n the value to compare with
      * @return the Dono object, or null if not found
      */
-    public TDono getDo(Vector v, int n) {
+    public TDono getDo(List<Object> v, int n) {
         TDono xd = null;
         int nn = -1;
 

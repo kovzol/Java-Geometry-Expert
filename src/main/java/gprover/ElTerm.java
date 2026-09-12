@@ -1,6 +1,7 @@
 package gprover;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The ElTerm class represents an element term in the geometric theorem
@@ -48,8 +49,8 @@ public class ElTerm {
              *
              * @return a vector of all XTerm objects
              */
-            public Vector getAllxterm() {
-                Vector v = new Vector();
+            public List<Object> getAllxterm() {
+                List<Object> v = new ArrayList<>();
                 v.add(p);
 
                 XTerm x = p1;
@@ -85,8 +86,8 @@ public class ElTerm {
              *
              * @return a vector of all Cond objects
              */
-            public Vector getAllCond() {
-                Vector v = new Vector();
+            public List<Object> getAllCond() {
+                List<Object> v = new ArrayList<>();
                 if (co != null) {
                     Cond c = co;
                     while (c != null) {

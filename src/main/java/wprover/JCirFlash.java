@@ -1,13 +1,11 @@
 package wprover;
 
-import wprover.CPoint;
-import wprover.CMisc;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JCirFlash is a class that extends JFlash and implements ActionListener.
@@ -16,7 +14,7 @@ import java.util.Vector;
 public class JCirFlash extends JFlash implements ActionListener {
 
     CPoint o;
-    Vector vlist = new Vector();
+    List<Object>  vlist = new ArrayList<>();
 
     /**
      * Constructs a new JCirFlash with the specified JPanel.

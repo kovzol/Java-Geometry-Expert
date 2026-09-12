@@ -1,6 +1,7 @@
 package wprover;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -32,8 +33,8 @@ public class CLine extends CClass {
     int extent = CMisc.LINDE_DRAW_EXT;
 
 
-    Vector points = new Vector();
-    Vector cons = new Vector();
+    List<Object> points = new ArrayList<>();
+    List<Object> cons = new ArrayList<>();
 
 
     final static int Width = 3000;

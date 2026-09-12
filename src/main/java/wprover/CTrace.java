@@ -17,7 +17,8 @@ public class CTrace extends CClass {
     private CClass oObj;
 
     private int Num = 40;
-    private int[] PX, PY;
+    private final int[] PX;
+    private final int[] PY;
     private int Radius = 2;
     private boolean dlns;
     private final static int MAXLEN = 300;
@@ -105,9 +106,7 @@ public class CTrace extends CClass {
      * @param n the number of points
      */
     public void setNumPts(int n) {
-        if (n < MAX_POINT)
-            Num = n;
-        else Num = MAX_POINT;
+        Num = Math.min(n, MAX_POINT);
     }
 
     /**
@@ -219,8 +218,8 @@ public class CTrace extends CClass {
      */
     public void move(double dx, double dy) {
         for (int i = 0; i < Num; i++) {
-            PX[i] += dx;
-            PY[i] += dy;
+            PX[i] += (int)Math.round(dx);
+            PY[i] += (int)Math.round(dy);
         }
     }
 
@@ -228,16 +227,15 @@ public class CTrace extends CClass {
      * Saves the trace to a PostScript file.
      *
      * @param fp the FileOutputStream to write to
-     * @param stype the stroke type
+     * @param sType the stroke type
      * @throws IOException if an I/O error occurs
      */
-    public void SavePS(FileOutputStream fp, int stype) throws IOException {
+    public void SavePS(FileOutputStream fp, int sType) throws IOException {
         if (!visible) return;
 
-         for (int i = 0; i < Num; i++) {
-                    if (dlns) {
-                if (oObj != null && oObj.get_type() == CClass.CIRCLE || i < Num -1)
-                {
+        for (int i = 0; i < Num; i++) {
+            if (dlns) {
+                if (oObj != null && oObj.get_type() == CClass.CIRCLE || i < Num - 1) {
 
                     int pos1x = PX[i];
                     int pos1y = PY[i];
@@ -245,10 +243,10 @@ public class CTrace extends CClass {
                     int pos2y = PY[(i + 1) % Num];
 
 
-                        String st1 = pos1x + " " + -pos1y + " moveto " + pos2x + " " + -pos2y + " lineto \n";
-                        fp.write(st1.getBytes());
-                        String st3 = "Color" + m_color + " stroke\n";
-                        fp.write(st3.getBytes());
+                    String st1 = pos1x + " " + -pos1y + " moveto " + pos2x + " " + -pos2y + " lineto \n";
+                    fp.write(st1.getBytes());
+                    String st3 = "Color" + m_color + " stroke\n";
+                    fp.write(st3.getBytes());
                 }
 
             }
@@ -270,13 +268,6 @@ public class CTrace extends CClass {
             out.writeInt(PY[i]);
         }
 
-//          private CPoint point, po;
-//    private CClass oObj;
-//
-//    private int Num = 16;
-//    private int[] PX, PY;
-//    private int Radius = 2;
-//    private boolean dlns;
         int oid, mid;
         oid = mid = -1;
         if (po != null)
@@ -330,11 +321,7 @@ public class CTrace extends CClass {
     public void addTracePoint(int i, double x, double y) {
         PX[i] = (int) x;
         PY[i] = (int) y;
-        if (x < 0 || y < 0) {
-            int k = 0;
-        }
         soft(i);
-
     }
 
     /**
@@ -399,7 +386,7 @@ public class CTrace extends CClass {
      *
      * @return the round length of the trace
      */
-    public double Roud_length() {
+    public double roudLength() {
         if (Num == 0) return 0.0;
 
         double len = 0;
@@ -422,7 +409,7 @@ public class CTrace extends CClass {
      * @param i the index of the trace point
      * @return the x coordinate of the trace point
      */
-    int getPtxi(int i) {
+    int getPtXi(int i) {
         return PX[i];
     }
 
@@ -432,7 +419,7 @@ public class CTrace extends CClass {
      * @param i the index of the trace point
      * @return the y coordinate of the trace point
      */
-    int getPtyi(int i) {
+    int getPtYi(int i) {
         return PY[i];
     }
 
@@ -450,7 +437,7 @@ public class CTrace extends CClass {
      *
      * @return the point on the trace
      */
-    public CPoint getonPoint() {
+    public CPoint getOnPoint() {
         return po;
     }
 

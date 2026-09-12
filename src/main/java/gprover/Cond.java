@@ -9,7 +9,9 @@ package gprover;
 
 import wprover.GExpert;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Represents a condition in the proof structure.
@@ -36,7 +38,7 @@ public class Cond {
     /** Step description. */
     public String sd = null;
     /** List of the direct steps in this node. */
-    public Vector vlist = null;
+    public List<Object> vlist = null;
     /** Depth of the condition, initialized from Gib.depth. */
     public long dep = Gib.depth;
 
@@ -178,7 +180,7 @@ public class Cond {
         rule = 0;
         if (co == null) return;
         if (vlist == null)
-            vlist = new Vector();
+            vlist = new ArrayList<>();
         vlist.add(co);
     }
 
@@ -192,7 +194,7 @@ public class Cond {
         rule = r;
         if (co == null) return;
         if (vlist == null)
-            vlist = new Vector();
+            vlist = new ArrayList<>();
         vlist.add(co);
     }
 
@@ -201,10 +203,10 @@ public class Cond {
      *
      * @param v the vector containing conditions to add
      */
-    public void add_allco(Vector v) {
+    public void add_allco(List<Object> v) {
         if (v == null) return;
         if (vlist == null)
-            vlist = new Vector();
+            vlist = new ArrayList<>();
         vlist.addAll(v);
     }
 
@@ -229,7 +231,7 @@ public class Cond {
     public void addcond(Cond co1, Cond co2) {
         rule = 0;
         if (vlist == null)
-            vlist = new Vector();
+            vlist = new ArrayList<>();
         if (co1 != null) vlist.add(co1);
         if (co2 != null) vlist.add(co2);
     }

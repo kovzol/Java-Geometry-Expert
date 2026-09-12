@@ -6,7 +6,7 @@ import gprover.Prover;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * FactFinderDialog is a dialog that allows users to search for geometric facts based on selected points and types.
@@ -48,7 +48,7 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
             S_T[i] = GExpert.getLanguage(S[i]);
         }
 
-        bs = new JComboBox(S_T);
+        bs = new JComboBox<>(S_T);
         bs.addItemListener(this);
 
         JPanel p1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -56,11 +56,11 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
         p1.add(bs);
         panel.add(p1);
         JPanel p2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        b1 = new JComboBox();
+        b1 = new JComboBox<>();
         b1.addItemListener(this);
-        b2 = new JComboBox();
+        b2 = new JComboBox<>();
         b2.addItemListener(this);
-        b3 = new JComboBox();
+        b3 = new JComboBox<>();
         b3.addItemListener(this);
         p2.add(b1);
         p2.add(b2);
@@ -81,7 +81,7 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
         // p3.add(breset); // This seems unimplemented yet. TODO.
         p3.add(bcancel);
         panel.add(p3);
-        model = new DefaultListModel();
+        model = new DefaultListModel<>();
         list = new JList(model);
         list.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
@@ -113,12 +113,11 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
      *
      * @param v the vector of points to set
      */
-    public void setPoints(Vector v) {
+    public void setPoints(List<Object> v) {
         b1.removeAllItems();
         b2.removeAllItems();
         b3.removeAllItems();
-        for (int i = 0; i < v.size(); i++) {
-            Object o = v.get(i);
+        for (Object o : v) {
             b1.addItem(o);
             b2.addItem(o);
             b3.addItem(o);
@@ -138,10 +137,8 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
      * Reselects the combo boxes based on the find type.
      */
     private void reselect() {
-        if (find_type == 0 || find_type == 3 || find_type == 4 || find_type == 6)
-            b3.setEnabled(false);
-        else
-            b3.setEnabled(true);
+        boolean b3Enabled = find_type == 0 || find_type == 3 || find_type == 4 || find_type == 6;
+        b3.setEnabled(b3Enabled);
 
         bsearch.setEnabled(false);
 
@@ -172,17 +169,16 @@ public class FactFinderDialog extends JBaseDialog implements ActionListener, Ite
         if (o3 != null)
             s3 = o3.toString();
 
-        Vector v = null;
+        List<Object> v;
         if (src == bsearch) {
             v = Prover.search_a_fact(find_type, s1, s2, s3);
-            if (v.size() == 0) {
+            if (v.isEmpty()) {
                 JOptionPane.showMessageDialog(gxInstance, GExpert.getLanguage("We could not find anything!"),
                         GExpert.getLanguage("No result"), JOptionPane.WARNING_MESSAGE);
             } else {
 
                 model.clear();
-                for (int i = 0; i < v.size(); i++)
-                    model.addElement(v.get(i));
+                for (Object o : v) model.add(0, o);
                 if (v.size() == 1) {
                     gxInstance.getpprove().high_light_a_fact((CClass) v.get(0));
                     list.setSelectedIndex(0);

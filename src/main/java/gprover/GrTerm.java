@@ -1,6 +1,7 @@
 package gprover;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The GrTerm class represents a geometric term in the theorem proving framework.
@@ -75,8 +76,8 @@ public class GrTerm {
      *
      * @return a vector containing all XTerm objects.
      */
-    public Vector getAllxterm() {
-        Vector v = new Vector();
+    public List<Object> getAllxterm() {
+        List<Object> v = new ArrayList<>();
         if (ps1 != null && ps1.p != null) {
             XTerm x = ps1.p;
             while (x != null) {
@@ -101,8 +102,8 @@ public class GrTerm {
      *
      * @return a vector containing all variables.
      */
-    public Vector getAllvars() {
-        Vector v = new Vector();
+    public  List<Object> getAllvars() {
+        List<Object> v = new ArrayList<>();
         getPSVar(v, ps1);
         getPSVar(v, ps2);
         return v;
@@ -114,7 +115,7 @@ public class GrTerm {
      * @param v the vector to which variables are added.
      * @param d the DTerm chain to process.
      */
-    void getPSVar(Vector v, DTerm d) {
+    void getPSVar( List<Object> v, DTerm d) {
         while (d != null) {
             getPVar(v, d.p);
             d = d.nx;
@@ -128,7 +129,7 @@ public class GrTerm {
      * @param v the vector to which the variable is added.
      * @param x the XTerm from which the variable is retrieved.
      */
-    void getPVar(Vector v, XTerm x) {
+    void getPVar( List<Object> v, XTerm x) {
         if (x == null) return;
         if (x.var != null)
             v.add(x.var);

@@ -5,7 +5,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SelectDialog is a class that extends JBaseDialog and implements ActionListener,
@@ -23,7 +24,7 @@ public class SelectDialog extends JBaseDialog implements
     private DefaultListModel listModel;
     private static final String str = "Cancel";
     private JButton cancle_button;
-    private Vector selectedlist;
+    private List<Object> selectedlist;
     Object selected = null;
     GExpert gxInstance;
 
@@ -35,7 +36,7 @@ public class SelectDialog extends JBaseDialog implements
      * @param owner the GExpert instance to associate with this dialog
      * @param vlist the list of items to display in the dialog
      */
-    public SelectDialog(GExpert owner, Vector vlist) {
+    public SelectDialog(GExpert owner, List<Object> vlist) {
         super(owner.getFrame(), "Select");
         gxInstance = owner;
 
@@ -61,7 +62,7 @@ public class SelectDialog extends JBaseDialog implements
         getContentPane().add(panel);
 
         this.setSize(new Dimension(130, 150));
-        selectedlist = new Vector();
+        selectedlist = new ArrayList<>();
         addItem(vlist);
     }
 
@@ -100,13 +101,13 @@ public class SelectDialog extends JBaseDialog implements
      *
      * @param v the vector of items to add
      */
-    public void addItem(Vector v) {
+    public void addItem(List<Object> v) {
         listModel.clear();
         selectedlist.clear();
 
         for (int i = 0; i < v.size(); i++) {
             CClass cc = (CClass) v.get(i);
-            listModel.addElement(cc.getDescription());
+            listModel.add(0, cc.getDescription());
             selectedlist.add(cc);
         }
     }

@@ -1,6 +1,7 @@
 package gprover;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -2175,7 +2176,7 @@ void print_elims(ElTerm el, char mk) {
      * @param v3 a vector for filtered NDGs
      * @param v4 a vector for deduced NDGs
      */
-    public void get_ndgs(Vector v1, Vector v2, Vector v3, Vector v4) { // cndg
+    public void get_ndgs(List<Object> v1, List<Object> v2, List<Object> v3, List<Object> v4) { // cndg
 
         int n = cns_no;
         for (int i = 1; i <= n; i++) {
@@ -2207,7 +2208,7 @@ void print_elims(ElTerm el, char mk) {
      * @param v1 the vector to which the NDG is added
      * @return the created CNdg object, or null if the points are identical or invalid
      */
-    protected CNdg add_n_isotropic(int a, int b, Vector v1) {
+    protected CNdg add_n_isotropic(int a, int b, List<Object> v1) {
         if (a == b)
             return null;
 
@@ -2242,7 +2243,7 @@ void print_elims(ElTerm el, char mk) {
      * @param v1 the vector to which the NDG is added
      * @return the created CNdg object
      */
-    protected CNdg add_n_pt(int type, int a, int b, int c, int d, Vector v1) {
+    protected CNdg add_n_pt(int type, int a, int b, int c, int d, List<Object> v1) {
         if (a > b) {
             int t = a;
             a = b;
@@ -2295,7 +2296,7 @@ void print_elims(ElTerm el, char mk) {
      * @param v1 the vector to which the NDG is added
      * @return the created CNdg object
      */
-    protected CNdg add_n_coll(int a, int b, int c, Vector v1) {
+    protected CNdg add_n_coll(int a, int b, int c, List<Object> v1) {
         if (a > b) {
             int t = a;
             a = b;
@@ -2332,7 +2333,7 @@ void print_elims(ElTerm el, char mk) {
      *
      * @param v1 the vector to be populated with NDG constraints
      */
-    public void init_ndgs(Vector v1) {
+    public void init_ndgs(List<Object> v1) {
         CNdg nd;
 
         int sz = v1.size();
@@ -2451,7 +2452,7 @@ void print_elims(ElTerm el, char mk) {
      * @param b the second point index
      * @param v1 the vector to add the NDG constraint
      */
-    public void add_n_neq(int a, int b, Vector v1) {
+    public void add_n_neq(int a, int b, List<Object> v1) {
         CNdg nd = add_ndg_neq(a, b);
         this.add_ndgs(nd, v1);
     }
@@ -2465,7 +2466,7 @@ void print_elims(ElTerm el, char mk) {
      * @param cs the construction containing the points
      * @param v1 the vector to add the NDG constraint
      */
-    public void add_coll_para(Cons cs, Vector v1) {
+    public void add_coll_para(Cons cs, List<Object> v1) {
         int a, b;
 
         a = cs.ps[0];
@@ -2502,7 +2503,7 @@ void print_elims(ElTerm el, char mk) {
      * @param c  the CNdg constraint to analyze
      * @param v4 the vector in which the deduced NDG constraints are stored
      */
-    public void angle_deduction(CNdg c, Vector v4) {
+    public void angle_deduction(CNdg c, List<Object> v4) {
         if (c == null)
             return;
 
@@ -2556,7 +2557,7 @@ void print_elims(ElTerm el, char mk) {
      * @param b  the second point index
      * @param v4 the vector containing NDG constraints
      */
-    protected void add_neqTo(int a, int b, Vector v4) {
+    protected void add_neqTo(int a, int b, List<Object> v4) {
         for (int i = 0; i < v4.size(); i++) {
             CNdg d = (CNdg) v4.get(i);
             if (d.type == NDG_NEQ || d.type == NDG_NON_ISOTROPIC) {
@@ -2642,7 +2643,7 @@ void print_elims(ElTerm el, char mk) {
      *
      * @param v4 the vector containing NDG constraints to filter
      */
-    protected void filter_ndg(Vector v4) {
+    protected void filter_ndg(List<Object> v4) {
         for (int i = 0; i < v4.size(); i++) {
             CNdg d = (CNdg) v4.get(i);
             for (int j = i + 1; j < v4.size(); j++) {
@@ -2671,7 +2672,7 @@ void print_elims(ElTerm el, char mk) {
      * @param v2 the source vector of NDG constraints
      * @param v3 the target vector for filtered NDG constraints
      */
-    protected void filter_ndg(Vector v2, Vector v3) {
+    protected void filter_ndg(List<Object> v2, List<Object> v3) {
         for (int i = 0; i < v2.size(); i++) {
             CNdg d = (CNdg) v2.get(i);
             boolean added = false;
@@ -2708,7 +2709,7 @@ void print_elims(ElTerm el, char mk) {
      * @param d     the NDG constraint to add
      * @param vlist the vector where the NDG constraint is stored
      */
-    protected void add_ndgs(CNdg d, Vector vlist) {
+    protected void add_ndgs(CNdg d, List<Object> vlist) {
         if (d == null)
             return;
 
@@ -2773,7 +2774,7 @@ void print_elims(ElTerm el, char mk) {
      * @param x  the XTerm to convert and add
      * @param v4 the vector where the NDG information is stored
      */
-    protected void addxtermndg(XTerm x, Vector v4) {
+    protected void addxtermndg(XTerm x, List<Object> v4) {
         if (x == null)
             return;
         xterm2ndg(x, v4);
@@ -2794,7 +2795,7 @@ void print_elims(ElTerm el, char mk) {
      * @param x the XTerm to convert
      * @param vlist the vector where the generated NDG constraints will be added
      */
-    protected void xterm2ndg(XTerm x, Vector vlist) {
+    protected void xterm2ndg(XTerm x, List<Object> vlist) {
         if (x == null || x.var == null)
             return;
 
@@ -2816,7 +2817,7 @@ void print_elims(ElTerm el, char mk) {
      * @param x the XTerm to process
      * @param vlist the vector where the generated NDG constraints will be added
      */
-    protected void xterm_1term(XTerm x, Vector vlist) {
+    protected void xterm_1term(XTerm x, List<Object> vlist) {
         long n = fcc(x);
 
         if (x.var == null) {
@@ -2877,7 +2878,7 @@ void print_elims(ElTerm el, char mk) {
      * @param x the XTerm to process
      * @param vlist the vector where the generated NDG constraints will be added
      */
-    protected void xterm_2term(XTerm x, Vector vlist) {
+    protected void xterm_2term(XTerm x, List<Object> vlist) {
         long n = fcc(x);
         if (x.ps != null) {
             DTerm dx1 = x.ps.nx;
@@ -3356,7 +3357,7 @@ void print_elims(ElTerm el, char mk) {
      * @param v3 the source vector of NDG constraints
      * @param v4 the target vector to store the deduced NDG constraints
      */
-    public void ndg_deduction(Vector v3, Vector v4) {
+    public void ndg_deduction(List<Object> v3, List<Object> v4) {
         for (int i = 0; i < v3.size(); i++) {
             CNdg d = (CNdg) v3.get(i);
             if (d.exists) {
@@ -3395,7 +3396,7 @@ void print_elims(ElTerm el, char mk) {
      *
      * @param v4 the vector containing NDG constraints to be sorted
      */
-    public void sortVector(Vector v4) {
+    public void sortVector(List<Object> v4) {
         for (int i = 1; i < v4.size(); i++) {
             CNdg d = (CNdg) v4.get(i);
             for (int j = 0; j < i; j++) {
@@ -3421,10 +3422,10 @@ void print_elims(ElTerm el, char mk) {
      *
      * @param v4 the vector containing NDG constraints to be parsed
      */
-    public void parse_neq(Vector v4) {
+    public void parse_neq(List<Object> v4) {
 
         sortVector(v4);
-        Vector v5 = new Vector();
+        List<Object> v5 = new ArrayList<>();
 
         for (int i = 0; i < v4.size(); i++) {
             CNdg d1 = (CNdg) v4.get(i);
@@ -4787,5 +4788,5 @@ void print_elims(ElTerm el, char mk) {
         return true;
     }
 
-    private Vector vndgs = new Vector();
+    private List<Object> vndgs = new ArrayList<>();
 }

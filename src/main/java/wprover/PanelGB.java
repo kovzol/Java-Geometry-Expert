@@ -12,7 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import java.io.IOException;
  */
 public class PanelGB extends PanelAlgebraic implements MouseListener {
 
-    private Vector vndgs;
+    private List<Object> vndgs;
     private boolean prs = false;
     private static long TIME = 1000000;
     private JPopupMenu menu;
@@ -109,7 +110,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
     protected int div(TMono m1, TPoly p1) {
         if (poly.pzerop(m1))
             return 0;
-        Vector vt = new Vector();
+        List<Object> vt = new ArrayList<>();
 
         while (p1 != null) {
             TMono t = p1.poly;
@@ -180,7 +181,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
      *
      * @param v the vector containing the terms to print
      */
-    public void printTP(Vector v) {
+    public void printTP(List<Object> v) {
         for (int i = 0; i < v.size(); i++) {
             TMono m = (TMono) v.get(i);
             if (m != null)
@@ -194,7 +195,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
      * @param v the vector containing the terms to check
      * @return true if the computation is finished, false otherwise
      */
-    public boolean gb_finished(Vector v) {
+    public boolean gb_finished(List<Object> v) {
         for (int i = 0; i < v.size(); i++) {
             TMono m = (TMono) v.get(i);
             if (poly.plength(m) == 1 && m.x == 0)
@@ -209,13 +210,13 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
      * @param pp the vector containing the polynomial terms
      * @param dx the index value for the computation
      */
-    public void test(Vector pp, int dx) {
+    public void test(List<Object> pp, int dx) {
         int size = pp.size();
 
         if (size < 2) return;
 
         int index = size - 3;
-        Vector vp = new Vector();
+        List<Object> vp = new ArrayList<>();
         for (int i = size - 2; i < size; i++)
             vp.add(pp.get(i));
 
@@ -237,7 +238,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
      *
      * @param pp the vector containing the polynomial terms
      */
-    public void gbasis(Vector pp) {
+    public void gbasis(List<Object> pp) {
         while (true) {
             pp = poly.bb_reduce(pp, 10000);
             if (!isRunning())
@@ -246,7 +247,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
             if (gb_finished(pp))
                 break;
 
-            Vector tp = poly.s_polys(pp);
+            List<Object> tp = poly.s_polys(pp);
 
             if (tp.size() != 0) {
                 for (int i = 0; i < tp.size(); i++)
@@ -270,9 +271,9 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
      * @param mc the conclusion polynomial term (TMono) to be reduced
      * @return the reduced conclusion polynomial or {@code null} if the process is interrupted
      */
-    public TMono sbasis(int x, Vector v, TMono mc) {
+    public TMono sbasis(int x, List<Object> v, TMono mc) {
 
-        Vector vg = new Vector();
+        List<Object> vg = new ArrayList<>();
         if (v.size() == 0) return mc;
         GeoPoly basic = GeoPoly.getPoly();
 
@@ -280,7 +281,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         int dx = nn / 2 + 2;
         TMono m1, m2;
         int param = 0;
-        Vector vrs = new Vector();
+        List<Object> vrs = new ArrayList<>();
 
 
         for (int n = 1; n < nn / 2 + 1; n++) {
@@ -340,12 +341,12 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
 
         basic.upValueTM(vrs, dx);
 
-        Vector vnds = basic.getcnds(vrs, dx);
+        List<Object> vnds = basic.getcnds(vrs, dx);
         basic.bb_reduce(vrs, 10000, true);
         if (!running)
             return null;
 
-        Vector vnn = new Vector();
+        List<Object> vnn = new ArrayList<>();
         for (int i = 0; i < vnds.size(); i++) {
 
             TMono m = (TMono) vnds.get(i);
@@ -358,7 +359,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
                 vnn.add(d);
         }
 
-        Vector vco = basic.parseCommonDono(vnn, dx);
+        List<Object> vco = basic.parseCommonDono(vnn, dx);
         for (int i = 0; i < vnds.size(); i++) {
             TMono d = (TMono) vnds.get(i);
             basic.ppush(d, vrs);
@@ -386,7 +387,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         basic.eraseCommonDono(vnn);
 
 
-        Vector vnn1 = new Vector();
+        List<Object> vnn1 = new ArrayList<>();
         for (int i = 0; i < vnn.size(); i++) {
             TDono d = (TDono) vnn.get(i);
             TMono m = basic.p_copy(d.p2);
@@ -419,7 +420,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
      *
      * @param v the vector containing the non-degenerate conditions
      */
-    public void addSVdd(Vector v) {
+    public void addSVdd(List<Object> v) {
         GeoPoly basic = GeoPoly.getPoly();
 
         addString2(GExpert.getLanguage("The Nondegenerate Conditions:"));
@@ -459,9 +460,9 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         addAlgebraicForm();
         addString2(GExpert.getLanguage("The equational hypotheses:"));
 
-        Vector vc = dp.getAllConstraint();
+        List<Object> vc = dp.getAllConstraint();
         int n = 1;
-        Vector pp = new Vector();
+        List<Object> pp = new ArrayList<>();
 
         for (int i = 0; i < vc.size(); i++) {
             Constraint c = (Constraint) vc.get(i);
@@ -487,7 +488,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         String s1 = poly.printSPoly(mc);
 
         addString2(GExpert.getLanguage("The Groebner basis:"));
-        Vector v = dp.getPBMono();
+        List<Object> v = dp.getPBMono();
 
         int x = basic.getMaxX(v);
         int dx = x / 2 + 2;
@@ -591,7 +592,7 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
         boolean fr = true;
         out.write("vars := [".getBytes());
 
-        Vector vp = dp.getPointList();
+        List<Object> vp = dp.getPointList();
         for (int i = vp.size() - 1; i >= 0; i--) {
             CPoint pt = (CPoint) vp.get(i);
             String s1 = pt.x1.getString();
@@ -606,10 +607,10 @@ public class PanelGB extends PanelAlgebraic implements MouseListener {
             out.write((s2 + ", " + s1).getBytes());
         }
 
-        Vector v = dp.getPBMono();
+        List<Object> v = dp.getPBMono();
         int x = basic.getMaxX(v);
 
-        Vector vg = new Vector();
+        List<Object> vg = new ArrayList<>();
         int nn = x;
         TMono m1, m2;
         int param = 0;

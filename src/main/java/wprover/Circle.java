@@ -1,6 +1,7 @@
 package wprover;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
@@ -18,8 +19,8 @@ public class Circle extends CClass {
     int type = PCircle;
 
     CPoint o = new CPoint();
-    Vector points = new Vector();
-    Vector cons = new Vector();
+    List<Object> points = new ArrayList<>();
+    List<Object> cons = new ArrayList<>();
 
     /**
      * Gets the number of points on the circle.
@@ -449,8 +450,8 @@ public class Circle extends CClass {
      * @param c2 the second circle
      * @return a vector of common points
      */
-    public static Vector CommonPoints(Circle c1, Circle c2) {
-        Vector vlist = new Vector();
+    public static List<Object> CommonPoints(Circle c1, Circle c2) {
+        List<Object> vlist = new ArrayList<>();
         for (int i = 0; i < c1.points.size(); i++) {
             Object obj = c1.points.get(i);
             if (c2.points.contains(obj)) {

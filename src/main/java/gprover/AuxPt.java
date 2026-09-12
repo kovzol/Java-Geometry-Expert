@@ -1,6 +1,8 @@
 package gprover;
 
-import java.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The AuxPt class represents an auxiliary point in a geometric construction.
@@ -12,7 +14,7 @@ public class AuxPt {
     int type;
 
     /** The list of ProPoint objects associated with the auxiliary point. */
-    Vector<ProPoint> vptlist = new Vector<>();
+    List<ProPoint> vptlist = new ArrayList<>();
 
     /**
      * Constructs an AuxPt object with the specified type.

@@ -1,11 +1,12 @@
 package wprover;
 
 import java.awt.*;
-import java.util.Vector;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DrawData is a utility class that manages color, dash, and width configurations for drawing operations.
@@ -34,9 +35,9 @@ public class DrawData {
     private static DrawData dd = new DrawData();
     private static int cnum;
 
-    public Vector colorlist = new Vector();
-    public Vector dashlist = new Vector();
-    public Vector widthlist = new Vector();
+    public List<Object> colorlist = new ArrayList<>();
+    public List<Object> dashlist = new ArrayList<>();
+    public List<Object> widthlist = new ArrayList<>();
 
     int default_color_num;
 
@@ -265,7 +266,7 @@ public class DrawData {
      * @param stype the style type (0 for color, 1 for gray, 2 for black &amp; white)
      * @throws IOException if an I/O error occurs while writing
      */
-    public static void SavePS(Vector vc, Vector vd, Vector vw, FileOutputStream fp, int stype) throws IOException {
+    public static void SavePS(List<Object> vc, List<Object> vd, List<Object> vw, FileOutputStream fp, int stype) throws IOException {
 
         fp.write("%-----define color, dash and width\n".getBytes());
 

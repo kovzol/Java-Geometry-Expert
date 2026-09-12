@@ -3,7 +3,8 @@ package wprover;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -16,7 +17,7 @@ public class JLineFlash extends JFlash implements ActionListener {
     /**
      * A list of lines to be flashed.
      */
-    private Vector vlist = new Vector();
+    private List<Object> vlist = new ArrayList<>();
 
     /**
      * A flag indicating whether to alternate the flashing effect.

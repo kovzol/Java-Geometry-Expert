@@ -1,6 +1,7 @@
 package wprover;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,10 +19,10 @@ public class CPolygon extends CClass {
     int grid = 12;
     int slope = 0;
     private boolean showArea = false;
-    Vector pointlist = new Vector();
+    List<Object> pointlist = new ArrayList<>();
 
     private CPoint pt1, pt2;
-    private Vector vtrlist = new Vector();
+    private  List<Object> vtrlist = new ArrayList<>();
     private double pdx, pdy;
     private double area;
 
@@ -346,7 +347,7 @@ public class CPolygon extends CClass {
      *
      * @return the vector list of dragged points
      */
-    public Vector getDraggedPoints() {
+    public  List<Object> getDraggedPoints() {
         return vtrlist;
     }
 
@@ -355,8 +356,8 @@ public class CPolygon extends CClass {
      *
      * @return the vector list of transformed points
      */
-    public Vector getTransformedPoints() {
-        Vector vlist = new Vector();
+    public  List<Object> getTransformedPoints() {
+        List<Object> vlist = new ArrayList<>();
 
         for (int i = 0; i < pointlist.size(); i++) {
             CPoint pt = (CPoint) pointlist.get(i);
@@ -458,7 +459,7 @@ public class CPolygon extends CClass {
      * @param v the vector of points to compare with
      * @return true if the polygons are equal, false otherwise
      */
-    public boolean check_rdeq(Vector v) {
+    public boolean check_rdeq( List<Object> v) {
         if (!visible) return false;
 
         int n = pointlist.size();
@@ -492,7 +493,7 @@ public class CPolygon extends CClass {
      * @param v the vector of points to compare with
      * @return true if the polygons are equal, false otherwise
      */
-    public boolean check_eq(Vector v) {
+    public boolean check_eq(List<Object> v) {
         int n = pointlist.size();
         if (n != v.size()) return false;
 
@@ -544,7 +545,7 @@ void setSlope(int s) {
  *
  * @param v the vector containing the points
  */
-public void setPoints(Vector v) {
+public void setPoints(List<Object> v) {
     pointlist.clear();
     pointlist.addAll(v);
     return;
@@ -699,10 +700,10 @@ public String getDescription() {
      * @param gtype the grid type (1: vertical, 2: horizontal, 3: both)
      * @return a vector of points if dtype is 1, otherwise null
      */
-    public Vector drawGrid(Graphics2D g2, int[] xpoints, int[] ypoints, int n, int dtype, int gtype) {
-        Vector vpl = null;
+    public List<Object> drawGrid(Graphics2D g2, int[] xpoints, int[] ypoints, int n, int dtype, int gtype) {
+        List<Object> vpl = null;
         if (dtype == 1)
-            vpl = new Vector();
+            vpl = new ArrayList<>();
 
         if (n <= 3) return vpl;
 
@@ -929,7 +930,7 @@ public String getDescription() {
                     s += pt.getname() + " lineto ";
             }
             fp.write(s.getBytes());
-            Vector vp = drawGrid(null, xpoints, ypoints, n, 1, type);
+            List<Object> vp = drawGrid(null, xpoints, ypoints, n, 1, type);
             String st = "";
             for (int i = 0; i < vp.size() / 2; i++) {
                 Point p1 = (Point) vp.get(2 * i);

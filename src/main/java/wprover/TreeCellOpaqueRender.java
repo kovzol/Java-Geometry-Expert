@@ -9,7 +9,8 @@ import javax.swing.tree.TreeCellEditor;
 import java.awt.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TreeCellOpaqueRender.java
@@ -24,7 +25,7 @@ public class TreeCellOpaqueRender extends JPanel implements TreeCellRenderer, Mo
     static Icon Icon_parallelogram = GExpert.createImageIcon("images/dtree/parallelogram.gif");
 
 
-    private Vector vlist = new Vector();
+    private List<Object> vlist = new ArrayList<>();
 
     private JTree tree;
 
@@ -479,7 +480,7 @@ class TreeCellOPaqueEditor extends AbstractCellEditor implements TreeCellEditor 
 class TreeCellAssertPanel extends JPanel implements MouseListener {
 
     private static Color bcolor = new Color(204, 255, 204);
-    private Vector vlist = new Vector();
+    private List<Object> vlist = new ArrayList<>();
     private MAssertion ass;
     private MEquation eq;
     private boolean selected = false;

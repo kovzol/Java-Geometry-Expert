@@ -222,7 +222,7 @@ public class AnimatePanel extends JToolBar implements ActionListener, ChangeList
      */
     public void adjustSpeed() {
         int n = getSpeed();
-        ant.Setstep(framesPerSecond.getValue());
+        ant.setStep(framesPerSecond.getValue());
         timer.setDelay(n);
     }
 

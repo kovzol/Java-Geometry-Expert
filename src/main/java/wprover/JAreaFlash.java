@@ -4,14 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JAreaFlash is a class that extends JFlash and implements ActionListener.
  * It is used to create a flashing area effect on a JPanel.
  */
 public class JAreaFlash extends JFlash implements ActionListener {
-    private Vector vlist = new Vector();
+    private  List<Object> vlist = new ArrayList<>();
     private int color = DrawData.LIGHTCOLOR;
 
     /**

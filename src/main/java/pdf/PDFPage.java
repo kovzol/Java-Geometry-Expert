@@ -25,7 +25,8 @@ import java.awt.print.PageFormat;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>This class defines a single page within a document.  It is linked to a
@@ -69,7 +70,7 @@ public class PDFPage extends PDFObject implements Serializable
     /**
      * This holds the contents of the page.
      */
-    protected Vector<PDFObject> contents;
+    protected List<PDFObject> contents;
 
     /**
      * Object ID that contains a thumbnail sketch of the page.
@@ -80,20 +81,20 @@ public class PDFPage extends PDFObject implements Serializable
     /**
      * This holds any Annotations contained within this page.
      */
-    protected Vector<PDFObject> annotations;
+    protected List<PDFObject> annotations;
 
     /**
      * This holds any resources for this page
      */
-    protected Vector<String> resources;
+    protected List<String> resources;
 
     // JM
-    protected Vector<String> imageResources;
+    protected List<String> imageResources;
 
     /**
      * The fonts associated with this page
      */
-    protected Vector<PDFFont> fonts;
+    protected List<PDFFont> fonts;
 
     /**
      * The xobjects or other images in the pdf
@@ -122,13 +123,13 @@ public class PDFPage extends PDFObject implements Serializable
     {
         super("/Page");
         pageFormat      = DEF_FORMAT;
-        contents        = new Vector<PDFObject>();
+        contents        = new ArrayList<>();
         thumbnail       = null;
-        annotations     = new Vector<PDFObject>();
-        resources       = new Vector<String>();
+        annotations     = new ArrayList<>();
+        resources       = new ArrayList<>();
 	// JM
-        imageResources	= new Vector<String>();
-        fonts           = new Vector<PDFFont>();
+        imageResources	= new ArrayList<>();
+        fonts           = new ArrayList<>();
         procset         = null;
     }
 
@@ -213,7 +214,7 @@ public class PDFPage extends PDFObject implements Serializable
 
         // finally create and return the font
         PDFFont f = pdfDocument.getFont(type,font,style);
-        fonts.addElement(f);
+        fonts.add(f);
         return f;
     }
 
@@ -279,7 +280,7 @@ public class PDFPage extends PDFObject implements Serializable
      * @param ob PDFObject describing some contents
      */
     public void add(PDFObject ob) {
-        contents.addElement(ob);
+        contents.add(ob);
     }
 
     /**
@@ -291,7 +292,7 @@ public class PDFPage extends PDFObject implements Serializable
      * @param ob Annotation to add.
      */
     public void addAnnotation(PDFObject ob) {
-        annotations.addElement(ob);
+        annotations.add(ob);
     }
 
     /**
@@ -310,7 +311,7 @@ public class PDFPage extends PDFObject implements Serializable
                                    xy2[0],xy2[1],
                                    note);
         pdfDocument.add(ob);
-        annotations.addElement(ob);
+        annotations.add(ob);
         return ob;
     }
 
@@ -332,7 +333,7 @@ public class PDFPage extends PDFObject implements Serializable
                                    dest
                                    );
         pdfDocument.add(ob);
-        annotations.addElement(ob);
+        annotations.add(ob);
         return ob;
     }
 
@@ -363,12 +364,12 @@ public class PDFPage extends PDFObject implements Serializable
                                    xy4[0],xy4[1]
                                    );
         pdfDocument.add(ob);
-        annotations.addElement(ob);
+        annotations.add(ob);
         return ob;
     }
 
     /** Contains the text strings for the xobjects. */
-    private Vector<String> xobjects = new Vector<String>();
+    private List<String> xobjects = new ArrayList<>();
     
     /**
      * This adds an XObject resource to the page.
@@ -377,7 +378,7 @@ public class PDFPage extends PDFObject implements Serializable
      * @param inxobject the XObject resource to be added.
      */
     public void addXObject(String inxobject){
-        xobjects.addElement(inxobject);
+        xobjects.add(inxobject);
     }
 
     /**
@@ -385,7 +386,7 @@ public class PDFPage extends PDFObject implements Serializable
      * @param resource String defining the resource
      */
     public void addResource(String resource) {
-        resources.addElement(resource);
+        resources.add(resource);
     }
 
     // JM
@@ -394,7 +395,7 @@ public class PDFPage extends PDFObject implements Serializable
      * @param resource the XObject resource to be added.
      */
     public void addImageResource(String resource) {
-        imageResources.addElement(resource);
+        imageResources.add(resource);
     }
 
     /**
@@ -529,7 +530,7 @@ public class PDFPage extends PDFObject implements Serializable
         // the /Contents pages object
         if(contents.size()>0) {
             if(contents.size()==1) {
-                PDFObject ob = (PDFObject)contents.elementAt(0);
+                PDFObject ob = (PDFObject)contents.get(0);
                 os.write("/Contents ".getBytes());
                 os.write(ob.toString().getBytes());
                 os.write("\n".getBytes());
@@ -557,7 +558,7 @@ public class PDFPage extends PDFObject implements Serializable
     private void addProcset() {
         if(procset==null) {
             pdfDocument.add(procset = new procset());
-            resources.addElement("/ProcSet "+procset);
+            resources.add("/ProcSet "+procset);
         }
     }
 
@@ -565,25 +566,25 @@ public class PDFPage extends PDFObject implements Serializable
      * This defines a procset
      */
     public class procset extends PDFObject {
-        private Vector<String> set;
+        private List<String> set;
 
         /**
          * Creates a new procset object.
          */
         public procset() {
             super(null);
-            set = new Vector<String>();
+            set = new ArrayList<>();
 
             // Our default procset (use addElement not add, as we dont want a
             // leading space)
-            set.addElement("/PDF");
+            set.add("/PDF");
         }
 
         /**
          * @param proc Entry to add to the procset
          */
         public void add(String proc) {
-            set.addElement(" "+proc);
+            set.add(" "+proc);
         }
 
         /**

@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.print.*;
 import java.io.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -75,8 +76,8 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
     final public static int CONSTRUCT_FROM_TEXT = 100;
 
 
-    Vector undolist = new Vector();
-    Vector redolist = new Vector();
+    List<Object> undolist = new ArrayList<>();
+    List<Object> redolist = new ArrayList<>();
     UndoStruct currentUndo = new UndoStruct(1);
 
     //    CPoint trackPoint = null;
@@ -88,7 +89,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
 
     protected JPanel panel;
     private CPoint pSolution = null;
-    private Vector solutionlist = new Vector();
+    private List<Object> solutionlist = new ArrayList<>();
     private CPoint FirstPnt = null;
     private CPoint SecondPnt = null;
     private CPoint ThirdPnt = null;
@@ -106,7 +107,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
     private double vtrx, vtry = 0;
 
     private int PreviousAction;
-    private Vector updaterListeners = new Vector();
+    private List<Object> updaterListeners = new ArrayList<>();
     private boolean needSave = false;
     private int save_id = CMisc.id_count;
     private int CAL_MODE = 0; // 0: MOVEMODE. 1. CAL
@@ -263,7 +264,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @return a vector containing all constraints
      */
-    public Vector getAllConstraint() {
+    public List<Object> getAllConstraint() {
         return constraintlist;
     }
 
@@ -328,8 +329,8 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @return a vector containing all solid objects
      */
-    public Vector getAllSolidObj() {
-        Vector v = new Vector();
+    public List<Object> getAllSolidObj() {
+        List<Object> v = new ArrayList<>();
         int n = CMisc.id_count + 1;
         for (int i = 1; i <= n; i++) {
             Object o = getOjbectById(i);
@@ -394,7 +395,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param v  the list to search
      * @return the object with the specified ID, or null if not found
      */
-    public CClass getObjectInListById(int id, Vector v) {
+    public CClass getObjectInListById(int id, List<Object> v) {
         for (int i = 0; i < v.size(); i++) {
             CClass cc = (CClass) v.get(i);
             if (cc.m_id == id) {
@@ -560,7 +561,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @return the list of selected objects
      */
-    public Vector getSelectList() {
+    public List<Object> getSelectList() {
         return SelectList;
     }
 
@@ -659,10 +660,10 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @return a vector of TMono objects.
      */
-    public Vector getPBMono() {
+    public List<Object> getPBMono() {
         TPoly poly = pblist;
         GeoPoly basic = GeoPoly.getPoly(); //.getInstance();
-        Vector vx = new Vector();
+        List<Object> vx = new ArrayList<>();
 
         TMono m1, m2;
         m1 = m2 = null;
@@ -670,7 +671,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         if (poly == null)
             return vx;
 
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         while (poly != null) {
             m1 = poly.getPoly();
             if (m1 != null)
@@ -693,8 +694,8 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         CharSet set = CharSet.getinstance();
         basic.setRMCOEF(false);
         try {
-            Vector v = getNDGS();
-            Vector v1 = new Vector();
+            List<Object> v = getNDGS();
+            List<Object> v1 = new ArrayList<>();
             for (int i = 0; i < v.size(); i++) {
                 TMono m = (TMono) v.get(i);
                 m = basic.simplify(m, parameter);
@@ -736,10 +737,10 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @return a vector of computed nondegenerate conditions.
      */
-    public Vector getNDGS() {
+    public List<Object> getNDGS() {
         TPoly poly = pblist;
         GeoPoly basic = GeoPoly.getPoly(); //.getInstance();
-        Vector vx = new Vector();
+        List<Object> vx = new ArrayList<>();
 
         TMono m1, m2;
         m1 = m2 = null;
@@ -748,7 +749,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
             return vx;
         int nn = poly.getPoly().x;
 
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         while (poly != null) {
             m1 = poly.getPoly();
             if (m1 != null)
@@ -952,7 +953,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         for (int i = 0; i < nt; i++) {
             CTrace t = (CTrace) tracelist.get(i);
             CPoint p = t.getPoint();
-            CPoint po = t.getonPoint();
+            CPoint po = t.getOnPoint();
             if (p == null || po == null)
                 continue;
 
@@ -1074,7 +1075,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @return a Vector containing result arrays for each parameter configuration.
      */
-    public Vector calculate_allResults() {     // calculate all results from the polygons.
+    public List<Object> calculate_allResults() {     // calculate all results from the polygons.
         double x1, y1, sin, cos;
         x1 = y1 = 0;
         sin = 0;
@@ -1114,7 +1115,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         }
 
 
-        Vector vlist = new Vector();
+        List<Object> vlist = new ArrayList<>();
         int n = paraCounter;
         double[] rr = new double[n];
         vlist.add(rr);
@@ -2449,7 +2450,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      */
     public void defineSpecificAngle() {
         if (paraCounter != 1) {
-            Vector v = this.getSpecificAngleList();
+            List<Object> v = this.getSpecificAngleList();
             if (v.size() == 0) {
                 JOptionPane.showMessageDialog(gxInstance,
                         gxInstance.getLanguage("Angle Specification must be done before drawing anything"),
@@ -2466,7 +2467,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         if (!dlg.isOkPressed()) {
             return;
         }
-        Vector v = dlg.getSpecificAngle();
+        List<Object> v = dlg.getSpecificAngle();
 
         for (int i = 0; i < v.size(); i++) {
             Integer in = (Integer) v.get(i);
@@ -2513,8 +2514,8 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @return a vector containing the specific angle constraints
      */
-    public Vector getSpecificAngleList() {
-        Vector v = new Vector();
+    public List<Object> getSpecificAngleList() {
+        List<Object> v = new ArrayList<>();
 
         for (int i = 0; i < constraintlist.size(); i++) {
             Constraint cs = (Constraint) constraintlist.get(i);
@@ -2533,7 +2534,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @return true if an element is viewed, false otherwise
      */
     public boolean viewElementFromXY(double x, double y) {
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         this.SelectAllFromXY(v, x, y, 0);
 
         CClass c = null;
@@ -2564,7 +2565,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param y the y-coordinate
      * @return the selected object, or null if no object is selected
      */
-    public Object popSelect(Vector v, int x, int y) {
+    public Object popSelect(List<Object> v, int x, int y) {
         if (v.size() == 1) {
             this.viewElement((CClass) v.get(0));
         }
@@ -2671,7 +2672,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
     public void RightMenuPopup(double x, double y) {
         if (gxInstance == null) return;
 
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         SelectAllFromXY(v, x, y, 0);
         CClass c = null;
         JPanel d = panel;
@@ -2704,7 +2705,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param x  the x-coordinate for selection
      * @param y  the y-coordinate for selection
      */
-    public void SelectFromAList(Vector v1, Vector v2, double x, double y) {
+    public void SelectFromAList(List<Object> v1, List<Object> v2, double x, double y) {
         for (int i = 0; i < v2.size(); i++) {
             CClass cc = (CClass) v2.get(i);
             if (cc.select(x, y)) {
@@ -2721,7 +2722,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param y    the y-coordinate for selection
      * @param type the type of objects to select (0: point preferential, 1: geometry object only, 2: all, etc.)
      */
-    public void SelectAllFromXY(Vector v, double x, double y, int type) {
+    public void SelectAllFromXY(List<Object> v, double x, double y, int type) {
         // 2: all; 1: geometry object only 0: point preferential
         //3: only point, 4:only line, 5: only circle
         //6: only angle 7: only distance  8:only polygon, 9, only text,10 only trace.
@@ -2792,7 +2793,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param x the x-coordinate for selection
      * @param y the y-coordinate for selection
      */
-    public void SelectNameText(Vector v, double x, double y) {
+    public void SelectNameText(List<Object> v, double x, double y) {
         for (int i = 0; i < textlist.size(); i++) {
             CText text = (CText) textlist.get(i);
 
@@ -2815,7 +2816,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @return the selected object, or null if no object is selected
      */
     public CClass SelectOneFromXY(double x, double y, int type) {
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         this.SelectAllFromXY(v, x, y, type);
         if (v.size() == 0) {
             return null;
@@ -2890,7 +2891,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param y the y-coordinate for selection
      * @return the list of selected objects
      */
-    public Vector OnCatch(double x, double y) {
+    public List<Object> OnCatch(double x, double y) {
         CatchList.clear();
         SelectAllFromXY(CatchList, x, y, 0);
         return CatchList;
@@ -2984,7 +2985,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      */
     private void handleMoveCase(double x, double y) {
         FirstPnt = this.CreateATempPoint(x, y);
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
 
         this.SelectAllFromXY(v, x, y, 0);
         if (v.size() == 0) {
@@ -4033,7 +4034,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                 CPoint p1 = (CPoint) obj2;
 
                 int exist_point_number = 0;
-                Vector<CPoint> vp = new Vector<>();
+                List<CPoint> vp = new ArrayList<>();
 
                 for (int i = 0; i < line.points.size(); i++) {
                     CPoint pu = null;
@@ -4636,13 +4637,13 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
             CAngle ag1 = (CAngle) SelectList.get(0);
             CAngle ag2 = (CAngle) SelectList.get(1);
 
-            Vector alist = this.getSpecificAngleList();
+            List<Object> alist = this.getSpecificAngleList();
             SpecificAngleDialog dlg = new SpecificAngleDialog(gxInstance, 2, alist);
             dlg.setLocation(400, 400);
             dlg.setTitle("Please select an specific angle");
             dlg.setVisible(true);
 
-            Vector v = dlg.getSpecificAngle();
+            List<Object> v = dlg.getSpecificAngle();
             if (v.size() == 1) {
                 Integer in = (Integer) v.get(0);
                 int va = in.intValue();
@@ -5326,7 +5327,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
             }
             if (SelectList.size() == 3) {
                 STATUS = 1;
-                Vector v = new Vector();
+                List<Object> v = new ArrayList<>();
                 v.add(ln);
                 this.flashStep(v);
             }
@@ -5523,7 +5524,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     this.addConstraintToList(cs1);
                     UndoStruct un = this.UndoAdded("Show " +
                             cc.getDescription());
-                    Vector v = new Vector();
+                    List<Object> v = new ArrayList<>();
                     v.add(cc);
                     this.setObjectListForFlash(v);
                     break;
@@ -5854,7 +5855,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                 poly.setDraggedPointsNull();
             } else {
                 if (SelectList.size() == 1) {
-                    Vector v = poly.getDraggedPoints();
+                    List<Object> v = poly.getDraggedPoints();
                     boolean already = false;
                     for (int i = 0; i < v.size() / 2; i++) {
                         if (v.get(i * 2) == pt) {
@@ -6227,7 +6228,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      */
     public void add_free_transform() {
         CPolygon p = (CPolygon) SelectList.get(0);
-        Vector v = p.getTransformedPoints();
+        List<Object> v = p.getTransformedPoints();
         CPolygon p1 = new CPolygon();
         p1.copy(p);
         p1.setPoints(v);
@@ -6302,8 +6303,8 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @return a vector containing the construction steps
      */
-    public Vector getConstructionFromDraw() {
-        Vector alist = new Vector();
+    public List<Object> getConstructionFromDraw() {
+        List<Object> alist = new ArrayList<>();
         for (int i = 0; i < constraintlist.size(); i++) {
             Constraint cs = (Constraint) constraintlist.get(i);
             if (cs.csd != null)
@@ -6324,7 +6325,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param v the vector of points
      * @return the matching polygon, or null if no match is found
      */
-    public CPolygon findPolygon(Vector v) {
+    public CPolygon findPolygon(List<Object> v) {
         for (int i = 0; i < polygonlist.size(); i++) {
             CPolygon p = (CPolygon) polygonlist.get(i);
             if (p.check_eq(v))
@@ -6340,7 +6341,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param v the vector of points
      * @return the matching polygon, or null if no match is found
      */
-    public CPolygon findPolygon1(Vector v) {
+    public CPolygon findPolygon1(List<Object> v) {
         for (int i = 0; i < polygonlist.size(); i++) {
             CPolygon p = (CPolygon) polygonlist.get(i);
             if (p.check_rdeq(v))
@@ -6528,7 +6529,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param y the y-coordinate
      * @return the selected object, or null if no object is selected
      */
-    public CClass CatchList(Vector v, double x, double y) {
+    public CClass CatchList(List<Object> v, double x, double y) {
         for (int i = 0; i < v.size(); i++) {
             CClass cc = (CClass) v.get(i);
             if (cc.select(x, y)) {
@@ -6746,7 +6747,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param list the list to which the object is added
      * @return true if the object was added, false otherwise
      */
-    public boolean addObjectToList(Object obj, Vector list) {
+    public boolean addObjectToList(Object obj, List<Object> list) {
         if (obj == null) {
             return false;
         }
@@ -7222,7 +7223,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param x    the new x-coordinate
      * @param y    the new y-coordinate
      */
-    private void ObjectLocationChanged(Vector list, CPoint old, double x, double y) {
+    private void ObjectLocationChanged(List<Object> list, CPoint old, double x, double y) {
         double x0 = FirstPnt.getx();
         double y0 = FirstPnt.gety();
         double dx = x - x0;
@@ -7241,7 +7242,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
             switch (t) {
                 case CClass.POINT:
                     CPoint p = (CPoint) c;
-                    if (!p.isFreezed())
+                    if (!p.isFrozen())
                         p.setXY(x, y);
                     return;
                 case CClass.LINE:
@@ -7307,7 +7308,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
     private void circleLocationChanged(Circle c, double dx, double dy) {
         Circle c1 = (Circle) c;
         CPoint p1 = c1.o;
-        if (!p1.isFreezed())
+        if (!p1.isFrozen())
             p1.setXY(p1.getx() + dx, p1.gety() + dy);
         objectsListMoved(c1.points, dx, dy);
         return;
@@ -7320,14 +7321,14 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param dx   the delta x value
      * @param dy   the delta y value
      */
-    public void objectsListMoved(Vector list, double dx, double dy) {
+    public void objectsListMoved(List<Object> list, double dx, double dy) {
         for (int i = 0; i < list.size(); i++) {
             CClass c = (CClass) list.get(i);
             int t = c.get_type();
             switch (t) {
                 case CClass.POINT:
                     CPoint p = (CPoint) c;
-                    if (!p.isFreezed())
+                    if (!p.isFrozen())
                         p.setXY(p.getx() + dx, p.gety() + dy);
                     break;
             }
@@ -7734,7 +7735,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         if (pt != null)
             return pt;
 
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         SelectFromAList(v, linelist, x, y);
         SelectFromAList(v, circlelist, x, y);
         if (v.size() >= 2) {
@@ -7774,7 +7775,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         if (pt != null)
             return pt;
 
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         SelectFromAList(v, linelist, x, y);
         SelectFromAList(v, circlelist, x, y);
         if (v.size() >= 2) {
@@ -7914,7 +7915,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
         }
 
         if (ln1 != null) {
-            Vector v = ln1.points;
+            List<Object> v = ln1.points;
             if (ln2 == null) {
                 if (v.contains(p3)) {
                     return p3;
@@ -7923,7 +7924,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     return p4;
                 }
             } else {
-                Vector v2 = ln2.points;
+                List<Object> v2 = ln2.points;
                 for (int i = 0; i < v2.size(); i++) {
                     if (v.contains(v2.get(i))) {
                         return (CPoint) v2.get(i);
@@ -9760,7 +9761,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
                     Constraint cs1 = line.getconsByType(Constraint.NTANGLE);
                     if (cs1 == null)
                         break;
-                    Vector v = cs1.getAllElements();
+                    List<Object> v = cs1.getAllElements();
                     v.add(p);
                     Constraint cs = new Constraint(Constraint.NTANGLE, v);
                     cs.PolyGenerate();
@@ -9949,7 +9950,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @return the selected polygon, or null if no polygon is selected.
      */
     public CPolygon SelectAPolygon(double x, double y) {
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         SelectFromAList(v, polygonlist, x, y);
         if (v.size() > 1) {
             return (CPolygon) this.popSelect(v, (int) x, (int) y);
@@ -9967,7 +9968,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param y    the y coordinate of the selection point.
      * @return the selected object, or null if none are hit.
      */
-    public CClass SelectFromAList(Vector list, double x, double y) {
+    public CClass SelectFromAList(List<Object> list, double x, double y) {
         if (list == null) {
             return null;
         }
@@ -9987,7 +9988,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      */
     public void re_generate_all_poly() {
         polylist = pblist = null;
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         v.addAll(constraintlist);
         constraintlist.clear();
         GeoPoly.clearZeroN();
@@ -10621,7 +10622,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @throws IOException if an I/O error occurs
      */
     void write_perp_foot(FileOutputStream fp, int stype) throws IOException {
-        Vector vlist = new Vector();
+        List<Object> vlist = new ArrayList<>();
         this.drawPerpFoot(null, vlist, 1);
         if (vlist.size() == 0) {
             return;
@@ -10657,7 +10658,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param stype       the style type
      * @throws IOException if an I/O error occurs
      */
-    void write_list_ps(FileOutputStream fp, Vector vlist, String discription, int stype) throws IOException {
+    void write_list_ps(FileOutputStream fp, List<Object> vlist, String discription, int stype) throws IOException {
         if (vlist.size() != 0) {
             fp.write((discription).getBytes());
         }
@@ -10675,9 +10676,9 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @throws IOException if an I/O error occurs
      */
     private void SaveDrawAttr(FileOutputStream fp, int stype) throws IOException {
-        Vector vc = new Vector();
-        Vector vd = new Vector();
-        Vector vw = new Vector();
+        List<Object> vc = new ArrayList<>();
+        List<Object> vd = new ArrayList<>();
+        List<Object> vw = new ArrayList<>();
 
         getUDAFromList(vc, vd, vw, pointlist);
         getUDAFromList(vc, vd, vw, linelist);
@@ -10704,7 +10705,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param vw    the vector for widths
      * @param vlist the list of objects to process
      */
-    private void getUDAFromList(Vector vc, Vector vd, Vector vw, Vector vlist) {
+    private void getUDAFromList(List<Object> vc, List<Object> vd, List<Object> vw, List<Object> vlist) {
         for (int i = 0; i < vlist.size(); i++) {
             CClass cc = (CClass) vlist.get(i);
             addAttrToList(cc.m_color, vc);
@@ -10719,7 +10720,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param atrr the attribute to add
      * @param v    the vector to add the attribute to
      */
-    private void addAttrToList(int atrr, Vector v) {
+    private void addAttrToList(int atrr, List<Object> v) {
         int i = 0;
 
         for (; i < v.size(); i++) {
@@ -11169,7 +11170,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param pc1 the starting ID
      * @param pc2 the ending ID
      */
-    public void moveUndoObjectFromList(Vector v1, Vector v2, int pc1, int pc2) {
+    public void moveUndoObjectFromList(List<Object> v1, List<Object> v2, int pc1, int pc2) {
         for (int i = 0; i < v2.size(); i++) {
             CClass cc = (CClass) v2.get(i);
             if (cc.m_id >= pc1 && cc.m_id < pc2) {
@@ -11188,7 +11189,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param pc1 the starting ID
      * @param pc2 the ending ID
      */
-    public void selectUndoObjectFromList(Vector v1, Vector v2, int pc1, int pc2) {
+    public void selectUndoObjectFromList(List<Object> v1, List<Object> v2, int pc1, int pc2) {
         for (int i = 0; i < v2.size(); i++) {
             CClass cc = (CClass) v2.get(i);
             if (cc.m_id >= pc1 && cc.m_id < pc2) {
@@ -11211,7 +11212,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
 
         undo = u;
         if ((u != null && u.flash) || compulsory_flash) {
-            Vector v = u.getAllObjects(this);
+            List<Object> v = u.getAllObjects(this);
             JObjectFlash f = new JObjectFlash(panel);
             f.setAt(panel, v);
             this.addFlash(f);
@@ -11253,7 +11254,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param cc the graphical object to set for flash display
      */
     public void setObjectListForFlash(CClass cc) {
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         v.add(cc);
         setObjectListForFlash(v);
     }
@@ -11264,7 +11265,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      * @param list the list of objects to be flashed
      * @param p    the panel on which the flash effect should be displayed
      */
-    public void setObjectListForFlash(Vector list, JPanel p) {
+    public void setObjectListForFlash(List<Object> list, JPanel p) {
 
         JObjectFlash f = new JObjectFlash(panel);
         f.setAt(p, list);
@@ -11276,7 +11277,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @param list the list of objects to be flashed
      */
-    public void setObjectListForFlash(Vector list) {
+    public void setObjectListForFlash(List<Object> list) {
         setObjectListForFlash(list, panel);
     }
 
@@ -11286,8 +11287,8 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @param list the list of undo structures whose associated objects will be flashed
      */
-    public void setUndoListForFlash(Vector list) {
-        Vector v = new Vector();
+    public void setUndoListForFlash(List<Object> list) {
+        List<Object> v = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             UndoStruct u = (UndoStruct) list.get(i);
             v.addAll(u.getAllObjects(this));
@@ -11301,8 +11302,8 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @param list the list of undo structures whose associated objects will be flashed
      */
-    public void setUndoListForFlash1(Vector list) {
-        Vector v = new Vector();
+    public void setUndoListForFlash1(List<Object> list) {
+        List<Object> v = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             UndoStruct u = (UndoStruct) list.get(i);
             v.addAll(u.getAllObjects(this));
@@ -11808,7 +11809,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
      *
      * @param v the vector containing objects to flash
      */
-    public void flashStep(Vector v) {
+    public void flashStep(List<Object> v) {
         this.setUndoListForFlash(v);
     }
 

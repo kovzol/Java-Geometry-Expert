@@ -4,7 +4,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JPolygonFlash is a class that extends JFlash and implements ActionListener.
@@ -12,7 +13,7 @@ import java.util.Vector;
  */
 public class JPolygonFlash extends JFlash implements ActionListener {
     private int c1, c2;
-    private Vector vlist, vlist1;
+    private List<Object> vlist, vlist1;
     private int FTYPE = 0;
     private int nd = 0;
     private int n = 0;
@@ -38,9 +39,9 @@ public class JPolygonFlash extends JFlash implements ActionListener {
     public JPolygonFlash(JPanel p, CPolygon poly1, CPolygon poly2, boolean oc, double xc, double yc, int c1, int c2, int tt) {
         super(p);
 
-        vlist = new Vector();
+        vlist = new ArrayList<>();
         vlist.addAll(poly1.pointlist);
-        vlist1 = new Vector();
+        vlist1 = new ArrayList<>();
         vlist1.addAll(poly2.pointlist);
         this.c1 = c1;
         this.c2 = c2;
@@ -146,7 +147,7 @@ public class JPolygonFlash extends JFlash implements ActionListener {
      * @param v the vector of points
      * @return the x-coordinate of the centroid
      */
-    public double getCentroidX(Vector v) {
+    public double getCentroidX(List<Object> v) {
         double dx1 = 0;
         int n = v.size();
         for (int i = 0; i < n; i++) {
@@ -163,7 +164,7 @@ public class JPolygonFlash extends JFlash implements ActionListener {
      * @param v the vector of points
      * @return the y-coordinate of the centroid
      */
-    public double getCentroidY(Vector v) {
+    public double getCentroidY(List<Object> v) {
         double dy1 = 0;
         int n = v.size();
         for (int i = 0; i < n; i++) {

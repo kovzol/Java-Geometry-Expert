@@ -65,7 +65,7 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
                 break;
             case CClass.POINT: {
                 CPoint p = (CPoint) cc;
-                if (!p.isFreezed()) {
+                if (!p.isFrozen()) {
                     item = addAMenuItem(GExpert.getLanguage("Freeze"), true);
                     item.setActionCommand("Freeze");
                 } else {
@@ -131,9 +131,9 @@ public class RightClickPopMenu extends JPopupMenu implements ActionListener {
         } else if (command.equals("Cancel Action")) {
             gxInstance.onKeyCancel();
         } else if (command.equals("Freeze"))
-            ((CPoint) cc).setFreezed(true);
+            ((CPoint) cc).setFrozen(true);
         else if (command.equals("Unfreeze"))
-            ((CPoint) cc).setFreezed(false);
+            ((CPoint) cc).setFrozen(false);
         else if (command.equals("Stop Trace"))
             gxInstance.dp.stopTrack();
         else if (command.equals("Trace")) {

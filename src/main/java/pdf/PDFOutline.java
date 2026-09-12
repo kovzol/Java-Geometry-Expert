@@ -44,7 +44,7 @@ public class PDFOutline extends PDFObject implements Serializable
     /**
      * This holds any outlines below us
      */
-    private Vector<PDFOutline> outlines;
+    private List<PDFOutline> outlines;
     
     /**
      * For subentries, this points to it's parent outline
@@ -87,7 +87,7 @@ public class PDFOutline extends PDFObject implements Serializable
     protected PDFOutline()
     {
         super("/Outlines");
-        outlines = new Vector<PDFOutline>();
+        outlines = new ArrayList<>();
         title = null;
         dest = null;
         destMode = FITPAGE;
@@ -190,7 +190,7 @@ public class PDFOutline extends PDFObject implements Serializable
      */
     public void add(PDFOutline outline)
     {
-        outlines.addElement(outline);
+        outlines.add(outline);
         
         // Tell the outline of ourselves
         outline.parent = this;
@@ -253,12 +253,12 @@ public class PDFOutline extends PDFObject implements Serializable
         if(outlines.size()>0) {
             // the number of the first outline in list
             os.write("/First ".getBytes());
-            os.write(outlines.elementAt(0).toString().getBytes());
+            os.write(outlines.get(0).toString().getBytes());
             os.write("\n".getBytes());
             
             // the number of the last outline in list
             os.write("/Last ".getBytes());
-            os.write(outlines.elementAt(outlines.size()-1).toString().getBytes());
+            os.write(outlines.get(outlines.size()-1).toString().getBytes());
             os.write("\n".getBytes());
         }
         
@@ -310,7 +310,7 @@ public class PDFOutline extends PDFObject implements Serializable
      */
     protected PDFOutline getNode(int i)
     {
-        return (PDFOutline)(outlines.elementAt(i));
+        return (PDFOutline)(outlines.get(i));
     }
     
     /**
@@ -319,7 +319,7 @@ public class PDFOutline extends PDFObject implements Serializable
      */
     public Enumeration<PDFOutline> elements()
     {
-        return outlines.elements();
+        return Collections.enumeration(outlines);
     }
     
     /**

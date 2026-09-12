@@ -2,11 +2,13 @@ package wprover;
 
 import maths.Param;
 
-import java.util.Vector;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 
 /**
@@ -17,10 +19,10 @@ import java.awt.*;
 public class CPoint extends CClass {
     private int type = 0;
     public Param x1, y1;
-    private Vector cons = new Vector();
+    private final List<Constraint> cons = new ArrayList<>();
     boolean hasSetColor = false;
     int m_radius = -1; //default.
-    private boolean freezed = false;
+    private boolean frozen = false;
     CText ptext;
 
 
@@ -39,8 +41,8 @@ public class CPoint extends CClass {
       * @return the first Constraint object, or null if no constraints are present
       */
     public Constraint getConstraint() {
-        if (cons.size() == 0) return null;
-        return (Constraint) cons.get(0);
+        if (cons.isEmpty()) return null;
+        return cons.get(0);
     }
 
      /**
@@ -107,7 +109,7 @@ public class CPoint extends CClass {
         if (obj == null) {
             return false;
         }
-        if (m_name == null || m_name.length() == 0) {
+        if (m_name == null || m_name.isEmpty()) {
             return false;
         }
         return m_name.equals(obj.toString());
@@ -130,11 +132,7 @@ public class CPoint extends CClass {
     public void setInFlashing(boolean flash) {
         super.setInFlashing(flash);
         if (ptext != null) {
-            if (flash) {
-                ptext.setInFlashing(true);
-            } else {
-                ptext.setInFlashing(false);
-            }
+            ptext.setInFlashing(flash);
         }
     }
 
@@ -174,7 +172,7 @@ public class CPoint extends CClass {
      * @return true if the point is selected, false otherwise
      */
     public boolean select(double x, double y) {
-        if (visible == false) {
+        if (!visible) {
             return false;
         }
 
@@ -386,9 +384,8 @@ public class CPoint extends CClass {
      * @return true if the coordinates are valid, false otherwise
      */
     public boolean check_xy_valid(double x, double y) {
-        for (int i = 0; i < cons.size(); i++) {
-            Constraint cs = (Constraint) cons.get(i);
-            if (!cs.check_constraint(x, y))
+        for (Constraint con : cons) {
+            if (!con.check_constraint(x, y))
                 return false;
         }
         return true;
@@ -401,11 +398,7 @@ public class CPoint extends CClass {
      * @return true if the points have the same coordinates, false otherwise
      */
     public boolean isEqual(CPoint p) {
-        if ((p.x1 == this.x1) && (p.y1 == this.y1)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (p.x1 == this.x1) && (p.y1 == this.y1);
     }
 
     /**
@@ -416,11 +409,7 @@ public class CPoint extends CClass {
      * @return true if the indices match this point's indices, false otherwise
      */
     public boolean isEqual(int x, int y) {
-        if ((x == this.x1.xindex) && (y == this.y1.xindex)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (x == this.x1.xindex) && (y == this.y1.xindex);
     }
 
     /**
@@ -431,11 +420,8 @@ public class CPoint extends CClass {
      * @return true if the location matches this point's location, false otherwise
      */
     public boolean isSame_Location(double x, double y) {
-        if (Math.abs(x - this.getx()) < CMisc.ZERO &&
-                Math.abs(y - this.gety()) < CMisc.ZERO) {
-            return true;
-        }
-        return false;
+        return Math.abs(x - this.getx()) < CMisc.ZERO &&
+                Math.abs(y - this.gety()) < CMisc.ZERO;
     }
 
     /**
@@ -487,8 +473,8 @@ public class CPoint extends CClass {
      *
      * @return true if the point is frozen, false otherwise
      */
-    public boolean isFreezed() {
-        return freezed;
+    public boolean isFrozen() {
+        return frozen;
     }
 
     /**
@@ -496,8 +482,8 @@ public class CPoint extends CClass {
      *
      * @param r the new frozen state
      */
-    public void setFreezed(boolean r) {
-        freezed = r;
+    public void setFrozen(boolean r) {
+        frozen = r;
     }
 
     /**
@@ -507,10 +493,8 @@ public class CPoint extends CClass {
      * @param y the new y-coordinate
      */
     public void setXY(double x, double y) {
-        if (true) {
-            x1.value = x;
-            y1.value = y;
-        }
+        x1.value = x;
+        y1.value = y;
     }
 
     /**
@@ -540,7 +524,7 @@ public class CPoint extends CClass {
     public void SavePS_Define_Point(FileOutputStream fp) throws IOException {
         String st = m_name;
 
-        if (st.length() == 0 || st.trim().length() == 0)
+        if (st.trim().isEmpty())
             st = "POINT" + m_id;
 
         String s = '/' + st + " {";
@@ -563,7 +547,7 @@ public class CPoint extends CClass {
      * @throws IOException if an I/O error occurs
      */
     public void SavePS(FileOutputStream fp, int stype) throws IOException {
-        if (visible == false) {
+        if (!visible) {
             return;
         }
 
@@ -574,7 +558,7 @@ public class CPoint extends CClass {
 
         String st = m_name;
 
-        if (st.length() == 0 || st.trim().length() == 0)
+        if (st.trim().isEmpty())
             st = "POINT" + m_id;
 
         s = st + " " + n + " cirfill fill " + st + " " + n + " cir black" + " stroke \n";
@@ -588,7 +572,7 @@ public class CPoint extends CClass {
      * @throws IOException if an I/O error occurs
      */
     public void SavePsOringinal(FileOutputStream fp) throws IOException {
-        if (visible == false) {
+        if (!visible) {
             return;
         }
 
@@ -597,7 +581,7 @@ public class CPoint extends CClass {
 
         String st = m_name;
 
-        if (st.length() == 0 || st.trim().length() == 0)
+        if (st.isEmpty() || st.trim().isEmpty())
             st = "POINT" + m_id;
 
         s = st + " " + n + " cirfill ";
@@ -629,7 +613,7 @@ public class CPoint extends CClass {
         }
         out.writeBoolean(visible);
         out.writeInt(m_radius);
-        out.writeBoolean(freezed);
+        out.writeBoolean(frozen);
     }
 
     /**
@@ -654,7 +638,7 @@ public class CPoint extends CClass {
             }
 
             int len = in.readInt();
-            m_name = new String();
+            m_name = "";
             for (int i = 0; i < len; i++) {
                 m_name += in.readChar();
             }
@@ -699,7 +683,7 @@ public class CPoint extends CClass {
             else
                 m_radius = -1;// default.
             if (CMisc.version_load_now >= 0.050)
-                freezed = in.readBoolean();
+                frozen = in.readBoolean();
         }
     }
 }

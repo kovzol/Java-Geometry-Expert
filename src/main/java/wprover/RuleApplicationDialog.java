@@ -8,10 +8,9 @@ import javax.swing.border.Border;
 import javax.swing.border.SoftBevelBorder;
 import java.awt.event.*;
 import java.awt.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Hashtable;
-import java.net.URL;
-import java.io.IOException;
 
 import UI.EntityButtonUI;
 
@@ -260,7 +259,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
      * rules and their conditions.
      */
     class ruleViewPanel extends JToolBar {
-        private Vector vlist = new Vector();
+        private List<Object> vlist = new ArrayList<>();
 
         public ruleViewPanel() {
             super(JToolBar.HORIZONTAL);
@@ -301,7 +300,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         public void loadRule(ElTerm el) {
             this.removeAll();
 
-            Vector v = el.getAllxterm();
+            List<Object> v = el.getAllxterm();
             setLabelObject(0, 1, v.get(0));
             setLabelObject(1, 0, " = ");
             for (int i = 1; i < v.size(); i++)
@@ -322,7 +321,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
      * with rules and their conditions.
      */
     class ruleAppPanel extends JToolBar {
-        private Vector vlist = new Vector();
+        private List<Object> vlist = new ArrayList<>();
 
         public ruleAppPanel() {
             super(JToolBar.HORIZONTAL);
@@ -349,7 +348,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         public void loadRule(Cond c) {
             this.removeAll();
 
-            Vector v = c.vlist;
+            List<Object> v = c.vlist;
             int n = v.size();
             if (n != 0) {
                 Color cr = new Color(0, 128, 0);
@@ -370,7 +369,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
 
         public void loadRule(ElTerm el) {
             this.removeAll();
-            Vector v = el.getAllCond();
+            List<Object> v = el.getAllCond();
             int n = v.size();
 
             if (n > 0) {
@@ -436,7 +435,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
 
         public void componentResized(ComponentEvent e) {
             if (dx == null) return;
-            Vector v1 = dx.pointlist;
+            List<Object> v1 = dx.pointlist;
             Rectangle rc = this.getPointsBounds(v1);
             double rx = this.getWidth();
             double ry = this.getHeight();
@@ -498,7 +497,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             });
         }
 
-        public Rectangle getPointsBounds(Vector v) {
+        public Rectangle getPointsBounds(List<Object> v) {
             if (v.size() == 0) return rc;
             CPoint p1 = (CPoint) v.get(0);
             double x, y, x1, y1;
@@ -602,7 +601,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             }
 
             if (ln != null) {
-                Vector v = dx.pointlist;
+                List<Object> v = dx.pointlist;
                 for (int i = 0; i < ln.getPtsSize(); i++) {
                     CPoint t = ln.getPoint(i);
                     if (v.contains(t))
@@ -702,7 +701,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             }
         }
 
-        private void addCondPts(Vector v1, Cond c) {
+        private void addCondPts(List<Object> v1, Cond c) {
             DrawProcess dp = dpp;
             if (c != null) {
                 int n = c.p.length;
@@ -720,9 +719,9 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
 
         public void LoadRule(Cond conc) {
             Cond c = conc;
-            Vector v1 = new Vector();
+            List<Object> v1 = new ArrayList<>();
             addCondPts(v1, c);
-            Vector v2 = c.vlist;
+            List<Object> v2 = c.vlist;
 
             if (v2 != null) {
                 for (int i = 0; i < v2.size(); i++) {
@@ -758,7 +757,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
         public void LoadRule(ElTerm el) {
             DrawProcess dp = dpp;
             Cond c = el.co;
-            Vector v1 = new Vector();
+            List<Object> v1 = new ArrayList<>();
             while (c != null) {
                 for (int i = 0; i < c.p.length; i++) {
                     if (c.p[i] != 0) {
@@ -779,7 +778,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
                 }
                 e1 = e1.nx;
             }
-            Vector aglist = el.getAllxterm();
+            List<Object> aglist = el.getAllxterm();
 
             for (int i = 0; i < aglist.size(); i++) {
                 XTerm x = (XTerm) aglist.get(i);
@@ -816,10 +815,10 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
                     dx.addLine(ln2);
                 }
             }
-            Vector vl = dx.linelist;
+            List<Object> vl = dx.linelist;
             for (int i = 0; i < vl.size(); i++) {
                 CLine ln = (CLine) vl.get(i);
-                Vector v2 = ln.points;
+                List<Object> v2 = ln.points;
                 if (v1.containsAll(v2))
                     continue;
 
@@ -860,7 +859,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
                 ang.setShowType(2);
 
                 double[] p = CLine.Intersect(ln1, ln2);
-                Vector va = dx.anglelist;
+                List<Object> va = dx.anglelist;
                 if (p != null) {
                     int num = 0;
                     for (int k = 0; k < va.size(); k++) {
@@ -906,7 +905,7 @@ public class RuleApplicationDialog extends JBaseDialog implements ComponentListe
             centerAllObject();
         }
 
-        public void addVectorWithoutDuplicate(Vector v1, Vector v2) {
+        public void addVectorWithoutDuplicate(List<Object> v1, List<Object> v2) {
             for (int i = 0; i < v2.size(); i++) {
                 Object obj = v2.get(i);
                 if (!v1.contains(obj))

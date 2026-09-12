@@ -2,7 +2,8 @@ package wprover;
 
 import maths.TPoly;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
@@ -70,20 +71,20 @@ class UndoStruct {
     TPoly polylist = null;
     TPoly pblist = null;
 
-    Vector pointlist = new Vector();
-    Vector linelist = new Vector();
-    Vector circlelist = new Vector();
-    Vector anglelist = new Vector();
-    Vector constraintlist = new Vector();
-    Vector distancelist = new Vector();
-    Vector polygonlist = new Vector();
-    Vector textlist = new Vector();
-    Vector tracklist = new Vector();
-    Vector otherlist = new Vector();
-    Vector objectlist = new Vector(); // object related to this node.
-    Vector childundolist = new Vector();
+    List<Object> pointlist = new ArrayList<>();
+    List<Object> linelist = new ArrayList<>();
+    List<Object> circlelist = new ArrayList<>();
+    List<Object> anglelist = new ArrayList<>();
+    List<Object> constraintlist = new ArrayList<>();
+    List<Object> distancelist = new ArrayList<>();
+    List<Object> polygonlist = new ArrayList<>();
+    List<Object> textlist = new ArrayList<>();
+    List<Object> tracklist = new ArrayList<>();
+    List<Object> otherlist = new ArrayList<>();
+    List<Object> objectlist = new ArrayList<>(); // object related to this node.
+    List<Object> childundolist = new ArrayList<>();
 
-    Vector dlist = new Vector();
+    List<Object> dlist = new ArrayList<>();;
 
     /**
      * Adds an object to the list of objects in the undo structure.
@@ -184,7 +185,7 @@ class UndoStruct {
      * @param v  the list of objects to draw
      * @param g2 the Graphics2D object to use for drawing
      */
-    private void drawlist(Vector v, Graphics2D g2) {
+    private void drawlist(List<Object> v, Graphics2D g2) {
         for (int i = 0; i < v.size(); i++) {
             CClass c = (CClass) v.get(i);
             c.draw(g2);
@@ -220,7 +221,7 @@ class UndoStruct {
      *
      * @param v the list of objects to add
      */
-    public void addObjectRelatedList(Vector v) {
+    public void addObjectRelatedList(List<Object> v) {
         for (int i = 0; i < v.size(); i++) {
             Object obj = v.get(i);
             if (!objectlist.contains(obj)) {
@@ -235,8 +236,8 @@ class UndoStruct {
      * @param dp the draw process to retrieve objects from
      * @return a list of all related objects
      */
-    public Vector getAllObjects(DrawProcess dp) {
-        Vector v = new Vector();
+    public List<Object> getAllObjects(DrawProcess dp) {
+        List<Object> v = new ArrayList<>();
 
         if (this.m_type == T_UNDO_NODE) {
             dp.selectUndoObjectFromList(v, dp.pointlist, id, id_b);
@@ -252,13 +253,13 @@ class UndoStruct {
         } else if (this.m_type == UndoStruct.T_COMBINED_NODE) {
             for (int i = 0; i < childundolist.size(); i++) {
                 UndoStruct un = (UndoStruct) childundolist.get(i);
-                Vector vt = un.getAllObjects(dp);
+                List<Object> vt = un.getAllObjects(dp);
                 v.addAll(vt);
             }
         } else if (this.m_type == UndoStruct.T_PROVE_NODE) {
             for (int i = 0; i < childundolist.size(); i++) {
                 UndoStruct un = (UndoStruct) childundolist.get(i);
-                Vector vt = un.getAllObjects(dp);
+                List<Object> vt = un.getAllObjects(dp);
                 v.addAll(vt);
             }
         }
@@ -274,7 +275,7 @@ class UndoStruct {
      * @param v   the list of objects to save
      * @throws IOException if an I/O error occurs
      */
-    public void SaveList(DataOutputStream out, Vector v) throws IOException {
+    public void SaveList(DataOutputStream out, List<Object> v) throws IOException {
         int n = v.size();
         if (n > 999) {
             int k = 0;
@@ -294,9 +295,9 @@ class UndoStruct {
      * @return a list of objects read from the input stream
      * @throws IOException if an I/O error occurs
      */
-    public Vector ReadList(DataInputStream in, DrawProcess dp) throws IOException {
+    public List<Object> ReadList(DataInputStream in, DrawProcess dp) throws IOException {
         int size = in.readInt();
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             int id = in.readInt();

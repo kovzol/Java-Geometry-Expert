@@ -5,7 +5,7 @@ import gprover.Cm;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * NumCheckDialog is a dialog for performing numerical checks on geometric points.
@@ -54,9 +54,9 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
         panel.add(bx);
         bx.addItemListener(this);
 
-        Vector v = gxInstance.dp.getPointList();
+        List<Object> v = gxInstance.dp.getPointList();
         for (int i = 0; i < bxs.length; i++) {
-            bxs[i] = new JComboBox(v);
+            bxs[i] = new JComboBox(v.toArray());
             panel.add(bxs[i]);
             panel.add(Box.createHorizontalStrut(3));
             bxs[i].addItemListener(this);
@@ -185,7 +185,7 @@ public class NumCheckDialog extends JBaseDialog implements DiagramUpdater, ItemL
      * Unselects all points in the JComboBoxes.
      */
     public void unSelectAllPoints() {
-        Vector v = gxInstance.dp.getPointList();
+        List<Object> v = gxInstance.dp.getPointList();
         for (int i = 0; i < bxs.length; i++) {
         }
 

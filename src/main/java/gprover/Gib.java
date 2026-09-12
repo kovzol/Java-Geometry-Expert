@@ -3,7 +3,8 @@ package gprover;
 
 import wprover.GExpert;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -2020,9 +2021,9 @@ public class Gib {
      */
     public void collect_angst() {
 
-        Vector v = new Vector();
+        List<Object> v = new ArrayList<>();
         Angles as = all_as.nx;
-        Vector vt = new Vector();
+        List<Object> vt = new ArrayList<>();
         while (as != null) {
             if (as.type != 0 && as.l1 != as.l2 && as.l3 != as.l4) {
                 vt.add(as);
@@ -2054,7 +2055,7 @@ public class Gib {
      * @param ag the angle expression to add
      * @param v a vector used for collecting angle structures
      */
-    public void addAngst(Angles ag, Vector v) {
+    public void addAngst(Angles ag,  List<Object> v) {
         AngSt a = new AngSt();
         a.addAngle(ag);
         last_ast.nx = a;
@@ -2128,8 +2129,8 @@ public class Gib {
         return (l2);
     }
 
-    protected Vector vauxpts = new Vector();
-    protected Vector vauxptf = new Vector();
+    protected List<Object> vauxpts = new ArrayList<>();
+    protected List<Object> vauxptf = new ArrayList<>();
 
     /**
      * Sets the boolean flag at a given index in a shared values array.

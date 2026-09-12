@@ -33,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -4462,7 +4463,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
      * @param n the pool identifier to update.
      */
     public void updateActionPool(int n) {
-        Vector v = dp.getSelectList();
+        List<Object> v = dp.getSelectList();
         int nx = vpoolist.size();
 
         if (v.size() != 0) {
