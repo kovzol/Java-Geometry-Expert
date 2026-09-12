@@ -88,7 +88,7 @@ some features in this version:
 <ul>
  <li>Piotr Błaszczyk (Polish translation)
  <li>Jorge Cassio (Portuguese translation)
- <li>Balázs Dékány (CheerpJ file handling improvements)
+ <li>Balázs Dékány (CheerpJ file handling improvements, graphics system enhancements, code cleanup)
  <li>Noah Dana-Picard (French and Hebrew translation)
  <li>Ines Ganglmayr (German translation)
  <li>Philip Hallwirth (Code cleanup, CheerpJ port)
