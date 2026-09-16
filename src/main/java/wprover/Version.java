@@ -15,7 +15,7 @@ public class Version {
  *
  * @return the version string
  */
-public static final String getVersion1() {
+public static String getVersion1() {
     return sversion;
 }
 
@@ -24,7 +24,7 @@ public static final String getVersion1() {
  *
  * @return the project name and version string
  */
-public static final String getNameAndVersion() {
+public static String getNameAndVersion() {
     return project + " " + sversion;
 }
 
@@ -33,7 +33,7 @@ public static final String getNameAndVersion() {
  *
  * @return the project name with surrounding spaces
  */
-public static final String getVersion() {
+public static String getVersion() {
     return " " + project + " ";
 }
 
@@ -42,7 +42,7 @@ public static final String getVersion() {
  *
  * @return the project name
  */
-public static final String getProject() {
+public static String getProject() {
     return project;
 }
 
@@ -51,7 +51,7 @@ public static final String getProject() {
  *
  * @return the date string
  */
-public static final String getLastModifiedOn() {
+public static String getLastModifiedOn() {
     return lastModifiedOn;
 }
 }
