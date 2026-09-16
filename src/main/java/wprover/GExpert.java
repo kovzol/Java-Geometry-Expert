@@ -4197,9 +4197,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
                     }
                     if (browser == null) {
                         throw new Exception("Could not find web browser");
-                    } else {
-                        Runtime.getRuntime().exec(new String[]{browser, url});
                     }
+                    
+                    Runtime.getRuntime().exec(new String[]{browser, url});
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, GExpert.getTranslationViaGettext("Can not open link {0}", url) + "\n" +
