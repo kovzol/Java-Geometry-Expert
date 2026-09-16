@@ -6,7 +6,7 @@ package wprover;
  */
 public class Version {
 
-    private static final String sversion = "0.88";
+    private static final String version = "0.88";
     private static final String lastModifiedOn = "2026-09-16";
     private static final String project = "Geometry Expert";
 
@@ -16,7 +16,7 @@ public class Version {
  * @return the version string
  */
 public static String getVersion1() {
-    return sversion;
+    return version;
 }
 
 /**
@@ -25,7 +25,7 @@ public static String getVersion1() {
  * @return the project name and version string
  */
 public static String getNameAndVersion() {
-    return project + " " + sversion;
+    return project + " " + version;
 }
 
 /**
