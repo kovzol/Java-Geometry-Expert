@@ -3628,7 +3628,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         JFrame frame = (JFrame) (Object) this;
 
         String v = Version.getProject();
-        String d = Version.getData();
+        String d = Version.getLastModifiedOn();
 
         v = this.getLanguage(v);
 

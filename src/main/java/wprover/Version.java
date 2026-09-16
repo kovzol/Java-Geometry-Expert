@@ -7,7 +7,7 @@ package wprover;
 public class Version {
 
     private static String sversion = "0.88";
-    private static String data = "2025-06-11";
+    private static String lastModifiedOn = "2026-09-16";
     private static String project = "Geometry Expert";
 
 /**
@@ -47,11 +47,11 @@ public static final String getProject() {
 }
 
 /**
- * Returns the date as a string.
+ * Returns the last modified on date as a string.
  *
  * @return the date string
  */
-public static final String getData() {
-    return data;
+public static final String getLastModifiedOn() {
+    return lastModifiedOn;
 }
 }
