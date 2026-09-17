@@ -10559,7 +10559,7 @@ public class DrawProcess extends DrawBase implements Printable, ActionListener {
 
         Calendar c = Calendar.getInstance();
         String stime = "%Create Time: " + c.getTime().toString() + "\n";
-        String sversion = "%Created By: " + Version.getNameAndVersion() + "\n";
+        String sversion = "%Created By: " + BuildInfo.getProjectName() + " " + BuildInfo.getVersion() + "\n";
 
         String s = "%!PS-Adobe-2.0\n" + stime + sversion + "\n" +
                 "%%BoundingBox: 0 500 400 650\n" +
