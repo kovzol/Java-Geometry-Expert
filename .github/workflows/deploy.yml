@@ -2,7 +2,7 @@ name: Deploy Deep Directory to GitHub Pages
 
 on:
   push:
-    branches: ["fix-online-help"]
+    branches: ["master"]
   workflow_dispatch:
 
 permissions:
