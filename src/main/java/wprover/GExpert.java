@@ -3627,12 +3627,12 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         String s = dp.getName();
         JFrame frame = (JFrame) (Object) this;
 
-        String v = Version.getProject();
-        String d = Version.getLastModifiedOn();
+        String v = BuildInfo.getProjectName();
+        String d = BuildInfo.getBuildTime();
 
-        v = this.getLanguage(v);
+        v = getLanguage(v);
 
-        if (s != null && s.length() != 0)
+        if (s != null && !s.isEmpty())
             frame.setTitle(s + "  -  " + v);
         else
             frame.setTitle(v);
