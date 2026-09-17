@@ -1,4 +1,4 @@
-name: Deploy Deep Directory to GitHub Pages
+name: Deploy help to GitHub Pages
 
 on:
   push:
