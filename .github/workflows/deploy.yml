@@ -30,7 +30,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Set this to the relative path of your target folder
+          # Set this to the relative path of the help directory
           path: "src/main/java/resources/docs/help"
 
       - name: Deploy to GitHub Pages
