@@ -1755,9 +1755,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             setBKState();
             d.repaint();
         } else if (command.equals("Online Help")) {
-            openURL(("https://github.com/kovzol/Java-Geometry-Expert")); // FIXME, use help/index.html
+            openURL(BuildInfo.getRepoUrl()); // FIXME, use help/index.html
         } else if (command.equals("JGEX Homepage")) {
-            openURL(("https://github.com/kovzol/Java-Geometry-Expert"));
+            openURL(BuildInfo.getRepoUrl());
         } else if (command.equals("Contact Us")) {
             openURL(("mailto:jgex@googlegroups.com"));
         } else if (command.equals("ff")) {
@@ -1765,7 +1765,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             setBKState();
             d.repaint();
         } else if (command.equalsIgnoreCase("Check for Update")) {
-            openURL("https://github.com/kovzol/Java-Geometry-Expert/releases");
+            openURL(BuildInfo.getRepoUrl()+ "/releases");
         } else if (command.equals("fr")) {
             dp.Undo();
             setBKState();

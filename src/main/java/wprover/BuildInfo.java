@@ -1,6 +1,7 @@
 package wprover;
 
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Properties;
 
 public final class BuildInfo {
@@ -26,6 +27,15 @@ public final class BuildInfo {
 
     public static String getRepo() {
         return PROPS.getProperty("build.repo", "Unknown");
+    }
+
+    public static String getRepoUrl() {
+        String repo = PROPS.getProperty("build.repo", "Unknown");
+        if (Objects.equals(repo, "Unknown")){
+            return "Unknown";
+        }
+
+        return "https://github.com/"+repo;
     }
 
     public static String getBuildDate() {

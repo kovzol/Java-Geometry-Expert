@@ -1665,13 +1665,12 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 ret += "\\n" + getLanguage(exstring);
             }
             ret += "\"";
-            // The files Rule??.jpg are located in the folder web (FIXME: make the GitHub repository configurable for forks):
+            // The files Rule??.jpg are located in the folder web
             String ruleStr = rule + "";
             if (rule < 10) {
                 ruleStr = "0" + ruleStr; // leading zero
             }
-            String url = "https://github.com/kovzol/Java-Geometry-Expert/blob/master/src/main/resources/docs/web/Rule"
-                    + ruleStr + ".jpg?raw=true";
+            String url = BuildInfo.getRepoUrl() + "/blob/master/src/main/resources/docs/web/Rule" + ruleStr + ".jpg?raw=true";
             ret += ", URL=\"" + url + "\"";
         }
         else {

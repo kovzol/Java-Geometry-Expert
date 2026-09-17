@@ -108,7 +108,7 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
 
         JLabel b1 = new JLabel(GExpert.getLanguage("For more information, please visit:"));
         b1.addMouseListener(this);
-        b2 = new JLabel("https://github.com/kovzol/Java-Geometry-Expert"); // TODO: Put this in a top-level file.
+        b2 = new JLabel(BuildInfo.getRepoUrl());
         b2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         b2.addMouseListener(this);
         panel3.add(b1);
@@ -167,7 +167,7 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
     public void mousePressed(MouseEvent e) {
         System.out.println("public void mousePressed(MouseEvent e)");
         if (e.getSource() == b2)
-            GExpert.openURL("https://github.com/kovzol/Java-Geometry-Expert"); // FIXME: it opens twice
+            GExpert.openURL(BuildInfo.getRepoUrl()); // FIXME: it opens twice
         this.setVisible(false);
     }
 
