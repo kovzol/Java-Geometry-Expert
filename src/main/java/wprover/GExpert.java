@@ -1386,10 +1386,10 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         menu = new JMenu(getLanguage("Help"));
         item = addAMenu(menu, "Help", "Help", KeyEvent.VK_F1, this);
         item.setAccelerator(KeyStroke.getKeyStroke("F1"));
+        addImageToItem(item, "help");
 
-        // this.addImageToItem(item, "help");
-        // item = addAMenu(menu, "Online Help", "Online Help", this);
-        // addImageToItem(item);
+        item = addAMenu(menu, "Online Help", "Online Help", this);
+        addImageToItem(item);
 
         item = addAMenu(menu, "Help on Mode", "Help on Mode", this);
         addImageToItem(item);
@@ -1755,7 +1755,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             setBKState();
             d.repaint();
         } else if (command.equals("Online Help")) {
-            openURL(("https://github.com/kovzol/Java-Geometry-Expert")); // FIXME, use help/index.html
+            openURL(("https://kovzol.github.io/Java-Geometry-Expert/"));
         } else if (command.equals("JGEX Homepage")) {
             openURL(("https://github.com/kovzol/Java-Geometry-Expert"));
         } else if (command.equals("Contact Us")) {
