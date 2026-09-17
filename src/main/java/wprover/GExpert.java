@@ -4141,12 +4141,11 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
      * @param args command line arguments.
      */
     public static void main(String[] args) {
-        System.out.println("Build date: "+BuildInfo.getBuildDate());
-        System.out.println("Build version: "+BuildInfo.getVersion());
-        System.out.println("Build repo: "+BuildInfo.getRepo());
+        System.out.println(BuildInfo.getProjectName());
+        System.out.println("Build date: " + BuildInfo.getBuildDate());
+        System.out.println("Build version: " + BuildInfo.getVersion());
+        System.out.println("Build repo: " + BuildInfo.getRepo());
 
-
-        System.out.println("Java " + Version.getNameAndVersion());
         processCommandLineOptions(args);
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
