@@ -45,7 +45,7 @@ public class Main {
             String dr = user_directory + sp + "examples";
 
             List<GTerm> vm = new ArrayList<>();
-            readThems(dr, vm);
+            Main.readTerms(dr, vm);
             for (int id = 0; id < vm.size(); id++) {
                 GTerm gt = (GTerm) vm.get(id);
                 System.out.print(id + " : " + gt.getName() + "\t\t");
@@ -122,7 +122,7 @@ public class Main {
     /**
      * Recursively read all “.gex”‐style term files from a resource directory on the classpath.
      */
-    static void readThems(String resourceDir,  List<GTerm> v) throws IOException, URISyntaxException {
+    static void readTerms(String resourceDir, List<GTerm> v) throws IOException, URISyntaxException {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         URL dirUrl = cl.getResource(resourceDir + "/");
         if (dirUrl == null) return;
@@ -134,7 +134,7 @@ public class Main {
                 for (Path p : ds) {
                     String nm = p.getFileName().toString();
                     if (Files.isDirectory(p)) {
-                        readThems(resourceDir + "/" + nm, v);
+                        Main.readTerms(resourceDir + "/" + nm, v);
                     } else {
                         loadTerms(cl.getResourceAsStream(resourceDir + "/" + nm), nm, v);
                     }
@@ -154,7 +154,7 @@ public class Main {
                     String rel = name.substring(prefix.length());
                     if (rel.contains("/")) {
                         String sub = rel.substring(0, rel.indexOf('/'));
-                        readThems(resourceDir + "/" + sub, v);
+                        Main.readTerms(resourceDir + "/" + sub, v);
                     } else {
                         loadTerms(cl.getResourceAsStream(name), rel, v);
                     }

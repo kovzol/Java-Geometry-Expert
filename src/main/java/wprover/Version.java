@@ -6,17 +6,17 @@ package wprover;
  */
 public class Version {
 
-    private static String sversion = "0.88";
-    private static String data = "2025-06-11";
-    private static String project = "Geometry Expert";
+    private static final String version = "0.88";
+    private static final String lastModifiedOn = "2026-09-16";
+    private static final String project = "Geometry Expert";
 
 /**
  * Returns the version as a string.
  *
  * @return the version string
  */
-public static final String getVersion1() {
-    return sversion;
+public static String getVersion1() {
+    return version;
 }
 
 /**
@@ -24,8 +24,8 @@ public static final String getVersion1() {
  *
  * @return the project name and version string
  */
-public static final String getNameAndVersion() {
-    return project + " " + sversion;
+public static String getNameAndVersion() {
+    return project + " " + version;
 }
 
 /**
@@ -33,7 +33,7 @@ public static final String getNameAndVersion() {
  *
  * @return the project name with surrounding spaces
  */
-public static final String getVersion() {
+public static String getVersion() {
     return " " + project + " ";
 }
 
@@ -42,16 +42,16 @@ public static final String getVersion() {
  *
  * @return the project name
  */
-public static final String getProject() {
+public static String getProject() {
     return project;
 }
 
 /**
- * Returns the date as a string.
+ * Returns the last modified on date as a string.
  *
  * @return the date string
  */
-public static final String getData() {
-    return data;
+public static String getLastModifiedOn() {
+    return lastModifiedOn;
 }
 }
