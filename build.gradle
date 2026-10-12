@@ -199,18 +199,6 @@ tasks.register('uberJar', Jar) {
 
     from sourceSets.main.output
     from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-
-    // Strip JDK-duplicated packages (org.xml.sax, org.w3c.dom, javax.xml)
-    // Task-level excludes apply to all unpacked dependencies uniformly
-    exclude '**/org/xml/sax/**'
-    exclude '**/org/w3c/dom/**'
-    exclude '**/org/w3c/css/**'
-    exclude '**/javax/xml/**'
-
-    // Strip digital signatures from third-party jars that break uber JAR verification
-    exclude 'META-INF/*.SF'
-    exclude 'META-INF/*.DSA'
-    exclude 'META-INF/*.RSA'
 }
 
 run {
@@ -225,9 +213,24 @@ javapackager {
     runnableJar = tasks.named('uberJar').get().archiveFile.get().asFile
     copyDependencies = false
 
+    bundleJre = true
+    modules = [
+            'java.base',
+            'java.desktop',
+            'java.sql',
+
+            'java.xml',
+            'jdk.xml.dom',
+            'java.scripting',
+
+            'java.logging',
+            'java.naming',
+            'java.management',
+            'java.prefs'
+    ]
+
     description = "JGEX combines dynamic geometry software, automated geometry theorem prover with a visually dynamic approach for presenting proofs."
     mainClass = applicationMainClass
-    bundleJre = true
     organizationName = "JGEX Contributors"
     url = "https://github.com/kovzol/Java-Geometry-Expert"
     organizationEmail = "jgex@googlegroups.com"
@@ -238,6 +241,10 @@ javapackager {
                     mimeType: 'application/vnd.geometry-expert',
                     description: 'Geometry Expert File'
             )
+    ]
+
+    additionalResources = [
+            file('src/main/resources/docs/help')
     ]
 
 
