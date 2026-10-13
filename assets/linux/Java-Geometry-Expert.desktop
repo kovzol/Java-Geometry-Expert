@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+
+Name=Java Geometry Expert
+Comment=Dynamic geometry + automated proofs
+Categories=Science;Education;Math;
+
+Icon=Java-Geometry-Expert
+Exec=Java-Geometry-Expert %U
+Terminal=false

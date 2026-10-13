@@ -12,32 +12,49 @@
  * (It is part of the gettext system.)
  */
 
-import io.github.fvarrui.javapackager.model.FileAssociation
+import io.github.javapackager.model.FileAssociation
+import java.time.LocalDate
 
 buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies {
-        classpath 'io.github.fvarrui:javapackager:1.7.5'
-    }
 }
 
 plugins {
     id 'application'
+    id 'io.github.javapackager' version '2.0.0'
 }
 
-apply plugin: 'io.github.fvarrui.javapackager.plugin'
 
 // Global settings:
 group = 'io.github.kovzol'
-ext.softwareVersion = '0.88'
+
+ext.softwareVersion = project.findProperty('softwareVersion')
+        ?: System.getenv('SOFTWARE_VERSION')
+        ?: '0-undefined-version'
+
+def buildDate = LocalDate.now().toString() // e.g., "2026-10-09"
+
+processResources {
+    // Re-run if version changes
+    inputs.property('version', project.ext.softwareVersion)
+    inputs.property('buildDate', buildDate)
+
+    filesMatching('**/wprover/version.properties') {
+        expand(
+                version: project.ext.softwareVersion,
+                buildDate: buildDate
+        )
+    }
+}
 
 // These are default settings based on Gradle's standard layout:
 ext.poDir = 'src/main/po'
 ext.classesDir = 'build/classes/java/main'
 ext.applicationMainClass = 'wprover.GExpert'
 version = softwareVersion
+
 
 tasks.addRule("Pattern: msgFmt_<FILE>Po: Compile <FILE>.po into <FILE>.class.") { String taskName ->
     if (taskName.startsWith('msgFmt_') && taskName.endsWith('Po')) {
@@ -118,9 +135,6 @@ tasks.register("msgMergeAll") {
 distributions {
     main {
         distributionBaseName = 'jgex'
-        contents {
-            into("bin") { from 'src/main/resources/docs'}
-        }
     }
 }
 
@@ -170,16 +184,25 @@ jar {
         )
     }
     mustRunAfter "msgFmtAll"
-    //to create an uber jar with all dependencies included
-    from {
-        configurations.runtimeClasspath.collect{it.isDirectory() ? it:zipTree(it)}
+}
+
+tasks.register('uberJar', Jar) {
+    archiveClassifier = 'runnable'
+    archiveBaseName = 'jgex'
+    archiveVersion = ''
+
+    manifest {
+        attributes('Main-Class': application.mainClass)
     }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    mustRunAfter "msgFmtAll"
+
+    from sourceSets.main.output
+    from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 }
 
 run {
     mustRunAfter "msgFmtAll"
-//    File runningDir = new File('src/main/resources/docs')
-//    workingDir = runningDir
 }
 
 javadoc {
@@ -187,16 +210,41 @@ javadoc {
 }
 
 javapackager {
+    runnableJar = tasks.named('uberJar').get().archiveFile.get().asFile
+    copyDependencies = false
+
+    bundleJre = true
+    modules = [
+            'java.base',
+            'java.desktop',
+            'java.sql',
+
+            'java.xml',
+            'jdk.xml.dom',
+            'java.scripting',
+
+            'java.logging',
+            'java.naming',
+            'java.management',
+            'java.prefs'
+    ]
+
     description = "JGEX combines dynamic geometry software, automated geometry theorem prover with a visually dynamic approach for presenting proofs."
     mainClass = applicationMainClass
-    bundleJre = true
-    additionalResources = [ file ("src/main/resources/docs/examples"), file ("src/main/resources/docs/help"), file("src/main/resources/docs/import"), file("src/main/resources/docs/rules") ]
     organizationName = "JGEX Contributors"
     url = "https://github.com/kovzol/Java-Geometry-Expert"
     organizationEmail = "jgex@googlegroups.com"
     version = softwareVersion
     fileAssociations = [
-        new FileAssociation(mimeType: 'application/vnd.geometry-expert', extension: 'gex', description: 'Geometry Expert File')
+            new FileAssociation(
+                    extension: 'gex',
+                    mimeType: 'application/vnd.geometry-expert',
+                    description: 'Geometry Expert File'
+            )
+    ]
+
+    additionalResources = [
+            file('src/main/resources/docs/help')
     ]
 
 
@@ -211,6 +259,10 @@ javapackager {
     winConfig.disableRunAfterInstall = false
 
     linuxConfig.categories = ["Education", "Graphics", "Science"]
+}
+
+tasks.matching { it.name.startsWith('package') }.configureEach {
+    dependsOn tasks.named('uberJar')
 }
 
 /*
@@ -243,7 +295,7 @@ task runGproverMain2(type: JavaExec) {
 
 // Task to build the web version of jgex
 tasks.register('buildWeb', Copy) {
-    dependsOn tasks.named('jar')
+    dependsOn tasks.named('uberJar')
 
     doFirst {
         // CheerpJ requires Java 17
@@ -259,7 +311,7 @@ tasks.register('buildWeb', Copy) {
     }
 
     // Copy and rename  the jar
-    from(tasks.named('jar')) {
+    from(tasks.named('uberJar')) {
         into ''
         rename { 'jgex.jar' }
     }

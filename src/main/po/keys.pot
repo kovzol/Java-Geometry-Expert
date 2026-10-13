@@ -23,7 +23,7 @@ msgid "Java Geometry Expert"
 msgstr ""
 
 #: ../wprover/AboutDialog.java:53
-msgid "Last modified on"
+msgid "Build date"
 msgstr ""
 
 #: ../wprover/AboutDialog.java:57

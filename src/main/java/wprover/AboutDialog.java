@@ -56,7 +56,7 @@ public class AboutDialog extends JPopupMenu implements MouseListener {
         lv.setHorizontalTextPosition(JLabel.LEFT);
         panel2.add(lv);
 
-        lv = new JLabel(GExpert.getLanguage("Last modified on") + " " + Version.getLastModifiedOn());
+        lv = new JLabel(GExpert.getLanguage("Build date") + " " + Version.getBuildDate());
         lv.setHorizontalTextPosition(JLabel.RIGHT);
         panel2.add(lv);
 

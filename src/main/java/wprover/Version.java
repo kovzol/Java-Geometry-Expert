@@ -1,14 +1,30 @@
 package wprover;
 
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.IOException;
+
 /**
  * Version is a class that provides version information for the Geometry Expert project.
  * It includes methods to retrieve the version number, project name, and release date.
  */
 public class Version {
 
-    private static final String version = "0.88";
-    private static final String lastModifiedOn = "2026-09-16";
+    private static final String version;
+    private static final String buildDate;
     private static final String project = "Geometry Expert";
+
+    static {
+        Properties props = new Properties();
+        try (InputStream in = Version.class.getResourceAsStream("/wprover/version.properties")) {
+            if (in != null) {
+                props.load(in);
+            }
+        } catch (IOException ignored) {
+        }
+        version = props.getProperty("version", "unknown");
+        buildDate = props.getProperty("buildDate", "unknown");
+    }
 
 /**
  * Returns the version as a string.
@@ -47,11 +63,11 @@ public static String getProject() {
 }
 
 /**
- * Returns the last modified on date as a string.
+ * Returns the build date as a string.
  *
  * @return the date string
  */
-public static String getLastModifiedOn() {
-    return lastModifiedOn;
+public static String getBuildDate() {
+    return buildDate;
 }
 }

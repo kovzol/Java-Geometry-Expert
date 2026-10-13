@@ -1,0 +1,134 @@
+name: Build Linux packages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    name: Build Linux (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-22.04
+            java_arch: x86_64
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+            java_arch: aarch64
+
+    runs-on: ${{ matrix.runner }}
+
+    env:
+      APP_NAME: Java-Geometry-Expert
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: version
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || github.ref_name }}
+        run: |
+          VERSION="${RELEASE_TAG#v}"
+
+          if [[ -z "$VERSION" || "$VERSION" == "refs/heads/"* ]]; then
+            VERSION="$(git describe --tags --always 2>/dev/null || echo dev)"
+            VERSION="${VERSION#v}"
+          fi
+
+          # Use a Debian/RPM-safe version string.
+          VERSION="${VERSION//_/-}"
+
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Building version: $VERSION"
+
+      - name: Install packaging dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            openjdk-11-jdk gettext
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Build AppImage, DEB, and RPM
+        run: |
+          ./gradlew --no-daemon clean package \
+            "-PsoftwareVersion=${{ steps.version.outputs.value }}"
+
+      - name: Collect and normalize artifacts
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          ARCH: ${{ matrix.arch }}
+        run: |
+          set -euo pipefail
+
+          mkdir -p dist
+
+          shopt -s nullglob
+          appimages=(build/*.AppImage)
+          debs=(build/*.deb)
+          rpms=(build/*.rpm)
+
+          if (( ${#appimages[@]} != 1 )); then
+            echo "Expected one AppImage; found ${#appimages[@]}"
+            find build -maxdepth 2 -type f
+            exit 1
+          fi
+
+          if (( ${#debs[@]} != 1 )); then
+            echo "Expected one DEB; found ${#debs[@]}"
+            find build -maxdepth 2 -type f
+            exit 1
+          fi
+
+          if (( ${#rpms[@]} != 1 )); then
+            echo "Expected one RPM; found ${#rpms[@]}"
+            find build -maxdepth 2 -type f
+            exit 1
+          fi
+
+          cp "${appimages[0]}" \
+            "dist/${APP_NAME}-${VERSION}-${ARCH}.AppImage"
+
+          cp "${debs[0]}" \
+            "dist/${APP_NAME}-${VERSION}-${ARCH}.deb"
+
+          cp "${rpms[0]}" \
+            "dist/${APP_NAME}-${VERSION}-${ARCH}.rpm"
+
+          chmod +x "dist/${APP_NAME}-${VERSION}-${ARCH}.AppImage"
+
+          ls -lh dist/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: linux-${{ matrix.arch }}
+          path: dist/*
+          if-no-files-found: error
+
+      - name: Upload packages to GitHub Release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+          ARCH: ${{ matrix.arch }}
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          gh release upload "$TAG" \
+            "dist/${APP_NAME}-${VERSION}-${ARCH}.AppImage" \
+            "dist/${APP_NAME}-${VERSION}-${ARCH}.deb" \
+            "dist/${APP_NAME}-${VERSION}-${ARCH}.rpm" \
+            --clobber

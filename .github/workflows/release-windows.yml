@@ -1,0 +1,135 @@
+name: Build Windows package
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    name: Build Windows (amd64)
+    runs-on: windows-latest
+
+    env:
+      APP_NAME: Java-Geometry-Expert
+      ARCH: amd64
+
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: version
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || github.ref_name }}
+        run: |
+          $ver = $env:RELEASE_TAG
+          if ($ver.StartsWith("v")) { $ver = $ver.Substring(1) }
+
+          if ([string]::IsNullOrWhiteSpace($ver) -or $ver.StartsWith("refs/heads/")) {
+            $ver = git describe --tags --always 2>$null
+            if (-not $ver) { $ver = "dev" }
+            if ($ver.StartsWith("v")) { $ver = $ver.Substring(1) }
+          }
+
+          $ver = $ver -replace '_', '-'
+
+          "value=$ver" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          Write-Host "Building version: $ver"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          architecture: x64
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Install gettext and Inno Setup
+        shell: pwsh
+        run: |
+          choco install gettext innosetup -y
+
+          $gettextDir = "C:\Program Files\gettext-iconv\bin"
+
+          if (Test-Path "$gettextDir\msgfmt.exe") {
+            Add-Content -Path $env:GITHUB_PATH -Value $gettextDir
+            $env:PATH = "$gettextDir;$env:PATH"
+          } else {
+            $msgfmt = Get-ChildItem "C:\Program Files\gettext-iconv" -Filter msgfmt.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+
+            if (-not $msgfmt) {
+              throw "msgfmt.exe was not found after installing gettext."
+            }
+
+            Add-Content -Path $env:GITHUB_PATH -Value $msgfmt.DirectoryName
+            $env:PATH = "$($msgfmt.DirectoryName);$env:PATH"
+          }
+
+          if (-not (Get-Command msgfmt -ErrorAction SilentlyContinue)) {
+            throw "msgfmt is still unavailable."
+          }
+
+          msgfmt --version
+
+      - name: Verify build tools
+        shell: pwsh
+        run: |
+          java -version
+          msgfmt --version
+
+          $iscc = Get-Command iscc -ErrorAction Stop
+          Write-Host "Inno Setup compiler found at: $($iscc.Source)"
+
+      - name: Build Windows package
+        shell: pwsh
+        run: |
+          .\gradlew.bat --no-daemon clean package "-PsoftwareVersion=${{ steps.version.outputs.value }}"
+
+      - name: Collect and normalize artifacts
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          set -euo pipefail
+
+          mkdir -p dist
+
+          shopt -s nullglob
+          exes=(build/*.exe)
+          zips=(build/*.zip)
+
+          if (( ${#exes[@]} == 1 )); then
+            cp "${exes[0]}" "dist/${APP_NAME}-${VERSION}-${ARCH}.exe"
+          fi
+
+          if (( ${#zips[@]} == 1 )); then
+            cp "${zips[0]}" "dist/${APP_NAME}-${VERSION}-${ARCH}.zip"
+          fi
+
+          ls -lh dist/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-${{ env.ARCH }}
+          path: dist/*
+          if-no-files-found: error
+
+      - name: Upload packages to GitHub Release
+        if: github.event_name == 'release'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name || github.ref_name }}
+        run: |
+          gh release view "$TAG" || gh release create "$TAG" --title "$TAG" --notes "Release $TAG"
+          gh release upload "$TAG" dist/* --clobber
