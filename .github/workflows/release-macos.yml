@@ -82,7 +82,8 @@ jobs:
           fi
 
           for file in "${packages[@]}"; do
-            cp "$file" "dist/${APP_NAME}-${VERSION}-${ARCH}-$(basename "$file")"
+            ext="${file##*.}"
+            cp "$file" "dist/${APP_NAME}-${VERSION}-${ARCH}.${ext}"
           done
 
           ls -lh dist/
