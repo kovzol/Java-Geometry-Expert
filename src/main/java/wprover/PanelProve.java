@@ -1665,7 +1665,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
                 ret += "\\n" + getLanguage(exstring);
             }
             ret += "\"";
-            // The files Rule??.jpg are located in the folder web (FIXME: make the GitHub repository configurable for forks):
+            // The files Rule??.jpg are located in the folder web
             String ruleStr = rule + "";
             if (rule < 10) {
                 ruleStr = "0" + ruleStr; // leading zero
