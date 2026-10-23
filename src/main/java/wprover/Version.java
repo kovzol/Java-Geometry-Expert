@@ -31,7 +31,7 @@ public class Version {
  *
  * @return the version string
  */
-public static String getVersion1() {
+public static String getVersion() {
     return version;
 }
 
@@ -42,15 +42,6 @@ public static String getVersion1() {
  */
 public static String getNameAndVersion() {
     return project + " " + version;
-}
-
-/**
- * Returns the project name surrounded by spaces.
- *
- * @return the project name with surrounding spaces
- */
-public static String getVersion() {
-    return " " + project + " ";
 }
 
 /**
