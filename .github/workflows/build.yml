@@ -22,4 +22,4 @@ jobs:
         sudo apt install -y gettext
 
     - name: Build
-      run: ./gradlew package
+      run: ./gradlew build
