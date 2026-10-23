@@ -55,6 +55,9 @@ ext.classesDir = 'build/classes/java/main'
 ext.applicationMainClass = 'wprover.GExpert'
 version = softwareVersion
 
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
 
 tasks.addRule("Pattern: msgFmt_<FILE>Po: Compile <FILE>.po into <FILE>.class.") { String taskName ->
     if (taskName.startsWith('msgFmt_') && taskName.endsWith('Po')) {
