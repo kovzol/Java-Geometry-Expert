@@ -1755,7 +1755,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             setBKState();
             d.repaint();
         } else if (command.equals("Online Help")) {
-            openURL(("https://kovzol.github.io/Java-Geometry-Expert/")); // move to build info
+            openURL((BuildInfo.getRepoPagesUrl()));
         } else if (command.equals("JGEX Homepage")) {
             openURL(BuildInfo.getRepoUrl());
         } else if (command.equals("Contact Us")) {

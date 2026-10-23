@@ -38,6 +38,23 @@ public final class BuildInfo {
         return "https://github.com/" + repo;
     }
 
+    public static String getRepoPagesUrl() {
+        String repo = getRepo();
+        if (Objects.equals(repo, "Unknown")) {
+            return "Unknown";
+        }
+
+        String[] parts = repo.split("/", 2);
+        if (parts.length < 2 || parts[0].isEmpty() || parts[1].isEmpty()) {
+            return "Unknown";
+        }
+
+        String owner = parts[0];
+        String repoName = parts[1];
+
+        return "https://" + owner + ".github.io/" + repoName + "/";
+    }
+
     public static String getProjectName() {
         return PROJECT_NAME;
     }
