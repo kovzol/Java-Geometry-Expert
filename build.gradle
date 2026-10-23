@@ -33,18 +33,20 @@ group = 'io.github.kovzol'
 ext.softwareVersion = project.findProperty('softwareVersion')
         ?: System.getenv('SOFTWARE_VERSION')
         ?: '0-undefined-version'
-
-def buildDate = LocalDate.now().toString() // e.g., "2026-10-09"
+ext.githubRepo = 'kovzol/Java-Geometry-Expert'
+ext.buildDate = LocalDate.now().toString() // e.g., "2026-10-09"
 
 processResources {
-    // Re-run if version changes
+    // Re-run if these values change
     inputs.property('version', project.ext.softwareVersion)
-    inputs.property('buildDate', buildDate)
+    inputs.property('buildDate', project.ext.buildDate)
+    inputs.property('repo', project.ext.githubRepo)
 
-    filesMatching('**/wprover/version.properties') {
+    filesMatching('**/wprover/buildinfo.properties') {
         expand(
                 version: project.ext.softwareVersion,
-                buildDate: buildDate
+                buildDate: project.ext.buildDate,
+                repo: project.ext.githubRepo
         )
     }
 }

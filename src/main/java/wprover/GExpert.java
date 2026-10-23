@@ -1755,9 +1755,9 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             setBKState();
             d.repaint();
         } else if (command.equals("Online Help")) {
-            openURL(("https://kovzol.github.io/Java-Geometry-Expert/"));
+            openURL(("https://kovzol.github.io/Java-Geometry-Expert/")); // move to build info
         } else if (command.equals("JGEX Homepage")) {
-            openURL(("https://github.com/kovzol/Java-Geometry-Expert"));
+            openURL(BuildInfo.getRepoUrl());
         } else if (command.equals("Contact Us")) {
             openURL(("mailto:jgex@googlegroups.com"));
         } else if (command.equals("ff")) {
@@ -1765,7 +1765,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
             setBKState();
             d.repaint();
         } else if (command.equalsIgnoreCase("Check for Update")) {
-            openURL("https://github.com/kovzol/Java-Geometry-Expert/releases");
+            openURL(BuildInfo.getRepoUrl() + "/releases");
         } else if (command.equals("fr")) {
             dp.Undo();
             setBKState();
@@ -3627,8 +3627,8 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
         String s = dp.getName();
         JFrame frame = (JFrame) (Object) this;
 
-        String v = Version.getProject();
-        String d = Version.getBuildDate();
+        String v = BuildInfo.getProjectName();
+        String d = BuildInfo.getBuildDate();
 
         v = this.getLanguage(v);
 
@@ -4141,7 +4141,7 @@ public class GExpert extends JFrame implements ActionListener, KeyListener, Drop
      * @param args command line arguments.
      */
     public static void main(String[] args) {
-        System.out.println("Java " + Version.getNameAndVersion());
+        System.out.println("Java " + BuildInfo.getProjectNameAndVersion());
         processCommandLineOptions(args);
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {

@@ -1670,7 +1670,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             if (rule < 10) {
                 ruleStr = "0" + ruleStr; // leading zero
             }
-            String url = "https://github.com/kovzol/Java-Geometry-Expert/blob/master/src/main/resources/docs/web/Rule"
+            String url = BuildInfo.getRepoUrl()
+                    + "/blob/master/src/main/resources/docs/web/Rule"
                     + ruleStr + ".jpg?raw=true";
             ret += ", URL=\"" + url + "\"";
         }
@@ -1708,7 +1709,7 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             // For some reason, this does not work, we get
             // an error org.apache.batik.dom.util.SAXIOException: Invalid byte 1 of 1-byte UTF-8 sequence.
             // FIXME.
-            // String url = "https://github.com/kovzol/Java-Geometry-Expert/blob/master/src/main/resources/docs/web/Rule" + rule + ".jpg?raw=true";
+            // String url = BuildInfo.getRepoUrl() + "/blob/master/src/main/resources/docs/web/Rule" + rule + ".jpg?raw=true";
             n = Node.builder().shape(s).table(table().border(0).bgColor(c).
                     cellBorder(0).cellSpacing(0).cellPadding(6).href(url).tooltip(tooltipstring).
                     tr(td().color(c).text(co.getNo() + ") " + co.getText())).
