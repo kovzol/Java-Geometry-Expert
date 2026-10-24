@@ -1,0 +1,106 @@
+name: Build macOS packages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    name: Build macOS (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: macos-15-intel
+          - arch: arm64
+            runner: macos-15
+
+    runs-on: ${{ matrix.runner }}
+
+    env:
+      APP_NAME: Java-Geometry-Expert
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: version
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || github.ref_name }}
+        run: |
+          VERSION="${RELEASE_TAG#v}"
+          if [[ -z "$VERSION" || "$VERSION" == "refs/heads/"* ]]; then
+            VERSION="$(git describe --tags --always 2>/dev/null || echo dev)"
+            VERSION="${VERSION#v}"
+          fi
+          VERSION="${VERSION//_/-}"
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Install gettext
+        run: |
+          brew install gettext
+          echo "$(brew --prefix gettext)/bin" >> "$GITHUB_PATH"
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Build packages
+        run: |
+          ./gradlew --no-daemon clean package \
+            "-PsoftwareVersion=${{ steps.version.outputs.value }}"
+
+      - name: Collect artifacts
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          ARCH: ${{ matrix.arch }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          shopt -s nullglob
+
+          packages=(build/*.dmg build/*.pkg)
+          if (( ${#packages[@]} == 0 )); then
+            echo "No DMG or PKG found; inspect build output."
+            find build -maxdepth 3 -type f
+            exit 1
+          fi
+
+          for file in "${packages[@]}"; do
+            ext="${file##*.}"
+            cp "$file" "dist/${APP_NAME}-${VERSION}-${ARCH}.${ext}"
+          done
+
+          ls -lh dist/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: macos-${{ matrix.arch }}
+          path: dist/*
+          if-no-files-found: error
+
+      - name: Upload packages to GitHub Release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+          VERSION: ${{ steps.version.outputs.value }}
+          ARCH: ${{ matrix.arch }}
+        run: |
+          gh release upload "$TAG" dist/* --clobber

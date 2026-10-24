@@ -264,6 +264,11 @@ javapackager {
     winConfig.disableRunAfterInstall = false
 
     linuxConfig.categories = ["Education", "Graphics", "Science"]
+
+    macConfig {
+        generateDmg = true
+        generatePkg = true
+    }
 }
 
 tasks.matching { it.name.startsWith('package') }.configureEach {
