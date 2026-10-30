@@ -2,7 +2,7 @@ name: Deploy Help to GitHub Pages
 
 on:
   push:
-    branches: ["master"]
+    branches: [ "master" ]
   workflow_dispatch:
 
 permissions:
