@@ -1,4 +1,4 @@
-name: Build macOS packages
+name: Build and Release MacOS Packages
 
 on:
   release:

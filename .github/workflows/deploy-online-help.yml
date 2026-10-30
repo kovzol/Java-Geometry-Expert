@@ -1,4 +1,4 @@
-name: Deploy help to GitHub Pages
+name: Deploy Help to GitHub Pages
 
 on:
   push:

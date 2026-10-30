@@ -1,4 +1,4 @@
-name: Build Linux packages
+name: Build and Release Linux Packages
 
 on:
   release:

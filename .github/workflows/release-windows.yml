@@ -1,4 +1,4 @@
-name: Build Windows package
+name: Build and Release Windows Package
 
 on:
   release:

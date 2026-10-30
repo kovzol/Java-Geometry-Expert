@@ -1,4 +1,4 @@
-name: Build Web package
+name: Build and Release Web Package
 
 on:
   release:
