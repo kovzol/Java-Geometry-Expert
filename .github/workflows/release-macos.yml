@@ -1,8 +1,8 @@
-name: Build macOS packages
+name: Build and Release MacOS Packages
 
 on:
   release:
-    types: [published]
+    types: [ published ]
   workflow_dispatch:
 
 permissions:
