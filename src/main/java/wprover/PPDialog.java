@@ -183,12 +183,12 @@ PPDialog extends JBaseDialog implements ActionListener, MouseMotionListener, Mou
 
         for (int i = 0; i < v1.size(); i++) {
             Cons c = (Cons) v1.get(i);
-            model1.add(0, c.toDDString());
+            model1.addElement(c.toDDString());
         }
 
         for (int i = 0; i < v.size(); i++) {
             Cons c = (Cons) v.get(i);
-            model2.add(0, (i + 1) + ": " + c.toDString());
+            model2.addElement((i + 1) + ": " + c.toDString());
         }
 
         for (int i = 0; i < v.size(); i++) {
@@ -197,7 +197,7 @@ PPDialog extends JBaseDialog implements ActionListener, MouseMotionListener, Mou
             //        String s = (i + 1) + ": ";
             //        if (m != null)
             //            s += poly.printNPoly(m);
-            //        model22.add(0, s);
+            //        model22.addElement(s);
         }
     }
 }

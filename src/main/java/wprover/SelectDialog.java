@@ -107,7 +107,7 @@ public class SelectDialog extends JBaseDialog implements
 
         for (int i = 0; i < v.size(); i++) {
             CClass cc = (CClass) v.get(i);
-            listModel.add(0, cc.getDescription());
+            listModel.addElement(cc.getDescription());
             selectedlist.add(cc);
         }
     }

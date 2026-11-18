@@ -390,7 +390,7 @@ class ProvePane extends JPanel
         listModel.clear();
         for (int i = 0; i < vlist.size(); i++) {
             CClass cc = (CClass) vlist.get(i);
-            listModel.add(0, cc.TypeString());
+            listModel.addElement(cc.TypeString());
         }
     }
 

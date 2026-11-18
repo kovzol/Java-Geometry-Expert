@@ -3196,8 +3196,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             Cons c = sconc;
             if (c != null) {
                 gt.setConclusion(c);
-                listModel.add(0, c);
-                listModelx.add(0, c.toDString());
+                listModel.addElement(c);
+                listModelx.addElement(c.toDString());
                 gt.ge_cpt();
 //                dp.flashCond(gt.getConc(), true);
             }
@@ -3224,8 +3224,8 @@ public class PanelProve extends JTabbedPane implements ChangeListener {
             List<Object> v = gt.getCons();
             for (int i = 0; i < v.size(); i++) {
                 Cons c = (Cons) v.get(i);
-                listModel.add(0, c);
-                listModelx.add(0, c.toDString());
+                listModel.addElement(c);
+                listModelx.addElement(c.toDString());
             }
         }
 
