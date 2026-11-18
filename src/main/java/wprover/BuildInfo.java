@@ -5,6 +5,10 @@ import java.util.Objects;
 import java.util.Properties;
 
 public final class BuildInfo {
+
+    // This should be overridden via the -PsoftwareVersion option from Gradle:
+    public static final String VERSION_HARDCODED = "0.89-hardcoded"; //
+
     private static final Properties PROPS = new Properties();
     private static final String PROJECT_NAME = "Java Geometry Expert";
 
@@ -19,7 +23,12 @@ public final class BuildInfo {
     }
 
     public static String getVersion() {
-        return PROPS.getProperty("version", "Unknown");
+        String version = PROPS.getProperty("version", "Unknown");
+        if (version.equals("0-undefined-version")
+                || version.equals("Unknown")) {
+            version = VERSION_HARDCODED; // override empty version
+        }
+        return version;
     }
 
     public static String getBuildDate() {
