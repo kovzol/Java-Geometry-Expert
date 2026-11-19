@@ -48,10 +48,11 @@ parts:
       mkdir -p ../install/usr/share/jgex && \
       cp -a build/install/jgex/lib/*.jar ../install/usr/share/jgex && \
       mkdir -p ../install/root && \
-      cp -a build/install/jgex/bin/examples ../install/root && \
-      cp -a build/install/jgex/bin/help ../install/root && \
-      cp -a build/install/jgex/bin/import ../install/root && \
-      cp -a build/install/jgex/bin/rules ../install/root && \
+      cp -a src/main/resources/docs/examples \
+        src/main/resources/docs/help \
+        src/main/resources/docs/import \
+        src/main/resources/docs/rules \
+        ../install/root/ && \
       echo "#!/bin/bash" > ../install/bin/jgex && \
       echo "JGEX_WD=~/.jgex # working directory" >> ../install/bin/jgex && \
       echo "test -d \$JGEX_WD || (mkdir -p \$JGEX_WD; cd \$SNAP/root; cp -a -u * \$JGEX_WD)" >> ../install/bin/jgex && \
